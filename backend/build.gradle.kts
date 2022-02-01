@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val http4k_version: String by project
+
 plugins {
     kotlin("jvm") version "1.6.10"
     application
@@ -13,6 +15,8 @@ repositories {
 }
 
 dependencies {
+    implementation(platform("org.http4k:http4k-bom:$http4k_version"))
+    implementation("org.http4k:http4k-core")
     testImplementation(kotlin("test"))
 }
 
