@@ -7,7 +7,10 @@ import org.http4k.filter.ServerFilters
 import org.http4k.hamkrest.hasStatus
 import org.http4k.lens.RequestContextKey
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 
+@Execution(CONCURRENT)
 internal class TokenAuthenticatorTest {
 
 
@@ -68,8 +71,8 @@ internal class TokenAuthenticatorTest {
 
         // the stack of Filters and our final request handler
         val authenticatedHandler = initialiseRequestContextFilter
-                .then(addAuthenticationFilter)
-                .then(authenticatedRequestHandler)
+            .then(addAuthenticationFilter)
+            .then(authenticatedRequestHandler)
 
         val request = Request(GET, "/")
         val response = authenticatedHandler(request)
@@ -101,8 +104,8 @@ internal class TokenAuthenticatorTest {
 
         // the stack of Filters and our final request handler
         val authenticatedHandler = initialiseRequestContextFilter
-                .then(addAuthenticationFilter)
-                .then(authenticatedRequestHandler)
+            .then(addAuthenticationFilter)
+            .then(authenticatedRequestHandler)
 
         val request = Request(GET, "/")
         val response = authenticatedHandler(request)

@@ -4,7 +4,10 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 
+@Execution(CONCURRENT)
 internal class TokenAuthenticatorKtTest {
     @Test
     internal fun `check extract bearer token returns null on empty request`() {
