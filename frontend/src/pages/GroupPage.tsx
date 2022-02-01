@@ -1,11 +1,10 @@
 import * as React from "react";
-import {Center, Heading, Spinner, Text} from "@chakra-ui/react";
+import {Heading, Spinner, Text, Center} from "@chakra-ui/react";
 import {useNavigate, useParams} from "react-router-dom";
 import {db} from "../firebase";
 import {ref} from "firebase/database";
 import {Group} from "./Groups";
 import {Val} from "react-firebase-hooks/database/dist/database/types";
-
 import {useObjectVal} from "react-firebase-hooks/database";
 
 export default function GroupPage() {

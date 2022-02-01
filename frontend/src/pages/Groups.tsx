@@ -1,9 +1,9 @@
 import * as React from "react";
-import {useEffect} from "react";
-import {Box, Button, Center, Heading, Link, Spinner, Text} from "@chakra-ui/react";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {useNavigate} from "react-router-dom";
+import {Button, Flex, Box, Heading, Link, Text, Spinner} from "@chakra-ui/react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import {auth, db, logout} from "../firebase";
+import { useEffect } from "react";
 import {ref} from "firebase/database";
 import {useListVals} from "react-firebase-hooks/database";
 
@@ -21,15 +21,15 @@ export default function Groups() {
     }, [user, loading]);
 
     return (
-        <Center>
-            <Box>
+        <Flex width="full" align="start" justifyContent="center">
+            <Box textAlign="center">
                 <Heading>Groups Page</Heading>
                 <Button onClick={logout}>Logout</Button>
-                {groups?.map((group, i) => <Link href={`group/${group.id}`} key={i}>{group.name}</Link>)}
+                {groups?.map((groups, i) => <Heading key={i}>{groups.name}</Heading>)}
                 {loadingGroups ? <Spinner/> : null}
                 {error ? <Text>{JSON.stringify(error)}</Text> : null}
                 <Link href={"group/new"}>Create a Group</Link>
             </Box>
-        </Center>
+        </Flex>
     );
 }
