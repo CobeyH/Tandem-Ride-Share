@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation(platform("org.http4k:http4k-bom:$http4k_version"))
     implementation("org.http4k:http4k-core")
+    implementation("org.http4k:http4k-testing-hamkrest")
     testImplementation(kotlin("test"))
 }
 
