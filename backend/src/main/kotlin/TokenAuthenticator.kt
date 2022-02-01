@@ -1,3 +1,6 @@
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseToken
 import org.http4k.core.Filter
 import org.http4k.core.Request
 import org.http4k.core.with
@@ -39,4 +42,19 @@ fun extractBearerToken(request: Request): String? {
     val bearerRegex = Regex("Bearer: (.*)")
     val (token) = bearerRegex.find(authenticationHeader)?.destructured ?: return null
     return token
+}
+
+/**
+ * Verifies a firebase [idToken]. Assumes there is an initialized [FirebaseApp](com.google.firebase.FirebaseApp)
+ * @param idToken the token to verify
+ * @param checkRevoked check to see if the token has been revoked (defaults to true)
+ * @return a [FirebaseToken] if verified, otherwise null
+ * @see <a href=https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_the_firebase_admin_sdk>verify-id-tokens</a>
+ */
+fun verifyFirebaseToken(idToken: String, checkRevoked: Boolean = true): FirebaseToken? {
+    return try {
+        FirebaseAuth.getInstance().verifyIdToken(idToken, checkRevoked)
+    } catch (unauthenticated: FirebaseAuthException) {
+        return null
+    }
 }
