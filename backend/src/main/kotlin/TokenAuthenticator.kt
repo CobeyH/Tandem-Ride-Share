@@ -18,21 +18,15 @@ class TokenAuthenticator<TOKEN>(
      * @param key the lens used to add and receive the token from a [Request].
      * @return a [Filter] which attaches the appropriate [TOKEN] to the request if the string token is verified.
      */
-    fun addAuthentication(key: RequestContextLens<TOKEN?>): Filter {
-        return Filter { nextHandler ->
-            response@{ request ->
-                val tokenString = extractToken(request)
-                    ?: return@response nextHandler(request)
-                val token = verifyToken(tokenString)
-                    ?: return@response nextHandler(request)
-                val requestWithContext = request.with(key of token)
-                return@response nextHandler(requestWithContext)
-            }
+    fun addAuthentication(key: RequestContextLens<TOKEN?>) = Filter { next ->
+        handler@{ request ->
+            val tokenString = extractToken(request) ?: return@handler next(request)
+            val token = verifyToken(tokenString) ?: return@handler next(request)
+            val requestWithContext = request.with(key of token)
+            return@handler next(requestWithContext)
         }
     }
 }
-
-private val bearerRegex = Regex("Bearer: (.*)")
 
 /**
  * Extracts the `Token` from `Authentication: Bearer <Token>` style header.
@@ -41,9 +35,8 @@ private val bearerRegex = Regex("Bearer: (.*)")
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc6750#section-2.1">Authorization Request Header Field</a>
  */
 fun extractBearerToken(request: Request): String? {
-    val authenticationHeader = request.header("Authentication")
-        ?: return null
-    val (token) = bearerRegex.find(authenticationHeader)?.destructured
-        ?: return null
+    val authenticationHeader = request.header("Authentication") ?: return null
+    val bearerRegex = Regex("Bearer: (.*)")
+    val (token) = bearerRegex.find(authenticationHeader)?.destructured ?: return null
     return token
 }
