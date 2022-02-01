@@ -9,13 +9,13 @@ import org.http4k.lens.RequestContextLens
 /**
  * Attaches a [TOKEN] to a request through [addAuthentication] if the request has enough information to create a valid token.
  * @param TOKEN the type of token. This should carry enough information to identify a user.
+ * @param verifyToken verifies the token string, returning the token if verified, null if invalid.
  * @param extractToken extracts the unverified string token from the request, returns null if the token cannot be found.
  * Defaults to [extractBearerToken]
- * @param verifyToken verifies the token string, returning the token if verified, null if invalid.
  */
 class TokenAuthenticator<TOKEN>(
-    private val extractToken: (Request) -> String? = ::extractBearerToken,
-    private val verifyToken: (String) -> TOKEN?
+    private val verifyToken: (String) -> TOKEN?,
+    private val extractToken: (Request) -> String? = ::extractBearerToken
 ) {
     /**
      * @param key the lens used to add and receive the token from a [Request].
