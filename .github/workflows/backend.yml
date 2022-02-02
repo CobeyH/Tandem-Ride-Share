@@ -29,3 +29,5 @@ jobs:
 
       - name: Execute Gradle build
         run: ./gradlew build
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE }}
