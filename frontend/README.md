@@ -44,3 +44,19 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Firebase Hosting
+
+This project has been initialized according to Firebase Hosting [Quickstart](https://firebase.google.com/docs/hosting/quickstart).
+
+## Setting up for development
+
+Make sure you install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) on your machine if you want to manually deploy a build.
+
+## Deployment
+
+### `firebase deploy --only hosting`
+
+This will deploy the latest build to the Firebase Hosting service.
+
+**Note: make sure you build the app first with `npm run build`**
