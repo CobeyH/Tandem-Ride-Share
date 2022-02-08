@@ -5,6 +5,7 @@ import Groups from "./pages/Groups";
 import Rides from "./pages/Rides";
 import { ChakraProvider, Box, Grid, theme } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import Register from "./pages/Registration";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -17,6 +18,7 @@ export const App = () => (
             <Route path="/login" element={<LoginForm />} />
             <Route path="/" element={<Groups />} />
             <Route path="/rides" element={<Rides />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </Router>
       </Grid>
