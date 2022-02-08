@@ -1,8 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { ColorModeScript } from "@chakra-ui/react";
+import * as React from "react";
+import ReactDOM from "react-dom";
+import { App } from "./App";
+import reportWebVitals from "./reportWebVitals";
+import * as serviceWorker from "./serviceWorker";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -19,18 +20,22 @@ const firebaseConfig = {
   storageBucket: "carpooling-6112a.appspot.com",
   messagingSenderId: "158541550551",
   appId: "1:158541550551:web:927805d53ab973714ab192",
-  measurementId: "G-4QXLHB625R"
+  measurementId: "G-4QXLHB625R",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig, "web-frontend");
 //const analytics = getAnalytics(app);
+console.log("Firebase setup with name", app.name);
+
+serviceWorker.unregister();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App message={`Connected to Firebase App: ${app.name}`}/>
+    <ColorModeScript />
+    <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

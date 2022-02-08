@@ -1,31 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import LoginForm from "./pages/LoginPage";
+import { ChakraProvider, Box, VStack, Grid, theme } from "@chakra-ui/react";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
 
-interface AppProps {
-  message: string;
-}
-
-function App({message}:AppProps) {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>{message}</p>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+export const App = () => (
+  <ChakraProvider theme={theme}>
+    <Box w="100%" h="200px" />
+    <Box textAlign="center" fontSize="xl">
+      <Grid minH="100vh" p={3}>
+        <ColorModeSwitcher justifySelf="flex-end" />
+        <VStack spacing={8}>
+          <LoginForm />
+        </VStack>
+      </Grid>
+    </Box>
+  </ChakraProvider>
+);
