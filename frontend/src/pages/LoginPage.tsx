@@ -14,7 +14,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   // If the user is signed in, go to the home page.
   useEffect(() => {
     if (loading) return;

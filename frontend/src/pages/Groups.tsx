@@ -6,7 +6,7 @@ import { auth, logout } from "../firebase";
 import { useEffect } from "react";
 
 export default function Groups() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
 
   useEffect(() => {
