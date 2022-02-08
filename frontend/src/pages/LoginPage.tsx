@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Box,
@@ -8,15 +8,26 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
-import { signInWithGoogle } from "../firebase";
+import { signInWithGoogle, auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-// This is in the wrong place. I'm not sure where it is meant to go.
 export default function Login() {
+  const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth);
+  // If the user is signed in, go to the home page.
+  useEffect(() => {
+    if (loading) return;
+    if (user) return navigate("/");
+  }, [user, loading]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // Create handler for the "sign in" button.
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     alert(`Email: ${email} Password: ${password}`);
+    navigate(`/`);
   };
 
   return (
