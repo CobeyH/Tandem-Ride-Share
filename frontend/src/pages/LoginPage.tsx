@@ -16,8 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signInWithGoogle();
-    alert(`Email: ${email} & Password: ${password}`);
+    alert(`Email: ${email} Password: ${password}`);
   };
 
   return (
@@ -47,10 +46,10 @@ export default function Login() {
             <Button width="full" mt={4} type="submit">
               Sign In
             </Button>
-            <Button width="full" mt={4} type="submit">
-              Sign In With Google
-            </Button>
           </form>
+          <Button width="full" mt={4} onClick={signInWithGoogle}>
+            Sign In With Google
+          </Button>
         </Box>
       </Box>
     </Flex>
