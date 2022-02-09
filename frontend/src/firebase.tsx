@@ -5,13 +5,13 @@ import {
   signOut,
 } from "firebase/auth";
 import {
-  getFirestore,
+  getDatabase,
   query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-} from "firebase/firestore";
+  ref,
+  set,
+  get,
+  equalTo,
+} from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -24,6 +24,7 @@ import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: "AIzaSyBrUBFWOzhP3XPuzi0ZYrNdNLcUWkLngTQ",
   authDomain: "carpooling-6112a.firebaseapp.com",
+  databaseURL: "https://carpooling-6112a-default-rtdb.firebaseio.com/",
   projectId: "carpooling-6112a",
   storageBucket: "carpooling-6112a.appspot.com",
   messagingSenderId: "158541550551",
@@ -34,18 +35,18 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig, "web-frontend");
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db = getDatabase(app);
 
 const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    const snapshot = await getDocs(q);
+    const q = query(ref(db, "users"), equalTo(user.uid, "uid"));
+    const snapshot = await get(q);
     // If the user doesn't exist then add them.
-    if (snapshot.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
+    if (!snapshot.exists()) {
+      await set(ref(db, "users/" + user.uid), {
         uid: user.uid,
         name: user.displayName,
         authProvider: "google",
