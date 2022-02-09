@@ -1,33 +1,35 @@
 import * as React from "react";
-import { Button, Flex, Box, Heading, Link, Text } from "@chakra-ui/react";
+import {Button, Flex, Box, Heading, Link, Text, Spinner} from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, logout } from "../firebase";
+import {auth, db, logout} from "../firebase";
 import { useEffect } from "react";
+import {ref} from "firebase/database";
+import {useListVals} from "react-firebase-hooks/database";
 
-type group = { name: string; number_members: number };
+export type Group = { id: string, name: string, rides: string[] };
 
-export default function Groups(props: { groups: group[] }) {
-  const [user, loading] = useAuthState(auth);
-  const navigate = useNavigate();
+export default function Groups() {
+    const [user, loading] = useAuthState(auth);
+    const [groups, loadingGroups, error] = useListVals<Group>(ref(db, "groups"));
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/login");
-  }, [user, loading]);
+    const navigate = useNavigate();
 
-  return (
-    <Flex width="full" align="start" justifyContent="center">
-      <Box textAlign="center">
-        <Heading>Groups Page</Heading>
-        <Button onClick={logout}>Logout</Button>
-        {props.groups.map((group, i) => (
-          <div key={i}>
-            <Link href={"/rides"}>{group.name}</Link>
-            <Text> {group.number_members} </Text>
-          </div>
-        ))}
-      </Box>
-    </Flex>
-  );
+    useEffect(() => {
+        if (loading) return;
+        if (!user) return navigate("/login");
+    }, [user, loading]);
+
+    return (
+        <Flex width="full" align="start" justifyContent="center">
+            <Box textAlign="center">
+                <Heading>Groups Page</Heading>
+                <Button onClick={logout}>Logout</Button>
+                {groups?.map((groups, i) => <Heading key={i}>{groups.name}</Heading>)}
+                {loadingGroups ? <Spinner/> : null}
+                {error ? <Text>{JSON.stringify(error)}</Text> : null}
+                <Link href={"group/new"}>Create a Group</Link>
+            </Box>
+        </Flex>
+    );
 }
