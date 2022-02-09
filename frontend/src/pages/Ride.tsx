@@ -3,7 +3,7 @@ import { Flex, Box, Heading } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon } from "leaflet";
 
-export default function Rides() {
+export default function Ride() {
   return (
     <MapContainer center={[45.4, -75.7]} zoom={12}scrollWheelZoom={false}>
       <TileLayer
