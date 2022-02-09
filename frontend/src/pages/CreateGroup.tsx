@@ -36,7 +36,7 @@ const CreateGroup = () => {
                         invalid: isInvalidName(e.currentTarget.value)
                     })}
                     isInvalid={invalidName}/>
-                <Button onClick={_ => {
+                <Button onClick={() => {
                     const id = `${user?.uid ?? "THIS IS A BUG"}_${name}`;
 
                     createGroup({id, name, rides: []}).then(() => {
