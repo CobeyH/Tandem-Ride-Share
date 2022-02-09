@@ -7,7 +7,7 @@ import {ColorModeSwitcher} from "./ColorModeSwitcher";
 import Register from "./pages/Registration";
 import CreateGroup from "./pages/CreateGroup";
 import GroupPage from "./pages/GroupPage";
-import Ride from "./pages/Ride";
+import Ride from "./pages/RidePage";
 
 export const App = () => (
     <ChakraProvider theme={theme}>
