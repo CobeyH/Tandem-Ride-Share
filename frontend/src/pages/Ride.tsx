@@ -1,7 +1,5 @@
 import * as React from "react";
-import { Flex, Box, Heading } from "@chakra-ui/react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Icon } from "leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 
 export default function Ride() {
   return (
