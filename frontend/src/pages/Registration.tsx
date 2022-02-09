@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Flex, Box, Heading, FormControl, FormLabel, Input, Button, Text} from "@chakra-ui/react";
-import {auth, signInWithGoogle} from "../firebase";
+import {auth} from "../firebase";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuthState} from "react-firebase-hooks/auth";
@@ -22,7 +22,7 @@ export default function Register() {
 
     const handleSubmit = () => {
         // Not sure where this info has to go for now, so I just left it blank
-        console.log("You're submitting your form")
+        console.log(`Need to implement handleSumbit. Email ${email}, Password: ${password}, First Name: ${firstName}, Last Name: ${lastName}`)
     };
 
     const checkPassword = (confirmPassword: string) => {
