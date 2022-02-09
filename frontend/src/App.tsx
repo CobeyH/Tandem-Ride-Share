@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginForm from "./pages/LoginPage";
 import Groups from "./pages/Groups";
 import Rides from "./pages/Rides";
+import Ride from "./pages/Ride";
 import { ChakraProvider, Box, Grid, theme } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import Register from "./pages/Registration";
@@ -18,6 +19,7 @@ export const App = () => (
             <Route path="/login" element={<LoginForm />} />
             <Route path="/" element={<Groups groups= {[{name:"group1", number_members:3}, {name:"group2", number_members:6}]}/> } />
             <Route path="/rides" element={<Rides />} />
+            <Route path="/ride" element={<Ride />} />
             <Route path="/register" element={<Register />} />
           </Routes>
         </Router>
