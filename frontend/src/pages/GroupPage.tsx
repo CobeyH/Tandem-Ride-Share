@@ -3,7 +3,7 @@ import {Box, Flex, Heading, Spinner, Text} from "@chakra-ui/react";
 import {useNavigate, useParams} from "react-router-dom";
 import {db} from "../firebase";
 import {ref} from "firebase/database";
-import {Group} from "./Groups";
+import {Group} from "./GroupsListPage";
 import {Val} from "react-firebase-hooks/database/dist/database/types";
 import {useObjectVal} from "react-firebase-hooks/database";
 
