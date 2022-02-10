@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ref, push, set } from "firebase/database";
 import { Ride, defaultMapCenter } from "./RidePage";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { icon } from "leaflet";
 
 type ValidatableField<T> = {
   field: T;
@@ -40,6 +41,17 @@ const CreateGroup = () => {
 
   const navigate = useNavigate();
 
+  const startIcon = icon({
+    iconUrl: "Arrow Circle Up_8.png",
+    iconSize: [96, 96],
+    iconAnchor: [48, 92],
+  });
+  const endIcon = icon({
+    iconUrl: "Arrow Circle Down_8.png",
+    iconSize: [96, 96],
+    iconAnchor: [48, 92],
+  });
+
   return (
     <>
       <Heading>Create Ride</Heading>
@@ -69,8 +81,8 @@ const CreateGroup = () => {
         </Button>
       </InputGroup>
       <MapContainer center={defaultMapCenter} zoom={12} scrollWheelZoom={false}>
-        <DraggableMarker onDragEnd={onDragEnd} />
-        <DraggableMarker onDragEnd={onDragStart} />
+        <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
+        <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -82,18 +94,19 @@ const CreateGroup = () => {
 
 export default CreateGroup;
 
-interface PositionCallback {
+interface MarkerProperties {
   onDragEnd: (position: L.LatLng) => void;
+  icon: L.Icon;
 }
 
-const DraggableMarker = ({ onDragEnd }: PositionCallback) => {
+const DraggableMarker = (props: MarkerProperties) => {
   const markerRef = useRef<L.Marker>(null);
   const eventHandlers = useMemo(
     () => ({
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
-          onDragEnd(marker.getLatLng());
+          props.onDragEnd(marker.getLatLng());
         }
       },
     }),
@@ -106,6 +119,7 @@ const DraggableMarker = ({ onDragEnd }: PositionCallback) => {
       eventHandlers={eventHandlers}
       position={defaultMapCenter}
       ref={markerRef}
+      icon={props.icon}
     />
   );
 };
