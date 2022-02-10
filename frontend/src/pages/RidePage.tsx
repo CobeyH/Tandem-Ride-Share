@@ -7,10 +7,12 @@ import { db } from "../firebase";
 import { Box, Heading } from "@chakra-ui/react";
 import { latLng, LatLng } from 'leaflet';
 
+export const defaultMapCenter = latLng([48.46557,-123.314736]);
+
 export default function RidePage() {
   const { rideId } = useParams();
   const [ride] = useObjectVal<Ride>(ref(db, "rides/" + rideId));
-  let center = latLng([48.46557,-123.314736]);
+  let center = defaultMapCenter;
   let startMarker, endMarker;
   if (ride) {
     center = findMidpoint(latLng(ride.start), latLng(ride.end));
