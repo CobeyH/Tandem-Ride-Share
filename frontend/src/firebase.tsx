@@ -4,14 +4,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import {
-  getDatabase,
-  query,
-  ref,
-  set,
-  get,
-  equalTo,
-} from "firebase/database";
+import { getDatabase, query, ref, set, get, equalTo } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
