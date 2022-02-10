@@ -1,13 +1,13 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { ref, push } from "firebase/database";
 import { Ride, defaultMapCenter } from "./RidePage";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 
-type ValidatableFiled<T> = {
+type ValidatableField<T> = {
   field: T;
   invalid: boolean;
 };
@@ -17,13 +17,18 @@ const createRide = async (ride: Ride) => await push(ref(db, "rides"), ride);
 const CreateGroup = () => {
   const [user] = useAuthState(auth);
   const [{ field: title, invalid: invalidTitle }, setTitle] = useState<
-    ValidatableFiled<string>
+    ValidatableField<string>
   >({
     field: user ? user.displayName + "'s Ride" : "",
     invalid: false,
   });
-
   const isInvalidTitle = (name: string) => name.length === 0;
+
+  const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
+  function onDragEnd(position: L.LatLng) {
+    setStartPosition([position.lat, position.lng]);
+  }
+
   const navigate = useNavigate();
 
   return (
@@ -44,16 +49,18 @@ const CreateGroup = () => {
         />
         <Button
           onClick={() => {
-            createRide({ title, start: [0, 0], end: [0, 0] }).then((id) => {
-              navigate(`/ride/${id}`);
-            });
+            createRide({ title, start: startPosition, end: [0, 0] }).then(
+              (id) => {
+                navigate(`/ride/${id}`);
+              }
+            );
           }}
         >
           Create
         </Button>
       </InputGroup>
       <MapContainer center={defaultMapCenter} zoom={12} scrollWheelZoom={false}>
-        <DraggableMarker />
+        <DraggableMarker onDragEnd={onDragEnd} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -65,39 +72,30 @@ const CreateGroup = () => {
 
 export default CreateGroup;
 
-function DraggableMarker() {
-  const [draggable, setDraggable] = useState(false);
-  const [position, setPosition] = useState(defaultMapCenter);
+interface PositionCallback {
+  onDragEnd: (position: L.LatLng) => void;
+}
+
+const DraggableMarker = ({ onDragEnd }: PositionCallback) => {
   const markerRef = useRef<L.Marker>(null);
   const eventHandlers = useMemo(
     () => ({
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
-          setPosition(marker.getLatLng());
+          onDragEnd(marker.getLatLng());
         }
       },
     }),
     []
   );
-  const toggleDraggable = useCallback(() => {
-    setDraggable((d) => !d);
-  }, []);
 
   return (
     <Marker
-      draggable={draggable}
+      draggable={true}
       eventHandlers={eventHandlers}
-      position={position}
+      position={defaultMapCenter}
       ref={markerRef}
-    >
-      <Popup minWidth={90}>
-        <span onClick={toggleDraggable}>
-          {draggable
-            ? "Marker is draggable"
-            : "Click here to make marker draggable"}
-        </span>
-      </Popup>
-    </Marker>
+    />
   );
-}
+};
