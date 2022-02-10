@@ -31,20 +31,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "cd .. && husky install frontend/.husky"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "*.tsx": [
-      "./node_modules/.bin/eslint --fix",
-      "git add"
+    "src/**/*.{tsx, ts, json}": [
+      "eslint --fix"
     ]
   },
   "browserslist": {
