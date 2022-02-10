@@ -4,7 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { ref, set } from "firebase/database";
-import { Group } from "./Groups";
+import { Group } from "./GroupsListPage";
 
 type ValidatableFiled<T> = {
   field: T;
