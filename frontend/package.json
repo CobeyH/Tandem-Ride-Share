@@ -38,7 +38,7 @@
     "extends": "react-app"
   },
   "lint-staged": {
-    "src/**/*.{tsx, ts, json}": [
+    "*.{tsx, ts, json}": [
       "eslint --fix"
     ]
   },
