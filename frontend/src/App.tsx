@@ -10,7 +10,7 @@ import GroupPage from "./pages/GroupPage";
 import Ride from "./pages/RidePage";
 
 export const App = () => (
-    <ChakraProvider theme={theme}>
+     <ChakraProvider theme={theme}>
         <Box w="100%" h="200px"/>
         <Box textAlign="center" fontSize="xl">
             <Grid minH="100vh" p={3}>
