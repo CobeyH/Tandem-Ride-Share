@@ -1,10 +1,11 @@
 import * as React from "react";
-import {Box, Flex, Heading, Spinner, Text} from "@chakra-ui/react";
+import {Center, Heading, Spinner, Text} from "@chakra-ui/react";
 import {useNavigate, useParams} from "react-router-dom";
 import {db} from "../firebase";
 import {ref} from "firebase/database";
 import {Group} from "./Groups";
 import {Val} from "react-firebase-hooks/database/dist/database/types";
+
 import {useObjectVal} from "react-firebase-hooks/database";
 
 export default function GroupPage() {
@@ -18,11 +19,7 @@ export default function GroupPage() {
     const [group, loading, error] = useObjectVal<Group>(ref(db, `groups/${groupId}`))
 
     return (
-        <Flex width="full" align="start" justifyContent="center">
-            <Box textAlign="center">
-                <Heading>Rides Page</Heading>
-            </Box>
-
+        <Center>
             {loading ?
                 <Spinner/> :
                 (error ?
@@ -33,8 +30,7 @@ export default function GroupPage() {
                         )
                 )
             }
-
-        </Flex>
+        </Center>
     );
 }
 

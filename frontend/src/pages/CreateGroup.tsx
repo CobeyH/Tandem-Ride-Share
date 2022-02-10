@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Heading, Input, InputGroup, Text} from "@chakra-ui/react";
+import {Box, Button, Center, Heading, Input, InputGroup, Text} from "@chakra-ui/react";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth, db} from "../firebase";
 import {useNavigate} from "react-router-dom";
@@ -24,28 +24,30 @@ const CreateGroup = () => {
     const navigate = useNavigate();
 
     return (
-        <>
-            <Heading>Create Group</Heading>
-            <InputGroup>
-                <Text mb={"8px"}>Name</Text>
-                <Input
-                    value={name}
-                    placeholder={"name"}
-                    onInput={e => setName({
-                        field: e.currentTarget.value,
-                        invalid: isInvalidName(e.currentTarget.value)
-                    })}
-                    isInvalid={invalidName}/>
-                <Button onClick={() => {
-                    const id = `${user?.uid ?? "THIS IS A BUG"}_${name}`;
+        <Center>
+            <Box>
+                <Heading>Create Group</Heading>
+                <InputGroup>
+                    <Text mb={"8px"}>Name</Text>
+                    <Input
+                        value={name}
+                        placeholder={"name"}
+                        onInput={e => setName({
+                            field: e.currentTarget.value,
+                            invalid: isInvalidName(e.currentTarget.value)
+                        })}
+                        isInvalid={invalidName}/>
+                    <Button onClick={() => {
+                        const id = `${user?.uid ?? "THIS IS A BUG"}_${name}`;
 
-                    createGroup({id, name, rides: []}).then(() => {
-                        console.log("hello");
-                        navigate(`/group/${id}`);
-                    })
-                }}>Create</Button>
-            </InputGroup>
-        </>
+                        createGroup({id, name, rides: []}).then(() => {
+                            console.log("hello");
+                            navigate(`/group/${id}`);
+                        })
+                    }}>Create</Button>
+                </InputGroup>
+            </Box>
+        </Center>
     );
 }
 
