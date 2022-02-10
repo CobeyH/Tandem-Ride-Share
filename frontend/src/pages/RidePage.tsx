@@ -6,6 +6,9 @@ import { useObjectVal } from "react-firebase-hooks/database";
 import { db } from "../firebase";
 import { Box, Heading } from "@chakra-ui/react";
 import { latLng, LatLng } from "leaflet";
+import { icon } from "leaflet";
+import startIconImg from "../images/Arrow Circle Up_8.png";
+import endIconImg from "../images/Arrow Circle Down_8.png";
 
 export const defaultMapCenter = latLng([48.46557, -123.314736]);
 
@@ -16,8 +19,18 @@ export default function RidePage() {
   let startMarker, endMarker;
   if (ride) {
     center = findMidpoint(latLng(ride.start), latLng(ride.end));
-    startMarker = <Marker position={ride.start} />;
-    endMarker = <Marker position={ride.end} />;
+    const startIcon = icon({
+      iconUrl: startIconImg,
+      iconSize: [96, 96],
+      iconAnchor: [48, 92],
+    });
+    const endIcon = icon({
+      iconUrl: endIconImg,
+      iconSize: [96, 96],
+      iconAnchor: [48, 92],
+    });
+    startMarker = <Marker position={ride.start} icon={startIcon} />;
+    endMarker = <Marker position={ride.end} icon={endIcon} />;
   } else {
     startMarker = endMarker = null;
   }
