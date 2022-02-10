@@ -39,7 +39,7 @@
   },
   "lint-staged": {
     "*.{tsx, ts, json}": [
-      "eslint --fix"
+      "npx eslint --fix"
     ]
   },
   "browserslist": {
