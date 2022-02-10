@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {Button, Heading, Input, InputGroup, Text} from "@chakra-ui/react";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth, db} from "../firebase";
@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {ref, push} from "firebase/database";
 import {Ride,defaultMapCenter} from "./RidePage";
 import {MapContainer,TileLayer,Marker} from "react-leaflet";
+import { LeafletEvent } from "leaflet";
 
 type ValidatableFiled<T> = {
     field: T
@@ -51,6 +52,10 @@ const CreateGroup = () => {
                 <Marker 
                     position={defaultMapCenter} 
                     draggable={true}
+                    eventHandlers={{
+                        move: (event: LeafletEvent) => {
+                        }
+                    }}
                 />
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
