@@ -1,12 +1,11 @@
-import React, {useRef, useState} from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Button, Heading, Input, InputGroup, Text} from "@chakra-ui/react";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth, db} from "../firebase";
 import {useNavigate} from "react-router-dom";
 import {ref, push} from "firebase/database";
 import {Ride,defaultMapCenter} from "./RidePage";
-import {MapContainer,TileLayer,Marker} from "react-leaflet";
-import { LeafletEvent } from "leaflet";
+import {MapContainer,TileLayer,Marker, Popup} from "react-leaflet";
 
 type ValidatableFiled<T> = {
     field: T
@@ -53,8 +52,7 @@ const CreateGroup = () => {
                     position={defaultMapCenter} 
                     draggable={true}
                     eventHandlers={{
-                        move: (event: LeafletEvent) => {
-                        }
+                        
                     }}
                 />
                 <TileLayer
@@ -67,3 +65,39 @@ const CreateGroup = () => {
 }
 
 export default CreateGroup
+
+function DraggableMarker() {
+    const [draggable, setDraggable] = useState(false);
+    const [position, setPosition] = useState(defaultMapCenter);
+    const markerRef = useRef<L.Marker>(null);
+    const eventHandlers = useMemo(
+        () => ({
+        dragend() {
+            const marker = markerRef.current;
+            if (marker != null) {
+                setPosition(marker.getLatLng())
+            }
+        },
+        }),
+        [],
+    );
+    const toggleDraggable = useCallback(() => {
+      setDraggable((d) => !d)
+    }, [])
+  
+    return (
+      <Marker
+        draggable={draggable}
+        eventHandlers={eventHandlers}
+        position={position}
+        ref={markerRef}>
+        <Popup minWidth={90}>
+          <span onClick={toggleDraggable}>
+            {draggable
+              ? 'Marker is draggable'
+              : 'Click here to make marker draggable'}
+          </span>
+        </Popup>
+      </Marker>
+    )
+  }
