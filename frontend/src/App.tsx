@@ -7,6 +7,7 @@ import {ColorModeSwitcher} from "./ColorModeSwitcher";
 import Register from "./pages/Registration";
 import CreateGroup from "./pages/CreateGroup";
 import GroupPage from "./pages/GroupPage";
+import Ride from "./pages/RidePage";
 
 export const App = () => (
     <ChakraProvider theme={theme}>
@@ -21,6 +22,7 @@ export const App = () => (
                             <Route path="/group/new" element={<CreateGroup/>}/>
                             <Route path="/group/:groupId" element={<GroupPage/>}/>
                         <Route path="/register" element={<Register/>}/>
+                        <Route path="/ride/:rideId" element={<Ride/>}/>
                     </Routes>
                 </Router>
             </Grid>
