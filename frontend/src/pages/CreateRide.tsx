@@ -7,6 +7,8 @@ import { ref, push, set } from "firebase/database";
 import { Ride, defaultMapCenter } from "./RidePage";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { icon } from "leaflet";
+import startIconImg from "../images/Arrow Circle Up_8.png";
+import endIconImg from "../images/Arrow Circle Down_8.png";
 
 type ValidatableField<T> = {
   field: T;
@@ -42,12 +44,12 @@ const CreateGroup = () => {
   const navigate = useNavigate();
 
   const startIcon = icon({
-    iconUrl: "Arrow Circle Up_8.png",
+    iconUrl: startIconImg,
     iconSize: [96, 96],
     iconAnchor: [48, 92],
   });
   const endIcon = icon({
-    iconUrl: "Arrow Circle Down_8.png",
+    iconUrl: endIconImg,
     iconSize: [96, 96],
     iconAnchor: [48, 92],
   });
