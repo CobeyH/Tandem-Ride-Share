@@ -77,7 +77,7 @@ export const registerWithEmailAndPassword = async (
     console.log(user.uid, user.displayName, user.email);
     await set(ref(db, "users/" + user.uid), {
       uid: user.uid,
-      name: user.displayName,
+      name: name,
       authProvider: "local",
       email: user.email,
     });
