@@ -23,11 +23,9 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Create handler for the "sign in" button.
-  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
+
+  const handleEmailLogin = () => {
     loginWithEmailAndPassword(email, password);
-    navigate(`/`);
   };
 
   return (
@@ -37,27 +35,20 @@ export default function Login() {
           <Heading>Login</Heading>
         </Box>
         <Box my={4} textAlign="left">
-          <form onSubmit={handleSubmit}>
-            <FormControl isRequired>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                placeholder="test@test.com"
-                onChange={(event) => setEmail(event.currentTarget.value)}
-              />
-            </FormControl>
-            <FormControl mt={6} isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                placeholder="*******"
-                onChange={(event) => setPassword(event.currentTarget.value)}
-              />
-            </FormControl>
-            <Button width="full" mt={4} type="submit">
-              Sign In
-            </Button>
-          </form>
+          <input
+            type="email"
+            placeholder="test@test.com"
+            onChange={(event) => setEmail(event.currentTarget.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="*******"
+            onChange={(event) => setPassword(event.currentTarget.value)}
+          />
+          <Button width="full" mt={4} onClick={handleEmailLogin}>
+            Sign In
+          </Button>
           <Button width="full" mt={4} onClick={signInWithGoogle}>
             Sign In With Google
           </Button>
