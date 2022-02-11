@@ -11,8 +11,10 @@ type ValidatableFiled<T> = {
   invalid: boolean;
 };
 
-const createGroup = async (group: Group) =>
+const createGroup = async (group: Group, userId: string) => {
+  group.members[userId] = true;
   await set(ref(db, `groups/${group.id}`), group);
+};
 
 const CreateGroup = () => {
   const [user] = useAuthState(auth);
@@ -44,12 +46,12 @@ const CreateGroup = () => {
         />
         <Button
           onClick={() => {
-            const id = `${user?.uid ?? "THIS IS A BUG"}_${name}`;
-
-            createGroup({ id, name, rides: [] }).then(() => {
-              console.log("hello");
-              navigate(`/group/${id}`);
-            });
+            if (user?.uid !== undefined) {
+              const id = `${user.uid}_${name}`;
+              createGroup({ id, name, rides: [], members: {} }, user.uid).then(
+                () => navigate(`/group/${id}`)
+              );
+            }
           }}
         >
           Create
