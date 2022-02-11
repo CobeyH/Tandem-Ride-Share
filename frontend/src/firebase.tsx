@@ -66,25 +66,26 @@ export async function loginWithEmailAndPassword(
   }
 }
 
-export async function registerWithEmailAndPassword(
+export const registerWithEmailAndPassword = async (
   name: string,
   email: string,
   password: string
-) {
+) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
+    console.log(user.uid, user.displayName, user.email);
     await set(ref(db, "users/" + user.uid), {
       uid: user.uid,
-      name,
+      name: user.displayName,
       authProvider: "local",
-      email,
+      email: user.email,
     });
   } catch (err) {
     console.error(err);
     alert(err);
   }
-}
+};
 
 export async function sendPasswordReset(email: string) {
   try {
