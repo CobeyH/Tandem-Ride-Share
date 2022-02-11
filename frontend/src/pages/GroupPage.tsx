@@ -10,7 +10,6 @@ import { useObjectVal } from "react-firebase-hooks/database";
 export default function GroupPage() {
   const navigate = useNavigate();
   const groupId = useParams()["groupId"];
-  console.log(useParams());
   if (groupId === undefined) {
     console.log("figure something better to do here");
     navigate("/");
