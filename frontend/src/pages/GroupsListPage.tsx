@@ -8,6 +8,7 @@ import {
   Link,
   Spinner,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
@@ -38,27 +39,29 @@ export default function GroupsListPage() {
       <Box textAlign={"center"}>
         <Heading>Groups Page</Heading>
         <Button onClick={logout}>Logout</Button>
-        {groups
-          ?.filter(({ members }) => {
-            if (
-              user !== null &&
-              user !== undefined &&
-              typeof (user ?? null) === "object" // we love javascript.
-            ) {
-              return members[user.uid] ?? false;
-            } else {
-              console.log("null users should be kicked back to login.");
-              return false;
-            }
-          })
-          ?.map((groups, i) => (
-            <Link key={i} href={`group/${groups.id}`}>
-              {groups.name}
-            </Link>
-          ))}
+        <VStack>
+          {groups
+            ?.filter(({ members }) => {
+              if (
+                user !== null &&
+                user !== undefined &&
+                typeof (user ?? null) === "object" // we love javascript.
+              ) {
+                return members[user.uid] ?? false;
+              } else {
+                console.log("null users should be kicked back to login.");
+                return false;
+              }
+            })
+            ?.map((groups, i) => (
+              <Link key={i} href={`group/${groups.id}`} margin={"2rem"}>
+                {groups.name}
+              </Link>
+            ))}
+        </VStack>
         {loadingGroups ? <Spinner /> : null}
         {error ? <Text>{JSON.stringify(error)}</Text> : null}
-        <Link href={"group/new"}>Create a Group</Link>
+        <Button onClick={() => navigate("group/new")}>Create a Group</Button>
       </Box>
     </Center>
   );
