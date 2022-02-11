@@ -8,7 +8,7 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
-import { signInWithGoogle, auth } from "../firebase";
+import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -26,7 +26,7 @@ export default function Login() {
   // Create handler for the "sign in" button.
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    alert(`Email: ${email} Password: ${password}`);
+    loginWithEmailAndPassword(email, password);
     navigate(`/`);
   };
 
