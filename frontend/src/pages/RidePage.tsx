@@ -10,6 +10,9 @@ import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
 
+const mapBoxAccessToken =
+  "pk.eyJ1IjoibWFyY3VzZHVubiIsImEiOiJja3ppeTllOTAxanBuMm9uMnRwMHZ1dmF6In0.gHleMGVyUBmw_na8Elfzdg";
+
 export const defaultMapCenter = latLng([48.46557, -123.314736]);
 
 export default function RidePage() {
@@ -43,8 +46,10 @@ export default function RidePage() {
         {startMarker}
         {endMarker}
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          id="mapbox/streets-v11"
+          accessToken={mapBoxAccessToken}
         />
       </MapContainer>
     </Box>
