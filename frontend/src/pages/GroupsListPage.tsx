@@ -15,7 +15,12 @@ import { auth, db, logout } from "../firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 
-export type Group = { id: string; name: string; rides: string[] };
+export type Group = {
+  id: string;
+  name: string;
+  rides: string[];
+  members: string[];
+};
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -33,11 +38,15 @@ export default function GroupsListPage() {
       <Box textAlign={"center"}>
         <Heading>Groups Page</Heading>
         <Button onClick={logout}>Logout</Button>
-        {groups?.map((groups, i) => (
-          <Link key={i} href={`group/${groups.id}`}>
-            {groups.name}
-          </Link>
-        ))}
+        {groups
+          ?.filter(({ members }) =>
+            (members ?? []).includes(user?.uid ?? "INVALID")
+          )
+          ?.map((groups, i) => (
+            <Link key={i} href={`group/${groups.id}`}>
+              {groups.name}
+            </Link>
+          ))}
         {loadingGroups ? <Spinner /> : null}
         {error ? <Text>{JSON.stringify(error)}</Text> : null}
         <Link href={"group/new"}>Create a Group</Link>

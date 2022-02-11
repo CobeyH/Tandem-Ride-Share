@@ -44,12 +44,16 @@ const CreateGroup = () => {
         />
         <Button
           onClick={() => {
-            const id = `${user?.uid ?? "THIS IS A BUG"}_${name}`;
+            if (user?.uid !== undefined) {
+              const id = `${user.uid}_${name}`;
 
-            createGroup({ id, name, rides: [] }).then(() => {
-              console.log("hello");
-              navigate(`/group/${id}`);
-            });
+              createGroup({ id, name, rides: [], members: [user?.uid] }).then(
+                () => {
+                  console.log("hello");
+                  navigate(`/group/${id}`);
+                }
+              );
+            }
           }}
         >
           Create
