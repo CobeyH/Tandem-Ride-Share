@@ -39,9 +39,18 @@ export default function GroupsListPage() {
         <Heading>Groups Page</Heading>
         <Button onClick={logout}>Logout</Button>
         {groups
-          ?.filter(({ members }) =>
-            (members ?? []).includes(user?.uid ?? "INVALID")
-          )
+          ?.filter(({ members }) => {
+            if (
+              user !== null &&
+              user !== undefined &&
+              typeof (user ?? null) === "object" // we love javascript.
+            ) {
+              return (members ?? []).includes(user.uid);
+            } else {
+              console.log("null users should be kicked back to login.");
+              return false;
+            }
+          })
           ?.map((groups, i) => (
             <Link key={i} href={`group/${groups.id}`}>
               {groups.name}
