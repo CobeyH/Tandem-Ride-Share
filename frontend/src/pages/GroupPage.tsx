@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Box, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
+import { Center, Flex, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
-import { ref } from "firebase/database";
+import { equalTo, orderByChild, query, ref } from "firebase/database";
 import { Group } from "./GroupsListPage";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
+import { Ride } from "./RidePage";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -21,10 +22,6 @@ export default function GroupPage() {
 
   return (
     <Flex width="full" align="start" justifyContent="center">
-      <Box textAlign="center">
-        <Heading>Rides Page</Heading>
-      </Box>
-
       {loading ? (
         <Spinner />
       ) : error ? (
@@ -38,8 +35,19 @@ export default function GroupPage() {
   );
 }
 
-const SingleGroup = ({ group }: { group: Val<Group> }) => (
-  <>
-    <Heading>{group.name}</Heading>
-  </>
-);
+const SingleGroup = ({ group }: { group: Val<Group> }) => {
+  const [snapshots, loading, error] = useListVals<Ride>(
+    query(ref(db, "rides"), orderByChild("groupId"), equalTo(group.id))
+  );
+
+  return (
+    <VStack spacing="24px" align="stretch">
+      <Heading>{group.name}</Heading>
+      {error && <strong>Error: {error}</strong>}
+      {loading && <Center>Loading...</Center>}
+      {!loading &&
+        snapshots &&
+        snapshots.map((v) => <Center key={v.title}>{v.title}</Center>)}
+    </VStack>
+  );
+};
