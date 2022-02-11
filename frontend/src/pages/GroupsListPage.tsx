@@ -45,7 +45,7 @@ export default function GroupsListPage() {
               user !== undefined &&
               typeof (user ?? null) === "object" // we love javascript.
             ) {
-              return (members ?? []).includes(user.uid);
+              return (members ?? []).includes(user.uid); // this is slow when we get a lot of groups but should be fine for now.
             } else {
               console.log("null users should be kicked back to login.");
               return false;
