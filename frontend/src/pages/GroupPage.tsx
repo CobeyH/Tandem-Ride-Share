@@ -1,12 +1,19 @@
 import * as React from "react";
-import { Center, Flex, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 import { equalTo, orderByChild, query, ref } from "firebase/database";
 import { Group } from "./GroupsListPage";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import { useListVals, useObjectVal } from "react-firebase-hooks/database";
-import { Ride } from "./RidePage";
+import { useList, useObjectVal } from "react-firebase-hooks/database";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -36,7 +43,8 @@ export default function GroupPage() {
 }
 
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
-  const [snapshots, loading, error] = useListVals<Ride>(
+  const navigate = useNavigate();
+  const [snapshots, loading, error] = useList(
     query(ref(db, "rides"), orderByChild("groupId"), equalTo(group.id))
   );
 
@@ -47,7 +55,23 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       {loading && <Center>Loading...</Center>}
       {!loading &&
         snapshots &&
-        snapshots.map((v) => <Center key={v.title}>{v.title}</Center>)}
+        snapshots.map((v) => (
+          <Button
+            key={v.key}
+            onClick={() => {
+              navigate(`/ride/${v.key}`);
+            }}
+          >
+            {v.val().title}
+          </Button>
+        ))}
+      <Button
+        onClick={() => {
+          navigate(`/group/${group.id}/ride/new`);
+        }}
+      >
+        New Ride
+      </Button>
     </VStack>
   );
 };
