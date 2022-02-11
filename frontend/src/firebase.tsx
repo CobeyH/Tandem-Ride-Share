@@ -3,6 +3,9 @@ import {
   getAuth,
   signInWithPopup,
   signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getDatabase, query, ref, set, get, equalTo } from "firebase/database";
 
@@ -50,6 +53,48 @@ export const signInWithGoogle = async () => {
     console.error(err);
   }
 };
+
+export async function loginWithEmailAndPassword(
+  email: string,
+  password: string
+) {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.error(err);
+    alert(err);
+  }
+}
+
+export const registerWithEmailAndPassword = async (
+  name: string,
+  email: string,
+  password: string
+) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+    console.log(user.uid, user.displayName, user.email);
+    await set(ref(db, "users/" + user.uid), {
+      uid: user.uid,
+      name: name,
+      authProvider: "local",
+      email: user.email,
+    });
+  } catch (err) {
+    console.error(err);
+    alert(err);
+  }
+};
+
+export async function sendPasswordReset(email: string) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Check your email for reset link");
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 export const logout = () => {
   signOut(auth);
