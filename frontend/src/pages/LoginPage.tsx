@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Flex,
-  Box,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-} from "@chakra-ui/react";
+import { Flex, Box, Heading, Button } from "@chakra-ui/react";
 import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Login() {
@@ -52,6 +44,9 @@ export default function Login() {
           <Button width="full" mt={4} onClick={signInWithGoogle}>
             Sign In With Google
           </Button>
+          <div>
+            Need an account? <Link to="/register">Register</Link> now.
+          </div>
         </Box>
       </Box>
     </Flex>
