@@ -28,6 +28,10 @@ const firebaseConfig = {
   measurementId: "G-4QXLHB625R",
 };
 
+export const DB_GROUP_COLLECT = "groups";
+export const DB_USER_COLLECT = "users";
+export const DB_RIDE_COLLECT = "rides";
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig, "web-frontend");
 export const auth = getAuth(app);
@@ -38,11 +42,11 @@ export const signInWithGoogle = async () => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
-    const q = query(ref(db, "users"), equalTo(user.uid, "uid"));
+    const q = query(ref(db, DB_USER_COLLECT), equalTo(user.uid, "uid"));
     const snapshot = await get(q);
     // If the user doesn't exist then add them.
     if (!snapshot.exists()) {
-      await set(ref(db, "users/" + user.uid), {
+      await set(ref(db, `${DB_USER_COLLECT}/${user.uid}`), {
         uid: user.uid,
         name: user.displayName,
         authProvider: "google",
@@ -75,7 +79,7 @@ export const registerWithEmailAndPassword = async (
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     console.log(user.uid, user.displayName, user.email);
-    await set(ref(db, "users/" + user.uid), {
+    await set(ref(db, `${DB_USER_COLLECT}/${user.uid}`), {
       uid: user.uid,
       name: name,
       authProvider: "local",
