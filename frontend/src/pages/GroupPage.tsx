@@ -1,8 +1,5 @@
 import * as React from "react";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   Center,
   Flex,
@@ -11,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 import { equalTo, orderByChild, query, ref } from "firebase/database";
 import { Group } from "./GroupsListPage";
@@ -36,28 +33,13 @@ export default function GroupPage() {
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : group ? (
-        <>
-          <NavBar />
-          <SingleGroup group={group} />
-        </>
+        <SingleGroup group={group} />
       ) : (
         <Text>No such group exists</Text>
       )}
     </Flex>
   );
 }
-
-const NavBar = () => {
-  return (
-    <Breadcrumb>
-      <BreadcrumbItem>
-        <BreadcrumbLink as={Link} to="/">
-          Home
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-    </Breadcrumb>
-  );
-};
 
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
