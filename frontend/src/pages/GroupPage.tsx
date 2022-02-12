@@ -11,7 +11,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase";
 import { equalTo, orderByChild, query, ref } from "firebase/database";
-import { Group } from "./GroupsListPage";
+import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Text, Box, Button, Center, Heading, Spinner } from "@chakra-ui/react";
 import { useObjectVal } from "react-firebase-hooks/database";
-import { Group } from "./GroupsListPage";
+import { Group } from "./CreateGroup";
 import { ref, set } from "firebase/database";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
