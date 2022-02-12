@@ -61,7 +61,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               navigate(`/ride/${v.key}`);
             }}
           >
-            {v.val().title}
+            {v.val().name}
           </Button>
         ))}
       <Button
