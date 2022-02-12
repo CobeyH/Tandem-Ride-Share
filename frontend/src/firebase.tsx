@@ -29,6 +29,7 @@ const firebaseConfig = {
 };
 
 export const DB_GROUP_COLLECT = "groups";
+export const DB_GROUP_RIDES_FIELD = DB_GROUP_COLLECT + "/rides";
 export const DB_USER_COLLECT = "users";
 export const DB_RIDE_COLLECT = "rides";
 

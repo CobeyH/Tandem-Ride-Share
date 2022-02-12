@@ -9,6 +9,7 @@ import { latLng, LatLng } from "leaflet";
 import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
+import { Ride } from "./CreateRide";
 
 const mapBoxAccessToken =
   "pk.eyJ1IjoibWFyY3VzZHVubiIsImEiOiJja3ppeTllOTAxanBuMm9uMnRwMHZ1dmF6In0.gHleMGVyUBmw_na8Elfzdg";
@@ -65,12 +66,6 @@ function ChangeView({ center, zoom }: MapView) {
 function findMidpoint(a: LatLng, b: LatLng) {
   return latLng((a.lat + b.lat) / 2, (a.lng + b.lng) / 2);
 }
-
-export type Ride = {
-  title: string;
-  start: [number, number];
-  end: [number, number];
-};
 
 type MapView = {
   center: LatLng;
