@@ -15,13 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
-
-export type Group = {
-  id: string;
-  name: string;
-  rides: string[];
-  members: { [key: string]: boolean };
-};
+import { Group } from "./CreateGroup";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
