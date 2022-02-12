@@ -1,7 +1,13 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, DB_GROUP_COLLECT, DB_RIDE_COLLECT } from "../firebase";
+import {
+  auth,
+  db,
+  DB_GROUP_COLLECT,
+  DB_KEY_SLUG_OPTS,
+  DB_RIDE_COLLECT,
+} from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
 import { defaultMapCenter } from "./RidePage";
@@ -24,7 +30,7 @@ export type Ride = {
 };
 
 const createRide = async (ride: Ride, groupId: string) => {
-  ride.id = slugify(ride.name);
+  ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
   if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${ride.id}`)))).exists()) {
     /* TODO: increment id */
     throw new Error("Group ID already exists");

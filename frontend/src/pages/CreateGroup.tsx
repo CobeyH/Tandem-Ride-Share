@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, DB_GROUP_COLLECT } from "../firebase";
+import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
 import slugify from "slugify";
@@ -19,7 +19,7 @@ export type Group = {
 };
 
 const createGroup = async (group: Group, userId: string) => {
-  group.id = slugify(group.name);
+  group.id = slugify(group.name, DB_KEY_SLUG_OPTS);
   if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${group.id}`)))).exists()) {
     /* TODO: increment id */
     throw new Error("Group ID already exists");

@@ -31,6 +31,14 @@ const firebaseConfig = {
 export const DB_GROUP_COLLECT = "groups";
 export const DB_USER_COLLECT = "users";
 export const DB_RIDE_COLLECT = "rides";
+export const DB_KEY_SLUG_OPTS = {
+  replacement: "-",
+  remove: undefined,
+  lower: true,
+  strict: true,
+  locale: "en",
+  trim: true,
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig, "web-frontend");
