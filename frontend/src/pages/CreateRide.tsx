@@ -1,13 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  auth,
-  db,
-  DB_GROUP_COLLECT,
-  DB_GROUP_RIDES_FIELD,
-  DB_RIDE_COLLECT,
-} from "../firebase";
+import { auth, db, DB_GROUP_COLLECT, DB_RIDE_COLLECT } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
 import { defaultMapCenter } from "./RidePage";
@@ -35,14 +29,7 @@ const createRide = async (ride: Ride, groupId: string) => {
     /* TODO: increment id */
     throw new Error("Group ID already exists");
   }
-  await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
-  await set(
-    ref(
-      db,
-      `${DB_GROUP_COLLECT}/${groupId}/${DB_GROUP_RIDES_FIELD}/${ride.id}`
-    ),
-    true
-  );
+  await set(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`), ride);
   return ride;
 };
 
