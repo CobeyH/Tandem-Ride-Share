@@ -36,7 +36,13 @@ const createRide = async (ride: Ride, groupId: string) => {
     throw new Error("Group ID already exists");
   }
   await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
-  await set(ref(db, `${DB_GROUP_RIDES_FIELD}/${ride.id}`), true);
+  await set(
+    ref(
+      db,
+      `${DB_GROUP_COLLECT}/${groupId}/${DB_GROUP_RIDES_FIELD}/${ride.id}`
+    ),
+    true
+  );
   return ride;
 };
 

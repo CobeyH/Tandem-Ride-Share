@@ -3,7 +3,7 @@ import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, DB_GROUP_COLLECT } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { equalTo, get, query, ref, set } from "firebase/database";
+import { get, query, ref, set } from "firebase/database";
 import slugify from "react-slugify";
 
 type ValidatableFiled<T> = {
