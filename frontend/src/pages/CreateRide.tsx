@@ -15,7 +15,7 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
-import slugify from "react-slugify";
+import slugify from "slugify";
 
 type ValidatableField<T> = {
   field: T;

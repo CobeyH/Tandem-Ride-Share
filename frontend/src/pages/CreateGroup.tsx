@@ -4,7 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, DB_GROUP_COLLECT } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
-import slugify from "react-slugify";
+import slugify from "slugify";
 
 type ValidatableFiled<T> = {
   field: T;
