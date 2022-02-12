@@ -1,17 +1,9 @@
 import * as React from "react";
 import { useEffect } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  Link,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, Heading, Link, Spinner, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db, logout } from "../firebase";
+import { auth, db } from "../firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 
@@ -37,7 +29,6 @@ export default function GroupsListPage() {
     <Center>
       <Box textAlign={"center"}>
         <Heading>Groups Page</Heading>
-        <Button onClick={logout}>Logout</Button>
         {groups
           ?.filter(({ members }) => {
             if (
