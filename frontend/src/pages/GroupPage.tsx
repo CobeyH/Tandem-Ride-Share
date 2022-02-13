@@ -14,6 +14,7 @@ import { ref } from "firebase/database";
 import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
+import RideCard from "../components/RideCard";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -54,16 +55,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       {loading && <Center>Loading...</Center>}
       {!loading &&
         snapshots &&
-        snapshots.map((v) => (
-          <Button
-            key={v.key}
-            onClick={() => {
-              navigate(`/ride/${v.key}`);
-            }}
-          >
-            {v.val().name}
-          </Button>
-        ))}
+        snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
       <Button
         onClick={() => {
           navigate(`/group/${group.id}/ride/new`);
