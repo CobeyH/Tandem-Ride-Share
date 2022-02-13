@@ -3,6 +3,7 @@ import { Flex, Box, Heading, Button } from "@chakra-ui/react";
 import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Header from "./Header";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,7 +22,13 @@ export default function Login() {
   };
 
   return (
-    <Flex width="full" align="center" justifyContent="center">
+    <Flex
+      width="full"
+      align="center"
+      justifyContent="center"
+      flexDirection="column"
+    >
+      <Header />
       <Box p={2}>
         <Box textAlign="center">
           <Heading>Login</Heading>

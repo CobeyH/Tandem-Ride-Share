@@ -7,6 +7,7 @@ import { logout, auth } from "../firebase";
 const Header = () => {
   return (
     <Flex
+      width="100%"
       align="center"
       justify="space-between"
       wrap="wrap"

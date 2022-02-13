@@ -9,11 +9,9 @@ import GroupPage from "./pages/GroupPage";
 import RidePage from "./pages/RidePage";
 import CreateRide from "./pages/CreateRide";
 import JoinGroup from "./pages/JoinGroup";
-import Header from "./pages/Header";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
-    <Header />
     <Router>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
