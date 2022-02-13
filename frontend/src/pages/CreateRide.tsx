@@ -1,28 +1,46 @@
 import React, { useMemo, useRef, useState } from "react";
 import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../firebase";
-import { useNavigate } from "react-router-dom";
-import { ref, push, set } from "firebase/database";
-import { Ride, defaultMapCenter } from "./RidePage";
+import {
+  auth,
+  db,
+  DB_GROUP_COLLECT,
+  DB_KEY_SLUG_OPTS,
+  DB_RIDE_COLLECT,
+} from "../firebase";
+import { useNavigate, useParams } from "react-router-dom";
+import { ref, set, get, query } from "firebase/database";
+import { defaultMapCenter } from "./RidePage";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
+import slugify from "slugify";
 
 type ValidatableField<T> = {
   field: T;
   invalid: boolean;
 };
 
-const ridesRef = ref(db, "rides");
-const createRide = async (ride: Ride) => {
-  const newRideRef = push(ridesRef);
-  await set(newRideRef, ride);
-  return newRideRef.key;
+export type Ride = {
+  id: string;
+  name: string;
+  start: [number, number];
+  end: [number, number];
 };
 
-const CreateGroup = () => {
+const createRide = async (ride: Ride, groupId: string) => {
+  ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
+  if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${ride.id}`)))).exists()) {
+    /* TODO: increment id */
+    throw new Error("Group ID already exists");
+  }
+  await set(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`), ride);
+  return ride;
+};
+
+const CreateRide = () => {
+  const { groupId } = useParams();
   const [user] = useAuthState(auth);
   const [{ field: title, invalid: invalidTitle }, setTitle] = useState<
     ValidatableField<string>
@@ -61,7 +79,7 @@ const CreateGroup = () => {
         <Text mb={"8px"}>Title</Text>
         <Input
           value={title}
-          placeholder={"Title"}
+          placeholder={"Ride Name"}
           onInput={(e) =>
             setTitle({
               field: e.currentTarget.value,
@@ -72,11 +90,17 @@ const CreateGroup = () => {
         />
         <Button
           onClick={() => {
-            createRide({ title, start: startPosition, end: endPosition }).then(
-              (id) => {
-                navigate(`/ride/${id}`);
-              }
-            );
+            if (groupId) {
+              const ride = {
+                id: "",
+                name: title,
+                start: startPosition,
+                end: endPosition,
+              };
+              createRide(ride, groupId).then(() =>
+                navigate(`/group/${groupId}`)
+              );
+            }
           }}
         >
           Create
@@ -94,7 +118,7 @@ const CreateGroup = () => {
   );
 };
 
-export default CreateGroup;
+export default CreateRide;
 
 interface MarkerProperties {
   onDragEnd: (position: L.LatLng) => void;

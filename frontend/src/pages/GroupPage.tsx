@@ -9,9 +9,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db } from "../firebase";
-import { equalTo, orderByChild, query, ref } from "firebase/database";
-import { Group } from "./GroupsListPage";
+import { db, DB_RIDE_COLLECT } from "../firebase";
+import { ref } from "firebase/database";
+import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 
@@ -44,7 +44,7 @@ export default function GroupPage() {
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
   const [snapshots, loading, error] = useList(
-    query(ref(db, "rides"), orderByChild("groupId"), equalTo(group.id))
+    ref(db, `${DB_RIDE_COLLECT}/${group.id}`)
   );
 
   return (
@@ -61,7 +61,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               navigate(`/ride/${v.key}`);
             }}
           >
-            {v.val().title}
+            {v.val().name}
           </Button>
         ))}
       <Button
