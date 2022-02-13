@@ -16,6 +16,7 @@ import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
 import slugify from "slugify";
+import Header from "./Header";
 
 type ValidatableField<T> = {
   field: T;
@@ -74,6 +75,12 @@ const CreateRide = () => {
 
   return (
     <>
+      <Header
+        pages={[
+          { label: "Group List", url: "/" },
+          { label: "Group", url: `/group/${groupId}` },
+        ]}
+      />
       <Heading>Create Ride</Heading>
       <InputGroup>
         <Text mb={"8px"}>Title</Text>

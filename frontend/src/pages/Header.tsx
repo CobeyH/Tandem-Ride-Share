@@ -1,12 +1,24 @@
-import { Flex, Button } from "@chakra-ui/react";
+import {
+  Flex,
+  Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from "@chakra-ui/react";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { logout, auth } from "../firebase";
 
-const Header = () => {
+export interface PageList {
+  pages?: { label: string; url: string }[];
+}
+
+const Header = (props: PageList) => {
   return (
     <Flex
+      width="100%"
       align="center"
       justify="space-between"
       wrap="wrap"
@@ -15,9 +27,26 @@ const Header = () => {
       color="white"
     >
       <ColorModeSwitcher justifySelf="flex-end" />
+      <Breadcrumbs pages={props.pages} />
       <LogoutButton />
     </Flex>
   );
+};
+
+const Breadcrumbs = (props: PageList) => {
+  if (!props || !props.pages || props.pages.length <= 0) {
+    return null;
+  }
+  const items = props.pages.map((p, i) => {
+    return (
+      <BreadcrumbItem key={i}>
+        <BreadcrumbLink as={Link} to={p.url}>
+          {p.label}
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+    );
+  });
+  return <Breadcrumb>{items}</Breadcrumb>;
 };
 
 const LogoutButton = () => {

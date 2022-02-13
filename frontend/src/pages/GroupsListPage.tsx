@@ -16,6 +16,7 @@ import { auth, db } from "../firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
+import Header from "./Header";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -29,33 +30,36 @@ export default function GroupsListPage() {
   }, [user, loading]);
 
   return (
-    <Center>
-      <Box textAlign={"center"}>
-        <Heading>Groups Page</Heading>
-        <VStack>
-          {groups
-            ?.filter(({ members }) => {
-              if (
-                user !== null &&
-                user !== undefined &&
-                typeof (user ?? null) === "object" // we love javascript.
-              ) {
-                return members[user.uid] ?? false;
-              } else {
-                console.log("null users should be kicked back to login.");
-                return false;
-              }
-            })
-            ?.map((groups, i) => (
-              <Link key={i} href={`group/${groups.id}`} margin={"2rem"}>
-                {groups.name}
-              </Link>
-            ))}
-        </VStack>
-        {loadingGroups ? <Spinner /> : null}
-        {error ? <Text>{JSON.stringify(error)}</Text> : null}
-        <Button onClick={() => navigate("group/new")}>Create a Group</Button>
-      </Box>
-    </Center>
+    <>
+      <Header />
+      <Center>
+        <Box textAlign={"center"}>
+          <Heading>Groups Page</Heading>
+          <VStack>
+            {groups
+              ?.filter(({ members }) => {
+                if (
+                  user !== null &&
+                  user !== undefined &&
+                  typeof (user ?? null) === "object" // we love javascript.
+                ) {
+                  return members[user.uid] ?? false;
+                } else {
+                  console.log("null users should be kicked back to login.");
+                  return false;
+                }
+              })
+              ?.map((groups, i) => (
+                <Link key={i} href={`group/${groups.id}`} margin={"2rem"}>
+                  {groups.name}
+                </Link>
+              ))}
+          </VStack>
+          {loadingGroups ? <Spinner /> : null}
+          {error ? <Text>{JSON.stringify(error)}</Text> : null}
+          <Button onClick={() => navigate("group/new")}>Create a Group</Button>
+        </Box>
+      </Center>
+    </>
   );
 }

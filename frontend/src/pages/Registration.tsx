@@ -6,6 +6,7 @@ import {
   registerWithEmailAndPassword,
   signInWithGoogle,
 } from "../firebase";
+import Header from "./Header";
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +23,7 @@ function Register() {
   }, [user, loading]);
   return (
     <div className="register">
+      <Header />
       <div className="register__container">
         <input
           type="text"

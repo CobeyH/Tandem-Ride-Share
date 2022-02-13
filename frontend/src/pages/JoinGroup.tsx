@@ -6,12 +6,14 @@ import { Group } from "./CreateGroup";
 import { ref, set } from "firebase/database";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Header from "./Header";
 
 const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
   const navigate = useNavigate();
 
   return (
     <Center>
+      <Header />
       <Box>
         <Button
           onClick={() => {
