@@ -5,6 +5,7 @@ import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
 import slugify from "slugify";
+import Header from "./Header";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -43,6 +44,7 @@ const CreateGroup = () => {
 
   return (
     <>
+      <Header pages={[{ label: "Group List", url: "/" }]} />
       <Heading>Create Group</Heading>
       <InputGroup>
         <Text mb={"8px"}>Name</Text>

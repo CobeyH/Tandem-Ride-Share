@@ -42,7 +42,12 @@ export default function RidePage() {
 
   return (
     <>
-      <Header />
+      <Header
+        pages={[
+          { label: "Group List", url: "/" },
+          { label: "TODO", url: "/" },
+        ]}
+      />
       <Box>
         <Heading>{center.toString()}</Heading>
         <MapContainer center={center} zoom={12} scrollWheelZoom={false}>

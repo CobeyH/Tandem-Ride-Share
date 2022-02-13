@@ -50,7 +50,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <Flex flexDirection="column" width="100%" align="center">
-      <Header />
+      <Header pages={[{ label: "Group List", url: "/" }]} />
       <VStack spacing="24px" align="c" width="20%">
         <Heading>{group.name}</Heading>
         {error && <strong>Error: {error}</strong>}

@@ -75,7 +75,12 @@ const CreateRide = () => {
 
   return (
     <>
-      <Header />
+      <Header
+        pages={[
+          { label: "Group List", url: "/" },
+          { label: "Group", url: `/group/${groupId}` },
+        ]}
+      />
       <Heading>Create Ride</Heading>
       <InputGroup>
         <Text mb={"8px"}>Title</Text>
