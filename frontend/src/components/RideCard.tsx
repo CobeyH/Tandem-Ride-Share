@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   AspectRatio,
   Box,
@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Ride } from "../pages/CreateRide";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { defaultMapCenter } from "../pages/RidePage";
 
 const mapBoxAccessToken =
@@ -18,6 +18,8 @@ const mapBoxAccessToken =
 
 export default function RideCard({ ride }: { ride: Ride }) {
   const { isOpen, onToggle } = useDisclosure();
+  const [map, setMap] = useState<L.Map | undefined>(undefined);
+
   return (
     <Box borderWidth="1px" borderRadius="lg" p="3" w="sm">
       <Flex onClick={onToggle}>
@@ -29,12 +31,18 @@ export default function RideCard({ ride }: { ride: Ride }) {
           <ChevronDownIcon w={6} h={6} />
         )}
       </Flex>
-      <Collapse in={isOpen}>
+      <Collapse
+        in={isOpen}
+        onAnimationComplete={() => {
+          if (map && isOpen) map.invalidateSize();
+        }}
+      >
         <AspectRatio ratio={16 / 10} mt="2">
           <MapContainer
             center={defaultMapCenter}
             zoom={12}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
+            whenCreated={setMap}
           >
             <TileLayer
               url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
@@ -42,20 +50,9 @@ export default function RideCard({ ride }: { ride: Ride }) {
               id="mapbox/streets-v11"
               accessToken={mapBoxAccessToken}
             />
-            <MapRefresher />
           </MapContainer>
         </AspectRatio>
       </Collapse>
     </Box>
   );
-}
-
-function MapRefresher() {
-  const map = useMap();
-  useEffect(() => {
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 400);
-  });
-  return null;
 }
