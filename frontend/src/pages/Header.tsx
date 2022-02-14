@@ -4,6 +4,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Spacer,
 } from "@chakra-ui/react";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -24,10 +25,12 @@ const Header = (props: PageList) => {
       wrap="wrap"
       padding={6}
       bg="teal.500"
+      marginBlockEnd={4}
       color="white"
     >
-      <ColorModeSwitcher justifySelf="flex-end" />
       <Breadcrumbs pages={props.pages} />
+      <Spacer />
+      <ColorModeSwitcher justifySelf="flex-end" />
       <LogoutButton />
     </Flex>
   );
