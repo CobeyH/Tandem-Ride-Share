@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
 import slugify from "slugify";
 import Header from "./Header";
+import DropZone from "../storage";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -81,6 +82,7 @@ const CreateGroup = () => {
               isInvalid={invalidName}
             />
           </HStack>
+          <DropZone />
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
