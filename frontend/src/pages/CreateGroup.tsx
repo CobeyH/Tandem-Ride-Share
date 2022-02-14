@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Input,
+  InputGroup,
+  Text,
+  Stack,
+  HStack,
+} from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +23,7 @@ type ValidatableFiled<T> = {
 export type Group = {
   id: string;
   name: string;
+  description: string;
   rides: string[];
   members: { [key: string]: boolean };
 };
@@ -38,6 +47,7 @@ const CreateGroup = () => {
     field: user ? user.displayName + "'s Group" : "",
     invalid: false,
   });
+  const [description, setDescription] = useState("");
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
@@ -45,32 +55,45 @@ const CreateGroup = () => {
   return (
     <>
       <Header pages={[{ label: "Group List", url: "/" }]} />
-      <Heading>Create Group</Heading>
-      <InputGroup>
-        <Text mb={"8px"}>Name</Text>
-        <Input
-          value={name}
-          placeholder={"name"}
-          onInput={(e) =>
-            setName({
-              field: e.currentTarget.value,
-              invalid: isInvalidName(e.currentTarget.value),
-            })
-          }
-          isInvalid={invalidName}
-        />
-        <Button
-          onClick={() => {
-            if (user?.uid !== undefined) {
-              createGroup(
-                { id: "", name, rides: [], members: {} },
-                user.uid
-              ).then((group) => navigate(`/group/${group.id}`));
-            }
-          }}
-        >
-          Create
-        </Button>
+      <InputGroup paddingInline={5}>
+        <Stack>
+          <Heading>Create Group</Heading>
+          <HStack>
+            <Text mb={"8px"}>Name</Text>
+            <Input
+              value={name}
+              placeholder={"name"}
+              onInput={(e) =>
+                setName({
+                  field: e.currentTarget.value,
+                  invalid: isInvalidName(e.currentTarget.value),
+                })
+              }
+              isInvalid={invalidName}
+            />
+          </HStack>
+          <HStack>
+            <Text mb={"8px"}>Description</Text>
+            <Input
+              value={description}
+              placeholder={"description"}
+              onInput={(e) => setDescription(e.currentTarget.value)}
+              isInvalid={invalidName}
+            />
+          </HStack>
+          <Button
+            onClick={() => {
+              if (user?.uid !== undefined) {
+                createGroup(
+                  { id: "", description, name, rides: [], members: {} },
+                  user.uid
+                ).then((group) => navigate(`/group/${group.id}`));
+              }
+            }}
+          >
+            Create
+          </Button>
+        </Stack>
       </InputGroup>
     </>
   );
