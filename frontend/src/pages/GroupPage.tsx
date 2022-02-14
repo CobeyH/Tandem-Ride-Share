@@ -53,6 +53,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Header pages={[{ label: "Group List", url: "/" }]} />
       <VStack spacing="24px" align="c" width="20%">
         <Heading>{group.name}</Heading>
+        <Text>{group.description}</Text>
         {error && <strong>Error: {error}</strong>}
         {loading && <Center>Loading...</Center>}
         {!loading &&
