@@ -14,7 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
 import slugify from "slugify";
 import Header from "./Header";
-import DropZone from "../storage";
+import DropZone, { storage } from "../storage";
+import { uploadBytes } from "firebase/storage";
+import { ref as storRef } from "firebase/storage";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -31,6 +33,7 @@ export type Group = {
 
 const createGroup = async (group: Group, userId: string) => {
   group.id = slugify(group.name, DB_KEY_SLUG_OPTS);
+
   if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${group.id}`)))).exists()) {
     /* TODO: increment id */
     throw new Error("Group ID already exists");
@@ -41,6 +44,13 @@ const createGroup = async (group: Group, userId: string) => {
 };
 
 const CreateGroup = () => {
+  // TODO: Fix type
+  const [banner, setBanner] = useState<Blob | MediaSource>();
+
+  const handleCallback = (childBanner: Blob | MediaSource) => {
+    setBanner(childBanner);
+  };
+
   const [user] = useAuthState(auth);
   const [{ field: name, invalid: invalidName }, setName] = useState<
     ValidatableFiled<string>
@@ -52,6 +62,16 @@ const CreateGroup = () => {
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
+
+  const uploadBanner = async (groupId: string) => {
+    if (!banner) {
+      return;
+    }
+    const blobUrl = URL.createObjectURL(banner);
+    const blob = await fetch(blobUrl).then((r) => r.blob());
+    const imageRef = storRef(storage, `${groupId}`);
+    uploadBytes(imageRef, blob);
+  };
 
   return (
     <>
@@ -82,14 +102,17 @@ const CreateGroup = () => {
               isInvalid={invalidName}
             />
           </HStack>
-          <DropZone />
+          <DropZone parentCallback={handleCallback} />
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
                 createGroup(
                   { id: "", description, name, rides: [], members: {} },
                   user.uid
-                ).then((group) => navigate(`/group/${group.id}`));
+                ).then((group) => {
+                  navigate(`/group/${group.id}`);
+                  uploadBanner(group.id).then(() => alert("file uploaded"));
+                });
               }
             }}
           >

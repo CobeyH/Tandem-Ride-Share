@@ -1,30 +1,21 @@
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-import React, { useCallback, useState } from "react";
+import { getStorage } from "firebase/storage";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { app } from "./firebase";
 
-const storage = getStorage(app);
+export const storage = getStorage(app);
 
-export const DropZone = () => {
-  const onDrop = useCallback(async (acceptedFiles) => {
+export const DropZone = (props: {
+  parentCallback: (banner: Blob | MediaSource) => void;
+}) => {
+  const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles?.[0];
 
     if (!file) {
       return;
     }
-    try {
-      await upload(URL.createObjectURL(file), `${file.name}_${Date.now()}`);
-    } catch (e) {
-      console.log(e);
-    }
+    props.parentCallback(file);
   }, []);
-
-  const upload = async (blobUrl: string, name: string) => {
-    alert(name);
-    const blob = await fetch(blobUrl).then((r) => r.blob());
-    const imageRef = ref(storage, `${name}`);
-    uploadBytes(imageRef, blob);
-  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -32,9 +23,9 @@ export const DropZone = () => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p>Drop the files here ...</p>
+        <p>Drop the file here ...</p>
       ) : (
-        <p>Drag n drop some files here, or click to select files</p>
+        <p>Drag and drop a banner image here, or click to select a file</p>
       )}
     </div>
   );
