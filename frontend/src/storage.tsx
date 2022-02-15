@@ -5,7 +5,7 @@ import { app } from "./firebase";
 
 export const storage = getStorage(app);
 
-export const DropZone = (props: {
+const DropZone = (props: {
   parentCallback: (banner: Blob | MediaSource) => void;
 }) => {
   const onDrop = useCallback((acceptedFiles) => {

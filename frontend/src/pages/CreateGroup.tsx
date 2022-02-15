@@ -29,10 +29,11 @@ export type Group = {
   description: string;
   rides: string[];
   members: { [key: string]: boolean };
+  banner?: string;
 };
 
-const createGroup = async (group: Group, userId: string) => {
-  group.id = slugify(group.name, DB_KEY_SLUG_OPTS);
+const createGroup = async (groupData: Omit<Group, "id">, userId: string) => {
+  const group = { ...groupData, id: slugify(groupData.name, DB_KEY_SLUG_OPTS) };
 
   if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${group.id}`)))).exists()) {
     /* TODO: increment id */
@@ -69,8 +70,9 @@ const CreateGroup = () => {
     }
     const blobUrl = URL.createObjectURL(banner);
     const blob = await fetch(blobUrl).then((r) => r.blob());
-    const imageRef = storRef(storage, `${groupId}`);
-    uploadBytes(imageRef, blob);
+    const imageRef = storRef(storage, `banners/${groupId}`);
+    await uploadBytes(imageRef, blob);
+    return imageRef;
   };
 
   return (
@@ -107,11 +109,14 @@ const CreateGroup = () => {
             onClick={() => {
               if (user?.uid !== undefined) {
                 createGroup(
-                  { id: "", description, name, rides: [], members: {} },
+                  { description, name, rides: [], members: {} },
                   user.uid
                 ).then((group) => {
                   navigate(`/group/${group.id}`);
-                  uploadBanner(group.id).then(() => alert("file uploaded"));
+                  uploadBanner(group.id).then((url) => {
+                    const groupRef = ref(db, `groups/${group.id}`);
+                    set(groupRef, { ...group, banner: url?.fullPath });
+                  });
                 });
               }
             }}
