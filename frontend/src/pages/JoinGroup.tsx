@@ -7,16 +7,17 @@ import {
   Center,
   Heading,
   Spinner,
-  Stack,
   VStack,
 } from "@chakra-ui/react";
-import { useObjectVal } from "react-firebase-hooks/database";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import { ref, set } from "firebase/database";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";
+import MapView, { findMidpoint } from "../components/MapView";
+import { Ride } from "./CreateRide";
 
 export type LocationGotoState = { goto?: string };
 
@@ -52,6 +53,9 @@ const JoinGroup = () => {
 
 const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
   const navigate = useNavigate();
+  const [rides, loadingRides, ridesLoadError] = useListVals<Ride>(
+    ref(db, `rides/${group.id}`)
+  );
 
   return (
     <>
@@ -60,6 +64,20 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
         <Center>
           <VStack>
             <Heading>{group.name}</Heading>
+            {loadingRides ? (
+              <Spinner />
+            ) : ridesLoadError || rides === [] || !rides ? null : (
+              <MapView
+                style={{ width: "100%", height: "25rem" }}
+                center={
+                  findMidpoint(
+                    rides[0].start,
+                    rides[0].end
+                  ) /* we know this is non-empty*/
+                }
+              />
+            )}
+
             <Text>Members: {group?.members?.length ?? 0}</Text>
             <Button
               onClick={() => {
