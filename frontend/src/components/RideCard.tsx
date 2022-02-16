@@ -12,7 +12,6 @@ import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
-import { latLng, marker } from "leaflet";
 
 export default function RideCard({ ride }: { ride: Ride }) {
   const { isOpen, onToggle } = useDisclosure();

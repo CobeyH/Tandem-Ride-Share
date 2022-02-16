@@ -6,7 +6,7 @@ import endIconImg from "../images/Arrow Circle Down_8.png";
 
 const MAPBOX_ACCESS_TOKEN =
   "pk.eyJ1IjoibWFyY3VzZHVubiIsImEiOiJja3ppeTllOTAxanBuMm9uMnRwMHZ1dmF6In0.gHleMGVyUBmw_na8Elfzdg";
-const DEFAULT_CENTER = latLng([48.46557, -123.314736]);
+export const DEFAULT_CENTER = latLng([48.46557, -123.314736]);
 const DEFAULT_ZOOM = 12;
 export const startIcon = icon({
   iconUrl: startIconImg,
@@ -51,12 +51,12 @@ export function findMidpoint(
 }
 
 type MapView = {
-  center: LatLng | undefined;
-  zoom: number | undefined;
+  center?: LatLng;
+  zoom?: number;
 };
 
 type MapObjCallback = {
-  setMap: React.Dispatch<React.SetStateAction<Map | undefined>>;
+  setMap?: React.Dispatch<React.SetStateAction<Map | undefined>>;
 };
 
 function ChangeView({ center, zoom }: MapView) {
