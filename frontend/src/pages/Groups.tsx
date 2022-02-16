@@ -1,13 +1,11 @@
 import * as React from "react";
-import { Button, Flex, Box, Heading, Link, Text } from "@chakra-ui/react";
+import { Button, Flex, Box, Heading } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, logout } from "../firebase";
 import { useEffect } from "react";
 
-type group = { name: string; number_members: number };
-
-export default function Groups(props: { groups: group[] }) {
+export default function Groups() {
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
 
@@ -21,12 +19,6 @@ export default function Groups(props: { groups: group[] }) {
       <Box textAlign="center">
         <Heading>Groups Page</Heading>
         <Button onClick={logout}>Logout</Button>
-        {props.groups.map((group, i) => (
-          <div key={i}>
-            <Link href={"/rides"}>{group.name}</Link>
-            <Text> {group.number_members} </Text>
-          </div>
-        ))}
       </Box>
     </Flex>
   );

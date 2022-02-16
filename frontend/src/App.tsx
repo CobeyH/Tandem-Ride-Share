@@ -16,7 +16,7 @@ export const App = () => (
         <Router>
           <Routes>
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/" element={<Groups groups= {[{name:"group1", number_members:3}, {name:"group2", number_members:6}]}/> } />
+            <Route path="/" element={<Groups />} />
             <Route path="/rides" element={<Rides />} />
             <Route path="/register" element={<Register />} />
           </Routes>
