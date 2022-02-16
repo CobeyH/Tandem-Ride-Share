@@ -10,14 +10,22 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Ride } from "../pages/CreateRide";
-import MapView from "./MapView";
+import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
+import { Marker } from "react-leaflet";
+import { latLng, marker } from "leaflet";
 
 export default function RideCard({ ride }: { ride: Ride }) {
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
+  let center, startMarker, endMarker;
+  if (ride) {
+    center = findMidpoint(ride.start, ride.end);
+    startMarker = <Marker position={ride.start} icon={startIcon} />;
+    endMarker = <Marker position={ride.end} icon={endIcon} />;
+  }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" p="3" w="sm">
+    <Box borderWidth="1px" borderRadius="lg" p="3" minW="sm">
       <Flex onClick={onToggle}>
         <Heading size="md">{ride.name}</Heading>
         <Spacer />
@@ -34,7 +42,10 @@ export default function RideCard({ ride }: { ride: Ride }) {
         }}
       >
         <AspectRatio ratio={16 / 10} mt="2">
-          <MapView center={undefined} zoom={undefined} setMap={setMap} />
+          <MapView center={center} zoom={undefined} setMap={setMap}>
+            {startMarker}
+            {endMarker}
+          </MapView>
         </AspectRatio>
       </Collapse>
     </Box>
