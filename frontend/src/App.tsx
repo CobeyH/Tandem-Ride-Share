@@ -16,6 +16,7 @@ import JoinGroup from "./pages/JoinGroup";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import { NavConstants } from "./NavigationConstants";
+import { useEffect } from "react";
 
 export const App = () => {
   const [user, loading] = useAuthState(auth);
@@ -47,6 +48,9 @@ export const App = () => {
 
 const Redirect = ({ to }: { to: string }) => {
   const navigate = useNavigate();
-  navigate(to);
+  useEffect(() => {
+    navigate(to);
+  }, []);
+
   return <></>;
 };
