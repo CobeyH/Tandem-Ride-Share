@@ -15,6 +15,40 @@ import { ref, set } from "firebase/database";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
+import { NavConstants } from "../NavigationConstants";
+
+export type LocationGotoState = { goto?: string };
+
+const JoinGroup = () => {
+  const groupId = useParams()["groupId"];
+  const [user, loadingUser] = useAuthState(auth);
+  const [group, loadingGroup, groupError] = useObjectVal<Group>(
+    ref(db, `groups/${groupId}`)
+  );
+  const navigate = useNavigate();
+  if (!groupId) {
+    console.log("Figure something better to do here.");
+    navigate("/");
+    return <></>;
+  } else if (!user) {
+    console.log("adding state and redirecting to /register");
+    const state: LocationGotoState = {
+      goto: NavConstants.groupWithIdJoin(groupId),
+    };
+    navigate("/register", { state: state });
+    return <></>; // return here to let typescript know from here on in user is not null
+  }
+
+  return groupError ? (
+    <Text>Error: {groupError}</Text>
+  ) : loadingUser || loadingGroup ? (
+    <Spinner />
+  ) : group ? (
+    <FoundGroup group={group} userId={user.uid} />
+  ) : (
+    <GroupNotFound /> // user could also not be found, but in that case they should be kicked back to login.
+  );
+};
 
 const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
   const navigate = useNavigate();
@@ -23,19 +57,25 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
     <Center>
       <Stack>
         <Header />
+        <Heading>{group.name}</Heading>
         <Box>
-          <Button
-            onClick={() => {
-              set(ref(db, `groups/${group.id}/members/${userId}`), true).then(
-                () => {
-                  navigate(`/group/${group.id}`);
-                }
-              );
-            }}
-          >
-            Join {group.name}
-          </Button>
-          <Text>Members: {group?.members?.length ?? 0}</Text>
+          <Center>
+            <Stack>
+              <Text>Members: {group?.members?.length ?? 0}</Text>
+              <Button
+                onClick={() => {
+                  set(
+                    ref(db, `groups/${group.id}/members/${userId}`),
+                    true
+                  ).then(() => {
+                    navigate(`/group/${group.id}`);
+                  });
+                }}
+              >
+                Join
+              </Button>
+            </Stack>
+          </Center>
         </Box>
       </Stack>
     </Center>
@@ -52,30 +92,6 @@ const GroupNotFound = () => {
         <Button onClick={() => navigate("/group")}>Groups</Button>
       </Box>
     </Center>
-  );
-};
-
-const JoinGroup = () => {
-  const groupId = useParams()["groupId"];
-  const [user, loadingUser] = useAuthState(auth);
-  console.log(`groups/${groupId}`);
-  const [group, loadingGroup, groupError] = useObjectVal<Group>(
-    ref(db, `groups/${groupId}`)
-  );
-  const navigate = useNavigate();
-  if (groupId === undefined) {
-    console.log("Figure something better to do here.");
-    navigate("/");
-  }
-
-  return groupError ? (
-    <Text>Error: {groupError}</Text>
-  ) : loadingUser || loadingGroup ? (
-    <Spinner />
-  ) : group && user ? (
-    <FoundGroup group={group} userId={user.uid} />
-  ) : (
-    <GroupNotFound /> // user could also not be found, but in that case they should be kicked back to login.
   );
 };
 
