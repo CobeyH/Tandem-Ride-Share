@@ -57,7 +57,17 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   return (
     <Flex flexDirection="column" width="100%" align="center">
       <Header pages={[{ label: "Group List", url: "/" }]} />
-      {banner === "loading" ? <Box /> : <Image src={banner} />}
+      {banner === "loading" ? (
+        <Box />
+      ) : (
+        <Image
+          src={banner}
+          width="95%"
+          maxHeight="200px"
+          objectFit="cover"
+          pb={5}
+        />
+      )}
 
       <VStack spacing="24px" align="c" width="20%">
         <Heading>{group.name}</Heading>
