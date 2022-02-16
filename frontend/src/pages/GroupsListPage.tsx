@@ -16,7 +16,7 @@ import { auth, db } from "../firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
-import Header from "./Header";
+import Header from "../components/Header";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);

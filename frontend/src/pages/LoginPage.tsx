@@ -11,7 +11,7 @@ import {
 import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Header from "./Header";
+import Header from "../components/Header";
 import { FaGoogle } from "react-icons/all";
 
 export default function Login() {
