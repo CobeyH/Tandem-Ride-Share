@@ -41,7 +41,7 @@ export const DB_KEY_SLUG_OPTS = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig, "web-frontend");
+export const app = initializeApp(firebaseConfig, "web-frontend");
 export const auth = getAuth(app);
 export const db = getDatabase(app);
 
