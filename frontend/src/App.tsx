@@ -1,5 +1,10 @@
 import * as React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import LoginForm from "./pages/LoginPage";
 import GroupsListPage from "./pages/GroupsListPage";
 import { ChakraProvider, theme } from "@chakra-ui/react";
@@ -10,6 +15,7 @@ import CreateRide from "./pages/CreateRide";
 import JoinGroup from "./pages/JoinGroup";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
+import { NavConstants } from "./NavigationConstants";
 
 export const App = () => {
   const [user, loading] = useAuthState(auth);
@@ -31,10 +37,16 @@ export const App = () => {
           <Routes>
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<Register />} />
-            <Route path="*" element={<LoginForm />} />
+            <Route path="*" element={<Redirect to={NavConstants.LOGIN} />} />
           </Routes>
         )}
       </Router>
     </ChakraProvider>
   );
+};
+
+const Redirect = ({ to }: { to: string }) => {
+  const navigate = useNavigate();
+  navigate(to);
+  return <></>;
 };
