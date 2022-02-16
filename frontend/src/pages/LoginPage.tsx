@@ -9,18 +9,31 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { FaGoogle } from "react-icons/all";
+import { LocationGotoState } from "./JoinGroup";
 
 export default function Login() {
+  const location = useLocation();
+
   const navigate = useNavigate();
   const [user, loading] = useAuthState(auth);
   // If the user is signed in, go to the home page.
   useEffect(() => {
     if (loading) return;
-    if (user) return navigate("/");
+    if (user) {
+      // goto is possibly set by JoinGroup in the case the user was sent a link but was not logged in
+      const state = location?.state as LocationGotoState;
+      let link: string;
+      if (state?.goto) {
+        link = state?.goto;
+      } else {
+        link = "/";
+      }
+      return navigate(link);
+    }
   }, [user, loading]);
 
   const [email, setEmail] = useState("");
