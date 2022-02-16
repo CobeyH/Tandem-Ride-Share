@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   auth,
   registerWithEmailAndPassword,
@@ -17,7 +17,9 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/all";
+import { LocationGotoState } from "./JoinGroup";
 function Register() {
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -29,7 +31,17 @@ function Register() {
   const navigate = useNavigate();
   useEffect(() => {
     if (loading) return;
-    if (user) return navigate("/");
+    if (user) {
+      // goto is possibly set by JoinGroup in the case the user was sent a link but was not logged in
+      const state = location?.state as LocationGotoState;
+      let link: string;
+      if (state?.goto) {
+        link = state?.goto;
+      } else {
+        link = "/";
+      }
+      return navigate(link);
+    }
   }, [user, loading]);
   return (
     <div className="register">
