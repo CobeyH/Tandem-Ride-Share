@@ -10,13 +10,14 @@ import {
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
-import { defaultMapCenter } from "./RidePage";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import { icon } from "leaflet";
-import startIconImg from "../images/Arrow Circle Up_8.png";
-import endIconImg from "../images/Arrow Circle Down_8.png";
+import { Marker } from "react-leaflet";
 import slugify from "slugify";
 import Header from "../components/Header";
+import MapView, {
+  DEFAULT_CENTER,
+  endIcon,
+  startIcon,
+} from "../components/MapView";
 
 type ValidatableField<T> = {
   field: T;
@@ -62,17 +63,6 @@ const CreateRide = () => {
 
   const navigate = useNavigate();
 
-  const startIcon = icon({
-    iconUrl: startIconImg,
-    iconSize: [96, 96],
-    iconAnchor: [48, 92],
-  });
-  const endIcon = icon({
-    iconUrl: endIconImg,
-    iconSize: [96, 96],
-    iconAnchor: [48, 92],
-  });
-
   return (
     <>
       <Header
@@ -113,14 +103,10 @@ const CreateRide = () => {
           Create
         </Button>
       </InputGroup>
-      <MapContainer center={defaultMapCenter} zoom={12} scrollWheelZoom={false}>
+      <MapView>
         <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
         <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-      </MapContainer>
+      </MapView>
     </>
   );
 };
@@ -150,7 +136,7 @@ const DraggableMarker = (props: MarkerProperties) => {
     <Marker
       draggable={true}
       eventHandlers={eventHandlers}
-      position={defaultMapCenter}
+      position={DEFAULT_CENTER}
       ref={markerRef}
       icon={props.icon}
     />

@@ -6,7 +6,6 @@ import { ChakraProvider, theme } from "@chakra-ui/react";
 import Register from "./pages/Registration";
 import CreateGroup from "./pages/CreateGroup";
 import GroupPage from "./pages/GroupPage";
-import RidePage from "./pages/RidePage";
 import CreateRide from "./pages/CreateRide";
 import JoinGroup from "./pages/JoinGroup";
 
@@ -20,7 +19,6 @@ export const App = () => (
         <Route path="/group/:groupId" element={<GroupPage />} />
         <Route path="/group/join/:groupId" element={<JoinGroup />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/ride/:rideId" element={<RidePage />} />
         <Route path="/group/:groupId/ride/new" element={<CreateRide />} />
       </Routes>
     </Router>
