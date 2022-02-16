@@ -18,7 +18,7 @@ export const App = () => (
         <Route path="/" element={<GroupsListPage />} />
         <Route path="/group/new" element={<CreateGroup />} />
         <Route path="/group/:groupId" element={<GroupPage />} />
-        <Route path="/group/join/:groupId" element={<JoinGroup />} />
+        <Route path="/group/:groupId/join" element={<JoinGroup />} />
         <Route path="/register" element={<Register />} />
         <Route path="/ride/:rideId" element={<RidePage />} />
         <Route path="/group/:groupId/ride/new" element={<CreateRide />} />
