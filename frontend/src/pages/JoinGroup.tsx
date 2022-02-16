@@ -34,7 +34,7 @@ const JoinGroup = () => {
     const state: LocationGotoState = {
       goto: NavConstants.groupWithIdJoin(groupId),
     };
-    navigate("/register", { state: state });
+    navigate("/register", { state });
     return <></>; // return here to let typescript know from here on in user is not null
   }
 
