@@ -1,6 +1,14 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Text, Box, Button, Center, Heading, Spinner } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Button,
+  Center,
+  Heading,
+  Spinner,
+  Stack,
+} from "@chakra-ui/react";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import { ref, set } from "firebase/database";
@@ -13,21 +21,23 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
 
   return (
     <Center>
-      <Header />
-      <Box>
-        <Button
-          onClick={() => {
-            set(ref(db, `groups/${group.id}/members/${userId}`), true).then(
-              () => {
-                navigate(`/group/${group.id}`);
-              }
-            );
-          }}
-        >
-          Join {group.name}
-        </Button>
-        <Text>Members: {group?.members?.length ?? 0}</Text>
-      </Box>
+      <Stack>
+        <Header />
+        <Box>
+          <Button
+            onClick={() => {
+              set(ref(db, `groups/${group.id}/members/${userId}`), true).then(
+                () => {
+                  navigate(`/group/${group.id}`);
+                }
+              );
+            }}
+          >
+            Join {group.name}
+          </Button>
+          <Text>Members: {group?.members?.length ?? 0}</Text>
+        </Box>
+      </Stack>
     </Center>
   );
 };
