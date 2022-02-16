@@ -45,7 +45,7 @@ const JoinGroup = () => {
   ) : group ? (
     <FoundGroup group={group} userId={user.uid} />
   ) : (
-    <GroupNotFound /> // user could also not be found, but in that case they should be kicked back to login.
+    <GroupNotFound />
   );
 };
 
