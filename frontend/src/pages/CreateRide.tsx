@@ -16,7 +16,7 @@ import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
 import slugify from "slugify";
-import Header from "./Header";
+import Header from "../components/Header";
 
 type ValidatableField<T> = {
   field: T;

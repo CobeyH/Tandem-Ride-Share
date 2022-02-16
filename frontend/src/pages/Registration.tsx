@@ -6,7 +6,7 @@ import {
   registerWithEmailAndPassword,
   signInWithGoogle,
 } from "../firebase";
-import Header from "./Header";
+import Header from "../components/Header";
 import {
   Flex,
   FormControl,
