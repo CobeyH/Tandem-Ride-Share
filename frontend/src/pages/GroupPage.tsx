@@ -16,10 +16,11 @@ import { ref } from "firebase/database";
 import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
-import Header from "./Header";
+import Header from "../components/Header";
 import { storage } from "../storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
+import ShareLink from "../components/ShareLink";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -93,6 +94,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
         >
           New Ride
         </Button>
+        <ShareLink />
       </VStack>
     </Flex>
   );

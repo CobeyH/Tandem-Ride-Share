@@ -10,7 +10,7 @@ import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
 import { Ride } from "./CreateRide";
-import Header from "./Header";
+import Header from "../components/Header";
 
 const mapBoxAccessToken =
   "pk.eyJ1IjoibWFyY3VzZHVubiIsImEiOiJja3ppeTllOTAxanBuMm9uMnRwMHZ1dmF6In0.gHleMGVyUBmw_na8Elfzdg";
