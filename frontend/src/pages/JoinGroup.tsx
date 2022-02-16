@@ -8,6 +8,7 @@ import {
   Heading,
   Spinner,
   Stack,
+  VStack,
 } from "@chakra-ui/react";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
@@ -53,31 +54,28 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
   const navigate = useNavigate();
 
   return (
-    <Center>
-      <Stack>
-        <Header />
-        <Heading>{group.name}</Heading>
-        <Box>
-          <Center>
-            <Stack>
-              <Text>Members: {group?.members?.length ?? 0}</Text>
-              <Button
-                onClick={() => {
-                  set(
-                    ref(db, `groups/${group.id}/members/${userId}`),
-                    true
-                  ).then(() => {
+    <>
+      <Header />
+      <Box>
+        <Center>
+          <VStack>
+            <Heading>{group.name}</Heading>
+            <Text>Members: {group?.members?.length ?? 0}</Text>
+            <Button
+              onClick={() => {
+                set(ref(db, `groups/${group.id}/members/${userId}`), true).then(
+                  () => {
                     navigate(`/group/${group.id}`);
-                  });
-                }}
-              >
-                Join
-              </Button>
-            </Stack>
-          </Center>
-        </Box>
-      </Stack>
-    </Center>
+                  }
+                );
+              }}
+            >
+              Join
+            </Button>
+          </VStack>
+        </Center>
+      </Box>
+    </>
   );
 };
 
