@@ -10,6 +10,7 @@ import { icon } from "leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
 import { Ride } from "./CreateRide";
+import Header from "./Header";
 
 const mapBoxAccessToken =
   "pk.eyJ1IjoibWFyY3VzZHVubiIsImEiOiJja3ppeTllOTAxanBuMm9uMnRwMHZ1dmF6In0.gHleMGVyUBmw_na8Elfzdg";
@@ -40,20 +41,28 @@ export default function RidePage() {
   }
 
   return (
-    <Box>
-      <Heading>{center.toString()}</Heading>
-      <MapContainer center={center} zoom={12} scrollWheelZoom={false}>
-        <ChangeView center={center} zoom={12} />
-        {startMarker}
-        {endMarker}
-        <TileLayer
-          url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          id="mapbox/streets-v11"
-          accessToken={mapBoxAccessToken}
-        />
-      </MapContainer>
-    </Box>
+    <>
+      <Header
+        pages={[
+          { label: "Group List", url: "/" },
+          { label: "TODO", url: "/" },
+        ]}
+      />
+      <Box>
+        <Heading>{center.toString()}</Heading>
+        <MapContainer center={center} zoom={12} scrollWheelZoom={false}>
+          <ChangeView center={center} zoom={12} />
+          {startMarker}
+          {endMarker}
+          <TileLayer
+            url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            id="mapbox/streets-v11"
+            accessToken={mapBoxAccessToken}
+          />
+        </MapContainer>
+      </Box>
+    </>
   );
 }
 

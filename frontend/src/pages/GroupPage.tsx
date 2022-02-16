@@ -15,6 +15,7 @@ import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import RideCard from "../components/RideCard";
+import Header from "./Header";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -49,20 +50,32 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   );
 
   return (
-    <VStack spacing="24px" align="stretch">
-      <Heading>{group.name}</Heading>
-      {error && <strong>Error: {error}</strong>}
-      {loading && <Center>Loading...</Center>}
-      {!loading &&
-        snapshots &&
-        snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
-      <Button
-        onClick={() => {
-          navigate(`/group/${group.id}/ride/new`);
-        }}
-      >
-        New Ride
-      </Button>
-    </VStack>
+    <Flex flexDirection="column" width="100%" align="center">
+      <Header pages={[{ label: "Group List", url: "/" }]} />
+      <VStack spacing="24px" align="c" width="20%">
+        <Heading>{group.name}</Heading>
+        {error && <strong>Error: {error}</strong>}
+        {loading && <Center>Loading...</Center>}
+        {!loading &&
+          snapshots &&
+          snapshots.map((v) => (
+            <Button
+              key={v.key}
+              onClick={() => {
+                navigate(`/ride/${v.key}`);
+              }}
+            >
+              {v.val().name}
+            </Button>
+          ))}
+        <Button
+          onClick={() => {
+            navigate(`/group/${group.id}/ride/new`);
+          }}
+        >
+          New Ride
+        </Button>
+      </VStack>
+    </Flex>
   );
 };

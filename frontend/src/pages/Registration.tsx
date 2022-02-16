@@ -6,6 +6,17 @@ import {
   registerWithEmailAndPassword,
   signInWithGoogle,
 } from "../firebase";
+import Header from "./Header";
+import {
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Box,
+  Heading,
+} from "@chakra-ui/react";
+import { FaGoogle } from "react-icons/all";
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,41 +33,56 @@ function Register() {
   }, [user, loading]);
   return (
     <div className="register">
-      <div className="register__container">
-        <input
-          type="text"
-          className="register__textBox"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Full Name"
-        />
-        <input
-          type="text"
-          className="register__textBox"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail Address"
-        />
-        <input
-          type="password"
-          className="register__textBox"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button className="register__btn" onClick={register}>
-          Register
-        </button>
-        <button
-          className="register__btn register__google"
-          onClick={signInWithGoogle}
-        >
-          Register with Google
-        </button>
-        <div>
-          Already have an account? <Link to="/">Login</Link> now.
+      <Header />
+      <Box textAlign="center">
+        <Heading>Registration</Heading>
+      </Box>
+      <Flex width="full" align="center" justifyContent="center">
+        <div className="register__container">
+          <FormControl mt={6} isRequired>
+            <FormLabel>Full Name</FormLabel>
+            <Input
+              type="fullName"
+              placeholder="Full name"
+              onChange={(event) => setName(event.currentTarget.value)}
+            />
+          </FormControl>
+          <FormControl mt={6} isRequired>
+            <FormLabel>E-mail Address</FormLabel>
+            <Input
+              type="email"
+              placeholder="test@test.com"
+              onChange={(event) => setEmail(event.currentTarget.value)}
+            />
+          </FormControl>
+          <FormControl mt={6} isRequired>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={(event) => setPassword(event.currentTarget.value)}
+            />
+          </FormControl>
+          <Button width="full" mt={4} onClick={register}>
+            Register
+          </Button>
+          <Button
+            mt={4}
+            leftIcon={<FaGoogle />}
+            width="full"
+            onClick={signInWithGoogle}
+          >
+            Register with Google
+          </Button>
+          <div>
+            Already have an account?{" "}
+            <Link style={{ color: "blue" }} to="/">
+              Login
+            </Link>{" "}
+            now.
+          </div>
         </div>
-      </div>
+      </Flex>
     </div>
   );
 }
