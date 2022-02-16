@@ -31,7 +31,6 @@ const JoinGroup = () => {
     navigate("/");
     return <></>;
   } else if (!user) {
-    console.log("adding state and redirecting to /register");
     const state: LocationGotoState = {
       goto: NavConstants.groupWithIdJoin(groupId),
     };
@@ -40,7 +39,7 @@ const JoinGroup = () => {
   }
 
   return groupError ? (
-    <Text>Error: {groupError}</Text>
+    <Text> Error: {groupError}</Text>
   ) : loadingUser || loadingGroup ? (
     <Spinner />
   ) : group ? (
