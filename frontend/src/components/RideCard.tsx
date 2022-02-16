@@ -10,11 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Ride } from "../pages/CreateRide";
-import { MapContainer, TileLayer } from "react-leaflet";
-import { defaultMapCenter } from "../pages/RidePage";
-
-const mapBoxAccessToken =
-  "pk.eyJ1IjoibWFyY3VzZHVubiIsImEiOiJja3ppeTllOTAxanBuMm9uMnRwMHZ1dmF6In0.gHleMGVyUBmw_na8Elfzdg";
+import MapView from "./MapView";
 
 export default function RideCard({ ride }: { ride: Ride }) {
   const { isOpen, onToggle } = useDisclosure();
@@ -38,19 +34,7 @@ export default function RideCard({ ride }: { ride: Ride }) {
         }}
       >
         <AspectRatio ratio={16 / 10} mt="2">
-          <MapContainer
-            center={defaultMapCenter}
-            zoom={12}
-            scrollWheelZoom={true}
-            whenCreated={setMap}
-          >
-            <TileLayer
-              url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              id="mapbox/streets-v11"
-              accessToken={mapBoxAccessToken}
-            />
-          </MapContainer>
+          <MapView center={undefined} zoom={undefined} setMap={setMap} />
         </AspectRatio>
       </Collapse>
     </Box>

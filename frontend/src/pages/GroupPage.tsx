@@ -77,16 +77,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
         {loading && <Center>Loading...</Center>}
         {!loading &&
           snapshots &&
-          snapshots.map((v) => (
-            <Button
-              key={v.key}
-              onClick={() => {
-                navigate(`/ride/${v.key}`);
-              }}
-            >
-              {v.val().name}
-            </Button>
-          ))}
+          snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
         <Button
           onClick={() => {
             navigate(`/group/${group.id}/ride/new`);
