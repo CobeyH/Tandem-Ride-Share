@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import {
   Button,
+  Container,
   Heading,
   Input,
   InputGroup,
@@ -9,16 +10,9 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  auth,
-  db,
-  DB_GROUP_COLLECT,
-  DB_KEY_SLUG_OPTS,
-  DB_RIDE_COLLECT,
-} from "../firebase";
+import { auth, db, DB_KEY_SLUG_OPTS, DB_RIDE_COLLECT } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
 import { Marker } from "react-leaflet";
@@ -43,12 +37,16 @@ export type Ride = {
   end: { lat: number; lng: number };
   maxPassengers: number;
   passengers: Record<string, boolean>;
-  driver: string;
+  driver?: string;
 };
 
 const createRide = async (ride: Ride, groupId: string) => {
   ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
-  if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${ride.id}`)))).exists()) {
+  if (
+    (
+      await get(query(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`)))
+    ).exists()
+  ) {
     /* TODO: increment id */
     throw new Error("Group ID already exists");
   }
@@ -92,58 +90,79 @@ const CreateRide = () => {
           { label: "Group", url: `/group/${groupId}` },
         ]}
       />
-      <Heading>Create Ride</Heading>
-      <InputGroup flexDirection="column">
-        <Text mb={"8px"}>Title</Text>
-        <Input
-          value={title}
-          placeholder={"Ride Name"}
-          onInput={(e) =>
-            setTitle({
-              field: e.currentTarget.value,
-              invalid: isInvalidTitle(e.currentTarget.value),
-            })
-          }
-          isInvalid={invalidTitle}
-        />
-        <NumberInput
-          defaultValue={3}
-          min={1}
-          max={9}
-          onChange={(_, num) => setMaxPassengers(num)}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        <Button
-          disabled={!hasDragged}
-          onClick={() => {
-            if (groupId && user) {
-              const ride = {
-                id: "",
-                name: title,
-                start: startPosition,
-                end: endPosition,
-                maxPassengers: maxPassengers,
-                passengers: {},
-                driver: user.uid,
-              };
-              createRide(ride, groupId).then(() =>
-                navigate(`/group/${groupId}`)
-              );
+      <Container>
+        <Heading>Create Ride</Heading>
+        <InputGroup flexDirection="column">
+          <Input
+            value={title}
+            placeholder={"Ride Name"}
+            onInput={(e) =>
+              setTitle({
+                field: e.currentTarget.value,
+                invalid: isInvalidTitle(e.currentTarget.value),
+              })
             }
-          }}
-        >
-          Create
-        </Button>
-      </InputGroup>
-      <MapView>
-        <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
-        <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
-      </MapView>
+            isInvalid={invalidTitle}
+          />
+          <NumberInput
+            defaultValue={3}
+            min={1}
+            max={9}
+            onChange={(_, num) => setMaxPassengers(num)}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <Button
+            disabled={!hasDragged}
+            onClick={() => {
+              if (groupId && user) {
+                const ride = {
+                  id: "",
+                  name: title,
+                  start: startPosition,
+                  end: endPosition,
+                  maxPassengers: maxPassengers,
+                  passengers: { [user.uid]: true },
+                };
+                createRide(ride, groupId).then(() =>
+                  navigate(`/group/${groupId}`)
+                );
+              }
+            }}
+          >
+            Create Ride as Passenger
+          </Button>
+          <Button
+            disabled={!hasDragged}
+            onClick={() => {
+              if (groupId && user) {
+                const ride = {
+                  id: "",
+                  name: title,
+                  start: startPosition,
+                  end: endPosition,
+                  maxPassengers: maxPassengers,
+                  passengers: {},
+                  driver: user.uid,
+                };
+                createRide(ride, groupId).then(() =>
+                  navigate(`/group/${groupId}`)
+                );
+              }
+            }}
+          >
+            Create Ride as Driver
+          </Button>
+        </InputGroup>
+        <MapView>
+          <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
+          <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
+        </MapView>
+      </Container>
     </>
   );
 };
