@@ -28,7 +28,6 @@ const Header = (props: PageList) => {
       padding={6}
       bg="teal.500"
       marginBlockEnd={4}
-      color="white"
     >
       <Breadcrumbs pages={props.pages} />
       <Spacer />
