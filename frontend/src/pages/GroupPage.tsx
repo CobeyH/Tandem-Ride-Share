@@ -35,7 +35,7 @@ export default function GroupPage() {
   );
 
   return (
-    <Flex width="full" align="start" justifyContent="center">
+    <>
       {loading ? (
         <Spinner />
       ) : error ? (
@@ -45,7 +45,7 @@ export default function GroupPage() {
       ) : (
         <Text>No such group exists</Text>
       )}
-    </Flex>
+    </>
   );
 }
 
@@ -57,7 +57,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const [banner] = useDownloadURL(storageRef(storage, `${group.banner}`));
 
   return (
-    <Flex flexDirection="column" width="100%" align="center">
+    <Flex width="100%" align="center">
       <Header pages={[{ label: "Group List", url: "/" }]} />
       {banner === "loading" ? (
         <Box />

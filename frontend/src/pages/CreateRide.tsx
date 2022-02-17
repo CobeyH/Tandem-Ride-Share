@@ -1,5 +1,16 @@
 import React, { useMemo, useRef, useState } from "react";
-import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Input,
+  InputGroup,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Text,
+} from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   auth,
@@ -29,6 +40,8 @@ export type Ride = {
   name: string;
   start: [number, number];
   end: [number, number];
+  maxPassengers: number;
+  passengers: string[];
 };
 
 const createRide = async (ride: Ride, groupId: string) => {
@@ -61,6 +74,8 @@ const CreateRide = () => {
     setEndPosition([position.lat, position.lng]);
   }
 
+  const [maxPassengers, setMaxPassengers] = useState<number>(3);
+
   const navigate = useNavigate();
 
   return (
@@ -72,7 +87,7 @@ const CreateRide = () => {
         ]}
       />
       <Heading>Create Ride</Heading>
-      <InputGroup>
+      <InputGroup flexDirection="column">
         <Text mb={"8px"}>Title</Text>
         <Input
           value={title}
@@ -85,6 +100,18 @@ const CreateRide = () => {
           }
           isInvalid={invalidTitle}
         />
+        <NumberInput
+          defaultValue={3}
+          min={1}
+          max={9}
+          onChange={(_, num) => setMaxPassengers(num)}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
         <Button
           onClick={() => {
             if (groupId) {
@@ -93,6 +120,8 @@ const CreateRide = () => {
                 name: title,
                 start: startPosition,
                 end: endPosition,
+                maxPassengers: maxPassengers,
+                passengers: [],
               };
               createRide(ride, groupId).then(() =>
                 navigate(`/group/${groupId}`)
