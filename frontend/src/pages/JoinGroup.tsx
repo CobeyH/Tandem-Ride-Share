@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Text,
@@ -8,6 +8,7 @@ import {
   Heading,
   Spinner,
   VStack,
+  AspectRatio,
 } from "@chakra-ui/react";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
@@ -53,9 +54,14 @@ const JoinGroup = () => {
 
 const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
   const navigate = useNavigate();
+  const [map, setMap] = useState<L.Map | undefined>(undefined);
   const [rides, loadingRides, ridesLoadError] = useListVals<Ride>(
     ref(db, `rides/${group.id}`)
   );
+
+  useEffect(() => {
+    map?.invalidateSize();
+  }, []);
 
   return (
     <>
@@ -67,15 +73,17 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
             {loadingRides ? (
               <Spinner />
             ) : ridesLoadError || rides === [] || !rides ? null : (
-              <MapView
-                style={{ width: "100%", height: "25rem" }}
-                center={
-                  findMidpoint(
-                    rides[0].start,
-                    rides[0].end
-                  ) /* we know this is non-empty*/
-                }
-              />
+              <AspectRatio ratio={1} width={"100%"}>
+                <MapView
+                  setMap={setMap}
+                  center={
+                    findMidpoint(
+                      rides[0].start,
+                      rides[0].end
+                    ) /* we know rides is non-empty*/
+                  }
+                />
+              </AspectRatio>
             )}
 
             <Text>Members: {group?.members?.length ?? 0}</Text>

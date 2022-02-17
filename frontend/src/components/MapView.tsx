@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { icon, LatLng, latLng, Map } from "leaflet";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
@@ -20,12 +20,10 @@ export const endIcon = icon({
 });
 
 export default function MapView(
-  props: MapView &
-    MapObjCallback & { children?: ReactNode } & { style?: CSSProperties }
+  props: MapView & MapObjCallback & { children?: ReactNode }
 ) {
   return (
     <MapContainer
-      style={props.style}
       center={props.center ? props.center : DEFAULT_CENTER}
       zoom={props.zoom ? props.zoom : DEFAULT_ZOOM}
       scrollWheelZoom={true}
