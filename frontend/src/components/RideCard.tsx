@@ -27,80 +27,89 @@ import {
   auth,
   db,
   DB_PASSENGERS_COLLECT,
+  DB_RIDE_COLLECT,
   DB_USER_COLLECT,
   User,
 } from "../firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function RideCard({ ride }: { ride: Ride }) {
+export default function RideCard({ rideId }: { rideId: string }) {
   const [user] = useAuthState(auth);
+  const [ride, rideLoading, rideError] = useObjectVal<Ride>(
+    ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
+  );
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
-  let center, startMarker, endMarker, maxPassengers, passengers, driver;
-  if (ride) {
+
+  let center, startMarker, endMarker;
+  if (ride !== undefined) {
     center = findMidpoint(ride.start as LatLng, ride.end as LatLng);
     startMarker = <Marker position={ride.start} icon={startIcon} />;
     endMarker = <Marker position={ride.end} icon={endIcon} />;
-
-    const [driverUser, driverLoading, driverError] = useObjectVal<User>(
-      ref(db, `${DB_USER_COLLECT}/${ride.driver}`)
-    );
-    driver = driverLoading
-      ? "Loading"
-      : driverError
-      ? "Error"
-      : driverUser?.name;
   }
 
   return (
     <Box borderWidth="1px" borderRadius="lg" p="3" minW="sm">
-      <Flex onClick={onToggle}>
-        <Heading size="md">{ride.name}</Heading>
-        <Spacer />
-        {isOpen ? (
-          <ChevronUpIcon w={6} h={6} />
-        ) : (
-          <>
-            {/* Driver Display */}
-            <Icon as={AiFillCar} w={6} h={6} />
-            <Text ms={1} me={3}>{`${driver ? driver : "Driver Needed"}`}</Text>
-            <ChevronDownIcon w={6} h={6} />
-            <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
-          </>
-        )}
-      </Flex>
-      <Collapse
-        in={isOpen}
-        onAnimationComplete={() => {
-          if (map && isOpen) map.invalidateSize();
-        }}
-      >
-        <Flex flexDirection="row" m={2} align="center">
-          {/* Driver Display */}
-          <Icon as={AiFillCar} w={6} h={6} />
-          <Text ms={1} me={3}>{`${driver ? driver : "Driver Needed"}`}</Text>
-          <Spacer />
-          <Button>Join as Driver</Button>
-        </Flex>
-        <Flex flexDirection="row" m={2} align="center">
-          <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
-          <Spacer />
-          {user ? <PassengerButton rideId={ride.id} userId={user.uid} /> : ""}
-        </Flex>
-        <AspectRatio ratio={16 / 10} mt="2">
-          <MapView center={center} zoom={undefined} setMap={setMap}>
-            {startMarker}
-            {endMarker}
-          </MapView>
-        </AspectRatio>
-      </Collapse>
+      {rideLoading && "Loading..."}
+      {rideError && `Error: ${rideError.message}`}
+      {ride && (
+        <>
+          <Flex onClick={onToggle}>
+            <Heading size="md">{ride.name}</Heading>
+            <Spacer />
+            {isOpen ? (
+              <ChevronUpIcon w={6} h={6} />
+            ) : (
+              <>
+                <DriverDisplay driverId={ride.driver} />
+                <PassengerCounter
+                  rideId={ride.id}
+                  maxPass={ride.maxPassengers}
+                />
+                <ChevronDownIcon w={6} h={6} />
+              </>
+            )}
+          </Flex>
+          <Collapse
+            in={isOpen}
+            onAnimationComplete={() => {
+              if (map && isOpen) map.invalidateSize();
+            }}
+          >
+            <Flex flexDirection="row" m={2} align="center">
+              <DriverDisplay driverId={ride.driver} />
+              <Spacer />
+              {user ? <DriverButton rideId={rideId} userId={user.uid} /> : ""}
+            </Flex>
+            <Flex flexDirection="row" m={2} align="center">
+              <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
+              <Spacer />
+              {user ? (
+                <PassengerButton rideId={ride.id} userId={user.uid} />
+              ) : (
+                ""
+              )}
+            </Flex>
+            <AspectRatio ratio={16 / 10} mt="2">
+              <MapView center={center} zoom={undefined} setMap={setMap}>
+                {startMarker}
+                {endMarker}
+              </MapView>
+            </AspectRatio>
+          </Collapse>
+        </>
+      )}
     </Box>
   );
 }
 
 function setRidePassenger(passId: string, rideId: string, state: boolean) {
   set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${passId}`), state);
+}
+
+function setRideDriver(driverId: string, rideId: string, state: boolean) {
+  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
 }
 
 function PassengerButton({
@@ -148,6 +157,42 @@ function PassengerCounter({
           passLoading ? "?" : passError ? "0" : passVals?.length
         } / ${maxPass}`}
       </Text>
+    </>
+  );
+}
+
+function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
+  const [driver, loading, error] = useObjectVal<string>(
+    ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`)
+  );
+  const amDriver = driver === userId;
+  return !loading && error === undefined ? (
+    <Button
+      onClick={() => {
+        setRideDriver(userId, rideId, !amDriver);
+      }}
+    >
+      {amDriver ? "Leave" : "Join"}
+    </Button>
+  ) : (
+    <></>
+  );
+}
+
+function DriverDisplay({ driverId }: { driverId: string | undefined }) {
+  const [driverUser, driverLoading, driverError] = useObjectVal<User>(
+    ref(db, `${DB_USER_COLLECT}/${driverId}`)
+  );
+  const driver = driverLoading
+    ? "Loading"
+    : driverError
+    ? "Error"
+    : driverUser?.name;
+
+  return (
+    <>
+      <Icon as={AiFillCar} w={6} h={6} />
+      <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
     </>
   );
 }

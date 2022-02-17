@@ -53,7 +53,7 @@ const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
     throw new Error("Ride ID already exists");
   }
   await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
-  await set(ref(db, `${DB_GROUP_COLLECT}/rides/${ride.id}`), true);
+  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${ride.id}`), true);
   if (passList) {
     await Promise.all(
       passList.map(async (p) => {

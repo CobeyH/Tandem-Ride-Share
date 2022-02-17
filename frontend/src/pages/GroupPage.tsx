@@ -52,9 +52,6 @@ export default function GroupPage() {
 
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
-  const [snapshots, loading, error] = useList(
-    ref(db, `${DB_RIDE_COLLECT}/${group.id}`)
-  );
   const [banner] = useDownloadURL(storageRef(storage, `${group.banner}`));
 
   return (
@@ -75,11 +72,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
         <VStack spacing="24px" align="c">
           <Heading>{group.name}</Heading>
           <Text>{group.description}</Text>
-          {error && <strong>Error: {error}</strong>}
-          {loading && <Center>Loading...</Center>}
-          {!loading &&
-            snapshots &&
-            snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
+          {group.rides
+            ? Object.keys(group.rides).map((key) => (
+                <RideCard key={key} rideId={key} />
+              ))
+            : null}
           <Button
             onClick={() => {
               navigate(`/group/${group.id}/ride/new`);

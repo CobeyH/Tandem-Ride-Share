@@ -27,7 +27,7 @@ export type Group = {
   id: string;
   name: string;
   description: string;
-  rides: string[];
+  rides: { [key: string]: boolean };
   members: { [key: string]: boolean };
   banner?: string;
 };
@@ -109,7 +109,7 @@ const CreateGroup = () => {
             onClick={() => {
               if (user?.uid !== undefined) {
                 createGroup(
-                  { description, name, rides: [], members: {} },
+                  { description, name, rides: {}, members: {} },
                   user.uid
                 ).then((group) => {
                   navigate(`/group/${group.id}`);
