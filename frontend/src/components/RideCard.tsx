@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   AspectRatio,
   Box,
+  Button,
   Collapse,
   Flex,
   Heading,
@@ -17,8 +18,8 @@ import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
 import { LatLng } from "leaflet";
-import { useObjectVal } from "react-firebase-hooks/database";
-import { db, DB_USER_COLLECT, User } from "../firebase";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
+import { db, DB_PASSENGERS_COLLECT, DB_USER_COLLECT, User } from "../firebase";
 import { ref } from "firebase/database";
 
 export default function RideCard({ ride }: { ride: Ride }) {
@@ -30,12 +31,20 @@ export default function RideCard({ ride }: { ride: Ride }) {
     startMarker = <Marker position={ride.start} icon={startIcon} />;
     endMarker = <Marker position={ride.end} icon={endIcon} />;
     maxPassengers = ride.maxPassengers;
-    passengers = ride.passengers ? Object.keys(ride.passengers).length : 0;
 
-    const [driverUser, loading, error] = useObjectVal<User>(
+    const [passVals, passLoading, passError] = useListVals<string>(
+      ref(db, `${DB_PASSENGERS_COLLECT}/${ride.id}`)
+    );
+    passengers = passLoading ? "?" : passError ? "0" : passVals?.length;
+
+    const [driverUser, driverLoading, driverError] = useObjectVal<User>(
       ref(db, `${DB_USER_COLLECT}/${ride.driver}`)
     );
-    driver = loading ? "Loading" : error ? "Error" : driverUser?.name;
+    driver = driverLoading
+      ? "Loading"
+      : driverError
+      ? "Error"
+      : driverUser?.name;
   }
 
   return (
@@ -43,20 +52,18 @@ export default function RideCard({ ride }: { ride: Ride }) {
       <Flex onClick={onToggle}>
         <Heading size="md">{ride.name}</Heading>
         <Spacer />
-        <>
-          {/* Driver Display */}
-          <Icon as={AiFillCar} w={6} h={6} />
-          <Text ms={1} me={3}>{`${driver ? driver : "Driver Needed"}`}</Text>
-        </>
-        <>
-          {/* Passengers Display */}
-          <Icon as={BsFillPersonFill} w={6} h={6} />
-          <Text ms={1} me={3}>{`${passengers} / ${maxPassengers}`}</Text>
-        </>
         {isOpen ? (
           <ChevronUpIcon w={6} h={6} />
         ) : (
-          <ChevronDownIcon w={6} h={6} />
+          <>
+            {/* Driver Display */}
+            <Icon as={AiFillCar} w={6} h={6} />
+            <Text ms={1} me={3}>{`${driver ? driver : "Driver Needed"}`}</Text>
+            {/* Passengers Display */}
+            <Icon as={BsFillPersonFill} w={6} h={6} />
+            <Text ms={1} me={3}>{`${passengers} / ${maxPassengers}`}</Text>
+            <ChevronDownIcon w={6} h={6} />
+          </>
         )}
       </Flex>
       <Collapse
@@ -65,6 +72,26 @@ export default function RideCard({ ride }: { ride: Ride }) {
           if (map && isOpen) map.invalidateSize();
         }}
       >
+        <Flex flexDirection="row" m={2} align="center">
+          {/* Driver Display */}
+          <Icon as={AiFillCar} w={6} h={6} />
+          <Text ms={1} me={3}>{`${driver ? driver : "Driver Needed"}`}</Text>
+          <Spacer />
+          <Button>Join as Driver</Button>
+        </Flex>
+        <Flex flexDirection="row" m={2} align="center">
+          {/* Passengers Display */}
+          <Icon as={BsFillPersonFill} w={6} h={6} />
+          <Text ms={1} me={3}>{`${passengers} / ${maxPassengers}`}</Text>
+          <Spacer />
+          <Button
+            onClick={() => {
+              addPassengerToRide("1", ride);
+            }}
+          >
+            Join as Passenger
+          </Button>
+        </Flex>
         <AspectRatio ratio={16 / 10} mt="2">
           <MapView center={center} zoom={undefined} setMap={setMap}>
             {startMarker}
@@ -74,4 +101,8 @@ export default function RideCard({ ride }: { ride: Ride }) {
       </Collapse>
     </Box>
   );
+}
+
+function addPassengerToRide(passId: string, ride: Ride) {
+  console.log(`${passId}:${ride.id}`);
 }

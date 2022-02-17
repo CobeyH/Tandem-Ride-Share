@@ -31,6 +31,7 @@ const firebaseConfig = {
 export const DB_GROUP_COLLECT = "groups";
 export const DB_USER_COLLECT = "users";
 export const DB_RIDE_COLLECT = "rides";
+export const DB_PASSENGERS_COLLECT = "passengers";
 export const DB_KEY_SLUG_OPTS = {
   replacement: "-",
   remove: undefined,

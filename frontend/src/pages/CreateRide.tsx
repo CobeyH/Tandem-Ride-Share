@@ -12,7 +12,13 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, DB_KEY_SLUG_OPTS, DB_RIDE_COLLECT } from "../firebase";
+import {
+  auth,
+  db,
+  DB_KEY_SLUG_OPTS,
+  DB_PASSENGERS_COLLECT,
+  DB_RIDE_COLLECT,
+} from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
 import { Marker } from "react-leaflet";
@@ -36,11 +42,10 @@ export type Ride = {
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
   maxPassengers: number;
-  passengers: Record<string, boolean>;
   driver?: string;
 };
 
-const createRide = async (ride: Ride, groupId: string) => {
+const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
   ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
   if (
     (
@@ -51,6 +56,14 @@ const createRide = async (ride: Ride, groupId: string) => {
     throw new Error("Group ID already exists");
   }
   await set(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`), ride);
+  if (passList) {
+    await Promise.all(
+      passList.map(async (p) => {
+        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${ride.id}/${p}`), true);
+      })
+    );
+  }
+
   return ride;
 };
 
@@ -126,9 +139,8 @@ const CreateRide = () => {
                   start: startPosition,
                   end: endPosition,
                   maxPassengers: maxPassengers,
-                  passengers: { [user.uid]: true },
                 };
-                createRide(ride, groupId).then(() =>
+                createRide(ride, groupId, [user.uid]).then(() =>
                   navigate(`/group/${groupId}`)
                 );
               }
@@ -146,7 +158,6 @@ const CreateRide = () => {
                   start: startPosition,
                   end: endPosition,
                   maxPassengers: maxPassengers,
-                  passengers: {},
                   driver: user.uid,
                 };
                 createRide(ride, groupId).then(() =>
