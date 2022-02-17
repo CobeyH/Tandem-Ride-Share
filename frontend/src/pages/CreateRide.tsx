@@ -67,11 +67,14 @@ const CreateRide = () => {
 
   const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
   const [endPosition, setEndPosition] = useState<[number, number]>([0, 0]);
+  const [hasDragged, setHasDragged] = useState(false);
+
   function onDragStart(position: L.LatLng) {
     setStartPosition([position.lat, position.lng]);
   }
   function onDragEnd(position: L.LatLng) {
     setEndPosition([position.lat, position.lng]);
+    setHasDragged(true); // enable 'Create' button after user move the icon
   }
 
   const [maxPassengers, setMaxPassengers] = useState<number>(3);
@@ -113,6 +116,7 @@ const CreateRide = () => {
           </NumberInputStepper>
         </NumberInput>
         <Button
+          disabled={!hasDragged}
           onClick={() => {
             if (groupId) {
               const ride = {

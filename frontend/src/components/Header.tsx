@@ -5,6 +5,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Spacer,
+  Box,
 } from "@chakra-ui/react";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -17,6 +18,7 @@ export interface PageList {
 }
 
 const Header = (props: PageList) => {
+  const [user] = useAuthState(auth);
   return (
     <Flex
       width="100%"
@@ -31,7 +33,8 @@ const Header = (props: PageList) => {
       <Breadcrumbs pages={props.pages} />
       <Spacer />
       <ColorModeSwitcher justifySelf="flex-end" />
-      <LogoutButton />
+      <Box px={5}>{user?.displayName}</Box>
+      {user ? <LogoutButton /> : null}
     </Flex>
   );
 };
@@ -53,11 +56,7 @@ const Breadcrumbs = (props: PageList) => {
 };
 
 const LogoutButton = () => {
-  const [user] = useAuthState(auth);
-  if (user) {
-    return <Button onClick={logout}>Logout</Button>;
-  }
-  return null;
+  return <Button onClick={logout}>Logout</Button>;
 };
 
 export default Header;
