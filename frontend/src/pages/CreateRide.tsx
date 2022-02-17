@@ -29,6 +29,7 @@ import MapView, {
   endIcon,
   startIcon,
 } from "../components/MapView";
+import { LatLng } from "leaflet";
 
 type ValidatableField<T> = {
   field: T;
@@ -38,10 +39,11 @@ type ValidatableField<T> = {
 export type Ride = {
   id: string;
   name: string;
-  start: [number, number];
-  end: [number, number];
+  start: { lat: number; lng: number };
+  end: { lat: number; lng: number };
   maxPassengers: number;
   passengers: Record<string, boolean>;
+  driver: string;
 };
 
 const createRide = async (ride: Ride, groupId: string) => {
@@ -65,15 +67,16 @@ const CreateRide = () => {
   });
   const isInvalidTitle = (name: string) => name.length === 0;
 
-  const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
-  const [endPosition, setEndPosition] = useState<[number, number]>([0, 0]);
+  const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
+  const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [hasDragged, setHasDragged] = useState(false);
 
-  function onDragStart(position: L.LatLng) {
-    setStartPosition([position.lat, position.lng]);
+  function onDragStart(position: LatLng) {
+    setStartPosition(position);
+    setHasDragged(true);
   }
-  function onDragEnd(position: L.LatLng) {
-    setEndPosition([position.lat, position.lng]);
+  function onDragEnd(position: LatLng) {
+    setEndPosition(position);
     setHasDragged(true); // enable 'Create' button after user move the icon
   }
 
@@ -118,7 +121,7 @@ const CreateRide = () => {
         <Button
           disabled={!hasDragged}
           onClick={() => {
-            if (groupId) {
+            if (groupId && user) {
               const ride = {
                 id: "",
                 name: title,
@@ -126,6 +129,7 @@ const CreateRide = () => {
                 end: endPosition,
                 maxPassengers: maxPassengers,
                 passengers: {},
+                driver: user.uid,
               };
               createRide(ride, groupId).then(() =>
                 navigate(`/group/${groupId}`)

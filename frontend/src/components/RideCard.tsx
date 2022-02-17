@@ -15,13 +15,14 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
+import { LatLng } from "leaflet";
 
 export default function RideCard({ ride }: { ride: Ride }) {
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
   let center, startMarker, endMarker, maxPassengers, passengers;
   if (ride) {
-    center = findMidpoint(ride.start, ride.end);
+    center = findMidpoint(ride.start as LatLng, ride.end as LatLng);
     startMarker = <Marker position={ride.start} icon={startIcon} />;
     endMarker = <Marker position={ride.end} icon={endIcon} />;
     maxPassengers = ride.maxPassengers;
