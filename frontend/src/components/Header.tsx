@@ -5,20 +5,27 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Spacer,
-  Box,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { logout, auth } from "../firebase";
+import { MdEmail } from "react-icons/all";
 
 export interface PageList {
   pages?: { label: string; url: string }[];
 }
 
-const Header = (props: PageList) => {
+const Header = ({ pages }: PageList) => {
   const [user] = useAuthState(auth);
+  const [userModalOpen, setUserModalOpen] = useState(false);
+
   return (
     <Flex
       width="100%"
@@ -28,29 +35,51 @@ const Header = (props: PageList) => {
       padding={6}
       marginBlockEnd={4}
     >
-      <Breadcrumbs pages={props.pages} />
+      <Breadcrumbs pages={pages} />
       <Spacer />
-      <ColorModeSwitcher justifySelf="flex-end" />
-      <Box px={5}>{user?.displayName}</Box>
-      {user ? <LogoutButton /> : null}
+      <Button onClick={() => setUserModalOpen(true)} variant={"outline"}>
+        Profile
+      </Button>
+      <Modal
+        isOpen={userModalOpen}
+        onClose={() => setUserModalOpen(false)}
+        isCentered={true}
+      >
+        <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+          <ModalHeader>
+            {user?.displayName}
+            <ColorModeSwitcher float={"right"} />
+          </ModalHeader>
+          <ModalBody>
+            {user?.email ? (
+              <Flex>
+                <MdEmail style={{ margin: 5 }} /> {user.email}
+              </Flex>
+            ) : null}
+          </ModalBody>
+          <ModalFooter>{user ? <LogoutButton /> : null}</ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };
 
-const Breadcrumbs = (props: PageList) => {
-  if (!props || !props.pages || props.pages.length <= 0) {
+const Breadcrumbs = ({ pages }: PageList) => {
+  if (pages === undefined || (pages.length ?? 0 !== 0)) {
     return null;
   }
-  const items = props.pages.map((p, i) => {
-    return (
-      <BreadcrumbItem key={i}>
-        <BreadcrumbLink as={Link} to={p.url}>
-          {p.label}
-        </BreadcrumbLink>
-      </BreadcrumbItem>
-    );
-  });
-  return <Breadcrumb>{items}</Breadcrumb>;
+
+  return (
+    <Breadcrumb>
+      {pages.map((p, i) => (
+        <BreadcrumbItem key={i}>
+          <BreadcrumbLink as={Link} to={p.url}>
+            {p.label}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      ))}
+    </Breadcrumb>
+  );
 };
 
 const LogoutButton = () => {
