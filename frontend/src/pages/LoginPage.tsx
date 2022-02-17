@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -75,17 +76,16 @@ export default function Login() {
           <Button width="full" mt={4} onClick={handleEmailLogin}>
             Sign In
           </Button>
-          <div>
-            New to Tandem?
+          <Text>
+            New to Tandem?{" "}
             <Link
               style={{ color: "blue" }}
               to="/register"
               state={location.state}
             >
-              {" "}
               Register
             </Link>{" "}
-          </div>
+          </Text>
           <Button
             leftIcon={<FaGoogle />}
             width="full"
