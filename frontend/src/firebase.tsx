@@ -111,3 +111,10 @@ export async function sendPasswordReset(email: string) {
 export const logout = () => {
   signOut(auth);
 };
+
+export type User = {
+  uid: string;
+  name: string;
+  authProvider: string;
+  email: string;
+};
