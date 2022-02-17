@@ -18,11 +18,23 @@ import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
 import { LatLng } from "leaflet";
-import { useListVals, useObjectVal } from "react-firebase-hooks/database";
-import { db, DB_PASSENGERS_COLLECT, DB_USER_COLLECT, User } from "../firebase";
-import { ref } from "firebase/database";
+import {
+  useList,
+  useListVals,
+  useObjectVal,
+} from "react-firebase-hooks/database";
+import {
+  auth,
+  db,
+  DB_PASSENGERS_COLLECT,
+  DB_USER_COLLECT,
+  User,
+} from "../firebase";
+import { equalTo, orderByValue, query, ref, set } from "firebase/database";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function RideCard({ ride }: { ride: Ride }) {
+  const [user] = useAuthState(auth);
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
   let center, startMarker, endMarker, maxPassengers, passengers, driver;
@@ -30,12 +42,6 @@ export default function RideCard({ ride }: { ride: Ride }) {
     center = findMidpoint(ride.start as LatLng, ride.end as LatLng);
     startMarker = <Marker position={ride.start} icon={startIcon} />;
     endMarker = <Marker position={ride.end} icon={endIcon} />;
-    maxPassengers = ride.maxPassengers;
-
-    const [passVals, passLoading, passError] = useListVals<string>(
-      ref(db, `${DB_PASSENGERS_COLLECT}/${ride.id}`)
-    );
-    passengers = passLoading ? "?" : passError ? "0" : passVals?.length;
 
     const [driverUser, driverLoading, driverError] = useObjectVal<User>(
       ref(db, `${DB_USER_COLLECT}/${ride.driver}`)
@@ -59,10 +65,8 @@ export default function RideCard({ ride }: { ride: Ride }) {
             {/* Driver Display */}
             <Icon as={AiFillCar} w={6} h={6} />
             <Text ms={1} me={3}>{`${driver ? driver : "Driver Needed"}`}</Text>
-            {/* Passengers Display */}
-            <Icon as={BsFillPersonFill} w={6} h={6} />
-            <Text ms={1} me={3}>{`${passengers} / ${maxPassengers}`}</Text>
             <ChevronDownIcon w={6} h={6} />
+            <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
           </>
         )}
       </Flex>
@@ -80,17 +84,9 @@ export default function RideCard({ ride }: { ride: Ride }) {
           <Button>Join as Driver</Button>
         </Flex>
         <Flex flexDirection="row" m={2} align="center">
-          {/* Passengers Display */}
-          <Icon as={BsFillPersonFill} w={6} h={6} />
-          <Text ms={1} me={3}>{`${passengers} / ${maxPassengers}`}</Text>
+          <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
           <Spacer />
-          <Button
-            onClick={() => {
-              addPassengerToRide("1", ride);
-            }}
-          >
-            Join as Passenger
-          </Button>
+          {user ? <PassengerButton rideId={ride.id} userId={user.uid} /> : ""}
         </Flex>
         <AspectRatio ratio={16 / 10} mt="2">
           <MapView center={center} zoom={undefined} setMap={setMap}>
@@ -103,6 +99,55 @@ export default function RideCard({ ride }: { ride: Ride }) {
   );
 }
 
-function addPassengerToRide(passId: string, ride: Ride) {
-  console.log(`${passId}:${ride.id}`);
+function setRidePassenger(passId: string, rideId: string, state: boolean) {
+  set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${passId}`), state);
+}
+
+function PassengerButton({
+  rideId,
+  userId,
+}: {
+  rideId: string;
+  userId: string;
+}) {
+  const [amPassenger, loading, error] = useObjectVal(
+    ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${userId}`)
+  );
+  return (
+    <Button
+      disabled={loading || error !== undefined}
+      onClick={() => {
+        setRidePassenger(userId, rideId, !amPassenger);
+      }}
+    >
+      {amPassenger ? "Leave" : "Join"}
+    </Button>
+  );
+}
+
+function PassengerCounter({
+  rideId,
+  maxPass,
+}: {
+  rideId: string;
+  maxPass: number;
+}) {
+  const [passVals, passLoading, passError] = useList(
+    query(
+      ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}`),
+      orderByValue(),
+      equalTo(true)
+    )
+  );
+
+  return (
+    <>
+      <Icon as={BsFillPersonFill} w={6} h={6} />
+      <Text ms={1} me={3}>
+        {`${
+          passLoading ? "?" : passError ? "0" : passVals?.length
+        } / ${maxPass}`}
+      </Text>
+    </>
+  );
 }
