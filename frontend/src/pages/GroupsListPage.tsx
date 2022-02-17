@@ -34,7 +34,7 @@ export default function GroupsListPage() {
       <Header />
       <Center>
         <Box textAlign={"center"}>
-          <Heading>Groups Page</Heading>
+          <Heading>My Groups</Heading>
           <VStack>
             {groups
               ?.filter(({ members }) => {
