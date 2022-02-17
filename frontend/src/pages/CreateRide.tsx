@@ -15,6 +15,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {
   auth,
   db,
+  DB_GROUP_COLLECT,
   DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
@@ -47,15 +48,12 @@ export type Ride = {
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
   ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
-  if (
-    (
-      await get(query(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`)))
-    ).exists()
-  ) {
+  if ((await get(query(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`)))).exists()) {
     /* TODO: increment id */
-    throw new Error("Group ID already exists");
+    throw new Error("Ride ID already exists");
   }
-  await set(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`), ride);
+  await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
+  await set(ref(db, `${DB_GROUP_COLLECT}/rides/${ride.id}`), true);
   if (passList) {
     await Promise.all(
       passList.map(async (p) => {
