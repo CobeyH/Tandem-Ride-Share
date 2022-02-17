@@ -98,7 +98,7 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
               </Box>
             )}
 
-            <Text>Members: {group?.members?.length ?? 0}</Text>
+            <Text>Members: {Object.keys(group?.members ?? {}).length}</Text>
             <Button
               onClick={() => {
                 set(ref(db, `groups/${group.id}/members/${userId}`), true).then(
