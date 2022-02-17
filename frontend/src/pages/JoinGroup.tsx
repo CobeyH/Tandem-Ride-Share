@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Text,
+  AspectRatio,
   Box,
   Button,
   Center,
   Heading,
   Spinner,
+  Text,
   VStack,
-  AspectRatio,
 } from "@chakra-ui/react";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
@@ -39,6 +39,8 @@ const JoinGroup = () => {
     };
     navigate("/register", { state });
     return <></>; // return here to let typescript know from here on in user is not null
+  } else if (group?.members[user.uid]) {
+    navigate(NavConstants.groupWithId(groupId));
   }
 
   return groupError ? (
