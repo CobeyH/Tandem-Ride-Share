@@ -75,6 +75,17 @@ export default function Login() {
           <Button width="full" mt={4} onClick={handleEmailLogin}>
             Sign In
           </Button>
+          <div>
+            New to Tandem?
+            <Link
+              style={{ color: "blue" }}
+              to="/register"
+              state={location.state}
+            >
+              {" "}
+              Register
+            </Link>{" "}
+          </div>
           <Button
             leftIcon={<FaGoogle />}
             width="full"
@@ -83,16 +94,6 @@ export default function Login() {
           >
             Sign In With Google
           </Button>
-          <div>
-            <Link
-              style={{ color: "blue" }}
-              to="/register"
-              state={location.state}
-            >
-              Register
-            </Link>{" "}
-            now.
-          </div>
         </Box>
       </Box>
     </Flex>

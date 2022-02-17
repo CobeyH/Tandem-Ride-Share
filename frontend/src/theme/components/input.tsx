@@ -1,16 +1,16 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
 import { lightTheme } from "../colours";
 
-const Button: ComponentStyleConfig = {
+export const Input: ComponentStyleConfig = {
+  // 3. We can add a new visual variant
   variants: {
     "tandem-base": {
-      bg: lightTheme.lightButton,
-      textColor: lightTheme.buttonText,
+      field: {
+        bg: lightTheme.form,
+      },
     },
   },
   defaultProps: {
     variant: "tandem-base",
   },
 };
-
-export default Button;

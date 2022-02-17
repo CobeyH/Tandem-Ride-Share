@@ -26,7 +26,6 @@ const Header = (props: PageList) => {
       justify="space-between"
       wrap="wrap"
       padding={6}
-      bg="teal.500"
       marginBlockEnd={4}
     >
       <Breadcrumbs pages={props.pages} />
