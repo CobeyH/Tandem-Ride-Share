@@ -37,29 +37,35 @@ const Header = ({ pages }: PageList) => {
     >
       <Breadcrumbs pages={pages} />
       <Spacer />
-      <Button onClick={() => setUserModalOpen(true)} variant={"outline"}>
-        Profile
-      </Button>
-      <Modal
-        isOpen={userModalOpen}
-        onClose={() => setUserModalOpen(false)}
-        isCentered={true}
-      >
-        <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-          <ModalHeader>
-            {user?.displayName}
-            <ColorModeSwitcher float={"right"} />
-          </ModalHeader>
-          <ModalBody>
-            {user?.email ? (
-              <Flex>
-                <MdEmail style={{ margin: 5 }} /> {user.email}
-              </Flex>
-            ) : null}
-          </ModalBody>
-          <ModalFooter>{user ? <LogoutButton /> : null}</ModalFooter>
-        </ModalContent>
-      </Modal>
+      {user ? (
+        <>
+          <Button onClick={() => setUserModalOpen(true)} variant={"outline"}>
+            Profile
+          </Button>
+          <Modal
+            isOpen={userModalOpen}
+            onClose={() => setUserModalOpen(false)}
+            isCentered={true}
+          >
+            <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+              <ModalHeader>
+                {user?.displayName}
+                <ColorModeSwitcher float={"right"} />
+              </ModalHeader>
+              <ModalBody>
+                {user?.email ? (
+                  <Flex>
+                    <MdEmail style={{ margin: 5 }} /> {user.email}
+                  </Flex>
+                ) : null}
+              </ModalBody>
+              <ModalFooter>{user ? <LogoutButton /> : null}</ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      ) : (
+        <ColorModeSwitcher float={"right"} />
+      )}
     </Flex>
   );
 };
