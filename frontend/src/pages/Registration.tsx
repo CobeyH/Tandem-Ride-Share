@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
+import { NavConstants } from "../NavigationConstants";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -88,7 +89,11 @@ function Register() {
           </Button>
           <div>
             Already have an account?{" "}
-            <Link style={{ color: "blue" }} to="/">
+            <Link
+              style={{ color: "blue" }}
+              to={NavConstants.LOGIN}
+              state={location.state}
+            >
               Login
             </Link>{" "}
             now.

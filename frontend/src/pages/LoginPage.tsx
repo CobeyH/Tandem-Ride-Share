@@ -84,8 +84,11 @@ export default function Login() {
             Sign In With Google
           </Button>
           <div>
-            Need an account?{" "}
-            <Link style={{ color: "blue" }} to="/register">
+            <Link
+              style={{ color: "blue" }}
+              to="/register"
+              state={location.state}
+            >
               Register
             </Link>{" "}
             now.
