@@ -61,7 +61,7 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
 
   useEffect(() => {
     map?.invalidateSize();
-  }, []);
+  }, [map]);
 
   return (
     <>
@@ -73,17 +73,29 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
             {loadingRides ? (
               <Spinner />
             ) : ridesLoadError || rides === [] || !rides ? null : (
-              <AspectRatio ratio={1} width={"100%"}>
-                <MapView
-                  setMap={setMap}
-                  center={
-                    findMidpoint(
-                      rides[0].start,
-                      rides[0].end
-                    ) /* we know rides is non-empty*/
-                  }
-                />
-              </AspectRatio>
+              <Box
+                paddingBottom={2}
+                paddingRight={2}
+                paddingLeft={2}
+                width={"100%"}
+              >
+                <Center>
+                  <Heading size={"sm"} padding={2}>
+                    {rides[0].name}
+                  </Heading>
+                </Center>
+                <AspectRatio ratio={1} width={"100%"}>
+                  <MapView
+                    setMap={setMap}
+                    center={
+                      findMidpoint(
+                        rides[0].start,
+                        rides[0].end
+                      ) /* we know rides is non-empty*/
+                    }
+                  />
+                </AspectRatio>
+              </Box>
             )}
 
             <Text>Members: {group?.members?.length ?? 0}</Text>
