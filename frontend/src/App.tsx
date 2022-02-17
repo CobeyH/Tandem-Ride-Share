@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import LoginForm from "./pages/LoginPage";
 import GroupsListPage from "./pages/GroupsListPage";
-import { ChakraProvider, theme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import Register from "./pages/Registration";
 import CreateGroup from "./pages/CreateGroup";
 import GroupPage from "./pages/GroupPage";
@@ -17,12 +17,13 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import { NavConstants } from "./NavigationConstants";
 import { useEffect } from "react";
+import extendedTheme from "./theme/style";
 
 export const App = () => {
   const [user, loading] = useAuthState(auth);
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={extendedTheme}>
       <Router>
         {loading || user ? (
           <Routes>
