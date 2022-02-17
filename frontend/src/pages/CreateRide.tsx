@@ -41,7 +41,7 @@ export type Ride = {
   start: [number, number];
   end: [number, number];
   maxPassengers: number;
-  passengers: string[];
+  passengers: Record<string, boolean>;
 };
 
 const createRide = async (ride: Ride, groupId: string) => {
@@ -125,7 +125,7 @@ const CreateRide = () => {
                 start: startPosition,
                 end: endPosition,
                 maxPassengers: maxPassengers,
-                passengers: [],
+                passengers: {},
               };
               createRide(ride, groupId).then(() =>
                 navigate(`/group/${groupId}`)

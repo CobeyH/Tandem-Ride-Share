@@ -9,6 +9,7 @@ import {
   VStack,
   Image,
   Box,
+  Container,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db, DB_RIDE_COLLECT } from "../firebase";
@@ -57,7 +58,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const [banner] = useDownloadURL(storageRef(storage, `${group.banner}`));
 
   return (
-    <Flex width="100%" align="center">
+    <>
       <Header pages={[{ label: "Group List", url: "/" }]} />
       {banner === "loading" ? (
         <Box />
@@ -70,24 +71,25 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           pb={5}
         />
       )}
-
-      <VStack spacing="24px" align="c" width="20%">
-        <Heading>{group.name}</Heading>
-        <Text>{group.description}</Text>
-        {error && <strong>Error: {error}</strong>}
-        {loading && <Center>Loading...</Center>}
-        {!loading &&
-          snapshots &&
-          snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
-        <Button
-          onClick={() => {
-            navigate(`/group/${group.id}/ride/new`);
-          }}
-        >
-          New Ride
-        </Button>
-        <ShareLink />
-      </VStack>
-    </Flex>
+      <Container>
+        <VStack spacing="24px" align="c">
+          <Heading>{group.name}</Heading>
+          <Text>{group.description}</Text>
+          {error && <strong>Error: {error}</strong>}
+          {loading && <Center>Loading...</Center>}
+          {!loading &&
+            snapshots &&
+            snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
+          <Button
+            onClick={() => {
+              navigate(`/group/${group.id}/ride/new`);
+            }}
+          >
+            New Ride
+          </Button>
+          <ShareLink />
+        </VStack>
+      </Container>
+    </>
   );
 };
