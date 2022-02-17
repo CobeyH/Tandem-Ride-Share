@@ -30,7 +30,7 @@ export default function RideCard({ ride }: { ride: Ride }) {
     startMarker = <Marker position={ride.start} icon={startIcon} />;
     endMarker = <Marker position={ride.end} icon={endIcon} />;
     maxPassengers = ride.maxPassengers;
-    passengers = Object.keys(ride.passengers).length;
+    passengers = ride.passengers ? Object.keys(ride.passengers).length : 0;
 
     const [driverUser, loading, error] = useObjectVal<User>(
       ref(db, `${DB_USER_COLLECT}/${ride.driver}`)
