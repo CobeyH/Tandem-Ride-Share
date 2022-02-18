@@ -77,6 +77,8 @@ export default function GroupsListPage() {
                 key={i}
                 px={"20%"}
                 py={4}
+                border="1px"
+                borderColor="gray.200"
                 borderRadius={"4px"}
                 backgroundColor={"whiteAlpha.800"}
                 onClick={() => navigate(NavConstants.groupWithId(group.id))}
