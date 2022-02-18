@@ -72,7 +72,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Container>
         <VStack spacing="24px" align="c">
           <Heading>{group.name}</Heading>
-          <Box bg="white" px={5} py={5}>
+          <Box bg="white" px={5} py={5} borderRadius={10}>
             <Text> Description: </Text>
             <Text> {group.description}</Text>
           </Box>
