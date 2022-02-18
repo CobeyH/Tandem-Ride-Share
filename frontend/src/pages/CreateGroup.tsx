@@ -27,6 +27,7 @@ export type Group = {
   id: string;
   name: string;
   description: string;
+  rides: { [key: string]: boolean };
   members: { [key: string]: boolean };
   banner?: string;
 };
@@ -107,15 +108,16 @@ const CreateGroup = () => {
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
-                createGroup({ description, name, members: {} }, user.uid).then(
-                  (group) => {
-                    navigate(`/group/${group.id}`);
-                    uploadBanner(group.id).then((url) => {
-                      const groupRef = ref(db, `groups/${group.id}`);
-                      set(groupRef, { ...group, banner: url?.fullPath });
-                    });
-                  }
-                );
+                createGroup(
+                  { description, name, rides: {}, members: {} },
+                  user.uid
+                ).then((group) => {
+                  navigate(`/group/${group.id}`);
+                  uploadBanner(group.id).then((url) => {
+                    const groupRef = ref(db, `groups/${group.id}`);
+                    set(groupRef, { ...group, banner: url?.fullPath });
+                  });
+                });
               }
             }}
           >

@@ -1,21 +1,20 @@
 import * as React from "react";
 import {
   Button,
-  Center,
-  Flex,
   Heading,
   Spinner,
   Text,
   VStack,
   Image,
   Box,
+  Container,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db, DB_RIDE_COLLECT } from "../firebase";
+import { db, DB_GROUP_COLLECT } from "../firebase";
 import { ref } from "firebase/database";
 import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import { useList, useObjectVal } from "react-firebase-hooks/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 import RideCard from "../components/RideCard";
 import Header from "../components/Header";
 import { storage } from "../storage";
@@ -31,11 +30,11 @@ export default function GroupPage() {
     navigate("/");
   }
   const [group, loading, error] = useObjectVal<Group>(
-    ref(db, `groups/${groupId}`)
+    ref(db, `${DB_GROUP_COLLECT}/${groupId}`)
   );
 
   return (
-    <Flex width="full" align="start" justifyContent="center">
+    <>
       {loading ? (
         <Spinner />
       ) : error ? (
@@ -45,19 +44,16 @@ export default function GroupPage() {
       ) : (
         <Text>No such group exists</Text>
       )}
-    </Flex>
+    </>
   );
 }
 
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
-  const [snapshots, loading, error] = useList(
-    ref(db, `${DB_RIDE_COLLECT}/${group.id}`)
-  );
   const [banner] = useDownloadURL(storageRef(storage, `${group.banner}`));
 
   return (
-    <Flex flexDirection="column" width="100%" align="center">
+    <>
       <Header pages={[{ label: "Group List", url: "/" }]} />
       {banner === "loading" ? (
         <Box />
@@ -70,24 +66,25 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           pb={5}
         />
       )}
-
-      <VStack spacing="24px" align="c" width="20%">
-        <Heading>{group.name}</Heading>
-        <Text>{group.description}</Text>
-        {error && <strong>Error: {error}</strong>}
-        {loading && <Center>Loading...</Center>}
-        {!loading &&
-          snapshots &&
-          snapshots.map((v) => <RideCard key={v.key} ride={v.val()} />)}
-        <Button
-          onClick={() => {
-            navigate(`/group/${group.id}/ride/new`);
-          }}
-        >
-          New Ride
-        </Button>
-        <ShareLink />
-      </VStack>
-    </Flex>
+      <Container>
+        <VStack spacing="24px" align="c">
+          <Heading>{group.name}</Heading>
+          <Text>{group.description}</Text>
+          {group.rides
+            ? Object.keys(group.rides).map((key) => (
+                <RideCard key={key} rideId={key} />
+              ))
+            : null}
+          <Button
+            onClick={() => {
+              navigate(`/group/${group.id}/ride/new`);
+            }}
+          >
+            New Ride
+          </Button>
+          <ShareLink />
+        </VStack>
+      </Container>
+    </>
   );
 };
