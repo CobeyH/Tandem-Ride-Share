@@ -71,7 +71,7 @@ const CreateRide = () => {
   const [{ field: title, invalid: invalidTitle }, setTitle] = useState<
     ValidatableField<string>
   >({
-    field: user ? user.displayName + "'s Ride" : "",
+    field: user?.displayName ? user.displayName + "'s Ride" : "",
     invalid: false,
   });
   const isInvalidTitle = (name: string) => name.length === 0;
