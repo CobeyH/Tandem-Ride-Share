@@ -30,7 +30,7 @@ import MapView, {
   endIcon,
   startIcon,
 } from "../components/MapView";
-import { LatLng } from "leaflet";
+import { LatLng, latLngBounds } from "leaflet";
 
 type ValidatableField<T> = {
   field: T;
@@ -79,14 +79,19 @@ const CreateRide = () => {
   const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [hasDragged, setHasDragged] = useState(false);
+  const [map, setMap] = useState<L.Map | undefined>(undefined);
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
     setHasDragged(true);
+    map?.invalidateSize();
+    map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
   function onDragEnd(position: LatLng) {
     setEndPosition(position);
     setHasDragged(true); // enable 'Create' button after user move the icon
+    map?.invalidateSize();
+    map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
 
   const [maxPassengers, setMaxPassengers] = useState<number>(3);
@@ -172,7 +177,7 @@ const CreateRide = () => {
             Create Ride as Driver
           </Button>
         </InputGroup>
-        <MapView style={{ height: "50vh" }}>
+        <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
         </MapView>
