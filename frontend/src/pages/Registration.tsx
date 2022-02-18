@@ -56,6 +56,8 @@ function Register() {
           <FormLabel>Full Name</FormLabel>
           <Input
             type="fullName"
+            color="white"
+            _placeholder={{ color: "white" }}
             placeholder="Full name"
             onChange={(event) => setName(event.currentTarget.value)}
           />
@@ -64,6 +66,8 @@ function Register() {
           <FormLabel>E-mail Address</FormLabel>
           <Input
             type="email"
+            color="white"
+            _placeholder={{ color: "white" }}
             placeholder="test@test.com"
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
@@ -72,6 +76,8 @@ function Register() {
           <FormLabel>Password</FormLabel>
           <Input
             type="password"
+            color="white"
+            _placeholder={{ color: "white" }}
             placeholder="Password"
             onChange={(event) => setPassword(event.currentTarget.value)}
           />

@@ -55,6 +55,8 @@ export default function Login() {
           <FormLabel>E-mail Address</FormLabel>
           <Input
             type="email"
+            color="white"
+            _placeholder={{ color: "white" }}
             placeholder="test@test.com"
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
@@ -63,6 +65,8 @@ export default function Login() {
           <FormLabel>Password</FormLabel>
           <Input
             type="password"
+            color="white"
+            _placeholder={{ color: "white" }}
             placeholder="*******"
             onChange={(event) => setPassword(event.currentTarget.value)}
           />
