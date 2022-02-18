@@ -40,8 +40,13 @@ export default function GroupsListPage() {
         <Box textAlign={"center"}>
           <Heading>My Groups</Heading>
           <InputGroup mt={4}>
-            <Input placeholder="Search Groups" />
-            <InputLeftElement>
+            <Input
+              textAlign={"center"}
+              color="white"
+              _placeholder={{ color: "white" }}
+              placeholder="Search Groups"
+            />
+            <InputLeftElement color={"white"}>
               <GiMagnifyingGlass />
             </InputLeftElement>
           </InputGroup>
