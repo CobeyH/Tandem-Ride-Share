@@ -8,6 +8,7 @@ import {
   Image,
   Box,
   Container,
+  Center,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db, DB_GROUP_COLLECT } from "../firebase";
@@ -36,7 +37,9 @@ export default function GroupPage() {
   return (
     <>
       {loading ? (
-        <Spinner />
+        <Center p={"35%"}>
+          <Spinner speed={"1.0s"} p={"10%"} />
+        </Center>
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : group ? (
