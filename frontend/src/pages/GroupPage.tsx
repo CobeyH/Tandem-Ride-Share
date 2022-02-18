@@ -72,7 +72,10 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Container>
         <VStack spacing="24px" align="c">
           <Heading>{group.name}</Heading>
-          <Text>{group.description}</Text>
+          <Box bg="white" px={5} py={5}>
+            <Text> Description: </Text>
+            <Text> {group.description}</Text>
+          </Box>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
                 <RideCard key={key} rideId={key} />
