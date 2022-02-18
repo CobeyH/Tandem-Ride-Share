@@ -24,6 +24,10 @@ const styles = {
     Button,
     Input,
   },
+  fonts: {
+    heading: "Montserrat",
+    body: "Montserrat",
+  },
 };
 
 // 3. extend the theme

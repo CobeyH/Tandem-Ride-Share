@@ -18,12 +18,14 @@ import { auth } from "./firebase";
 import { NavConstants } from "./NavigationConstants";
 import { useEffect } from "react";
 import extendedTheme from "./theme/style";
+import Fonts from "./theme/components/font";
 
 export const App = () => {
   const [user, loading] = useAuthState(auth);
 
   return (
     <ChakraProvider theme={extendedTheme}>
+      <Fonts />
       <Router>
         {loading || user ? (
           <Routes>
