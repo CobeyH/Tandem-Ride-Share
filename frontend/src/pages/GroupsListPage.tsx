@@ -45,7 +45,6 @@ export default function GroupsListPage() {
               <GiMagnifyingGlass />
             </InputLeftElement>
           </InputGroup>
-
           <VStack>
             {groups
               ?.filter(({ members }) => {
