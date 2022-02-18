@@ -19,14 +19,7 @@ import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
 import { LatLng } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
-import {
-  auth,
-  db,
-  DB_PASSENGERS_COLLECT,
-  DB_RIDE_COLLECT,
-  DB_USER_COLLECT,
-  User,
-} from "../firebase";
+import { auth, db, DB_PASSENGERS_COLLECT, DB_RIDE_COLLECT } from "../firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -52,13 +45,13 @@ export default function RideCard({
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" p="3" minW="sm">
+    <Box borderWidth="1px" borderRadius="lg" p="3">
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
         <>
           <Flex onClick={onToggle}>
-            <Heading size="md">{ride.name}</Heading>
+            <Heading size="sm">{ride.name}</Heading>
             <Spacer />
             {isOpen ? (
               <ChevronUpIcon w={6} h={6} />
@@ -186,19 +179,12 @@ function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
 }
 
 function DriverDisplay({ driverId }: { driverId: string | undefined }) {
-  const [driverUser, driverLoading, driverError] = useObjectVal<User>(
-    ref(db, `${DB_USER_COLLECT}/${driverId}`)
-  );
-  const driver = driverLoading
-    ? "Loading"
-    : driverError
-    ? "Error"
-    : driverUser?.name;
-
   return (
-    <>
-      <Icon as={AiFillCar} w={6} h={6} />
-      <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
-    </>
+    <Icon
+      as={AiFillCar}
+      w={6}
+      h={6}
+      color={driverId ? "green.100" : "red.100"}
+    />
   );
 }
