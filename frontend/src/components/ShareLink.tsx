@@ -14,7 +14,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
+import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 const ShareLink = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,14 +23,14 @@ const ShareLink = () => {
   const url = window.location.href;
   return (
     <>
-      <Button
+      <ExternalLinkIcon
         onClick={() => {
           setValue(url + "/join");
           onOpen();
         }}
       >
         Invite Friends
-      </Button>
+      </ExternalLinkIcon>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

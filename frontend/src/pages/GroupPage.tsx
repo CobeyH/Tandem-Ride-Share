@@ -9,6 +9,7 @@ import {
   Box,
   Container,
   Center,
+  HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db, DB_GROUP_COLLECT } from "../firebase";
@@ -71,7 +72,10 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       )}
       <Container>
         <VStack spacing="24px" align="c">
-          <Heading textAlign={"center"}>{group.name}</Heading>
+          <HStack>
+            <Heading textAlign={"center"}>{group.name}</Heading>
+            <ShareLink />
+          </HStack>
           <Box bg="white" px={5} py={5} borderRadius={"4px"}>
             <Text> Description: </Text>
             <Text> {group.description}</Text>
@@ -88,7 +92,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           >
             New Ride
           </Button>
-          <ShareLink />
         </VStack>
       </Container>
     </>

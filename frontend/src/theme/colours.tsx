@@ -6,3 +6,11 @@ export const lightTheme = {
   form: "#C8C8C8",
   settings: "#808080",
 };
+
+export const groupLogos = [
+  "#3975AE",
+  "#EC9A29",
+  "#72E1D1",
+  "#D7263D",
+  "#B07C9E",
+];

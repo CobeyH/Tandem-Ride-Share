@@ -1,10 +1,12 @@
 import * as React from "react";
 import { useEffect } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Center,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
@@ -20,6 +22,7 @@ import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import Header from "../components/Header";
+import { groupLogos } from "../theme/colours";
 import { GiMagnifyingGlass } from "react-icons/all";
 
 export default function GroupsListPage() {
@@ -65,9 +68,17 @@ export default function GroupsListPage() {
                 }
               })
               ?.map((groups, i) => (
-                <Link key={i} href={`group/${groups.id}`} margin={"2rem"}>
-                  {groups.name}
-                </Link>
+                <HStack key={i}>
+                  <Avatar
+                    bg={groupLogos[i % groupLogos.length]}
+                    size="xs"
+                    textAlign="center"
+                    name={groups.name}
+                  />
+                  <Link href={`group/${groups.id}`} margin={"2rem"}>
+                    {groups.name}
+                  </Link>
+                </HStack>
               ))}
           </VStack>
           {loadingGroups ? <Spinner /> : null}
