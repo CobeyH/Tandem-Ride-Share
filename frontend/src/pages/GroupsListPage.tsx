@@ -5,6 +5,8 @@ import {
   Box,
   Button,
   Center,
+  Container,
+  Flex,
   Heading,
   HStack,
   Input,
@@ -40,20 +42,26 @@ export default function GroupsListPage() {
   return (
     <>
       <Header />
-      <Center>
-        <Box textAlign={"center"}>
-          <Heading>My Groups</Heading>
-          <InputGroup mt={4}>
-            <Input
-              textAlign={"center"}
-              color="white"
-              _placeholder={{ color: "white" }}
-              placeholder="Search Groups"
-            />
-            <InputLeftElement color={"white"}>
-              <GiMagnifyingGlass />
-            </InputLeftElement>
-          </InputGroup>
+      <Container>
+        <Center>
+          <Heading size={"md"}>My Groups</Heading>
+        </Center>
+        <InputGroup mt={4} size={"sm"}>
+          <Input
+            textAlign={"center"}
+            color="white"
+            _placeholder={{ color: "white" }}
+            placeholder="Search Groups"
+          />
+          <InputLeftElement color={"white"}>
+            <GiMagnifyingGlass />
+          </InputLeftElement>
+        </InputGroup>
+        <Flex
+          flexDir={"column"}
+          justifyContent={"space-between"}
+          height={"75vh"}
+        >
           <VStack>
             {groups
               ?.filter(({ members }) => {
@@ -69,30 +77,40 @@ export default function GroupsListPage() {
                 }
               })
               ?.map((group, i) => (
-                <HStack key={i} mt={4}>
-                  <Avatar
-                    bg={groupLogos[i % groupLogos.length]}
-                    size="xs"
-                    textAlign="center"
-                    name={group.name}
-                    onClick={() => navigate(NavConstants.groupWithId(group.id))}
-                  />
-                  <Link
-                    href={NavConstants.groupWithId(group.id)}
-                    margin={"2rem"}
-                  >
-                    {group.name}
-                  </Link>
-                </HStack>
+                <Box
+                  mt={4}
+                  color={""}
+                  key={i}
+                  px={"20%"}
+                  py={4}
+                  borderRadius={"4px"}
+                  backgroundColor={"whiteAlpha.800"}
+                >
+                  <HStack>
+                    <Avatar
+                      bg={groupLogos[i % groupLogos.length]}
+                      size="xs"
+                      textAlign="center"
+                      name={group.name}
+                      onClick={() =>
+                        navigate(NavConstants.groupWithId(group.id))
+                      }
+                    />
+                    <Link
+                      href={NavConstants.groupWithId(group.id)}
+                      margin={"2rem"}
+                    >
+                      {group.name}
+                    </Link>
+                  </HStack>
+                </Box>
               ))}
           </VStack>
           {loadingGroups ? <Spinner /> : null}
           {error ? <Text>{JSON.stringify(error)}</Text> : null}
-          <Button onClick={() => navigate("group/new")} mt={4}>
-            Create a Group
-          </Button>
-        </Box>
-      </Center>
+          <Button onClick={() => navigate("group/new")}>Create a Group</Button>
+        </Flex>
+      </Container>
     </>
   );
 }
