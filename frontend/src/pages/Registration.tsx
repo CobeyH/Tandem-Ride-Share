@@ -8,13 +8,14 @@ import {
 } from "../firebase";
 import Header from "../components/Header";
 import {
-  Flex,
   FormControl,
   FormLabel,
   Input,
   Button,
   Box,
   Heading,
+  Container,
+  VStack,
 } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
@@ -45,62 +46,60 @@ function Register() {
     }
   }, [user, loading]);
   return (
-    <div className="register">
+    <Container>
       <Header />
       <Box textAlign="center">
         <Heading>Registration</Heading>
       </Box>
-      <Flex width="full" align="center" justifyContent="center">
-        <div className="register__container">
-          <FormControl mt={6} isRequired>
-            <FormLabel>Full Name</FormLabel>
-            <Input
-              type="fullName"
-              placeholder="Full name"
-              onChange={(event) => setName(event.currentTarget.value)}
-            />
-          </FormControl>
-          <FormControl mt={6} isRequired>
-            <FormLabel>E-mail Address</FormLabel>
-            <Input
-              type="email"
-              placeholder="test@test.com"
-              onChange={(event) => setEmail(event.currentTarget.value)}
-            />
-          </FormControl>
-          <FormControl mt={6} isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="Password"
-              onChange={(event) => setPassword(event.currentTarget.value)}
-            />
-          </FormControl>
-          <Button width="full" mt={4} onClick={register}>
-            Register
-          </Button>
-          <Button
-            mt={4}
-            leftIcon={<FaGoogle />}
-            width="full"
-            onClick={signInWithGoogle}
+      <VStack>
+        <FormControl mt={6} isRequired>
+          <FormLabel>Full Name</FormLabel>
+          <Input
+            type="fullName"
+            placeholder="Full name"
+            onChange={(event) => setName(event.currentTarget.value)}
+          />
+        </FormControl>
+        <FormControl mt={6} isRequired>
+          <FormLabel>E-mail Address</FormLabel>
+          <Input
+            type="email"
+            placeholder="test@test.com"
+            onChange={(event) => setEmail(event.currentTarget.value)}
+          />
+        </FormControl>
+        <FormControl mt={6} isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={(event) => setPassword(event.currentTarget.value)}
+          />
+        </FormControl>
+        <Button width="full" mt={4} onClick={register}>
+          Register
+        </Button>
+        <Button
+          mt={4}
+          leftIcon={<FaGoogle />}
+          width="full"
+          onClick={signInWithGoogle}
+        >
+          Register with Google
+        </Button>
+        <div>
+          Already have an account?{" "}
+          <Link
+            style={{ color: "blue" }}
+            to={NavConstants.LOGIN}
+            state={location.state}
           >
-            Register with Google
-          </Button>
-          <div>
-            Already have an account?{" "}
-            <Link
-              style={{ color: "blue" }}
-              to={NavConstants.LOGIN}
-              state={location.state}
-            >
-              Login
-            </Link>{" "}
-            now.
-          </div>
+            Login
+          </Link>{" "}
+          now.
         </div>
-      </Flex>
-    </div>
+      </VStack>
+    </Container>
   );
 }
 export default Register;
