@@ -81,7 +81,7 @@ const CreateGroup = () => {
       <Header pages={[{ label: "Group List", url: "/" }]} />
       <InputGroup paddingInline={5}>
         <Stack>
-          <Heading>Create Group</Heading>
+          <Heading textAlign={"center"}>Create Group</Heading>
           <HStack>
             <Text mb={"8px"}>Name</Text>
             <Input
