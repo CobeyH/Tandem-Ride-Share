@@ -1,10 +1,12 @@
 import * as React from "react";
 import { useEffect } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Center,
   Heading,
+  HStack,
   Link,
   Spinner,
   Text,
@@ -17,6 +19,7 @@ import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import Header from "../components/Header";
+import { groupLogos } from "../theme/colours";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -35,7 +38,7 @@ export default function GroupsListPage() {
       <Center>
         <Box textAlign={"center"}>
           <Heading>My Groups</Heading>
-          <VStack>
+          <VStack spacing={5}>
             {groups
               ?.filter(({ members }) => {
                 if (
@@ -50,9 +53,17 @@ export default function GroupsListPage() {
                 }
               })
               ?.map((groups, i) => (
-                <Link key={i} href={`group/${groups.id}`} margin={"2rem"}>
-                  {groups.name}
-                </Link>
+                <HStack key={i}>
+                  <Avatar
+                    bg={groupLogos[i % groupLogos.length]}
+                    size="xs"
+                    textAlign="center"
+                    name={groups.name}
+                  />
+                  <Link href={`group/${groups.id}`} margin={"2rem"}>
+                    {groups.name}
+                  </Link>
+                </HStack>
               ))}
           </VStack>
           {loadingGroups ? <Spinner /> : null}
