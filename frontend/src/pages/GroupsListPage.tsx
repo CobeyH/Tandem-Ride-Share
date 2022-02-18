@@ -2,16 +2,13 @@ import * as React from "react";
 import { useEffect } from "react";
 import {
   Avatar,
-  Box,
   Button,
   Center,
   Container,
   Heading,
-  HStack,
   Input,
   InputGroup,
   InputLeftElement,
-  Link,
   Spinner,
   Text,
   VStack,
@@ -71,31 +68,20 @@ export default function GroupsListPage() {
               }
             })
             ?.map((group, i) => (
-              <Box
+              <Button
                 mt={4}
-                color={""}
                 key={i}
-                px={"20%"}
-                py={4}
-                borderRadius={"4px"}
-                backgroundColor={"whiteAlpha.800"}
-                onClick={() => navigate(NavConstants.groupWithId(group.id))}
+                onClick={() => navigate(NavConstants.groupWithIdJoin(group.id))}
               >
-                <HStack>
-                  <Avatar
-                    bg={groupLogos[i % groupLogos.length]}
-                    size="xs"
-                    textAlign="center"
-                    name={group.name}
-                  />
-                  <Link
-                    href={NavConstants.groupWithId(group.id)}
-                    margin={"2rem"}
-                  >
-                    {group.name}
-                  </Link>
-                </HStack>
-              </Box>
+                <Avatar
+                  bg={groupLogos[i % groupLogos.length]}
+                  size="xs"
+                  textAlign="center"
+                  name={group.name}
+                  mr={4}
+                />{" "}
+                {group.name}
+              </Button>
             ))}
         </VStack>
         {loadingGroups ? <Spinner /> : null}
