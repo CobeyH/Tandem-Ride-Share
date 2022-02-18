@@ -34,7 +34,13 @@ import {
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function RideCard({ rideId }: { rideId: string }) {
+export default function RideCard({
+  rideId,
+  viewOnly,
+}: {
+  rideId: string;
+  viewOnly?: boolean;
+}) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
@@ -80,12 +86,16 @@ export default function RideCard({ rideId }: { rideId: string }) {
             <Flex flexDirection="row" m={2} align="center">
               <DriverDisplay driverId={ride.driver} />
               <Spacer />
-              {user ? <DriverButton rideId={rideId} userId={user.uid} /> : ""}
+              {user && !viewOnly ? (
+                <DriverButton rideId={rideId} userId={user.uid} />
+              ) : (
+                ""
+              )}
             </Flex>
             <Flex flexDirection="row" m={2} align="center">
               <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
               <Spacer />
-              {user ? (
+              {user && !viewOnly ? (
                 <PassengerButton rideId={ride.id} userId={user.uid} />
               ) : (
                 ""
