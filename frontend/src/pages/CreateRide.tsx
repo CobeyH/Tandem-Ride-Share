@@ -102,7 +102,7 @@ const CreateRide = () => {
         ]}
       />
       <Container>
-        <Heading>Create Ride</Heading>
+        <Heading textAlign={"center"}>Create Ride</Heading>
         <InputGroup flexDirection="column">
           <Input
             value={title}

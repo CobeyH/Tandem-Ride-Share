@@ -71,7 +71,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       )}
       <Container>
         <VStack spacing="24px" align="c">
-          <Heading>{group.name}</Heading>
+          <Heading textAlign={"center"}>{group.name}</Heading>
           <Box bg="white" px={5} py={5}>
             <Text> Description: </Text>
             <Text> {group.description}</Text>
