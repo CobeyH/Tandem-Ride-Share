@@ -15,7 +15,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
-
+import { lightTheme } from "../theme/colours";
 export default function Login() {
   const location = useLocation();
 
@@ -45,7 +45,7 @@ export default function Login() {
   };
 
   return (
-    <Container>
+    <Container bg={lightTheme.main} height="100vh">
       <Header />
       <Box textAlign="center">
         <Heading>Login</Heading>

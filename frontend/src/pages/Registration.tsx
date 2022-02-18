@@ -20,6 +20,7 @@ import {
 import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
+import { lightTheme } from "../theme/colours";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ function Register() {
     }
   }, [user, loading]);
   return (
-    <Container>
+    <Container bg={lightTheme.main} height="100vh">
       <Header />
       <Box textAlign="center">
         <Heading>Registration</Heading>
@@ -56,8 +57,6 @@ function Register() {
           <FormLabel>Full Name</FormLabel>
           <Input
             type="fullName"
-            color="white"
-            _placeholder={{ color: "white" }}
             placeholder="Full name"
             onChange={(event) => setName(event.currentTarget.value)}
           />
@@ -66,8 +65,6 @@ function Register() {
           <FormLabel>E-mail Address</FormLabel>
           <Input
             type="email"
-            color="white"
-            _placeholder={{ color: "white" }}
             placeholder="test@test.com"
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
@@ -76,8 +73,6 @@ function Register() {
           <FormLabel>Password</FormLabel>
           <Input
             type="password"
-            color="white"
-            _placeholder={{ color: "white" }}
             placeholder="Password"
             onChange={(event) => setPassword(event.currentTarget.value)}
           />
