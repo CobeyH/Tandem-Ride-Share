@@ -45,13 +45,13 @@ export default function RideCard({
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" p="3" minW="sm">
+    <Box borderWidth="1px" borderRadius="lg" p="3">
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
         <>
           <Flex onClick={onToggle}>
-            <Heading size="md">{ride.name}</Heading>
+            <Heading size="sm">{ride.name}</Heading>
             <Spacer />
             {isOpen ? (
               <ChevronUpIcon w={6} h={6} />
