@@ -5,6 +5,7 @@ import {
   Button,
   Center,
   Heading,
+  Input,
   Link,
   Spinner,
   Text,
@@ -35,6 +36,7 @@ export default function GroupsListPage() {
       <Center>
         <Box textAlign={"center"}>
           <Heading>My Groups</Heading>
+          <Input placeholder="Search Groups" mt={4} />
           <VStack>
             {groups
               ?.filter(({ members }) => {
