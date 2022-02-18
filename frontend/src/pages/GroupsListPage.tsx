@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Center,
+  Container,
   Heading,
   HStack,
   Input,
@@ -24,6 +25,7 @@ import { Group } from "./CreateGroup";
 import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { GiMagnifyingGlass } from "react-icons/all";
+import { NavConstants } from "../NavigationConstants";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -39,53 +41,69 @@ export default function GroupsListPage() {
   return (
     <>
       <Header />
-      <Center>
-        <Box textAlign={"center"}>
-          <Heading>My Groups</Heading>
-          <InputGroup mt={4}>
-            <Input
-              textAlign={"center"}
-              color="white"
-              _placeholder={{ color: "white" }}
-              placeholder="Search Groups"
-            />
-            <InputLeftElement color={"white"}>
-              <GiMagnifyingGlass />
-            </InputLeftElement>
-          </InputGroup>
-          <VStack>
-            {groups
-              ?.filter(({ members }) => {
-                if (
-                  user !== null &&
-                  user !== undefined &&
-                  typeof (user ?? null) === "object" // we love javascript.
-                ) {
-                  return members[user.uid] ?? false;
-                } else {
-                  console.log("null users should be kicked back to login.");
-                  return false;
-                }
-              })
-              ?.map((groups, i) => (
-                <HStack key={i}>
+      <Container>
+        <Center>
+          <Heading size={"md"}>My Groups</Heading>
+        </Center>
+        <InputGroup mt={4} size={"sm"}>
+          <Input
+            textAlign={"center"}
+            color="white"
+            _placeholder={{ color: "white" }}
+            placeholder="Search Groups"
+          />
+          <InputLeftElement color={"white"}>
+            <GiMagnifyingGlass />
+          </InputLeftElement>
+        </InputGroup>
+        <VStack>
+          {groups
+            ?.filter(({ members }) => {
+              if (
+                user !== null &&
+                user !== undefined &&
+                typeof (user ?? null) === "object" // we love javascript.
+              ) {
+                return members[user.uid] ?? false;
+              } else {
+                console.log("null users should be kicked back to login.");
+                return false;
+              }
+            })
+            ?.map((group, i) => (
+              <Box
+                mt={4}
+                color={""}
+                key={i}
+                px={"20%"}
+                py={4}
+                borderRadius={"4px"}
+                backgroundColor={"whiteAlpha.800"}
+                onClick={() => navigate(NavConstants.groupWithId(group.id))}
+              >
+                <HStack>
                   <Avatar
                     bg={groupLogos[i % groupLogos.length]}
                     size="xs"
                     textAlign="center"
-                    name={groups.name}
+                    name={group.name}
                   />
-                  <Link href={`group/${groups.id}`} margin={"2rem"}>
-                    {groups.name}
+                  <Link
+                    href={NavConstants.groupWithId(group.id)}
+                    margin={"2rem"}
+                  >
+                    {group.name}
                   </Link>
                 </HStack>
-              ))}
-          </VStack>
-          {loadingGroups ? <Spinner /> : null}
-          {error ? <Text>{JSON.stringify(error)}</Text> : null}
+              </Box>
+            ))}
+        </VStack>
+        {loadingGroups ? <Spinner /> : null}
+        {error ? <Text>{JSON.stringify(error)}</Text> : null}
+        <Center pt={4}>
           <Button onClick={() => navigate("group/new")}>Create a Group</Button>
-        </Box>
-      </Center>
+        </Center>
+      </Container>
     </>
   );
 }
