@@ -19,7 +19,14 @@ import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
 import { LatLng } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
-import { auth, db, DB_PASSENGERS_COLLECT, DB_RIDE_COLLECT } from "../firebase";
+import {
+  auth,
+  db,
+  DB_PASSENGERS_COLLECT,
+  DB_RIDE_COLLECT,
+  DB_USER_COLLECT,
+  User,
+} from "../firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -57,7 +64,10 @@ export default function RideCard({
               <ChevronUpIcon w={6} h={6} />
             ) : (
               <>
-                <DriverDisplay driverId={ride.driver} />
+                <DriverDisplay
+                  driverId={ride.driver}
+                  displayDriverName={isOpen}
+                />
                 <PassengerCounter
                   rideId={ride.id}
                   maxPass={ride.maxPassengers}
@@ -73,7 +83,10 @@ export default function RideCard({
             }}
           >
             <Flex flexDirection="row" m={2} align="center">
-              <DriverDisplay driverId={ride.driver} />
+              <DriverDisplay
+                driverId={ride.driver}
+                displayDriverName={isOpen}
+              />
               <Spacer />
               {user && !viewOnly ? (
                 <DriverButton rideId={rideId} userId={user.uid} />
@@ -178,13 +191,33 @@ function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
   );
 }
 
-function DriverDisplay({ driverId }: { driverId: string | undefined }) {
+function DriverDisplay({
+  driverId,
+  displayDriverName,
+}: {
+  driverId: string | undefined;
+  displayDriverName: boolean;
+}) {
+  const [driverUser, driverLoading, driverError] = useObjectVal<User>(
+    ref(db, `${DB_USER_COLLECT}/${driverId}`)
+  );
+  const driver = driverLoading
+    ? "Loading"
+    : driverError
+    ? "Error"
+    : driverUser?.name;
+
   return (
-    <Icon
-      as={AiFillCar}
-      w={6}
-      h={6}
-      color={driverId ? "green.100" : "red.100"}
-    />
+    <>
+      <Icon
+        as={AiFillCar}
+        w={6}
+        h={6}
+        color={driverId ? "green.100" : "red.100"}
+      />
+      {displayDriverName ? (
+        <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
+      ) : null}
+    </>
   );
 }
