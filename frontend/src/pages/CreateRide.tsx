@@ -1,11 +1,23 @@
 import React, { useMemo, useRef, useState } from "react";
-import { Button, Heading, Input, InputGroup, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Heading,
+  Input,
+  InputGroup,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+} from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   auth,
   db,
   DB_GROUP_COLLECT,
   DB_KEY_SLUG_OPTS,
+  DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,6 +30,7 @@ import MapView, {
   endIcon,
   startIcon,
 } from "../components/MapView";
+import { LatLng } from "leaflet";
 
 type ValidatableField<T> = {
   field: T;
@@ -27,17 +40,28 @@ type ValidatableField<T> = {
 export type Ride = {
   id: string;
   name: string;
-  start: [number, number];
-  end: [number, number];
+  start: { lat: number; lng: number };
+  end: { lat: number; lng: number };
+  maxPassengers: number;
+  driver?: string;
 };
 
-const createRide = async (ride: Ride, groupId: string) => {
+const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
   ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
-  if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${ride.id}`)))).exists()) {
+  if ((await get(query(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`)))).exists()) {
     /* TODO: increment id */
-    throw new Error("Group ID already exists");
+    throw new Error("Ride ID already exists");
   }
-  await set(ref(db, `${DB_RIDE_COLLECT}/${groupId}/${ride.id}`), ride);
+  await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
+  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${ride.id}`), true);
+  if (passList) {
+    await Promise.all(
+      passList.map(async (p) => {
+        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${ride.id}/${p}`), true);
+      })
+    );
+  }
+
   return ride;
 };
 
@@ -52,17 +76,20 @@ const CreateRide = () => {
   });
   const isInvalidTitle = (name: string) => name.length === 0;
 
-  const [startPosition, setStartPosition] = useState<[number, number]>([0, 0]);
-  const [endPosition, setEndPosition] = useState<[number, number]>([0, 0]);
+  const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
+  const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [hasDragged, setHasDragged] = useState(false);
 
-  function onDragStart(position: L.LatLng) {
-    setStartPosition([position.lat, position.lng]);
+  function onDragStart(position: LatLng) {
+    setStartPosition(position);
+    setHasDragged(true);
   }
-  function onDragEnd(position: L.LatLng) {
-    setEndPosition([position.lat, position.lng]);
+  function onDragEnd(position: LatLng) {
+    setEndPosition(position);
     setHasDragged(true); // enable 'Create' button after user move the icon
   }
+
+  const [maxPassengers, setMaxPassengers] = useState<number>(3);
 
   const navigate = useNavigate();
 
@@ -74,43 +101,77 @@ const CreateRide = () => {
           { label: "Group", url: `/group/${groupId}` },
         ]}
       />
-      <Heading>Create Ride</Heading>
-      <InputGroup>
-        <Text mb={"8px"}>Title</Text>
-        <Input
-          value={title}
-          placeholder={"Ride Name"}
-          onInput={(e) =>
-            setTitle({
-              field: e.currentTarget.value,
-              invalid: isInvalidTitle(e.currentTarget.value),
-            })
-          }
-          isInvalid={invalidTitle}
-        />
-        <Button
-          disabled={!hasDragged}
-          onClick={() => {
-            if (groupId) {
-              const ride = {
-                id: "",
-                name: title,
-                start: startPosition,
-                end: endPosition,
-              };
-              createRide(ride, groupId).then(() =>
-                navigate(`/group/${groupId}`)
-              );
+      <Container>
+        <Heading>Create Ride</Heading>
+        <InputGroup flexDirection="column">
+          <Input
+            value={title}
+            placeholder={"Ride Name"}
+            onInput={(e) =>
+              setTitle({
+                field: e.currentTarget.value,
+                invalid: isInvalidTitle(e.currentTarget.value),
+              })
             }
-          }}
-        >
-          Create
-        </Button>
-      </InputGroup>
-      <MapView>
-        <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
-        <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
-      </MapView>
+            isInvalid={invalidTitle}
+          />
+          <NumberInput
+            defaultValue={3}
+            min={1}
+            max={9}
+            onChange={(_, num) => setMaxPassengers(num)}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <Button
+            disabled={!hasDragged}
+            onClick={() => {
+              if (groupId && user) {
+                const ride = {
+                  id: "",
+                  name: title,
+                  start: startPosition,
+                  end: endPosition,
+                  maxPassengers: maxPassengers,
+                };
+                createRide(ride, groupId, [user.uid]).then(() =>
+                  navigate(`/group/${groupId}`)
+                );
+              }
+            }}
+          >
+            Create Ride as Passenger
+          </Button>
+          <Button
+            disabled={!hasDragged}
+            onClick={() => {
+              if (groupId && user) {
+                const ride = {
+                  id: "",
+                  name: title,
+                  start: startPosition,
+                  end: endPosition,
+                  maxPassengers: maxPassengers,
+                  driver: user.uid,
+                };
+                createRide(ride, groupId).then(() =>
+                  navigate(`/group/${groupId}`)
+                );
+              }
+            }}
+          >
+            Create Ride as Driver
+          </Button>
+        </InputGroup>
+        <MapView>
+          <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
+          <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
+        </MapView>
+      </Container>
     </>
   );
 };
