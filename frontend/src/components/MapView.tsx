@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { icon, LatLng, latLng, Map } from "leaflet";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import startIconImg from "../images/Arrow Circle Up_8.png";
 import endIconImg from "../images/Arrow Circle Down_8.png";
 
@@ -31,7 +31,6 @@ export default function MapView(
       whenCreated={props.setMap}
       style={props.style}
     >
-      <ChangeView center={props.center} zoom={props.zoom} />
       <TileLayer
         url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -60,9 +59,3 @@ type MapView = {
 type MapObjCallback = {
   setMap?: React.Dispatch<React.SetStateAction<Map | undefined>>;
 };
-
-function ChangeView({ center, zoom }: MapView) {
-  const map = useMap();
-  map.setView(center ? center : DEFAULT_CENTER, zoom ? zoom : DEFAULT_ZOOM);
-  return null;
-}
