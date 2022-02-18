@@ -71,7 +71,7 @@ const Header = ({ pages }: PageList) => {
 };
 
 const Breadcrumbs = ({ pages }: PageList) => {
-  if (pages === undefined || (pages.length ?? 0 !== 0)) {
+  if (pages === undefined || pages.length === 0) {
     return null;
   }
 
