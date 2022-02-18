@@ -18,11 +18,7 @@ import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
 import { LatLng } from "leaflet";
-import {
-  useList,
-  useListVals,
-  useObjectVal,
-} from "react-firebase-hooks/database";
+import { useList, useObjectVal } from "react-firebase-hooks/database";
 import {
   auth,
   db,
