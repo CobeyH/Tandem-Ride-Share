@@ -213,7 +213,7 @@ function DriverDisplay({
         as={AiFillCar}
         w={6}
         h={6}
-        color={driverId ? "green.100" : "red.100"}
+        color={driverId ? "green.100" : "red.200"}
       />
       {displayDriverName ? (
         <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
