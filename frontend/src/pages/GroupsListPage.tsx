@@ -79,6 +79,7 @@ export default function GroupsListPage() {
                 py={4}
                 borderRadius={"4px"}
                 backgroundColor={"whiteAlpha.800"}
+                onClick={() => navigate(NavConstants.groupWithId(group.id))}
               >
                 <HStack>
                   <Avatar
@@ -86,7 +87,6 @@ export default function GroupsListPage() {
                     size="xs"
                     textAlign="center"
                     name={group.name}
-                    onClick={() => navigate(NavConstants.groupWithId(group.id))}
                   />
                   <Link
                     href={NavConstants.groupWithId(group.id)}
