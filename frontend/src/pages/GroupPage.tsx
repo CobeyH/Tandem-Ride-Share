@@ -1,8 +1,6 @@
 import * as React from "react";
 import {
   Button,
-  Center,
-  Flex,
   Heading,
   Spinner,
   Text,
@@ -12,11 +10,11 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db, DB_RIDE_COLLECT } from "../firebase";
+import { db, DB_GROUP_COLLECT } from "../firebase";
 import { ref } from "firebase/database";
 import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import { useList, useObjectVal } from "react-firebase-hooks/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 import RideCard from "../components/RideCard";
 import Header from "../components/Header";
 import { storage } from "../storage";
@@ -32,7 +30,7 @@ export default function GroupPage() {
     navigate("/");
   }
   const [group, loading, error] = useObjectVal<Group>(
-    ref(db, `groups/${groupId}`)
+    ref(db, `${DB_GROUP_COLLECT}/${groupId}`)
   );
 
   return (
