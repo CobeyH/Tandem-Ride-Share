@@ -17,7 +17,7 @@ import { AiFillCar } from "react-icons/ai";
 import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
-import { LatLng } from "leaflet";
+import { latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import {
   auth,
@@ -79,7 +79,15 @@ export default function RideCard({
           <Collapse
             in={isOpen}
             onAnimationComplete={() => {
-              if (map && isOpen) map.invalidateSize();
+              if (map && isOpen) {
+                map.invalidateSize();
+                map.fitBounds(
+                  latLngBounds([
+                    latLng(ride.end.lat, ride.end.lng),
+                    latLng(ride.start.lat, ride.start.lng),
+                  ])
+                );
+              }
             }}
           >
             <Flex flexDirection="row" m={2} align="center">
