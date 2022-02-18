@@ -105,6 +105,7 @@ const CreateRide = () => {
         <Heading>Create Ride</Heading>
         <InputGroup flexDirection="column">
           <Input
+            mt={4}
             value={title}
             placeholder={"Ride Name"}
             onInput={(e) =>
@@ -116,6 +117,7 @@ const CreateRide = () => {
             isInvalid={invalidTitle}
           />
           <NumberInput
+            mt={4}
             defaultValue={3}
             min={1}
             max={9}
@@ -128,6 +130,7 @@ const CreateRide = () => {
             </NumberInputStepper>
           </NumberInput>
           <Button
+            mt={4}
             disabled={!hasDragged}
             onClick={() => {
               if (groupId && user) {
@@ -147,6 +150,8 @@ const CreateRide = () => {
             Create Ride as Passenger
           </Button>
           <Button
+            mt={4}
+            mb={4}
             disabled={!hasDragged}
             onClick={() => {
               if (groupId && user) {
@@ -167,7 +172,7 @@ const CreateRide = () => {
             Create Ride as Driver
           </Button>
         </InputGroup>
-        <MapView>
+        <MapView style={{ height: "50vh" }}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
         </MapView>
