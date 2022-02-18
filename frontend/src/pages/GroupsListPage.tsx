@@ -57,59 +57,53 @@ export default function GroupsListPage() {
             <GiMagnifyingGlass />
           </InputLeftElement>
         </InputGroup>
-        <Flex
-          flexDir={"column"}
-          justifyContent={"space-between"}
-          height={"75vh"}
-        >
-          <VStack>
-            {groups
-              ?.filter(({ members }) => {
-                if (
-                  user !== null &&
-                  user !== undefined &&
-                  typeof (user ?? null) === "object" // we love javascript.
-                ) {
-                  return members[user.uid] ?? false;
-                } else {
-                  console.log("null users should be kicked back to login.");
-                  return false;
-                }
-              })
-              ?.map((group, i) => (
-                <Box
-                  mt={4}
-                  color={""}
-                  key={i}
-                  px={"20%"}
-                  py={4}
-                  borderRadius={"4px"}
-                  backgroundColor={"whiteAlpha.800"}
-                >
-                  <HStack>
-                    <Avatar
-                      bg={groupLogos[i % groupLogos.length]}
-                      size="xs"
-                      textAlign="center"
-                      name={group.name}
-                      onClick={() =>
-                        navigate(NavConstants.groupWithId(group.id))
-                      }
-                    />
-                    <Link
-                      href={NavConstants.groupWithId(group.id)}
-                      margin={"2rem"}
-                    >
-                      {group.name}
-                    </Link>
-                  </HStack>
-                </Box>
-              ))}
-          </VStack>
-          {loadingGroups ? <Spinner /> : null}
-          {error ? <Text>{JSON.stringify(error)}</Text> : null}
+        <VStack>
+          {groups
+            ?.filter(({ members }) => {
+              if (
+                user !== null &&
+                user !== undefined &&
+                typeof (user ?? null) === "object" // we love javascript.
+              ) {
+                return members[user.uid] ?? false;
+              } else {
+                console.log("null users should be kicked back to login.");
+                return false;
+              }
+            })
+            ?.map((group, i) => (
+              <Box
+                mt={4}
+                color={""}
+                key={i}
+                px={"20%"}
+                py={4}
+                borderRadius={"4px"}
+                backgroundColor={"whiteAlpha.800"}
+              >
+                <HStack>
+                  <Avatar
+                    bg={groupLogos[i % groupLogos.length]}
+                    size="xs"
+                    textAlign="center"
+                    name={group.name}
+                    onClick={() => navigate(NavConstants.groupWithId(group.id))}
+                  />
+                  <Link
+                    href={NavConstants.groupWithId(group.id)}
+                    margin={"2rem"}
+                  >
+                    {group.name}
+                  </Link>
+                </HStack>
+              </Box>
+            ))}
+        </VStack>
+        {loadingGroups ? <Spinner /> : null}
+        {error ? <Text>{JSON.stringify(error)}</Text> : null}
+        <Center pt={4}>
           <Button onClick={() => navigate("group/new")}>Create a Group</Button>
-        </Flex>
+        </Center>
       </Container>
     </>
   );
