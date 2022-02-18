@@ -24,6 +24,7 @@ import { Group } from "./CreateGroup";
 import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { GiMagnifyingGlass } from "react-icons/all";
+import { NavConstants } from "../NavigationConstants";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -67,23 +68,29 @@ export default function GroupsListPage() {
                   return false;
                 }
               })
-              ?.map((groups, i) => (
-                <HStack key={i}>
+              ?.map((group, i) => (
+                <HStack key={i} mt={4}>
                   <Avatar
                     bg={groupLogos[i % groupLogos.length]}
                     size="xs"
                     textAlign="center"
-                    name={groups.name}
+                    name={group.name}
+                    onClick={() => navigate(NavConstants.groupWithId(group.id))}
                   />
-                  <Link href={`group/${groups.id}`} margin={"2rem"}>
-                    {groups.name}
+                  <Link
+                    href={NavConstants.groupWithId(group.id)}
+                    margin={"2rem"}
+                  >
+                    {group.name}
                   </Link>
                 </HStack>
               ))}
           </VStack>
           {loadingGroups ? <Spinner /> : null}
           {error ? <Text>{JSON.stringify(error)}</Text> : null}
-          <Button onClick={() => navigate("group/new")}>Create a Group</Button>
+          <Button onClick={() => navigate("group/new")} mt={4}>
+            Create a Group
+          </Button>
         </Box>
       </Center>
     </>
