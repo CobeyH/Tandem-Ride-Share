@@ -8,12 +8,13 @@ import { lightTheme } from "./colours";
 // Component Styles
 import Button from "./components/button";
 import { Input } from "./components/input";
+import "@fontsource/montserrat";
 
 const styles = {
   styles: {
     global: (props: Dict) => ({
       body: {
-        fontFamily: "body",
+        fontFamily: "Montserrat",
         color: mode("gray.800", "whiteAlpha.900")(props),
         bg: mode(lightTheme.main, "gray.800")(props),
         lineHeight: "base",
