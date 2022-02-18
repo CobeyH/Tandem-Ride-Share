@@ -7,6 +7,7 @@ import {
   Text,
   Stack,
   HStack,
+  Textarea,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
@@ -80,7 +81,7 @@ const CreateGroup = () => {
       <Header pages={[{ label: "Group List", url: "/" }]} />
       <InputGroup paddingInline={5}>
         <Stack>
-          <Heading>Create Group</Heading>
+          <Heading textAlign={"center"}>Create Group</Heading>
           <HStack>
             <Text mb={"8px"}>Name</Text>
             <Input
@@ -97,9 +98,9 @@ const CreateGroup = () => {
           </HStack>
           <HStack>
             <Text mb={"8px"}>Description</Text>
-            <Input
+            <Textarea
               value={description}
-              placeholder={"description"}
+              placeholder={"Description"}
               onInput={(e) => setDescription(e.currentTarget.value)}
               isInvalid={invalidName}
             />

@@ -64,7 +64,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       ) : (
         <Image
           src={banner}
-          width="95%"
+          width="100%"
           maxHeight="200px"
           objectFit="cover"
           pb={5}
@@ -73,10 +73,10 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Container>
         <VStack spacing="24px" align="c">
           <HStack>
-            <Heading>{group.name}</Heading>
+            <Heading textAlign={"center"}>{group.name}</Heading>
             <ShareLink />
           </HStack>
-          <Box bg="white" px={5} py={5} borderRadius={10}>
+          <Box bg="white" px={5} py={5} borderRadius={"4px"}>
             <Text> Description: </Text>
             <Text> {group.description}</Text>
           </Box>

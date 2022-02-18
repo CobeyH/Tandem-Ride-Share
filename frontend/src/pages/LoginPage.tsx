@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Flex,
   Box,
   Heading,
   Button,
@@ -8,6 +7,7 @@ import {
   FormLabel,
   Input,
   Text,
+  Container,
 } from "@chakra-ui/react";
 import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -45,57 +45,46 @@ export default function Login() {
   };
 
   return (
-    <Flex
-      width="full"
-      align="center"
-      justifyContent="center"
-      flexDirection="column"
-    >
+    <Container>
       <Header />
-      <Box p={2}>
-        <Box textAlign="center">
-          <Heading>Login</Heading>
-        </Box>
-        <Box my={4} textAlign="left">
-          <FormControl mt={6} isRequired>
-            <FormLabel>E-mail Address</FormLabel>
-            <Input
-              type="email"
-              placeholder="test@test.com"
-              onChange={(event) => setEmail(event.currentTarget.value)}
-            />
-          </FormControl>
-          <FormControl mt={6} isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="*******"
-              onChange={(event) => setPassword(event.currentTarget.value)}
-            />
-          </FormControl>
-          <Button width="full" mt={4} onClick={handleEmailLogin}>
-            Sign In
-          </Button>
-          <Text>
-            New to Tandem?{" "}
-            <Link
-              style={{ color: "blue" }}
-              to="/register"
-              state={location.state}
-            >
-              Register
-            </Link>{" "}
-          </Text>
-          <Button
-            leftIcon={<FaGoogle />}
-            width="full"
-            mt={4}
-            onClick={signInWithGoogle}
-          >
-            Sign In With Google
-          </Button>
-        </Box>
+      <Box textAlign="center">
+        <Heading>Login</Heading>
       </Box>
-    </Flex>
+      <Box>
+        <FormControl mt={6} isRequired>
+          <FormLabel>E-mail Address</FormLabel>
+          <Input
+            type="email"
+            placeholder="test@test.com"
+            onChange={(event) => setEmail(event.currentTarget.value)}
+          />
+        </FormControl>
+        <FormControl mt={6} isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input
+            type="password"
+            placeholder="*******"
+            onChange={(event) => setPassword(event.currentTarget.value)}
+          />
+        </FormControl>
+        <Button width="full" mt={4} onClick={handleEmailLogin}>
+          Sign In
+        </Button>
+        <Text>
+          New to Tandem?{" "}
+          <Link style={{ color: "blue" }} to="/register" state={location.state}>
+            Register
+          </Link>{" "}
+        </Text>
+        <Button
+          leftIcon={<FaGoogle />}
+          width="full"
+          mt={4}
+          onClick={signInWithGoogle}
+        >
+          Sign In With Google
+        </Button>
+      </Box>
+    </Container>
   );
 }
