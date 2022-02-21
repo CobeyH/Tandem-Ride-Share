@@ -17,9 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import { Group } from "../pages/CreateGroup";
+import GroupJoinButton from "./GroupJoinButton";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
 
 const GroupSearch = (props: { groups: Group[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [user] = useAuthState(auth);
   return (
     <>
       <InputGroup mt={4} size={"sm"}>
@@ -47,7 +51,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
                   return (
                     <HStack key={i}>
                       <Heading> {publicGroup.name} </Heading>;
-                      <Button> Join </Button>
+                      <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );
                 })}

@@ -11,12 +11,13 @@ import {
 } from "@chakra-ui/react";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
-import { ref, set } from "firebase/database";
+import { ref } from "firebase/database";
 import { auth, db, DB_GROUP_COLLECT } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";
 import RideCard from "../components/RideCard";
+import GroupJoinButton from "../components/GroupJoinButton";
 
 export type LocationGotoState = { goto?: string };
 
@@ -53,7 +54,6 @@ const JoinGroup = () => {
 };
 
 const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
-  const navigate = useNavigate();
   const rides = group.rides ? Object.keys(group.rides) : null;
 
   return (
@@ -73,20 +73,8 @@ const FoundGroup = ({ group, userId }: { group: Group; userId: string }) => {
                 <RideCard rideId={rides[0]} viewOnly={true} />
               </Box>
             )}
-
             <Text>Members: {Object.keys(group?.members ?? {}).length}</Text>
-            <Button
-              onClick={() => {
-                set(
-                  ref(db, `${DB_GROUP_COLLECT}/${group.id}/members/${userId}`),
-                  true
-                ).then(() => {
-                  navigate(`/group/${group.id}`);
-                });
-              }}
-            >
-              Join
-            </Button>
+            <GroupJoinButton group={group} userId={userId} />
           </VStack>
         </Center>
       </Box>
