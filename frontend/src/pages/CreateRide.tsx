@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Heading,
+  HStack,
   Input,
   InputGroup,
   NumberDecrementStepper,
@@ -44,6 +45,8 @@ export type Ride = {
   end: { lat: number; lng: number };
   maxPassengers: number;
   driver?: string;
+  startDate: string;
+  endDate: string;
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
@@ -80,6 +83,8 @@ const CreateRide = () => {
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [hasDragged, setHasDragged] = useState(false);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -145,6 +150,8 @@ const CreateRide = () => {
                   start: startPosition,
                   end: endPosition,
                   maxPassengers: maxPassengers,
+                  startDate,
+                  endDate,
                 };
                 createRide(ride, groupId, [user.uid]).then(() =>
                   navigate(`/group/${groupId}`)
@@ -167,6 +174,8 @@ const CreateRide = () => {
                   end: endPosition,
                   maxPassengers: maxPassengers,
                   driver: user.uid,
+                  startDate,
+                  endDate,
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)
@@ -177,6 +186,16 @@ const CreateRide = () => {
             Create Ride as Driver
           </Button>
         </InputGroup>
+        <HStack>
+          <Input
+            type="datetime-local"
+            onInput={(e) => setStartDate(e.currentTarget.value)}
+          />
+          <Input
+            type="datetime-local"
+            onInput={(e) => setEndDate(e.currentTarget.value)}
+          />
+        </HStack>
         <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
