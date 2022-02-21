@@ -6,10 +6,12 @@ import {
   Collapse,
   Flex,
   Heading,
+  HStack,
   Icon,
   Spacer,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";
@@ -111,6 +113,7 @@ export default function RideCard({
                 ""
               )}
             </Flex>
+            <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
@@ -227,5 +230,26 @@ function DriverDisplay({
         <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
       ) : null}
     </>
+  );
+}
+
+function RideTimes({
+  startTime,
+  endTime,
+}: {
+  startTime: string;
+  endTime: string;
+}) {
+  return (
+    <VStack>
+      <HStack>
+        <Text> Start Date </Text>
+        <Text> {startTime} </Text>
+      </HStack>
+      <HStack>
+        <Text> End Date </Text>
+        <Text> {endTime} </Text>
+      </HStack>
+    </VStack>
   );
 }
