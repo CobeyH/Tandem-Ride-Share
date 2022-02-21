@@ -40,26 +40,6 @@ export default function GroupsListPage() {
           <Heading size={"md"}>My Groups</Heading>
         </Center>
         <GroupSearch groups={groups ?? []} />
-        <GroupSearch
-          groups={[
-            {
-              id: "1",
-              name: "testing1",
-              isPrivate: false,
-              description: "desc",
-              members: { user: true },
-              rides: { user: true },
-            },
-            {
-              id: "2",
-              name: "testing2",
-              isPrivate: true,
-              description: "desc",
-              members: { user: true },
-              rides: { user: true },
-            },
-          ]}
-        />
         <VStack>
           {groups
             ?.filter(({ members }) => {
