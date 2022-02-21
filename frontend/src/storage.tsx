@@ -1,9 +1,13 @@
-import { getStorage } from "firebase/storage";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { app } from "./firebase";
 
 export const storage = getStorage(app);
+
+if (location.hostname === "localhost") {
+  connectStorageEmulator(storage, "localhost", 9199);
+}
 
 const DropZone = (props: {
   parentCallback: (banner: Blob | MediaSource) => void;
