@@ -59,7 +59,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
                     !group.isPrivate &&
                     user?.uid &&
                     !group.members[user.uid] &&
-                    group.name.includes(search)
+                    group.name.toLowerCase().includes(search.toLowerCase())
                   );
                 })
                 .map((publicGroup: Group, i: number) => {
