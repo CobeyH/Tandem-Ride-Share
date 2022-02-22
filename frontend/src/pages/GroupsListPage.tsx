@@ -6,9 +6,6 @@ import {
   Center,
   Container,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Spinner,
   Text,
   VStack,
@@ -21,8 +18,8 @@ import { useListVals } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
-import { GiMagnifyingGlass } from "react-icons/all";
 import { NavConstants } from "../NavigationConstants";
+import GroupSearch from "../components/GroupSearch";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -42,17 +39,7 @@ export default function GroupsListPage() {
         <Center>
           <Heading size={"md"}>My Groups</Heading>
         </Center>
-        <InputGroup mt={4} size={"sm"}>
-          <Input
-            textAlign={"center"}
-            color="white"
-            _placeholder={{ color: "white" }}
-            placeholder="Search Groups"
-          />
-          <InputLeftElement color={"white"}>
-            <GiMagnifyingGlass />
-          </InputLeftElement>
-        </InputGroup>
+        <GroupSearch groups={groups ?? []} />
         <VStack>
           {groups
             ?.filter(({ members }) => {
