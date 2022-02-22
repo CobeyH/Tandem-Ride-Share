@@ -31,6 +31,8 @@ v16.13.2
 
 ## Running
 
-While in the `frontend` directory run `npm install` to instal dependancies.
+While in the `frontend` directory run `npm install` to install dependancies.
+
+This application uses Firebase services that need to be emulated locally. Run `npm run emulators` to start the emulators. You can view the firebase console at localhost:3001.
 
 To start developing run `npm start`. This should open your default browser to the application. Change a file and save it and the application should reload.
