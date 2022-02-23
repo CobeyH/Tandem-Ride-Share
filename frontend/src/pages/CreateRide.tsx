@@ -140,7 +140,7 @@ const CreateRide = () => {
             isChecked={isDriver}
             onChange={(e) => setIsDriver(e.target.checked)}
           >
-            Create as driver
+            Are you the driver?
           </Checkbox>
           <Button
             mt={4}
