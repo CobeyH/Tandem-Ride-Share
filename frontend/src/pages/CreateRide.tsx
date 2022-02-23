@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import {
   Button,
+  Checkbox,
   Container,
   Heading,
   Input,
@@ -80,6 +81,7 @@ const CreateRide = () => {
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [hasDragged, setHasDragged] = useState(false);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
+  const [isDriver, setIsDriver] = useState<boolean>(false);
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -134,26 +136,12 @@ const CreateRide = () => {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
-          <Button
-            mt={4}
-            disabled={!hasDragged}
-            onClick={() => {
-              if (groupId && user) {
-                const ride = {
-                  id: "",
-                  name: title,
-                  start: startPosition,
-                  end: endPosition,
-                  maxPassengers: maxPassengers,
-                };
-                createRide(ride, groupId, [user.uid]).then(() =>
-                  navigate(`/group/${groupId}`)
-                );
-              }
-            }}
+          <Checkbox
+            isChecked={isDriver}
+            onChange={(e) => setIsDriver(e.target.checked)}
           >
-            Create Ride as Passenger
-          </Button>
+            Create as driver
+          </Checkbox>
           <Button
             mt={4}
             mb={4}
@@ -166,7 +154,7 @@ const CreateRide = () => {
                   start: startPosition,
                   end: endPosition,
                   maxPassengers: maxPassengers,
-                  driver: user.uid,
+                  ...(isDriver && { driver: user.uid }),
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)
@@ -174,7 +162,7 @@ const CreateRide = () => {
               }
             }}
           >
-            Create Ride as Driver
+            Confirm
           </Button>
         </InputGroup>
         <MapView style={{ height: "50vh" }} setMap={setMap}>
