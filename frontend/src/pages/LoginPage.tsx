@@ -16,6 +16,7 @@ import Header from "../components/Header";
 import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { lightTheme } from "../theme/colours";
+import SignInRegister from "../components/SignInRegister";
 export default function Login() {
   const location = useLocation();
 
@@ -71,15 +72,10 @@ export default function Login() {
             onChange={(event) => setPassword(event.currentTarget.value)}
           />
         </FormControl>
-        <Button width="full" mt={4} onClick={handleEmailLogin}>
-          Sign In
-        </Button>
-        <Text>
-          New to Tandem?{" "}
-          <Link style={{ color: "blue" }} to="/register" state={location.state}>
-            Register
-          </Link>{" "}
-        </Text>
+        <SignInRegister
+          onClickSignIn={handleEmailLogin}
+          state={location.state as LocationGotoState}
+        />
         <Button
           leftIcon={<FaGoogle />}
           width="full"
