@@ -41,6 +41,7 @@ export const App = () => {
           <Routes>
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/group/:groupId/join" element={<JoinGroup />} />
             <Route path="*" element={<Redirect to={NavConstants.LOGIN} />} />
           </Routes>
         )}
