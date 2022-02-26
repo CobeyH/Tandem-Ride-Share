@@ -17,17 +17,26 @@ import { AiFillCar } from "react-icons/ai";
 import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
-import { latLng, LatLng, latLngBounds } from "leaflet";
+import { DomUtil, latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import {
   auth,
   db,
+  DB_GROUP_COLLECT,
+  DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
   DB_USER_COLLECT,
   User,
 } from "../firebase";
-import { equalTo, orderByValue, query, ref, set } from "firebase/database";
+import {
+  equalTo,
+  orderByValue,
+  query,
+  ref,
+  set,
+  remove,
+} from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function RideCard({
@@ -117,6 +126,9 @@ export default function RideCard({
                 {endMarker}
               </MapView>
             </AspectRatio>
+            <Flex flexDirection="row" m={2} align="center">
+              <CompleteRideButton rideId={ride.id} />
+            </Flex>
           </Collapse>
         </>
       )}
@@ -131,6 +143,10 @@ function setRidePassenger(passId: string, rideId: string, state: boolean) {
 function setRideDriver(driverId: string, rideId: string, state: boolean) {
   set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
 }
+
+const completeRide = async (rideId: string) => {
+  await remove(ref(db, `${DB_RIDE_COLLECT}/${rideId}`));
+};
 
 function PassengerButton({
   rideId,
@@ -227,5 +243,19 @@ function DriverDisplay({
         <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
       ) : null}
     </>
+  );
+}
+
+function CompleteRideButton({ rideId }: { rideId: string }) {
+  return (
+    <Button
+      width="full"
+      mt={4}
+      onClick={() => {
+        completeRide(rideId).then(() => console.log("deleted successfully!"));
+      }}
+    >
+      Complete Ride
+    </Button>
   );
 }
