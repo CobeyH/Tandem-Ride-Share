@@ -9,11 +9,9 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Menu,
   MenuButton,
   MenuDivider,
-  MenuGroup,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
@@ -23,6 +21,7 @@ import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { logout, auth } from "../firebase";
 import { MdEmail } from "react-icons/all";
+import { User } from "firebase/auth";
 
 export interface PageList {
   pages?: { label: string; url: string }[];
@@ -30,7 +29,6 @@ export interface PageList {
 
 const Header = ({ pages }: PageList) => {
   const [user] = useAuthState(auth);
-  const [userModalOpen, setUserModalOpen] = useState(false);
 
   return (
     <Flex
@@ -46,37 +44,45 @@ const Header = ({ pages }: PageList) => {
       <Menu>
         <MenuButton as={Button}>Profile</MenuButton>
         <MenuList>
-          <MenuItem onClick={() => setUserModalOpen(true)}>
-            My Account
-            {user ? (
-              <Modal
-                isOpen={userModalOpen}
-                onClose={() => setUserModalOpen(false)}
-                isCentered={true}
-              >
-                <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-                  <ModalHeader>
-                    {user?.displayName}
-                    <ColorModeSwitcher float={"right"} />
-                  </ModalHeader>
-                  <ModalBody>
-                    {user?.email ? (
-                      <Flex>
-                        <MdEmail style={{ margin: 5 }} /> {user.email}
-                      </Flex>
-                    ) : null}
-                  </ModalBody>
-                </ModalContent>
-              </Modal>
-            ) : (
-              <ColorModeSwitcher float={"right"} />
-            )}
-          </MenuItem>
+          <Settings user={user} />
           <MenuDivider />
           <MenuItem onClick={logout}>Logout</MenuItem>
         </MenuList>
       </Menu>
     </Flex>
+  );
+};
+
+const Settings = (props: { user: User | null | undefined }) => {
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const user = props.user;
+  return (
+    <MenuItem onClick={() => setUserModalOpen(true)}>
+      Settings
+      {user ? (
+        <Modal
+          isOpen={userModalOpen}
+          onClose={() => setUserModalOpen(false)}
+          isCentered={true}
+        >
+          <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+            <ModalHeader>
+              {user?.displayName}
+              <ColorModeSwitcher float={"right"} />
+            </ModalHeader>
+            <ModalBody>
+              {user?.email ? (
+                <Flex>
+                  <MdEmail style={{ margin: 5 }} /> {user.email}
+                </Flex>
+              ) : null}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      ) : (
+        <ColorModeSwitcher float={"right"} />
+      )}
+    </MenuItem>
   );
 };
 
