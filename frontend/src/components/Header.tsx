@@ -10,6 +10,12 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -37,35 +43,39 @@ const Header = ({ pages }: PageList) => {
     >
       <Breadcrumbs pages={pages} />
       <Spacer />
-      {user ? (
-        <>
-          <Button onClick={() => setUserModalOpen(true)} variant={"outline"}>
-            Profile
-          </Button>
-          <Modal
-            isOpen={userModalOpen}
-            onClose={() => setUserModalOpen(false)}
-            isCentered={true}
-          >
-            <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-              <ModalHeader>
-                {user?.displayName}
-                <ColorModeSwitcher float={"right"} />
-              </ModalHeader>
-              <ModalBody>
-                {user?.email ? (
-                  <Flex>
-                    <MdEmail style={{ margin: 5 }} /> {user.email}
-                  </Flex>
-                ) : null}
-              </ModalBody>
-              <ModalFooter>{user ? <LogoutButton /> : null}</ModalFooter>
-            </ModalContent>
-          </Modal>
-        </>
-      ) : (
-        <ColorModeSwitcher float={"right"} />
-      )}
+      <Menu>
+        <MenuButton as={Button}>Profile</MenuButton>
+        <MenuList>
+          <MenuItem onClick={() => setUserModalOpen(true)}>
+            My Account
+            {user ? (
+              <Modal
+                isOpen={userModalOpen}
+                onClose={() => setUserModalOpen(false)}
+                isCentered={true}
+              >
+                <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+                  <ModalHeader>
+                    {user?.displayName}
+                    <ColorModeSwitcher float={"right"} />
+                  </ModalHeader>
+                  <ModalBody>
+                    {user?.email ? (
+                      <Flex>
+                        <MdEmail style={{ margin: 5 }} /> {user.email}
+                      </Flex>
+                    ) : null}
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            ) : (
+              <ColorModeSwitcher float={"right"} />
+            )}
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem onClick={logout}>Logout</MenuItem>
+        </MenuList>
+      </Menu>
     </Flex>
   );
 };
@@ -86,10 +96,6 @@ const Breadcrumbs = ({ pages }: PageList) => {
       ))}
     </Breadcrumb>
   );
-};
-
-const LogoutButton = () => {
-  return <Button onClick={logout}>Logout</Button>;
 };
 
 export default Header;
