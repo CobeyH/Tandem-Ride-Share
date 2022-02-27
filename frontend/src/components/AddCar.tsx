@@ -106,7 +106,7 @@ const CarSelector = () => {
           <RadioGroup onChange={setSelection} value={selection}>
             <Stack direction="column">
               {trucks.map((c: Vehicle, i: number) => (
-                <Radio key={i} value={`${i}`}>
+                <Radio key={cars.length + i} value={`${cars.length + i}`}>
                   {c.type}
                 </Radio>
               ))}
