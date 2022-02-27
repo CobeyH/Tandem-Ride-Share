@@ -22,6 +22,7 @@ import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { logout, auth } from "../firebase";
 import { MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
+import AddCar from "./AddCar";
 
 export interface PageList {
   pages?: { label: string; url: string }[];
@@ -45,6 +46,7 @@ const Header = ({ pages }: PageList) => {
         <MenuButton as={Button}>Profile</MenuButton>
         <MenuList>
           <Settings user={user} />
+          <AddCar />
           <MenuDivider />
           <MenuItem onClick={logout}>Logout</MenuItem>
         </MenuList>
