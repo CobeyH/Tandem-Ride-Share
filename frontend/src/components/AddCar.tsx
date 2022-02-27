@@ -87,13 +87,9 @@ const CarSelector = (props: { user: User }) => {
   const [displayName, setDisplayName] = useState("");
   const [carType, setcarType] = useState("1");
   const [car, setCar] = useState<Vehicle>(cars[0]);
-  const [numSeats, setNumSeats] = useState<number>(0);
-  const [fuelUsage, setFuelUsage] = useState<number>(0);
 
   useEffect(() => {
     setCar(getCarFromList(carType));
-    setNumSeats(car.numSeats);
-    setFuelUsage(car.fuelUsage);
   }, [carType]);
   return (
     <ModalBody>
@@ -151,8 +147,8 @@ const CarSelector = (props: { user: User }) => {
       </Accordion>
       <h2>Number of Seats</h2>
       <NumberInput
-        onChange={(value) => setNumSeats(parseInt(value))}
-        value={numSeats}
+        onChange={(value) => setCar({ ...car, numSeats: parseInt(value) })}
+        value={car.numSeats}
         min={1}
         max={12}
       >
@@ -164,8 +160,8 @@ const CarSelector = (props: { user: User }) => {
       </NumberInput>
       <h2>Fuel Usage</h2>
       <NumberInput
-        onChange={(value) => setFuelUsage(parseFloat(value))}
-        value={fuelUsage}
+        onChange={(value) => setCar({ ...car, fuelUsage: parseFloat(value) })}
+        value={car.fuelUsage}
         min={5}
         max={20}
       >
@@ -179,9 +175,7 @@ const CarSelector = (props: { user: User }) => {
       <Button
         onClick={() => {
           registerCar(props.user, {
-            type: car.type,
-            numSeats,
-            fuelUsage,
+            ...car,
             displayName,
           }).then(() => alert("car registered"));
         }}
