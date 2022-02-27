@@ -129,9 +129,16 @@ export const logout = () => {
   signOut(auth);
 };
 
+export type Vehicle = {
+  type: string;
+  fuelUsage: number;
+  numSeats: number;
+};
+
 export type User = {
   uid: string;
   name: string;
   authProvider: string;
   email: string;
+  cars?: Vehicle[];
 };
