@@ -26,7 +26,7 @@ import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { FaCarSide, FaGasPump } from "react-icons/all";
+import { FaCarSide, FaGasPump, FaShuttleVan } from "react-icons/all";
 import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
 
 const cars: Vehicle[] = [
@@ -174,7 +174,10 @@ const CarSelector = (props: { user: User }) => {
           label={`${car.numSeats}`}
         >
           <SliderThumb boxSize={6}>
-            <Box color="tomato" as={FaCarSide} />
+            <Box
+              color="tomato"
+              as={car.numSeats < 6 ? FaCarSide : FaShuttleVan}
+            />
           </SliderThumb>
         </Tooltip>
       </Slider>
