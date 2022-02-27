@@ -68,7 +68,7 @@ const AddCar = () => {
 };
 
 const CarSelector = () => {
-  const [selection, setSelection] = useState("1");
+  const [value, setValue] = useState("1");
   return (
     <Accordion>
       <AccordionItem>
@@ -81,7 +81,7 @@ const CarSelector = () => {
           </AccordionButton>
         </h2>
         <AccordionPanel pb={4}>
-          <RadioGroup onChange={setSelection} value={selection}>
+          <RadioGroup onChange={setValue} value={value}>
             <Stack direction="column">
               {cars.map((c: Vehicle, i: number) => (
                 <Radio key={i} value={`${i}`}>
@@ -103,10 +103,10 @@ const CarSelector = () => {
           </AccordionButton>
         </h2>
         <AccordionPanel pb={4}>
-          <RadioGroup onChange={setSelection} value={selection}>
+          <RadioGroup onChange={setValue} value={value}>
             <Stack direction="column">
               {trucks.map((c: Vehicle, i: number) => (
-                <Radio key={cars.length + i} value={`${cars.length + i}`}>
+                <Radio key={cars.length + 1 + i} value={`${cars.length + i}`}>
                   {c.type}
                 </Radio>
               ))}
