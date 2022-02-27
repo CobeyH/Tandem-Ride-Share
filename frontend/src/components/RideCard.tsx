@@ -17,26 +17,17 @@ import { AiFillCar } from "react-icons/ai";
 import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker } from "react-leaflet";
-import { DomUtil, latLng, LatLng, latLngBounds } from "leaflet";
+import { latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import {
   auth,
   db,
-  DB_GROUP_COLLECT,
-  DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
   DB_USER_COLLECT,
   User,
 } from "../firebase";
-import {
-  equalTo,
-  orderByValue,
-  query,
-  ref,
-  set,
-  remove,
-} from "firebase/database";
+import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function RideCard({
