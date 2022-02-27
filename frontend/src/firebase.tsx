@@ -133,6 +133,7 @@ export type Vehicle = {
   type: string;
   fuelUsage: number;
   numSeats: number;
+  displayName?: string;
 };
 
 export type User = {

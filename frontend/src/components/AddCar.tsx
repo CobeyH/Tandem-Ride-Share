@@ -8,6 +8,7 @@ import {
 import { Box, Spacer, Stack } from "@chakra-ui/layout";
 import {
   Button,
+  Input,
   MenuItem,
   Modal,
   ModalBody,
@@ -21,9 +22,12 @@ import {
   Radio,
   RadioGroup,
 } from "@chakra-ui/react";
+import { User } from "firebase/auth";
+import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Vehicle } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db, DB_USER_COLLECT, Vehicle } from "../firebase";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -44,7 +48,7 @@ const trucks: Vehicle[] = [
   { type: "Extra Large", fuelUsage: 15, numSeats: 7 },
 ];
 
-const AddCar = () => {
+const AddCar = (props: { user: User }) => {
   const [carModalOpen, setCarModalOpen] = useState(false);
   return (
     <MenuItem onClick={() => setCarModalOpen(true)}>
@@ -65,8 +69,14 @@ const AddCar = () => {
   );
 };
 
-const registerCar = () => {
-  alert("test");
+const registerCar = async (car: Vehicle) => {
+  const [user] = useAuthState(auth);
+  const carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
+  //TODO: User feedback on error states
+  if (!user || !carId) {
+    return;
+  }
+  await set(ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${carId}`), car);
 };
 
 const getCarFromList = (radioIndex: string): Vehicle => {
@@ -75,6 +85,7 @@ const getCarFromList = (radioIndex: string): Vehicle => {
 };
 
 const CarSelector = () => {
+  const [displayName, setDisplayName] = useState("");
   const [carType, setcarType] = useState("1");
   const [car, setCar] = useState<Vehicle>(cars[0]);
   const [numSeats, setNumSeats] = useState<number>(0);
@@ -87,6 +98,13 @@ const CarSelector = () => {
   }, [carType]);
   return (
     <ModalBody>
+      <h2>Display Name</h2>
+      <Input
+        isRequired={true}
+        value={displayName}
+        onChange={(e) => setDisplayName(e.target.value)}
+      />
+
       <Accordion>
         <AccordionItem>
           <h2>
@@ -161,7 +179,12 @@ const CarSelector = () => {
       <Spacer pt={5} />
       <Button
         onClick={() => {
-          registerCar();
+          registerCar({
+            type: car.type,
+            numSeats,
+            fuelUsage,
+            displayName,
+          }).then(() => alert("car registered"));
         }}
       >
         Add

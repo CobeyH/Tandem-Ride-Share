@@ -42,48 +42,48 @@ const Header = ({ pages }: PageList) => {
     >
       <Breadcrumbs pages={pages} />
       <Spacer />
-      <Menu>
-        <MenuButton as={Button}>Profile</MenuButton>
-        <MenuList>
-          <Settings user={user} />
-          <AddCar />
-          <MenuDivider />
-          <MenuItem onClick={logout}>Logout</MenuItem>
-        </MenuList>
-      </Menu>
+      {user ? (
+        <Menu>
+          <MenuButton as={Button}>Profile</MenuButton>
+          <MenuList>
+            <Settings user={user} />
+            <AddCar user={user} />
+            <MenuDivider />
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
+      ) : (
+        <ColorModeSwitcher float={"right"} />
+      )}
     </Flex>
   );
 };
 
-const Settings = (props: { user: User | null | undefined }) => {
+const Settings = (props: { user: User }) => {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const user = props.user;
   return (
     <MenuItem onClick={() => setUserModalOpen(true)}>
       Settings
-      {user ? (
-        <Modal
-          isOpen={userModalOpen}
-          onClose={() => setUserModalOpen(false)}
-          isCentered={true}
-        >
-          <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-            <ModalHeader>
-              {user?.displayName}
-              <ColorModeSwitcher float={"right"} />
-            </ModalHeader>
-            <ModalBody>
-              {user?.email ? (
-                <Flex>
-                  <MdEmail style={{ margin: 5 }} /> {user.email}
-                </Flex>
-              ) : null}
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      ) : (
-        <ColorModeSwitcher float={"right"} />
-      )}
+      <Modal
+        isOpen={userModalOpen}
+        onClose={() => setUserModalOpen(false)}
+        isCentered={true}
+      >
+        <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+          <ModalHeader>
+            {user?.displayName}
+            <ColorModeSwitcher float={"right"} />
+          </ModalHeader>
+          <ModalBody>
+            {user?.email ? (
+              <Flex>
+                <MdEmail style={{ margin: 5 }} /> {user.email}
+              </Flex>
+            ) : null}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </MenuItem>
   );
 };
