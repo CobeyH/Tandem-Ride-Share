@@ -5,7 +5,7 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { Box, Spacer, Stack } from "@chakra-ui/layout";
+import { Box, Heading, Spacer, Stack } from "@chakra-ui/layout";
 import {
   Button,
   Input,
@@ -14,20 +14,20 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Radio,
   RadioGroup,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+  Tooltip,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, DB_USER_COLLECT, Vehicle } from "../firebase";
+import { FaCarSide, FaGasPump } from "react-icons/all";
+import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -87,13 +87,16 @@ const CarSelector = (props: { user: User }) => {
   const [displayName, setDisplayName] = useState("");
   const [carType, setcarType] = useState("1");
   const [car, setCar] = useState<Vehicle>(cars[0]);
+  const [showTooltip, setShowTooltip] = React.useState(false);
 
   useEffect(() => {
     setCar(getCarFromList(carType));
   }, [carType]);
   return (
     <ModalBody>
-      <h2>Display Name</h2>
+      <Heading as="h2" size="l">
+        Display Name
+      </Heading>
       <Input
         isRequired={true}
         value={displayName}
@@ -104,9 +107,9 @@ const CarSelector = (props: { user: User }) => {
         <AccordionItem>
           <h2>
             <AccordionButton>
-              <Box flex="1" textAlign="left">
+              <Heading as="h2" size="l">
                 Car
-              </Box>
+              </Heading>
               <AccordionIcon />
             </AccordionButton>
           </h2>
@@ -126,9 +129,9 @@ const CarSelector = (props: { user: User }) => {
         <AccordionItem>
           <h2>
             <AccordionButton>
-              <Box flex="1" textAlign="left">
+              <Heading as="h2" size="l">
                 Truck
-              </Box>
+              </Heading>
               <AccordionIcon />
             </AccordionButton>
           </h2>
@@ -145,32 +148,66 @@ const CarSelector = (props: { user: User }) => {
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-      <h2>Number of Seats</h2>
-      <NumberInput
-        onChange={(value) => setCar({ ...car, numSeats: parseInt(value) })}
+      <Heading as="h2" size="l">
+        Number of Seats
+      </Heading>
+      <Slider
+        id="slider"
+        onChange={(value) => setCar({ ...car, numSeats: value })}
         value={car.numSeats}
         min={1}
         max={12}
+        onTouchStart={() => setShowTooltip(true)}
+        onTouchEnd={() => setShowTooltip(false)}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
-        <NumberInputField />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
-      <h2>Fuel Usage</h2>
-      <NumberInput
-        onChange={(value) => setCar({ ...car, fuelUsage: parseFloat(value) })}
+        <SliderTrack>
+          <SliderFilledTrack />
+        </SliderTrack>
+        <Tooltip
+          hasArrow
+          bg="teal.500"
+          color="white"
+          placement="right"
+          isOpen={showTooltip}
+          label={`${car.numSeats}`}
+        >
+          <SliderThumb boxSize={6}>
+            <Box color="tomato" as={FaCarSide} />
+          </SliderThumb>
+        </Tooltip>
+      </Slider>
+      <Heading as="h2" size="l">
+        Fuel Usage
+      </Heading>
+      <Slider
+        aria-label="slider-ex-1"
+        onChange={(value) => setCar({ ...car, fuelUsage: value })}
         value={car.fuelUsage}
         min={5}
         max={20}
+        onTouchStart={() => setShowTooltip(true)}
+        onTouchEnd={() => setShowTooltip(false)}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
-        <NumberInputField />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+        <SliderTrack>
+          <SliderFilledTrack />
+        </SliderTrack>
+        <Tooltip
+          hasArrow
+          bg="teal.500"
+          color="white"
+          placement="right"
+          isOpen={showTooltip}
+          label={`${car.fuelUsage}`}
+        >
+          <SliderThumb boxSize={6}>
+            <Box color="tomato" as={FaGasPump} />
+          </SliderThumb>
+        </Tooltip>
+      </Slider>
       <Spacer pt={5} />
       <Button
         onClick={() => {
