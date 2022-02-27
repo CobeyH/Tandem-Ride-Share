@@ -61,7 +61,7 @@ const AddCar = (props: { user: User }) => {
         >
           <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
             <ModalHeader>Add A Car</ModalHeader>
-            <CarSelector />
+            <CarSelector user={props.user} />
           </ModalContent>
         </Modal>
       }
@@ -69,8 +69,7 @@ const AddCar = (props: { user: User }) => {
   );
 };
 
-const registerCar = async (car: Vehicle) => {
-  const [user] = useAuthState(auth);
+const registerCar = async (user: User, car: Vehicle) => {
   const carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
   //TODO: User feedback on error states
   if (!user || !carId) {
@@ -84,7 +83,7 @@ const getCarFromList = (radioIndex: string): Vehicle => {
   return index < cars.length ? cars[index] : trucks[index - cars.length];
 };
 
-const CarSelector = () => {
+const CarSelector = (props: { user: User }) => {
   const [displayName, setDisplayName] = useState("");
   const [carType, setcarType] = useState("1");
   const [car, setCar] = useState<Vehicle>(cars[0]);
@@ -179,7 +178,7 @@ const CarSelector = () => {
       <Spacer pt={5} />
       <Button
         onClick={() => {
-          registerCar({
+          registerCar(props.user, {
             type: car.type,
             numSeats,
             fuelUsage,
