@@ -23,6 +23,7 @@ import { storage } from "../storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
+import PreviousRides from "../components/PreviousRides";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -80,9 +81,16 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <Text> Description: </Text>
             <Text> {group.description}</Text>
           </Box>
+          <Text>Active Rides</Text>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
                 <RideCard key={key} rideId={key} />
+              ))
+            : null}
+          <Text>Previous Rides</Text>
+          {group.rides
+            ? Object.keys(group.rides).map((key) => (
+                <PreviousRides key={key} rideId={key} />
               ))
             : null}
           <Button

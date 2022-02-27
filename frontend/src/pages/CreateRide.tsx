@@ -45,6 +45,7 @@ export type Ride = {
   end: { lat: number; lng: number };
   maxPassengers: number;
   driver?: string;
+  isComplete: boolean;
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
@@ -154,6 +155,7 @@ const CreateRide = () => {
                   start: startPosition,
                   end: endPosition,
                   maxPassengers: maxPassengers,
+                  isComplete: false,
                   ...(isDriver && { driver: user.uid }),
                 };
                 createRide(ride, groupId).then(() =>

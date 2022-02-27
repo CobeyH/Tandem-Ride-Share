@@ -60,7 +60,7 @@ export default function RideCard({
     endMarker = <Marker position={ride.end} icon={endIcon} />;
   }
 
-  return (
+  return !ride?.isComplete ? (
     <Box borderWidth="1px" borderRadius="lg" p="3">
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
@@ -133,6 +133,8 @@ export default function RideCard({
         </>
       )}
     </Box>
+  ) : (
+    <></>
   );
 }
 
@@ -144,9 +146,9 @@ function setRideDriver(driverId: string, rideId: string, state: boolean) {
   set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
 }
 
-const completeRide = async (rideId: string) => {
-  await remove(ref(db, `${DB_RIDE_COLLECT}/${rideId}`));
-};
+function completeRide(rideId: string) {
+  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/isComplete`), true);
+}
 
 function PassengerButton({
   rideId,
@@ -252,7 +254,9 @@ function CompleteRideButton({ rideId }: { rideId: string }) {
       width="full"
       mt={4}
       onClick={() => {
-        completeRide(rideId).then(() => console.log("deleted successfully!"));
+        confirm("Do you want to mark this ride as complete?")
+          ? completeRide(rideId)
+          : null;
       }}
     >
       Complete Ride
