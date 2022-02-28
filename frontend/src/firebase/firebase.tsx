@@ -10,6 +10,15 @@ import {
 } from "firebase/auth";
 import {
   connectDatabaseEmulator,
+  equalTo,
+  get,
+  getDatabase,
+  query,
+  ref,
+  set,
+} from "firebase/database";
+import {
+  connectDatabaseEmulator,
   getDatabase
 } from "firebase/database";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
