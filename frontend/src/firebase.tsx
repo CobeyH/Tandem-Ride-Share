@@ -1,25 +1,26 @@
 import {
-  GoogleAuthProvider,
+  connectAuthEmulator,
+  createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  connectAuthEmulator,
 } from "firebase/auth";
 import {
+  connectDatabaseEmulator,
+  equalTo,
+  get,
   getDatabase,
   query,
   ref,
   set,
-  get,
-  equalTo,
-  connectDatabaseEmulator,
 } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -40,6 +41,8 @@ const firebaseConfig = {
 export const DB_GROUP_COLLECT = "groups";
 export const DB_USER_COLLECT = "users";
 export const DB_RIDE_COLLECT = "rides";
+export const DB_GROUP_CHAT_COLLECT = "chats/group";
+export const DB_RIDE_CHAT_COLLECT = "chats/ride";
 export const DB_PASSENGERS_COLLECT = "passengers";
 export const DB_KEY_SLUG_OPTS = {
   replacement: "-",
