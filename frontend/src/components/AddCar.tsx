@@ -85,13 +85,9 @@ const getCarFromList = (radioIndex: string): Vehicle => {
 
 const CarSelector = (props: { user: User }) => {
   const [displayName, setDisplayName] = useState("");
-  const [carType, setcarType] = useState("1");
   const [car, setCar] = useState<Vehicle>(cars[0]);
   const [showTooltip, setShowTooltip] = React.useState(false);
 
-  useEffect(() => {
-    setCar(getCarFromList(carType));
-  }, [carType]);
   return (
     <ModalBody>
       <Heading as="h2" size="l">
@@ -102,52 +98,7 @@ const CarSelector = (props: { user: User }) => {
         value={displayName}
         onChange={(e) => setDisplayName(e.target.value)}
       />
-
-      <Accordion>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading as="h2" size="l">
-                Car
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <RadioGroup onChange={setcarType} value={carType}>
-              <Stack direction="column">
-                {cars.map((c: Vehicle, i: number) => (
-                  <Radio key={i} value={`${i}`}>
-                    {c.type}
-                  </Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionPanel>
-        </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading as="h2" size="l">
-                Truck
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <RadioGroup onChange={setcarType} value={carType}>
-              <Stack direction="column">
-                {trucks.map((c: Vehicle, i: number) => (
-                  <Radio key={cars.length + i} value={`${cars.length + i}`}>
-                    {c.type}
-                  </Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+      <CarAccordion carUpdate={setCar} />
       <Heading as="h2" size="l">
         Number of Seats
       </Heading>
@@ -185,7 +136,6 @@ const CarSelector = (props: { user: User }) => {
         Fuel Usage
       </Heading>
       <Slider
-        aria-label="slider-ex-1"
         onChange={(value) => setCar({ ...car, fuelUsage: value })}
         value={car.fuelUsage}
         min={5}
@@ -223,6 +173,64 @@ const CarSelector = (props: { user: User }) => {
         Add
       </Button>
     </ModalBody>
+  );
+};
+
+const CarAccordion = (props: { carUpdate: (carType: Vehicle) => void }) => {
+  return (
+    <Accordion allowToggle>
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Heading as="h2" size="l">
+              Car
+            </Heading>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          <RadioGroup
+            onChange={(carType: string) =>
+              props.carUpdate(getCarFromList(carType))
+            }
+          >
+            <Stack direction="column">
+              {cars.map((c: Vehicle, i: number) => (
+                <Radio key={i} value={`${i}`}>
+                  {c.type}
+                </Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        </AccordionPanel>
+      </AccordionItem>
+
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Heading as="h2" size="l">
+              Truck
+            </Heading>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          <RadioGroup
+            onChange={(carType: string) =>
+              props.carUpdate(getCarFromList(carType))
+            }
+          >
+            <Stack direction="column">
+              {trucks.map((c: Vehicle, i: number) => (
+                <Radio key={cars.length + i} value={`${cars.length + i}`}>
+                  {c.type}
+                </Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   );
 };
 
