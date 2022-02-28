@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -99,6 +99,13 @@ const CreateRide = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!isDriver) {
+      setSelectedCar(undefined);
+    }
+    console.log("selected car", selectedCar);
+  }, [isDriver]);
+
   return (
     <>
       <Header
@@ -124,7 +131,9 @@ const CreateRide = () => {
           />
           <Checkbox
             isChecked={isDriver}
-            onChange={(e) => setIsDriver(e.target.checked)}
+            onChange={(e) => {
+              setIsDriver(e.target.checked);
+            }}
           >
             Are you the driver?
           </Checkbox>
