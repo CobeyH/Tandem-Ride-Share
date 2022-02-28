@@ -131,18 +131,15 @@ const CreateRide = () => {
           <Button
             mt={4}
             mb={4}
-            disabled={!hasDragged || !selectedCar}
+            disabled={!hasDragged}
             onClick={() => {
-              if (!selectedCar) {
-                return;
-              }
               if (groupId && user) {
                 const ride = {
                   id: "",
                   name: title,
                   start: startPosition,
                   end: endPosition,
-                  maxPassengers: selectedCar?.numSeats,
+                  maxPassengers: selectedCar?.numSeats || 4,
                   ...(isDriver && { driver: user.uid }),
                 };
                 createRide(ride, groupId).then(() =>
