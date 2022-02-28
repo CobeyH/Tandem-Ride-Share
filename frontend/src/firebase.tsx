@@ -1,13 +1,13 @@
 import {
-  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
 } from "firebase/auth";
-import { getDatabase, query, ref, set, get, equalTo } from "firebase/database";
+import { equalTo, get, getDatabase, query, ref, set } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -29,6 +29,8 @@ const firebaseConfig = {
 };
 
 export const DB_GROUP_COLLECT = "groups";
+export const DB_GROUP_CHAT_COLLECT = "chats/group";
+export const DB_RIDE_CHAT_COLLECT = "chats/ride";
 export const DB_USER_COLLECT = "users";
 export const DB_RIDE_COLLECT = "rides";
 export const DB_PASSENGERS_COLLECT = "passengers";
