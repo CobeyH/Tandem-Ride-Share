@@ -25,7 +25,7 @@ import {
 import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaCarSide, FaGasPump, FaShuttleVan } from "react-icons/all";
 import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
 
