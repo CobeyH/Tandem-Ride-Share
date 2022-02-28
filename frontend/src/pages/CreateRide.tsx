@@ -129,7 +129,7 @@ const CreateRide = () => {
             Are you the driver?
           </Checkbox>
           {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
-          {selectedCar ? (
+          {selectedCar && isDriver ? (
             <CarStatsSlider
               car={selectedCar}
               updateCar={setSelectedCar}
