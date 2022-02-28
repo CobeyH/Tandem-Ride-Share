@@ -29,6 +29,7 @@ import MapView, {
 } from "../components/MapView";
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/ChooseCar";
+import CarStatsSlider from "../components/CarStatsSlider";
 
 type ValidatableField<T> = {
   field: T;
@@ -128,6 +129,13 @@ const CreateRide = () => {
             Are you the driver?
           </Checkbox>
           {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
+          {selectedCar ? (
+            <CarStatsSlider
+              car={selectedCar}
+              updateCar={setSelectedCar}
+              isDisabled={true}
+            />
+          ) : null}
           <Button
             mt={4}
             mb={4}

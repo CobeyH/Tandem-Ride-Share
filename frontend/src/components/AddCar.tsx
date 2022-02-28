@@ -5,7 +5,7 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { Box, Heading, Spacer, Stack } from "@chakra-ui/layout";
+import { Heading, Spacer, Stack } from "@chakra-ui/layout";
 import {
   Button,
   Input,
@@ -16,18 +16,13 @@ import {
   ModalHeader,
   Radio,
   RadioGroup,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
-  Tooltip,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
-import { FaCarSide, FaGasPump, FaShuttleVan } from "react-icons/all";
 import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
+import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -86,7 +81,6 @@ const getCarFromList = (radioIndex: string): Vehicle => {
 const CarSelector = (props: { user: User }) => {
   const [displayName, setDisplayName] = useState("");
   const [car, setCar] = useState<Vehicle>(cars[0]);
-  const [showTooltip, setShowTooltip] = React.useState(false);
 
   return (
     <ModalBody>
@@ -99,68 +93,7 @@ const CarSelector = (props: { user: User }) => {
         onChange={(e) => setDisplayName(e.target.value)}
       />
       <CarAccordion carUpdate={setCar} />
-      <Heading as="h2" size="l">
-        Number of Seats
-      </Heading>
-      <Slider
-        id="slider"
-        onChange={(value) => setCar({ ...car, numSeats: value })}
-        value={car.numSeats}
-        min={1}
-        max={12}
-        onTouchStart={() => setShowTooltip(true)}
-        onTouchEnd={() => setShowTooltip(false)}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip
-          hasArrow
-          bg="teal.500"
-          color="white"
-          placement="right"
-          isOpen={showTooltip}
-          label={`${car.numSeats}`}
-        >
-          <SliderThumb boxSize={6}>
-            <Box
-              color="tomato"
-              as={car.numSeats < 6 ? FaCarSide : FaShuttleVan}
-            />
-          </SliderThumb>
-        </Tooltip>
-      </Slider>
-      <Heading as="h2" size="l">
-        Fuel Usage
-      </Heading>
-      <Slider
-        onChange={(value) => setCar({ ...car, fuelUsage: value })}
-        value={car.fuelUsage}
-        min={5}
-        max={20}
-        onTouchStart={() => setShowTooltip(true)}
-        onTouchEnd={() => setShowTooltip(false)}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip
-          hasArrow
-          bg="teal.500"
-          color="white"
-          placement="right"
-          isOpen={showTooltip}
-          label={`${car.fuelUsage}`}
-        >
-          <SliderThumb boxSize={6}>
-            <Box color="tomato" as={FaGasPump} />
-          </SliderThumb>
-        </Tooltip>
-      </Slider>
+      <CarStatsSlider car={car} updateCar={setCar} />
       <Spacer pt={5} />
       <Button
         onClick={() => {
