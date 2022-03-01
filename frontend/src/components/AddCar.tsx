@@ -5,7 +5,7 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { Box, Heading, Spacer, Stack } from "@chakra-ui/layout";
+import { Heading, Spacer, Stack } from "@chakra-ui/layout";
 import {
   Button,
   Input,
@@ -16,18 +16,13 @@ import {
   ModalHeader,
   Radio,
   RadioGroup,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
-  Tooltip,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { FaCarSide, FaGasPump, FaShuttleVan } from "react-icons/all";
+import { useState } from "react";
 import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
+import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -85,13 +80,8 @@ const getCarFromList = (radioIndex: string): Vehicle => {
 
 const CarSelector = (props: { user: User }) => {
   const [displayName, setDisplayName] = useState("");
-  const [carType, setcarType] = useState("1");
   const [car, setCar] = useState<Vehicle>(cars[0]);
-  const [showTooltip, setShowTooltip] = React.useState(false);
 
-  useEffect(() => {
-    setCar(getCarFromList(carType));
-  }, [carType]);
   return (
     <ModalBody>
       <Heading as="h2" size="l">
@@ -102,115 +92,8 @@ const CarSelector = (props: { user: User }) => {
         value={displayName}
         onChange={(e) => setDisplayName(e.target.value)}
       />
-
-      <Accordion>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading as="h2" size="l">
-                Car
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <RadioGroup onChange={setcarType} value={carType}>
-              <Stack direction="column">
-                {cars.map((c: Vehicle, i: number) => (
-                  <Radio key={i} value={`${i}`}>
-                    {c.type}
-                  </Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionPanel>
-        </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading as="h2" size="l">
-                Truck
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <RadioGroup onChange={setcarType} value={carType}>
-              <Stack direction="column">
-                {trucks.map((c: Vehicle, i: number) => (
-                  <Radio key={cars.length + i} value={`${cars.length + i}`}>
-                    {c.type}
-                  </Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
-      <Heading as="h2" size="l">
-        Number of Seats
-      </Heading>
-      <Slider
-        id="slider"
-        onChange={(value) => setCar({ ...car, numSeats: value })}
-        value={car.numSeats}
-        min={1}
-        max={12}
-        onTouchStart={() => setShowTooltip(true)}
-        onTouchEnd={() => setShowTooltip(false)}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip
-          hasArrow
-          bg="teal.500"
-          color="white"
-          placement="right"
-          isOpen={showTooltip}
-          label={`${car.numSeats}`}
-        >
-          <SliderThumb boxSize={6}>
-            <Box
-              color="tomato"
-              as={car.numSeats < 6 ? FaCarSide : FaShuttleVan}
-            />
-          </SliderThumb>
-        </Tooltip>
-      </Slider>
-      <Heading as="h2" size="l">
-        Fuel Usage
-      </Heading>
-      <Slider
-        aria-label="slider-ex-1"
-        onChange={(value) => setCar({ ...car, fuelUsage: value })}
-        value={car.fuelUsage}
-        min={5}
-        max={20}
-        onTouchStart={() => setShowTooltip(true)}
-        onTouchEnd={() => setShowTooltip(false)}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip
-          hasArrow
-          bg="teal.500"
-          color="white"
-          placement="right"
-          isOpen={showTooltip}
-          label={`${car.fuelUsage}`}
-        >
-          <SliderThumb boxSize={6}>
-            <Box color="tomato" as={FaGasPump} />
-          </SliderThumb>
-        </Tooltip>
-      </Slider>
+      <CarAccordion carUpdate={setCar} />
+      <CarStatsSlider car={car} updateCar={setCar} />
       <Spacer pt={5} />
       <Button
         onClick={() => {
@@ -223,6 +106,64 @@ const CarSelector = (props: { user: User }) => {
         Add
       </Button>
     </ModalBody>
+  );
+};
+
+const CarAccordion = (props: { carUpdate: (carType: Vehicle) => void }) => {
+  return (
+    <Accordion allowToggle>
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Heading as="h2" size="l">
+              Car
+            </Heading>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          <RadioGroup
+            onChange={(carType: string) =>
+              props.carUpdate(getCarFromList(carType))
+            }
+          >
+            <Stack direction="column">
+              {cars.map((c: Vehicle, i: number) => (
+                <Radio key={i} value={`${i}`}>
+                  {c.type}
+                </Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        </AccordionPanel>
+      </AccordionItem>
+
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Heading as="h2" size="l">
+              Truck
+            </Heading>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          <RadioGroup
+            onChange={(carType: string) =>
+              props.carUpdate(getCarFromList(carType))
+            }
+          >
+            <Stack direction="column">
+              {trucks.map((c: Vehicle, i: number) => (
+                <Radio key={cars.length + i} value={`${cars.length + i}`}>
+                  {c.type}
+                </Radio>
+              ))}
+            </Stack>
+          </RadioGroup>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   );
 };
 

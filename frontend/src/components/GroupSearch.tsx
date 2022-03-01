@@ -32,13 +32,13 @@ const GroupSearch = (props: { groups: Group[] }) => {
       <InputGroup mt={4} size={"sm"}>
         <Input
           textAlign={"center"}
-          color="white"
+          color="black"
           onInput={(e) => setSearch(e.currentTarget.value)}
           value={search}
-          _placeholder={{ color: "white" }}
+          _placeholder={{ color: "black" }}
           placeholder="Find Public Groups"
         />
-        <InputLeftElement color={"white"}>
+        <InputLeftElement color={"black"}>
           <GiMagnifyingGlass />
         </InputLeftElement>
         <Button onClick={onOpen}>Submit</Button>
