@@ -30,6 +30,7 @@ import {
 } from "../firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
+import ChooseCar from "./ChooseCar";
 
 export default function RideCard({
   rideId,
@@ -42,7 +43,7 @@ export default function RideCard({
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
   );
-  const [car, carLoading, carError] = useObjectVal<Vehicle>(
+  const [car] = useObjectVal<Vehicle>(
     ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
   );
   const { isOpen, onToggle } = useDisclosure();
@@ -132,8 +133,14 @@ function setRidePassenger(passId: string, rideId: string, state: boolean) {
   set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${passId}`), state);
 }
 
-function setRideDriver(driverId: string, rideId: string, state: boolean) {
+function setRideDriver(
+  driverId: string,
+  rideId: string,
+  state: boolean,
+  carId: string | undefined
+) {
   set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
+  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/carId`), state ? carId : null);
 }
 
 function PassengerButton({
@@ -189,15 +196,20 @@ function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
   const [driver, loading, error] = useObjectVal<string>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`)
   );
+  const [car, setCar] = useState<Vehicle>();
   const amDriver = driver === userId;
   return !loading && error === undefined ? (
-    <Button
-      onClick={() => {
-        setRideDriver(userId, rideId, !amDriver);
-      }}
-    >
-      {amDriver ? "Leave" : "Join"}
-    </Button>
+    <>
+      <ChooseCar carUpdate={setCar} />
+      <Button
+        isDisabled={car == undefined}
+        onClick={() => {
+          setRideDriver(userId, rideId, !amDriver, car?.carId);
+        }}
+      >
+        {amDriver ? "Leave" : "Join"}
+      </Button>
+    </>
   ) : (
     <></>
   );
