@@ -38,7 +38,7 @@ const CarStatsSlider = (props: {
           color="white"
           placement="right"
           isOpen={true}
-          label={`${props.car.numSeats}`}
+          label={`${props.car.numSeats} Seats`}
         >
           <SliderThumb boxSize={6}>
             <Box
@@ -69,7 +69,7 @@ const CarStatsSlider = (props: {
           color="white"
           placement="right"
           isOpen={true}
-          label={`${props.car.fuelUsage}`}
+          label={`${props.car.fuelUsage} L/100km`}
         >
           <SliderThumb boxSize={6}>
             <Box color="tomato" as={FaGasPump} />
