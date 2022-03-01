@@ -26,6 +26,7 @@ import {
   DB_RIDE_COLLECT,
   DB_USER_COLLECT,
   User,
+  Vehicle,
 } from "../firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -40,6 +41,9 @@ export default function RideCard({
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
+  );
+  const [car, carLoading, carError] = useObjectVal<Vehicle>(
+    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
   );
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
@@ -70,7 +74,7 @@ export default function RideCard({
                 />
                 <PassengerCounter
                   rideId={ride.id}
-                  maxPass={ride.maxPassengers}
+                  maxPass={car?.numSeats || 4}
                 />
                 <ChevronDownIcon w={6} h={6} />
               </>
@@ -103,7 +107,7 @@ export default function RideCard({
               )}
             </Flex>
             <Flex flexDirection="row" m={2} align="center">
-              <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
+              <PassengerCounter rideId={ride.id} maxPass={car?.numSeats || 4} />
               <Spacer />
               {user && !viewOnly ? (
                 <PassengerButton rideId={ride.id} userId={user.uid} />

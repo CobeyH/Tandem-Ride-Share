@@ -41,8 +41,8 @@ export type Ride = {
   name: string;
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
-  maxPassengers: number;
   driver?: string;
+  carId?: string;
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
@@ -103,7 +103,6 @@ const CreateRide = () => {
     if (!isDriver) {
       setSelectedCar(undefined);
     }
-    console.log("selected car", selectedCar);
   }, [isDriver]);
 
   return (
@@ -156,8 +155,10 @@ const CreateRide = () => {
                   name: title,
                   start: startPosition,
                   end: endPosition,
-                  maxPassengers: selectedCar?.numSeats || 4,
                   ...(isDriver && { driver: user.uid }),
+                  ...(selectedCar !== undefined && {
+                    carId: selectedCar?.carId,
+                  }),
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)

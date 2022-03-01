@@ -65,12 +65,15 @@ const AddCar = (props: { user: User }) => {
 };
 
 const registerCar = async (user: User, car: Vehicle) => {
-  const carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
-  //TODO: User feedback on error states
-  if (!user || !carId) {
+  if (!user || !car.displayName) {
     return;
   }
-  await set(ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${carId}`), car);
+  car.carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
+  //TODO: User feedback on error states
+  await set(
+    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${car.carId}`),
+    car
+  );
 };
 
 const getCarFromList = (radioIndex: string): Vehicle => {
