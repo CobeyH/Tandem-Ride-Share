@@ -148,7 +148,7 @@ const CreateRide = () => {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
-          <Button
+ <Button
             mt={4}
             disabled={!hasDragged}
             onClick={() => {
@@ -168,16 +168,8 @@ const CreateRide = () => {
               }
             }}
           >
-            Are you the driver?
-          </Checkbox>
-          {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
-          {selectedCar && isDriver ? (
-            <CarStatsSlider
-              car={selectedCar}
-              updateCar={setSelectedCar}
-              isDisabled={true}
-            />
-          ) : null}
+            Create Ride as Passenger
+          </Button>
           <Button
             mt={4}
             mb={4}
@@ -193,7 +185,6 @@ const CreateRide = () => {
                   driver: user.uid,
                   startDate,
                   endDate,
-
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)
@@ -201,7 +192,7 @@ const CreateRide = () => {
               }
             }}
           >
-            Confirm
+            Create Ride as Driver
           </Button>
         </InputGroup>
         <Text>Start Time</Text>
