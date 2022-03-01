@@ -12,15 +12,13 @@ import {
   auth,
   db,
   DB_GROUP_COLLECT,
-  DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
   Vehicle,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { ref, set, get, query, push } from "firebase/database";
+import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
-import slugify from "slugify";
 import Header from "../components/Header";
 import MapView, {
   DEFAULT_CENTER,
