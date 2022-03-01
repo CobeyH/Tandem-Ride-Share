@@ -8,6 +8,7 @@ import {
   Stack,
   HStack,
   Textarea,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
@@ -28,6 +29,7 @@ export type Group = {
   id: string;
   name: string;
   description: string;
+  isPrivate: boolean;
   rides: { [key: string]: boolean };
   members: { [key: string]: boolean };
   banner?: string;
@@ -61,6 +63,7 @@ const CreateGroup = () => {
     invalid: false,
   });
   const [description, setDescription] = useState("");
+  const [isPrivate, setPrivate] = useState<boolean>(true);
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
@@ -105,12 +108,19 @@ const CreateGroup = () => {
               isInvalid={invalidName}
             />
           </HStack>
+          <HStack>
+            <Text mb={"8px"}>Private Group:</Text>
+            <Checkbox
+              isChecked={isPrivate}
+              onChange={(e) => setPrivate(e.target.checked)}
+            />
+          </HStack>
           <DropZone parentCallback={handleCallback} />
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
                 createGroup(
-                  { description, name, rides: {}, members: {} },
+                  { description, isPrivate, name, rides: {}, members: {} },
                   user.uid
                 ).then((group) => {
                   navigate(`/group/${group.id}`);

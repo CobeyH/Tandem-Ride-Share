@@ -1,6 +1,7 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
+  Checkbox,
   Container,
   Heading,
   Input,
@@ -20,6 +21,7 @@ import {
   DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
+  Vehicle,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
@@ -32,6 +34,8 @@ import MapView, {
   startIcon,
 } from "../components/MapView";
 import { LatLng, latLngBounds } from "leaflet";
+import ChooseCar from "../components/ChooseCar";
+import CarStatsSlider from "../components/CarStatsSlider";
 
 type ValidatableField<T> = {
   field: T;
@@ -99,9 +103,14 @@ const CreateRide = () => {
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
 
-  const [maxPassengers, setMaxPassengers] = useState<number>(3);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isDriver) {
+      setSelectedCar(undefined);
+    }
+    console.log("selected car", selectedCar);
+  }, [isDriver]);
 
   return (
     <>
@@ -159,8 +168,16 @@ const CreateRide = () => {
               }
             }}
           >
-            Create Ride as Passenger
-          </Button>
+            Are you the driver?
+          </Checkbox>
+          {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
+          {selectedCar && isDriver ? (
+            <CarStatsSlider
+              car={selectedCar}
+              updateCar={setSelectedCar}
+              isDisabled={true}
+            />
+          ) : null}
           <Button
             mt={4}
             mb={4}
@@ -176,6 +193,7 @@ const CreateRide = () => {
                   driver: user.uid,
                   startDate,
                   endDate,
+
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)
@@ -183,7 +201,7 @@ const CreateRide = () => {
               }
             }}
           >
-            Create Ride as Driver
+            Confirm
           </Button>
         </InputGroup>
         <Text>Start Time</Text>

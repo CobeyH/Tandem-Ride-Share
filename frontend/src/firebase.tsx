@@ -6,8 +6,17 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  connectAuthEmulator,
 } from "firebase/auth";
-import { getDatabase, query, ref, set, get, equalTo } from "firebase/database";
+import {
+  getDatabase,
+  query,
+  ref,
+  set,
+  get,
+  equalTo,
+  connectDatabaseEmulator,
+} from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -45,6 +54,13 @@ export const DB_KEY_SLUG_OPTS = {
 export const app = initializeApp(firebaseConfig, "web-frontend");
 export const auth = getAuth(app);
 export const db = getDatabase(app);
+
+// Setup emulators for local development
+if (location.hostname === "localhost") {
+  console.log("Starting on localhost");
+  connectDatabaseEmulator(db, "localhost", 9000);
+  connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+}
 
 const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
@@ -113,9 +129,17 @@ export const logout = () => {
   signOut(auth);
 };
 
+export type Vehicle = {
+  type: string;
+  fuelUsage: number;
+  numSeats: number;
+  displayName?: string;
+};
+
 export type User = {
   uid: string;
   name: string;
   authProvider: string;
   email: string;
+  cars?: Vehicle[];
 };
