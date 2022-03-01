@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -6,11 +6,6 @@ import {
   Heading,
   Input,
   InputGroup,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
@@ -20,6 +15,7 @@ import {
   DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
+  Vehicle,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, get, query } from "firebase/database";
@@ -32,6 +28,8 @@ import MapView, {
   startIcon,
 } from "../components/MapView";
 import { LatLng, latLngBounds } from "leaflet";
+import ChooseCar from "../components/ChooseCar";
+import CarStatsSlider from "../components/CarStatsSlider";
 
 type ValidatableField<T> = {
   field: T;
@@ -82,6 +80,9 @@ const CreateRide = () => {
   const [hasDragged, setHasDragged] = useState(false);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
   const [isDriver, setIsDriver] = useState<boolean>(false);
+  const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
+    undefined
+  );
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -96,9 +97,14 @@ const CreateRide = () => {
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
 
-  const [maxPassengers, setMaxPassengers] = useState<number>(3);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isDriver) {
+      setSelectedCar(undefined);
+    }
+    console.log("selected car", selectedCar);
+  }, [isDriver]);
 
   return (
     <>
@@ -123,25 +129,22 @@ const CreateRide = () => {
             }
             isInvalid={invalidTitle}
           />
-          <NumberInput
-            mt={4}
-            defaultValue={3}
-            min={1}
-            max={9}
-            onChange={(_, num) => setMaxPassengers(num)}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
           <Checkbox
             isChecked={isDriver}
-            onChange={(e) => setIsDriver(e.target.checked)}
+            onChange={(e) => {
+              setIsDriver(e.target.checked);
+            }}
           >
             Are you the driver?
           </Checkbox>
+          {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
+          {selectedCar && isDriver ? (
+            <CarStatsSlider
+              car={selectedCar}
+              updateCar={setSelectedCar}
+              isDisabled={true}
+            />
+          ) : null}
           <Button
             mt={4}
             mb={4}
@@ -153,7 +156,7 @@ const CreateRide = () => {
                   name: title,
                   start: startPosition,
                   end: endPosition,
-                  maxPassengers: maxPassengers,
+                  maxPassengers: selectedCar?.numSeats || 4,
                   ...(isDriver && { driver: user.uid }),
                 };
                 createRide(ride, groupId).then(() =>
