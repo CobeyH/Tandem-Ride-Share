@@ -240,16 +240,43 @@ function RideTimes({
   startTime: string;
   endTime: string;
 }) {
+  // make time strings pretty
+  const start_date = startTime.split("T")[0];
+  let start_time = startTime.split("T")[1];
+  const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
+
+  start_time = isPm_start
+    ? `${parseInt(start_time.split(":")[0]) - 12}:${parseInt(
+        start_time.split(":")[1]
+      )}`
+    : start_time;
+
+  const end_date = endTime.split("T")[0];
+  let end_time = endTime.split("T")[1];
+  const isPm_end = parseInt(end_time.split(":")[0]) >= 12;
+
+  end_time = isPm_end
+    ? `${parseInt(end_time.split(":")[0]) - 12}:${parseInt(
+        end_time.split(":")[1]
+      )}`
+    : end_time;
+
   return (
-    <VStack>
-      <HStack>
-        <Text> Start Date </Text>
-        <Text> {startTime} </Text>
-      </HStack>
-      <HStack>
-        <Text> End Date </Text>
-        <Text> {endTime} </Text>
-      </HStack>
-    </VStack>
+    <>
+      <Flex flexDirection="row" m={2} align="center">
+        <Text>Start Date</Text>
+        <Spacer />
+        <Text>
+          {start_date} {start_time} {isPm_start ? "PM" : "AM"}
+        </Text>
+      </Flex>
+      <Flex flexDirection="row" m={2} align="center">
+        <Text>End Date</Text>
+        <Spacer />
+        <Text>
+          {end_date} {end_time} {isPm_end ? "PM" : "AM"}
+        </Text>
+      </Flex>
+    </>
   );
 }
