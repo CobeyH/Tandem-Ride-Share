@@ -111,7 +111,9 @@ export default function RideCard({
                 ""
               )}
             </Flex>
-            <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
+            {ride.startDate !== undefined || ride.endDate !== undefined ? (
+              <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
+            ) : null}
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
