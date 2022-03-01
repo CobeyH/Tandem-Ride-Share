@@ -6,12 +6,10 @@ import {
   Collapse,
   Flex,
   Heading,
-  HStack,
   Icon,
   Spacer,
   Text,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";

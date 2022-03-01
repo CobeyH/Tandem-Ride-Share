@@ -2,9 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import {
   Button,
   Container,
-  Flex,
   Heading,
-  HStack,
   Input,
   InputGroup,
   NumberDecrementStepper,
@@ -13,9 +11,6 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
-  Box,
-  Spacer,
-  VStack,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
