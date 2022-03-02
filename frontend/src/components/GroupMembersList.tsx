@@ -60,11 +60,10 @@ const GroupMembersList = (props: {
           <DrawerBody>
             {groupMembers?.map((user: User, i) => (
               <HStack key={i}>
-                <Heading size="md">{user.name}</Heading>
+                <Heading size="md">{user?.name}</Heading>
                 {user.uid === props.ownerId ? (
                   <Badge colorScheme={"blue"}>Owner</Badge>
                 ) : null}
-                {console.log(props.ownerId)}
               </HStack>
             ))}
           </DrawerBody>
