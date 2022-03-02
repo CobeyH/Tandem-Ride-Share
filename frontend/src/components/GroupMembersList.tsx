@@ -18,7 +18,6 @@ import * as React from "react";
 import { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { db, DB_USER_COLLECT, User } from "../firebase";
-import { lightTheme } from "../theme/colours";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
