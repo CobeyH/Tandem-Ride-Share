@@ -6,6 +6,7 @@ import {
   Heading,
   Input,
   InputGroup,
+  Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
@@ -43,6 +44,8 @@ export type Ride = {
   end: { lat: number; lng: number };
   maxPassengers: number;
   driver?: string;
+  startDate: string;
+  endDate: string;
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
@@ -83,6 +86,8 @@ const CreateRide = () => {
   const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
     undefined
   );
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -157,6 +162,8 @@ const CreateRide = () => {
                   start: startPosition,
                   end: endPosition,
                   maxPassengers: selectedCar?.numSeats || 4,
+                  startDate,
+                  endDate,
                   ...(isDriver && { driver: user.uid }),
                 };
                 createRide(ride, groupId).then(() =>
@@ -168,6 +175,18 @@ const CreateRide = () => {
             Confirm
           </Button>
         </InputGroup>
+        <Text>Start Time</Text>
+        <Input
+          mb="4"
+          type="datetime-local"
+          onInput={(e) => setStartDate(e.currentTarget.value)}
+        />
+        <Text>End Time</Text>
+        <Input
+          mb="4"
+          type="datetime-local"
+          onInput={(e) => setEndDate(e.currentTarget.value)}
+        />
         <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
