@@ -128,12 +128,8 @@ export default function RideCard({
               </MapView>
             </AspectRatio>
             <Flex flexDirection="row" m={2} align="center">
-              {user && !ride?.isComplete && (
-                <CompleteRideButton
-                  rideId={rideId}
-                  userId={user.uid}
-                  driverId={ride.driver}
-                />
+              {user && !ride?.isComplete && user.uid == ride.driver && (
+                <CompleteRideButton rideId={rideId} />
               )}
             </Flex>
           </Collapse>
@@ -264,18 +260,9 @@ function DriverDisplay({
   );
 }
 
-function CompleteRideButton({
-  rideId,
-  userId,
-  driverId,
-}: {
-  rideId: string;
-  userId: string;
-  driverId: string | undefined;
-}) {
+function CompleteRideButton({ rideId }: { rideId: string }) {
   return (
     <Button
-      disabled={driverId == undefined || userId !== driverId}
       width="full"
       mt={4}
       onClick={() => {
