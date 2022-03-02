@@ -253,14 +253,30 @@ function DriverDisplay({
   );
 }
 
+/**
+ * MapQuest Open Directions API functions and components.
+ */
+const MQ_DIR_URI = "http://open.mapquestapi.com/directions/v2/route";
+const MQ_KEY = "zrK0kZ2o9WcxfTJpYYWaZ9uYHYSZvcyC";
+
+type RouteResponse = {
+  sessionId: string;
+};
+
 function RidePath({ start, end }: { start: LatLng; end: LatLng }) {
   const [error, setError] = useState(null);
   const [routeLoaded, setRouteLoaded] = useState(false);
   const [pathLoaded, setPathLoaded] = useState(false);
-  const [route, setRoute] = useState([]);
+  const [, setRoute] = useState<RouteResponse | undefined>(undefined);
   const [path, setPath] = useState<LatLng[] | undefined>(undefined);
 
   useEffect(() => {
+    /**
+     * Here we are making the first API call to the Directions API Route
+     * endpoint. Then we compose the reponse to JSON, then use the result
+     * to make a second call to the RouteShape enpoint which only accepts
+     * a sessionId.
+     */
     fetch(
       `${MQ_DIR_URI}?key=${MQ_KEY}` +
         `&from=${start.lat},${start.lng}&to=${end.lat},${end.lng}&unit=k`
@@ -269,7 +285,7 @@ function RidePath({ start, end }: { start: LatLng; end: LatLng }) {
       .then(
         (result) => {
           setRouteLoaded(true);
-          setRoute(result);
+          setRoute(result.route);
           fetch(
             `${MQ_DIR_URI}shape?key=${MQ_KEY}` +
               `&sessionId=${result.route.sessionId}&fullShape=true`
@@ -297,15 +313,10 @@ function RidePath({ start, end }: { start: LatLng; end: LatLng }) {
     <>
       {!error && routeLoaded && pathLoaded && path ? (
         <Polyline positions={path} />
-      ) : (
-        "Loading..."
-      )}
+      ) : undefined}
     </>
   );
 }
-
-const MQ_DIR_URI = "http://open.mapquestapi.com/directions/v2/route";
-const MQ_KEY = "zrK0kZ2o9WcxfTJpYYWaZ9uYHYSZvcyC";
 
 /**
  * MapQuest Directions RouteShape API returns flat array of decimal lat and lng.
@@ -319,6 +330,8 @@ function arrayToLatLngs(array: Array<number>) {
   }
   return result;
 }
+/** End of MapQuest section, to be refactored to separate file */
+
 function RideTimes({
   startTime,
   endTime,
