@@ -10,28 +10,31 @@ import {
   Heading,
   IconButton,
   Icon,
+  Badge,
+  HStack,
 } from "@chakra-ui/react";
 import { child, get, ref } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
-import { db, DB_USER_COLLECT } from "../firebase";
+import { db, DB_USER_COLLECT, User } from "../firebase";
+import { lightTheme } from "../theme/colours";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
   ownerId: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [groupMembers, setGroupMembers] = useState<string[]>();
+  const [groupMembers, setGroupMembers] = useState<User[]>();
 
   const fetchUsers = () => {
     const userRef = ref(db, DB_USER_COLLECT);
     const queryPromises = Object.keys(props.members).map((userId) => {
       return get(child(userRef, `${userId}`));
     });
-    Promise.all(queryPromises).then((users) => {
-      const userNames = users.map((user) => user.val().name);
-      setGroupMembers(userNames);
+    Promise.all(queryPromises).then((snapshots) => {
+      const members = snapshots.map((user) => user.val());
+      setGroupMembers(members);
     });
   };
 
@@ -56,10 +59,14 @@ const GroupMembersList = (props: {
           <DrawerCloseButton />
 
           <DrawerBody>
-            {groupMembers?.map((userName, i) => (
-              <Heading size="md" key={i}>
-                {userName}
-              </Heading>
+            {groupMembers?.map((user: User, i) => (
+              <HStack key={i}>
+                <Heading size="md">{user.name}</Heading>
+                {user.uid === props.ownerId ? (
+                  <Badge colorScheme={"blue"}>Owner</Badge>
+                ) : null}
+                {console.log(props.ownerId)}
+              </HStack>
             ))}
           </DrawerBody>
 
