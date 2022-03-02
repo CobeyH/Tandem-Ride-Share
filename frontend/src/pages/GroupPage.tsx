@@ -23,6 +23,7 @@ import { storage } from "../storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
+import GroupMembersList from "../components/GroupMembersList";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           <HStack>
             <Heading textAlign={"center"}>{group.name}</Heading>
             <ShareLink />
+            <GroupMembersList members={group.members} ownerId={group.owner} />
           </HStack>
           <Box bg="white" px={5} py={5} borderRadius={"4px"}>
             <Text> Description: </Text>
