@@ -1,8 +1,25 @@
 import React from "react";
-import { DatabaseReference, ref, set } from "firebase/database";
-import { db, DB_GROUP_CHAT_COLLECT, DB_RIDE_CHAT_COLLECT } from "../firebase";
-import { Spinner, VStack, Text, Heading, Box } from "@chakra-ui/react";
-import { useListVals } from "react-firebase-hooks/database/dist/database/useList";
+import { ref, set } from "firebase/database";
+import {
+  auth,
+  db,
+  DB_GROUP_CHAT_COLLECT,
+  DB_RIDE_CHAT_COLLECT,
+  DB_USER_COLLECT,
+  User,
+} from "../firebase";
+import {
+  Box,
+  Container,
+  Heading,
+  Input,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { useList, useObjectVal } from "react-firebase-hooks/database";
+import slugify from "slugify";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 type MessageTimestamp = number; // (new Date()).getTime()
 import { ref, set } from "firebase/database";
@@ -27,36 +44,88 @@ type Message = {
   timestamp: MessageTimestamp;
 };
 
-export const GroupChat = (groupId: string) => (
-  <Chat dbLocation={ref(db, `${DB_GROUP_CHAT_COLLECT}/${groupId}`)} />
+const makeMessage = ({
+  sender_id,
+  contents,
+}: Omit<Message, "timestamp">): Message => ({
+  sender_id,
+  contents,
+  timestamp: Date.now(),
+});
+
+export const GroupChat = ({ groupId }: { groupId: string }) => (
+  <Chat dbLocation={`${DB_GROUP_CHAT_COLLECT}/${groupId}`} />
 );
 
-export const RideChat = (rideId: string) => (
-  <Chat dbLocation={ref(db, `${DB_RIDE_CHAT_COLLECT}/${rideId}`)} />
+export const RideChat = ({ rideId }: { rideId: string }) => (
+  <Chat dbLocation={`${DB_RIDE_CHAT_COLLECT}/${rideId}`} />
 );
 
-const Chat = (props: { dbLocation: DatabaseReference }) => {
-  const [chat, loading, error] = useListVals<Message>(props.dbLocation, {});
-
-  if (loading) {
-    return <Spinner />;
-  } else if (error) {
-    console.log(error);
-    return <h1>{JSON.stringify(error)}</h1>;
-  } else if (chat) {
-    return (
-      <ChatContents
-        contents={chat.sort(
-          ({ timestamp: fst }, { timestamp: snd }) => fst - snd
-        )}
+function ChatTextBox({
+  dbLocation,
+  userId,
+}: {
+  dbLocation: string;
+  userId: string;
+}) {
+  return (
+    <>
+      <Input
+        onKeyDown={(e) => {
+          if (e.key == "Enter") {
+            set(
+              ref(
+                db,
+                `${dbLocation}/${slugify(e.currentTarget.value + Date.now())}`
+              ),
+              makeMessage({
+                sender_id: userId,
+                contents: e.currentTarget.value,
+              })
+            );
+          }
+        }}
       />
-    );
-  } else {
-    // the docs say this will have an effect immediately, and we don't need to guard against calling it twice. :/
-    set(props.dbLocation, []).then(() =>
-      console.log(`Created an empty chat at ${props.dbLocation.key}`)
-    );
+    </>
+  );
+}
+
+const Chat = (props: { dbLocation: string }) => {
+  const [chat, messagesLoading, messagesError] = useList(
+    ref(db, props.dbLocation)
+  );
+  console.log({ chat });
+
+  const [user, userLoading, userError] = useAuthState(auth);
+
+  if (messagesLoading || userLoading) {
     return <Spinner />;
+  } else if (messagesError || userError) {
+    console.log(messagesError);
+    return <h1>{JSON.stringify(messagesError)}</h1>;
+  } else if (chat && user) {
+    return (
+      <Container p={4}>
+        {chat.length === 0 ? (
+          <Text>Nothing seems to be here, Say something!</Text>
+        ) : (
+          <ChatContents
+            contents={chat
+              .map((value) => value.val() as Message)
+              .sort(({ timestamp: fst }, { timestamp: snd }) => fst - snd)}
+          />
+        )}
+        <ChatTextBox dbLocation={props.dbLocation} userId={user.uid} />
+      </Container>
+    );
+  } else if (!chat) {
+    set(ref(db, props.dbLocation), []).then(() => {
+      console.log(`Created an empty chat at ${props.dbLocation}`);
+    });
+    return <Spinner />;
+  } else {
+    console.log("Error: NO USER");
+    return <h1>Error: NO USER</h1>;
   }
 };
 
