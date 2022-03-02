@@ -9,6 +9,7 @@ import {
   HStack,
   Textarea,
   Checkbox,
+  Container,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
@@ -82,60 +83,62 @@ const CreateGroup = () => {
   return (
     <>
       <Header pages={[{ label: "Group List", url: "/" }]} />
-      <InputGroup paddingInline={5}>
-        <Stack>
-          <Heading textAlign={"center"}>Create Group</Heading>
-          <HStack>
-            <Text mb={"8px"}>Name</Text>
-            <Input
-              value={name}
-              placeholder={"name"}
-              onInput={(e) =>
-                setName({
-                  field: e.currentTarget.value,
-                  invalid: isInvalidName(e.currentTarget.value),
-                })
-              }
-              isInvalid={invalidName}
-            />
-          </HStack>
-          <HStack>
-            <Text mb={"8px"}>Description</Text>
-            <Textarea
-              value={description}
-              placeholder={"Description"}
-              onInput={(e) => setDescription(e.currentTarget.value)}
-              isInvalid={invalidName}
-            />
-          </HStack>
-          <HStack>
-            <Text mb={"8px"}>Private Group:</Text>
-            <Checkbox
-              isChecked={isPrivate}
-              onChange={(e) => setPrivate(e.target.checked)}
-            />
-          </HStack>
-          <DropZone parentCallback={handleCallback} />
-          <Button
-            onClick={() => {
-              if (user?.uid !== undefined) {
-                createGroup(
-                  { description, isPrivate, name, rides: {}, members: {} },
-                  user.uid
-                ).then((group) => {
-                  navigate(`/group/${group.id}`);
-                  uploadBanner(group.id).then((url) => {
-                    const groupRef = ref(db, `groups/${group.id}`);
-                    set(groupRef, { ...group, banner: url?.fullPath });
+      <Container>
+        <InputGroup paddingInline={5}>
+          <Stack>
+            <Heading textAlign={"center"}>Create Group</Heading>
+            <HStack>
+              <Text mb={"8px"}>Name</Text>
+              <Input
+                value={name}
+                placeholder={"name"}
+                onInput={(e) =>
+                  setName({
+                    field: e.currentTarget.value,
+                    invalid: isInvalidName(e.currentTarget.value),
+                  })
+                }
+                isInvalid={invalidName}
+              />
+            </HStack>
+            <HStack>
+              <Text mb={"8px"}>Description</Text>
+              <Textarea
+                value={description}
+                placeholder={"Description"}
+                onInput={(e) => setDescription(e.currentTarget.value)}
+                isInvalid={invalidName}
+              />
+            </HStack>
+            <HStack>
+              <Text mb={"8px"}>Private Group:</Text>
+              <Checkbox
+                isChecked={isPrivate}
+                onChange={(e) => setPrivate(e.target.checked)}
+              />
+            </HStack>
+            <DropZone parentCallback={handleCallback} />
+            <Button
+              onClick={() => {
+                if (user?.uid !== undefined) {
+                  createGroup(
+                    { description, isPrivate, name, rides: {}, members: {} },
+                    user.uid
+                  ).then((group) => {
+                    navigate(`/group/${group.id}`);
+                    uploadBanner(group.id).then((url) => {
+                      const groupRef = ref(db, `groups/${group.id}`);
+                      set(groupRef, { ...group, banner: url?.fullPath });
+                    });
                   });
-                });
-              }
-            }}
-          >
-            Create
-          </Button>
-        </Stack>
-      </InputGroup>
+                }
+              }}
+            >
+              Create
+            </Button>
+          </Stack>
+        </InputGroup>
+      </Container>
     </>
   );
 };
