@@ -257,8 +257,8 @@ function RideTimes({
   endTime: string;
 }) {
   // make time strings pretty
-  const start_date = startTime.split("T")[0];
-  let start_time = startTime.split("T")[1];
+  const start_date = startTime?.split("T")[0];
+  let start_time = startTime?.split("T")[1];
   const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
 
   start_time = isPm_start
@@ -267,13 +267,13 @@ function RideTimes({
       )}`
     : start_time;
 
-  const end_date = endTime.split("T")[0];
-  let end_time = endTime.split("T")[1];
-  const isPm_end = parseInt(end_time.split(":")[0]) >= 12;
+  const end_date = endTime?.split("T")[0];
+  let end_time = endTime?.split("T")[1];
+  const isPm_end = parseInt(end_time?.split(":")[0]) >= 12;
 
   end_time = isPm_end
-    ? `${parseInt(end_time.split(":")[0]) - 12}:${parseInt(
-        end_time.split(":")[1]
+    ? `${parseInt(end_time?.split(":")[0]) - 12}:${parseInt(
+        end_time?.split(":")[1]
       )}`
     : end_time;
 
