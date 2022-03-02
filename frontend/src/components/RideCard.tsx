@@ -35,9 +35,11 @@ import ChooseCar from "./ChooseCar";
 export default function RideCard({
   rideId,
   viewOnly,
+  isActive,
 }: {
   rideId: string;
   viewOnly?: boolean;
+  isActive?: boolean;
 }) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
@@ -56,7 +58,7 @@ export default function RideCard({
     endMarker = <Marker position={ride.end} icon={endIcon} />;
   }
 
-  return !ride?.isComplete ? (
+  return !ride?.isComplete == isActive ? (
     <Box borderWidth="1px" borderRadius="lg" p="3">
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
@@ -101,7 +103,7 @@ export default function RideCard({
                 displayDriverName={isOpen}
               />
               <Spacer />
-              {user && !viewOnly ? (
+              {user && !viewOnly && isActive ? (
                 <DriverButton rideId={rideId} userId={user.uid} />
               ) : (
                 ""
@@ -110,7 +112,7 @@ export default function RideCard({
             <Flex flexDirection="row" m={2} align="center">
               <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
               <Spacer />
-              {user && !viewOnly ? (
+              {user && !viewOnly && isActive ? (
                 <PassengerButton rideId={rideId} userId={user.uid} />
               ) : (
                 ""
@@ -126,7 +128,7 @@ export default function RideCard({
               </MapView>
             </AspectRatio>
             <Flex flexDirection="row" m={2} align="center">
-              {user && (
+              {user && !ride?.isComplete && (
                 <CompleteRideButton
                   rideId={rideId}
                   userId={user.uid}
@@ -138,9 +140,7 @@ export default function RideCard({
         </>
       )}
     </Box>
-  ) : (
-    <></>
-  );
+  ) : null;
 }
 
 function setRidePassenger(passId: string, rideId: string, state: boolean) {
