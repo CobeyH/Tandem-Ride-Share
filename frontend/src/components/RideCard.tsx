@@ -26,11 +26,9 @@ import {
   DB_RIDE_COLLECT,
   DB_USER_COLLECT,
   User,
-  Vehicle,
 } from "../firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
-import ChooseCar from "./ChooseCar";
 
 export default function RideCard({
   rideId,
@@ -42,9 +40,6 @@ export default function RideCard({
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
-  );
-  const [car] = useObjectVal<Vehicle>(
-    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
   );
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
@@ -74,8 +69,8 @@ export default function RideCard({
                   displayDriverName={isOpen}
                 />
                 <PassengerCounter
-                  rideId={rideId}
-                  maxPass={car?.numSeats || 4}
+                  rideId={ride.id}
+                  maxPass={ride.maxPassengers}
                 />
                 <ChevronDownIcon w={6} h={6} />
               </>
@@ -108,17 +103,14 @@ export default function RideCard({
               )}
             </Flex>
             <Flex flexDirection="row" m={2} align="center">
-              <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
+              <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
               <Spacer />
               {user && !viewOnly ? (
-                <PassengerButton rideId={rideId} userId={user.uid} />
+                <PassengerButton rideId={ride.id} userId={user.uid} />
               ) : (
                 ""
               )}
             </Flex>
-            {ride.startDate !== undefined || ride.endDate !== undefined ? (
-              <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
-            ) : null}
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
@@ -126,7 +118,13 @@ export default function RideCard({
               </MapView>
             </AspectRatio>
             <Flex flexDirection="row" m={2} align="center">
-              <CompleteRideButton rideId={rideId} />
+              {user && (
+                <CompleteRideButton
+                  rideId={ride.id}
+                  userId={user.uid}
+                  driverId={ride.driver}
+                />
+              )}
             </Flex>
           </Collapse>
         </>
@@ -141,14 +139,8 @@ function setRidePassenger(passId: string, rideId: string, state: boolean) {
   set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${passId}`), state);
 }
 
-function setRideDriver(
-  driverId: string,
-  rideId: string,
-  state: boolean,
-  carId: string | undefined
-) {
+function setRideDriver(driverId: string, rideId: string, state: boolean) {
   set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/carId`), state ? carId : null);
 }
 
 function completeRide(rideId: string) {
@@ -208,20 +200,15 @@ function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
   const [driver, loading, error] = useObjectVal<string>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`)
   );
-  const [car, setCar] = useState<Vehicle>();
   const amDriver = driver === userId;
   return !loading && error === undefined ? (
-    <>
-      <ChooseCar carUpdate={setCar} />
-      <Button
-        isDisabled={car == undefined}
-        onClick={() => {
-          setRideDriver(userId, rideId, !amDriver, car?.carId);
-        }}
-      >
-        {amDriver ? "Leave" : "Join"}
-      </Button>
-    </>
+    <Button
+      onClick={() => {
+        setRideDriver(userId, rideId, !amDriver);
+      }}
+    >
+      {amDriver ? "Leave" : "Join"}
+    </Button>
   ) : (
     <></>
   );
@@ -258,9 +245,18 @@ function DriverDisplay({
   );
 }
 
-function CompleteRideButton({ rideId }: { rideId: string }) {
+function CompleteRideButton({
+  rideId,
+  userId,
+  driverId,
+}: {
+  rideId: string;
+  userId: string;
+  driverId: string | undefined;
+}) {
   return (
     <Button
+      disabled={driverId == undefined || userId !== driverId}
       width="full"
       mt={4}
       onClick={() => {
@@ -271,53 +267,5 @@ function CompleteRideButton({ rideId }: { rideId: string }) {
     >
       Complete Ride
     </Button>
-  );
-}
-
-function RideTimes({
-  startTime,
-  endTime,
-}: {
-  startTime: string;
-  endTime: string;
-}) {
-  // make time strings pretty
-  const start_date = startTime.split("T")[0];
-  let start_time = startTime.split("T")[1];
-  const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
-
-  start_time = isPm_start
-    ? `${parseInt(start_time.split(":")[0]) - 12}:${parseInt(
-        start_time.split(":")[1]
-      )}`
-    : start_time;
-
-  const end_date = endTime.split("T")[0];
-  let end_time = endTime.split("T")[1];
-  const isPm_end = parseInt(end_time.split(":")[0]) >= 12;
-
-  end_time = isPm_end
-    ? `${parseInt(end_time.split(":")[0]) - 12}:${parseInt(
-        end_time.split(":")[1]
-      )}`
-    : end_time;
-
-  return (
-    <>
-      <Flex flexDirection="row" m={2} align="center">
-        <Text>Start Date</Text>
-        <Spacer />
-        <Text>
-          {start_date} {start_time} {isPm_start ? "PM" : "AM"}
-        </Text>
-      </Flex>
-      <Flex flexDirection="row" m={2} align="center">
-        <Text>End Date</Text>
-        <Spacer />
-        <Text>
-          {end_date} {end_time} {isPm_end ? "PM" : "AM"}
-        </Text>
-      </Flex>
-    </>
   );
 }
