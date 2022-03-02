@@ -44,7 +44,7 @@ export default function RideCard({
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
   );
-  const [route, routeLoading, routeError] = useObjectVal<RideRoute>(
+  const [route] = useObjectVal<RideRoute>(
     ref(db, `${DB_ROUTE_COLLECT}/${rideId}`)
   );
   const [car] = useObjectVal<Vehicle>(
@@ -127,7 +127,7 @@ export default function RideCard({
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
                 {endMarker}
-                {route !== undefined && <Polyline positions={route.shape} />}
+                {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
           </Collapse>
