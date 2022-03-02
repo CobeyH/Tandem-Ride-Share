@@ -40,6 +40,7 @@ export type Ride = {
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
   driver?: string;
+  isComplete: boolean;
   carId?: string;
   startDate: string;
   endDate: string;
@@ -155,6 +156,7 @@ const CreateRide = () => {
                   end: endPosition,
                   maxPassengers: selectedCar?.numSeats || 4,
                   startDate,
+                  isComplete: false,
                   endDate,
                   ...(isDriver && { driver: user.uid }),
                   ...(selectedCar !== undefined && {

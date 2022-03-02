@@ -84,9 +84,16 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <Text> Description: </Text>
             <Text> {group.description}</Text>
           </Box>
+          <Text>Active Rides</Text>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
-                <RideCard key={key} rideId={key} />
+                <RideCard key={key} rideId={key} isActive={true} />
+              ))
+            : null}
+          <Text>Previous Rides</Text>
+          {group.rides
+            ? Object.keys(group.rides).map((key) => (
+                <RideCard key={key} rideId={key} isActive={false} />
               ))
             : null}
           <Button

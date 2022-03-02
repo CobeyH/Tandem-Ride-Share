@@ -35,9 +35,11 @@ import ChooseCar from "./ChooseCar";
 export default function RideCard({
   rideId,
   viewOnly,
+  isActive,
 }: {
   rideId: string;
   viewOnly?: boolean;
+  isActive?: boolean;
 }) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
@@ -56,7 +58,7 @@ export default function RideCard({
     endMarker = <Marker position={ride.end} icon={endIcon} />;
   }
 
-  return (
+  return !ride?.isComplete == isActive ? (
     <Box borderWidth="1px" borderRadius="lg" p="3">
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
@@ -101,7 +103,7 @@ export default function RideCard({
                 displayDriverName={isOpen}
               />
               <Spacer />
-              {user && !viewOnly ? (
+              {user && !viewOnly && isActive ? (
                 <DriverButton rideId={rideId} userId={user.uid} />
               ) : (
                 ""
@@ -110,7 +112,7 @@ export default function RideCard({
             <Flex flexDirection="row" m={2} align="center">
               <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
               <Spacer />
-              {user && !viewOnly ? (
+              {user && !viewOnly && isActive ? (
                 <PassengerButton rideId={rideId} userId={user.uid} />
               ) : (
                 ""
@@ -125,11 +127,16 @@ export default function RideCard({
                 {endMarker}
               </MapView>
             </AspectRatio>
+            <Flex flexDirection="row" m={2} align="center">
+              {user && !ride?.isComplete && user.uid == ride.driver && (
+                <CompleteRideButton rideId={rideId} />
+              )}
+            </Flex>
           </Collapse>
         </>
       )}
     </Box>
-  );
+  ) : null;
 }
 
 function setRidePassenger(passId: string, rideId: string, state: boolean) {
@@ -144,6 +151,10 @@ function setRideDriver(
 ) {
   set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
   set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/carId`), state ? carId : null);
+}
+
+function completeRide(rideId: string) {
+  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/isComplete`), true);
 }
 
 function PassengerButton({
@@ -246,6 +257,22 @@ function DriverDisplay({
         <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
       ) : null}
     </>
+  );
+}
+
+function CompleteRideButton({ rideId }: { rideId: string }) {
+  return (
+    <Button
+      width="full"
+      mt={4}
+      onClick={() => {
+        confirm("Do you want to mark this ride as complete?")
+          ? completeRide(rideId)
+          : null;
+      }}
+    >
+      Complete Ride
+    </Button>
   );
 }
 
