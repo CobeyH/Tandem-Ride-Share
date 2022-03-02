@@ -256,7 +256,7 @@ function DriverDisplay({
 /**
  * MapQuest Open Directions API functions and components.
  */
-const MQ_DIR_URI = "http://open.mapquestapi.com/directions/v2/route";
+const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/route";
 const MQ_KEY = "zrK0kZ2o9WcxfTJpYYWaZ9uYHYSZvcyC";
 
 type RouteResponse = {
