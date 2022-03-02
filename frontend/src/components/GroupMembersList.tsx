@@ -21,7 +21,7 @@ import { db, DB_USER_COLLECT, User } from "../firebase";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
-  ownerId: string;
+  ownerId: string | undefined;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupMembers, setGroupMembers] = useState<User[]>();

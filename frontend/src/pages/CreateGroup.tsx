@@ -38,7 +38,6 @@ export type Group = {
 
 const createGroup = async (groupData: Omit<Group, "id">, userId: string) => {
   const group = { ...groupData, id: slugify(groupData.name, DB_KEY_SLUG_OPTS) };
-  console.log(groupData);
   if ((await get(query(ref(db, `${DB_GROUP_COLLECT}/${group.id}`)))).exists()) {
     /* TODO: increment id */
     throw new Error("Group ID already exists");
@@ -127,7 +126,7 @@ const CreateGroup = () => {
                     name,
                     rides: {},
                     members: {},
-                    owner: user.uid,
+                    owner: user?.uid,
                   },
                   user.uid
                 ).then((group) => {
