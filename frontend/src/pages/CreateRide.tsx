@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -6,25 +6,20 @@ import {
   Heading,
   Input,
   InputGroup,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   auth,
   db,
   DB_GROUP_COLLECT,
-  DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
+  Vehicle,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { ref, set, get, query } from "firebase/database";
+import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
-import slugify from "slugify";
 import Header from "../components/Header";
 import MapView, {
   DEFAULT_CENTER,
@@ -32,6 +27,8 @@ import MapView, {
   startIcon,
 } from "../components/MapView";
 import { LatLng, latLngBounds } from "leaflet";
+import ChooseCar from "../components/ChooseCar";
+import CarStatsSlider from "../components/CarStatsSlider";
 
 type ValidatableField<T> = {
   field: T;
@@ -39,26 +36,23 @@ type ValidatableField<T> = {
 };
 
 export type Ride = {
-  id: string;
   name: string;
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
-  maxPassengers: number;
   driver?: string;
+  carId?: string;
+  startDate: string;
+  endDate: string;
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
-  ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
-  if ((await get(query(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`)))).exists()) {
-    /* TODO: increment id */
-    throw new Error("Ride ID already exists");
-  }
-  await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
-  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${ride.id}`), true);
+  const newRideRef = await push(ref(db, `${DB_RIDE_COLLECT}`), ride);
+  const rideId = newRideRef.key;
+  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${rideId}`), true);
   if (passList) {
     await Promise.all(
       passList.map(async (p) => {
-        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${ride.id}/${p}`), true);
+        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${p}`), true);
       })
     );
   }
@@ -82,6 +76,11 @@ const CreateRide = () => {
   const [hasDragged, setHasDragged] = useState(false);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
   const [isDriver, setIsDriver] = useState<boolean>(false);
+  const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
+    undefined
+  );
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -96,9 +95,13 @@ const CreateRide = () => {
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
 
-  const [maxPassengers, setMaxPassengers] = useState<number>(3);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isDriver) {
+      setSelectedCar(undefined);
+    }
+  }, [isDriver]);
 
   return (
     <>
@@ -123,25 +126,22 @@ const CreateRide = () => {
             }
             isInvalid={invalidTitle}
           />
-          <NumberInput
-            mt={4}
-            defaultValue={3}
-            min={1}
-            max={9}
-            onChange={(_, num) => setMaxPassengers(num)}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
           <Checkbox
             isChecked={isDriver}
-            onChange={(e) => setIsDriver(e.target.checked)}
+            onChange={(e) => {
+              setIsDriver(e.target.checked);
+            }}
           >
             Are you the driver?
           </Checkbox>
+          {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
+          {selectedCar && isDriver ? (
+            <CarStatsSlider
+              car={selectedCar}
+              updateCar={setSelectedCar}
+              isDisabled={true}
+            />
+          ) : null}
           <Button
             mt={4}
             mb={4}
@@ -153,8 +153,13 @@ const CreateRide = () => {
                   name: title,
                   start: startPosition,
                   end: endPosition,
-                  maxPassengers: maxPassengers,
+                  maxPassengers: selectedCar?.numSeats || 4,
+                  startDate,
+                  endDate,
                   ...(isDriver && { driver: user.uid }),
+                  ...(selectedCar !== undefined && {
+                    carId: selectedCar?.carId,
+                  }),
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)
@@ -165,6 +170,18 @@ const CreateRide = () => {
             Confirm
           </Button>
         </InputGroup>
+        <Text>Start Time</Text>
+        <Input
+          mb="4"
+          type="datetime-local"
+          onInput={(e) => setStartDate(e.currentTarget.value)}
+        />
+        <Text>End Time</Text>
+        <Input
+          mb="4"
+          type="datetime-local"
+          onInput={(e) => setEndDate(e.currentTarget.value)}
+        />
         <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />

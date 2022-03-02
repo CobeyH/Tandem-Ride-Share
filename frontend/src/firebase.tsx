@@ -103,7 +103,6 @@ export const registerWithEmailAndPassword = async (
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    console.log(user.uid, user.displayName, user.email);
     await set(ref(db, `${DB_USER_COLLECT}/${user.uid}`), {
       uid: user.uid,
       name: name,
@@ -130,6 +129,7 @@ export const logout = () => {
 };
 
 export type Vehicle = {
+  carId?: string;
   type: string;
   fuelUsage: number;
   numSeats: number;
