@@ -54,14 +54,15 @@ export default function GroupPage() {
 
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
-  const [banner] = useDownloadURL(storageRef(storage, `${group.banner}`));
+  const bannerRef = storageRef(storage, `${group.banner}`);
+  const [banner, bannerLoading] = group.banner
+    ? useDownloadURL(bannerRef)
+    : [undefined, false];
 
   return (
     <>
       <Header pages={[{ label: "Group List", url: "/" }]} />
-      {banner === "loading" ? (
-        <Box />
-      ) : (
+      {!bannerLoading && banner !== undefined ? (
         <Image
           src={banner}
           width="100%"
@@ -69,7 +70,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           objectFit="cover"
           pb={5}
         />
-      )}
+      ) : null}
       <Container>
         <VStack spacing="24px" align="c">
           <HStack>

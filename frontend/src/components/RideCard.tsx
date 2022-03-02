@@ -74,7 +74,7 @@ export default function RideCard({
                   displayDriverName={isOpen}
                 />
                 <PassengerCounter
-                  rideId={ride.id}
+                  rideId={rideId}
                   maxPass={car?.numSeats || 4}
                 />
                 <ChevronDownIcon w={6} h={6} />
@@ -108,14 +108,17 @@ export default function RideCard({
               )}
             </Flex>
             <Flex flexDirection="row" m={2} align="center">
-              <PassengerCounter rideId={ride.id} maxPass={car?.numSeats || 4} />
+              <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
               <Spacer />
               {user && !viewOnly ? (
-                <PassengerButton rideId={ride.id} userId={user.uid} />
+                <PassengerButton rideId={rideId} userId={user.uid} />
               ) : (
                 ""
               )}
             </Flex>
+            {ride.startDate !== undefined || ride.endDate !== undefined ? (
+              <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
+            ) : null}
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
@@ -242,6 +245,54 @@ function DriverDisplay({
       {displayDriverName ? (
         <Text ms={1} me={3}>{`${driverId ? driver : "Driver Needed"}`}</Text>
       ) : null}
+    </>
+  );
+}
+
+function RideTimes({
+  startTime,
+  endTime,
+}: {
+  startTime: string;
+  endTime: string;
+}) {
+  // make time strings pretty
+  const start_date = startTime.split("T")[0];
+  let start_time = startTime.split("T")[1];
+  const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
+
+  start_time = isPm_start
+    ? `${parseInt(start_time.split(":")[0]) - 12}:${parseInt(
+        start_time.split(":")[1]
+      )}`
+    : start_time;
+
+  const end_date = endTime.split("T")[0];
+  let end_time = endTime.split("T")[1];
+  const isPm_end = parseInt(end_time.split(":")[0]) >= 12;
+
+  end_time = isPm_end
+    ? `${parseInt(end_time.split(":")[0]) - 12}:${parseInt(
+        end_time.split(":")[1]
+      )}`
+    : end_time;
+
+  return (
+    <>
+      <Flex flexDirection="row" m={2} align="center">
+        <Text>Start Date</Text>
+        <Spacer />
+        <Text>
+          {start_date} {start_time} {isPm_start ? "PM" : "AM"}
+        </Text>
+      </Flex>
+      <Flex flexDirection="row" m={2} align="center">
+        <Text>End Date</Text>
+        <Spacer />
+        <Text>
+          {end_date} {end_time} {isPm_end ? "PM" : "AM"}
+        </Text>
+      </Flex>
     </>
   );
 }
