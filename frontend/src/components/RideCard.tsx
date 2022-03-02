@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AspectRatio,
   Box,
@@ -16,7 +16,7 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
 import { Ride } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
-import { Marker } from "react-leaflet";
+import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import {
@@ -85,7 +85,7 @@ export default function RideCard({
                   latLngBounds([
                     latLng(ride.end.lat, ride.end.lng),
                     latLng(ride.start.lat, ride.start.lng),
-                  ])
+                  ]).pad(0.1)
                 );
               }
             }}
@@ -115,6 +115,10 @@ export default function RideCard({
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
                 {endMarker}
+                <RidePath
+                  start={ride?.start as LatLng}
+                  end={ride?.end as LatLng}
+                />
               </MapView>
             </AspectRatio>
           </Collapse>
@@ -228,4 +232,71 @@ function DriverDisplay({
       ) : null}
     </>
   );
+}
+
+function RidePath({ start, end }: { start: LatLng; end: LatLng }) {
+  const [error, setError] = useState(null);
+  const [routeLoaded, setRouteLoaded] = useState(false);
+  const [pathLoaded, setPathLoaded] = useState(false);
+  const [route, setRoute] = useState([]);
+  const [path, setPath] = useState<LatLng[] | undefined>(undefined);
+
+  useEffect(() => {
+    fetch(
+      `${MQ_DIR_URI}?key=${MQ_KEY}` +
+        `&from=${start.lat},${start.lng}&to=${end.lat},${end.lng}&unit=k`
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setRouteLoaded(true);
+          setRoute(result);
+          fetch(
+            `${MQ_DIR_URI}shape?key=${MQ_KEY}` +
+              `&sessionId=${result.route.sessionId}&fullShape=true`
+          )
+            .then((res) => res.json())
+            .then(
+              (result) => {
+                setPathLoaded(true);
+                setPath(arrayToLatLngs(result.route.shape.shapePoints));
+              },
+              (error) => {
+                setPathLoaded(true);
+                setError(error);
+              }
+            );
+        },
+        (error) => {
+          setRouteLoaded(true);
+          setError(error);
+        }
+      );
+  }, []);
+
+  return (
+    <>
+      {!error && routeLoaded && pathLoaded && path ? (
+        <Polyline positions={path} />
+      ) : (
+        "Loading..."
+      )}
+    </>
+  );
+}
+
+const MQ_DIR_URI = "http://open.mapquestapi.com/directions/v2/route";
+const MQ_KEY = "zrK0kZ2o9WcxfTJpYYWaZ9uYHYSZvcyC";
+
+/**
+ * MapQuest Directions RouteShape API returns flat array of decimal lat and lng.
+ * @param array Array of numbers [ lat0, lng0, lat1, lng1, ... ]
+ * @returns Array of LatLng [ LatLng0, LatLng1, ... ]
+ */
+function arrayToLatLngs(array: Array<number>) {
+  const result = [];
+  for (let i = 0; i < array.length; i += 2) {
+    result.push(latLng(array[i], array[i + 1]));
+  }
+  return result;
 }
