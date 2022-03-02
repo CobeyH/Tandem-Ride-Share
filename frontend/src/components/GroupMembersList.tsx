@@ -5,14 +5,15 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  DrawerHeader,
   DrawerBody,
   DrawerFooter,
   Heading,
+  Icon,
 } from "@chakra-ui/react";
 import { child, get, ref } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
+import { FaUserFriends } from "react-icons/fa";
 import { db, DB_USER_COLLECT } from "../firebase";
 
 const GroupMembersList = (props: {
@@ -39,7 +40,9 @@ const GroupMembersList = (props: {
 
   return (
     <>
-      <Button onClick={onOpen}>Open</Button>
+      <Icon as={FaUserFriends} w={6} h={6} focusable={true} onClick={onOpen}>
+        Open
+      </Icon>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
