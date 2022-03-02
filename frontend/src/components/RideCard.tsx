@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AspectRatio,
   Box,
@@ -14,7 +14,7 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import { Ride } from "../pages/CreateRide";
+import { Ride, RideRoute } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
@@ -24,6 +24,7 @@ import {
   db,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
+  DB_ROUTE_COLLECT,
   DB_USER_COLLECT,
   User,
   Vehicle,
@@ -42,6 +43,9 @@ export default function RideCard({
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
+  );
+  const [route, routeLoading, routeError] = useObjectVal<RideRoute>(
+    ref(db, `${DB_ROUTE_COLLECT}/${rideId}`)
   );
   const [car] = useObjectVal<Vehicle>(
     ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
@@ -116,17 +120,14 @@ export default function RideCard({
                 ""
               )}
             </Flex>
-            {ride.startDate !== undefined || ride.endDate !== undefined ? (
+            {ride.startDate && ride.endDate ? (
               <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
             ) : null}
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
                 {endMarker}
-                <RidePath
-                  start={ride?.start as LatLng}
-                  end={ride?.end as LatLng}
-                />
+                {route !== undefined && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
           </Collapse>
@@ -253,85 +254,6 @@ function DriverDisplay({
   );
 }
 
-/**
- * MapQuest Open Directions API functions and components.
- */
-const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/route";
-const MQ_KEY = "zrK0kZ2o9WcxfTJpYYWaZ9uYHYSZvcyC";
-
-type RouteResponse = {
-  sessionId: string;
-};
-
-function RidePath({ start, end }: { start: LatLng; end: LatLng }) {
-  const [error, setError] = useState(null);
-  const [routeLoaded, setRouteLoaded] = useState(false);
-  const [pathLoaded, setPathLoaded] = useState(false);
-  const [, setRoute] = useState<RouteResponse | undefined>(undefined);
-  const [path, setPath] = useState<LatLng[] | undefined>(undefined);
-
-  useEffect(() => {
-    /**
-     * Here we are making the first API call to the Directions API Route
-     * endpoint. Then we compose the reponse to JSON, then use the result
-     * to make a second call to the RouteShape enpoint which only accepts
-     * a sessionId.
-     */
-    fetch(
-      `${MQ_DIR_URI}?key=${MQ_KEY}` +
-        `&from=${start.lat},${start.lng}&to=${end.lat},${end.lng}&unit=k`
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setRouteLoaded(true);
-          setRoute(result.route);
-          fetch(
-            `${MQ_DIR_URI}shape?key=${MQ_KEY}` +
-              `&sessionId=${result.route.sessionId}&fullShape=true`
-          )
-            .then((res) => res.json())
-            .then(
-              (result) => {
-                setPathLoaded(true);
-                setPath(arrayToLatLngs(result.route.shape.shapePoints));
-              },
-              (error) => {
-                setPathLoaded(true);
-                setError(error);
-              }
-            );
-        },
-        (error) => {
-          setRouteLoaded(true);
-          setError(error);
-        }
-      );
-  }, []);
-
-  return (
-    <>
-      {!error && routeLoaded && pathLoaded && path ? (
-        <Polyline positions={path} />
-      ) : undefined}
-    </>
-  );
-}
-
-/**
- * MapQuest Directions RouteShape API returns flat array of decimal lat and lng.
- * @param array Array of numbers [ lat0, lng0, lat1, lng1, ... ]
- * @returns Array of LatLng [ LatLng0, LatLng1, ... ]
- */
-function arrayToLatLngs(array: Array<number>) {
-  const result = [];
-  for (let i = 0; i < array.length; i += 2) {
-    result.push(latLng(array[i], array[i + 1]));
-  }
-  return result;
-}
-/** End of MapQuest section, to be refactored to separate file */
-
 function RideTimes({
   startTime,
   endTime,
@@ -339,6 +261,7 @@ function RideTimes({
   startTime: string;
   endTime: string;
 }) {
+  console.log(`${startTime}`);
   // make time strings pretty
   const start_date = startTime.split("T")[0];
   let start_time = startTime.split("T")[1];

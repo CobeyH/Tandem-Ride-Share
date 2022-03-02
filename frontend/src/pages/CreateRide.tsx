@@ -15,6 +15,7 @@ import {
   DB_GROUP_COLLECT,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
+  DB_ROUTE_COLLECT,
   Vehicle,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,6 +30,7 @@ import MapView, {
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
+import { getRideRoute } from "../Directions";
 
 type ValidatableField<T> = {
   field: T;
@@ -45,6 +47,12 @@ export type Ride = {
   endDate: string;
 };
 
+export type RideRoute = {
+  distance: number;
+  fuelUsed: number;
+  shape: LatLng[];
+};
+
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
   const newRideRef = await push(ref(db, `${DB_RIDE_COLLECT}`), ride);
   const rideId = newRideRef.key;
@@ -56,8 +64,16 @@ const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
       })
     );
   }
-
+  if (rideId) createRoute(rideId, ride);
   return ride;
+};
+
+const createRoute = async (rideId: string, ride: Ride) => {
+  const route = await getRideRoute(ride.start as LatLng, ride.end as LatLng);
+  if (route) {
+    await set(ref(db, `${DB_ROUTE_COLLECT}/${rideId}`), route);
+  }
+  return route;
 };
 
 const CreateRide = () => {
