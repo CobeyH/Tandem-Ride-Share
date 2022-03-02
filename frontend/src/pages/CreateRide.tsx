@@ -13,15 +13,13 @@ import {
   auth,
   db,
   DB_GROUP_COLLECT,
-  DB_KEY_SLUG_OPTS,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
   Vehicle,
 } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { ref, set, get, query } from "firebase/database";
+import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
-import slugify from "slugify";
 import Header from "../components/Header";
 import MapView, {
   DEFAULT_CENTER,
@@ -38,7 +36,6 @@ type ValidatableField<T> = {
 };
 
 export type Ride = {
-  id: string;
   name: string;
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
@@ -49,17 +46,13 @@ export type Ride = {
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
-  ride.id = slugify(ride.name, DB_KEY_SLUG_OPTS);
-  if ((await get(query(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`)))).exists()) {
-    /* TODO: increment id */
-    throw new Error("Ride ID already exists");
-  }
-  await set(ref(db, `${DB_RIDE_COLLECT}/${ride.id}`), ride);
-  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${ride.id}`), true);
+  const newRideRef = await push(ref(db, `${DB_RIDE_COLLECT}`), ride);
+  const rideId = newRideRef.key;
+  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${rideId}`), true);
   if (passList) {
     await Promise.all(
       passList.map(async (p) => {
-        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${ride.id}/${p}`), true);
+        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${p}`), true);
       })
     );
   }

@@ -69,7 +69,7 @@ export default function RideCard({
                   displayDriverName={isOpen}
                 />
                 <PassengerCounter
-                  rideId={ride.id}
+                  rideId={rideId}
                   maxPass={ride.maxPassengers}
                 />
                 <ChevronDownIcon w={6} h={6} />
@@ -103,10 +103,10 @@ export default function RideCard({
               )}
             </Flex>
             <Flex flexDirection="row" m={2} align="center">
-              <PassengerCounter rideId={ride.id} maxPass={ride.maxPassengers} />
+              <PassengerCounter rideId={rideId} maxPass={ride.maxPassengers} />
               <Spacer />
               {user && !viewOnly ? (
-                <PassengerButton rideId={ride.id} userId={user.uid} />
+                <PassengerButton rideId={rideId} userId={user.uid} />
               ) : (
                 ""
               )}
