@@ -9,7 +9,11 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -17,6 +21,8 @@ import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { logout, auth } from "../firebase";
 import { MdEmail } from "react-icons/all";
+import { User } from "firebase/auth";
+import AddCar from "./AddCar";
 
 export interface PageList {
   pages?: { label: string; url: string }[];
@@ -24,7 +30,6 @@ export interface PageList {
 
 const Header = ({ pages }: PageList) => {
   const [user] = useAuthState(auth);
-  const [userModalOpen, setUserModalOpen] = useState(false);
 
   return (
     <Flex
@@ -38,35 +43,48 @@ const Header = ({ pages }: PageList) => {
       <Breadcrumbs pages={pages} />
       <Spacer />
       {user ? (
-        <>
-          <Button onClick={() => setUserModalOpen(true)} variant={"outline"}>
-            Profile
-          </Button>
-          <Modal
-            isOpen={userModalOpen}
-            onClose={() => setUserModalOpen(false)}
-            isCentered={true}
-          >
-            <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-              <ModalHeader>
-                {user?.displayName}
-                <ColorModeSwitcher float={"right"} />
-              </ModalHeader>
-              <ModalBody>
-                {user?.email ? (
-                  <Flex>
-                    <MdEmail style={{ margin: 5 }} /> {user.email}
-                  </Flex>
-                ) : null}
-              </ModalBody>
-              <ModalFooter>{user ? <LogoutButton /> : null}</ModalFooter>
-            </ModalContent>
-          </Modal>
-        </>
+        <Menu>
+          <MenuButton as={Button}>Profile</MenuButton>
+          <MenuList>
+            <Settings user={user} />
+            <AddCar user={user} />
+            <MenuDivider />
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
       ) : (
         <ColorModeSwitcher float={"right"} />
       )}
     </Flex>
+  );
+};
+
+const Settings = (props: { user: User }) => {
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const user = props.user;
+  return (
+    <MenuItem onClick={() => setUserModalOpen(true)}>
+      Settings
+      <Modal
+        isOpen={userModalOpen}
+        onClose={() => setUserModalOpen(false)}
+        isCentered={true}
+      >
+        <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+          <ModalHeader>
+            {user?.displayName}
+            <ColorModeSwitcher float={"right"} />
+          </ModalHeader>
+          <ModalBody>
+            {user?.email ? (
+              <Flex>
+                <MdEmail style={{ margin: 5 }} /> {user.email}
+              </Flex>
+            ) : null}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </MenuItem>
   );
 };
 
@@ -86,10 +104,6 @@ const Breadcrumbs = ({ pages }: PageList) => {
       ))}
     </Breadcrumb>
   );
-};
-
-const LogoutButton = () => {
-  return <Button onClick={logout}>Logout</Button>;
 };
 
 export default Header;
