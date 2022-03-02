@@ -39,8 +39,8 @@ export type Ride = {
   name: string;
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
-  maxPassengers: number;
   driver?: string;
+  carId?: string;
   startDate: string;
   endDate: string;
 };
@@ -101,7 +101,6 @@ const CreateRide = () => {
     if (!isDriver) {
       setSelectedCar(undefined);
     }
-    console.log("selected car", selectedCar);
   }, [isDriver]);
 
   return (
@@ -158,6 +157,9 @@ const CreateRide = () => {
                   startDate,
                   endDate,
                   ...(isDriver && { driver: user.uid }),
+                  ...(selectedCar !== undefined && {
+                    carId: selectedCar?.carId,
+                  }),
                 };
                 createRide(ride, groupId).then(() =>
                   navigate(`/group/${groupId}`)
