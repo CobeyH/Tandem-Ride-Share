@@ -8,6 +8,7 @@ import {
   DrawerBody,
   DrawerFooter,
   Heading,
+  IconButton,
   Icon,
 } from "@chakra-ui/react";
 import { child, get, ref } from "firebase/database";
@@ -40,9 +41,15 @@ const GroupMembersList = (props: {
 
   return (
     <>
-      <Icon as={FaUserFriends} w={6} h={6} focusable={true} onClick={onOpen}>
+      <IconButton
+        aria-label="group-members"
+        icon={<Icon as={FaUserFriends} />}
+        w={6}
+        h={6}
+        onClick={onOpen}
+      >
         Open
-      </Icon>
+      </IconButton>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
