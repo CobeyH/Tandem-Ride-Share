@@ -7,6 +7,8 @@ export const Input: ComponentStyleConfig = {
     "tandem-base": {
       field: {
         bg: lightTheme.form,
+        color: "black",
+        _placeholder: { color: "black" },
       },
     },
   },
