@@ -14,13 +14,18 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import { Ride, RideRoute } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import { auth, db } from "../firebase/firebase";
-import { DBConstants, User, Vehicle } from "../firebase/database";
+import {
+  DBConstants,
+  RideRoute,
+  User,
+  useRide,
+  Vehicle,
+} from "../firebase/database";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
@@ -35,9 +40,7 @@ export default function RideCard({
   isActive?: boolean;
 }) {
   const [user] = useAuthState(auth);
-  const [ride, rideLoading, rideError] = useObjectVal<Ride>(
-    ref(db, `${DBConstants.RIDES}/${rideId}`)
-  );
+  const [ride, rideLoading, rideError] = useRide(rideId);
   const [route] = useObjectVal<RideRoute>(
     ref(db, `${DBConstants.ROUTES}/${rideId}`)
   );

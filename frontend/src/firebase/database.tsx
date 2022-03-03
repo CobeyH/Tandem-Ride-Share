@@ -1,5 +1,6 @@
 import { get, ref, set } from "firebase/database";
-import { useListVals } from "react-firebase-hooks/database";
+import { LatLng } from "leaflet";
+import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 
 const GROUPS = "groups";
@@ -39,6 +40,23 @@ export type User = {
   authProvider: string;
   email: string;
   cars?: Vehicle[];
+};
+
+export type Ride = {
+  name: string;
+  start: { lat: number; lng: number };
+  end: { lat: number; lng: number };
+  driver?: string;
+  isComplete: boolean;
+  carId?: string;
+  startDate: string;
+  endDate: string;
+};
+
+export type RideRoute = {
+  distance: number;
+  fuelUsed: number;
+  shape: LatLng[];
 };
 
 export const getUser = async (userId: string) => {
@@ -89,4 +107,8 @@ export const setGroupMember = async (
     ref(db, `${GROUPS}/${groupId}/members/${userId}`),
     isMember ? true : null
   );
+};
+
+export const useRide = (rideId: string) => {
+  return useObjectVal<Ride>(ref(db, `${RIDES}/${rideId}`));
 };

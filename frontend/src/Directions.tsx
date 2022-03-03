@@ -1,5 +1,5 @@
 import { latLng, LatLng } from "leaflet";
-import { RideRoute } from "./pages/CreateRide";
+import { RideRoute } from "./firebase/database";
 
 /**
  * MapQuest Open Directions API functions and components.

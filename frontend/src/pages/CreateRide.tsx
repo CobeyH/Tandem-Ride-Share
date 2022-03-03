@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase/firebase";
-import { DBConstants, Vehicle } from "../firebase/database";
+import { DBConstants, Ride, Vehicle } from "../firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
@@ -28,23 +28,6 @@ import { getRideRoute } from "../Directions";
 type ValidatableField<T> = {
   field: T;
   invalid: boolean;
-};
-
-export type Ride = {
-  name: string;
-  start: { lat: number; lng: number };
-  end: { lat: number; lng: number };
-  driver?: string;
-  isComplete: boolean;
-  carId?: string;
-  startDate: string;
-  endDate: string;
-};
-
-export type RideRoute = {
-  distance: number;
-  fuelUsed: number;
-  shape: LatLng[];
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
