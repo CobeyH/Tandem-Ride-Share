@@ -9,7 +9,8 @@ import { auth, db } from "../firebase/firebase";
 const ChooseCar = (props: { carUpdate: (car: Vehicle) => void }) => {
   const [user] = useAuthState(auth);
   const [cars, loadingCars] = useListVals<Vehicle>(
-    ref(db, `users/${user?.uid}/vehicles`)
+    ref(db, `users/${user?.uid}/vehicles`),
+    { keyField: "carId" }
   );
   return loadingCars ? (
     <Spinner />

@@ -67,3 +67,8 @@ export const getUser = async (userId: string) => {
 export const setUser = async (user: User) => {
   return set(ref(db, `${USERS}/${user.uid}`), user);
 };
+
+export const setUserVehicle = async (userId: string, vehicle: Vehicle) => {
+  const { carId, ...car } = vehicle;
+  return set(ref(db, `${USERS}/${userId}/vehicles/${carId}`), car);
+};
