@@ -14,7 +14,7 @@ import GroupPage from "./pages/GroupPage";
 import CreateRide from "./pages/CreateRide";
 import JoinGroup from "./pages/JoinGroup";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./firebase";
+import { auth } from "./firebase/firebase";
 import { NavConstants } from "./NavigationConstants";
 import { useEffect } from "react";
 import extendedTheme from "./theme/style";

@@ -28,7 +28,7 @@ import {
   DB_USER_COLLECT,
   User,
   Vehicle,
-} from "../firebase";
+} from "../firebase/firebase";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";

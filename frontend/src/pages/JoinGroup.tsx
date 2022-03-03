@@ -12,7 +12,7 @@ import {
 import { useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import { ref } from "firebase/database";
-import { auth, db, DB_GROUP_COLLECT } from "../firebase";
+import { auth, db, DB_GROUP_COLLECT } from "../firebase/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";

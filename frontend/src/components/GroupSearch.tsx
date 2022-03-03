@@ -19,7 +19,7 @@ import { GiMagnifyingGlass } from "react-icons/gi";
 import { Group } from "../pages/CreateGroup";
 import GroupJoinButton from "./GroupJoinButton";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
+import { auth } from "../firebase/firebase";
 import { useState } from "react";
 
 const GroupSearch = (props: { groups: Group[] }) => {

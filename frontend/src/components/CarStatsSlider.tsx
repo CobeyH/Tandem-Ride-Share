@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { FaCarSide, FaShuttleVan, FaGasPump } from "react-icons/fa";
-import { Vehicle } from "../firebase";
+import { Vehicle } from "../firebase/firebase";
 
 const CarStatsSlider = (props: {
   isDisabled?: boolean;

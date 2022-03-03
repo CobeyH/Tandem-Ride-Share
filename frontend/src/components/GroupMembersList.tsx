@@ -17,7 +17,7 @@ import { child, get, ref } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
-import { db, DB_USER_COLLECT, User } from "../firebase";
+import { db, DB_USER_COLLECT, User } from "../firebase/firebase";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };

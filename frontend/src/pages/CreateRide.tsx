@@ -17,7 +17,7 @@ import {
   DB_RIDE_COLLECT,
   DB_ROUTE_COLLECT,
   Vehicle,
-} from "../firebase";
+} from "../firebase/firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";

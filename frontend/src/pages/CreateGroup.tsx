@@ -11,12 +11,17 @@ import {
   Checkbox,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, DB_GROUP_COLLECT, DB_KEY_SLUG_OPTS } from "../firebase";
+import {
+  auth,
+  db,
+  DB_GROUP_COLLECT,
+  DB_KEY_SLUG_OPTS,
+} from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
 import slugify from "slugify";
 import Header from "../components/Header";
-import DropZone, { storage } from "../storage";
+import DropZone, { storage } from "../firebase/storage";
 import { uploadBytes } from "firebase/storage";
 import { ref as storRef } from "firebase/storage";
 

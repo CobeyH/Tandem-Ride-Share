@@ -3,7 +3,7 @@ import { ref } from "firebase/database";
 import * as React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useListVals } from "react-firebase-hooks/database";
-import { Vehicle, db, auth } from "../firebase";
+import { Vehicle, db, auth } from "../firebase/firebase";
 
 const ChooseCar = (props: { carUpdate: (car: Vehicle) => void }) => {
   const [user] = useAuthState(auth);

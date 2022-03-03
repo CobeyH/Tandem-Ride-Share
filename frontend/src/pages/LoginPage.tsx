@@ -8,7 +8,11 @@ import {
   Input,
   Container,
 } from "@chakra-ui/react";
-import { signInWithGoogle, auth, loginWithEmailAndPassword } from "../firebase";
+import {
+  signInWithGoogle,
+  auth,
+  loginWithEmailAndPassword,
+} from "../firebase/firebase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "@chakra-ui/react";
 import { set, ref } from "firebase/database";
-import { db, DB_GROUP_COLLECT } from "../firebase";
+import { db, DB_GROUP_COLLECT } from "../firebase/firebase";
 import { Group } from "../pages/CreateGroup";
 import { useNavigate } from "react-router";
 

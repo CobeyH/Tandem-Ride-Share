@@ -21,7 +21,7 @@ import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
-import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
+import { db, DB_USER_COLLECT, Vehicle } from "../firebase/firebase";
 import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [

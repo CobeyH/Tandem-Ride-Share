@@ -12,14 +12,14 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db, DB_GROUP_COLLECT } from "../firebase";
+import { db, DB_GROUP_COLLECT } from "../firebase/firebase";
 import { ref } from "firebase/database";
 import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
 import { useObjectVal } from "react-firebase-hooks/database";
 import RideCard from "../components/RideCard";
 import Header from "../components/Header";
-import { storage } from "../storage";
+import { storage } from "../firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
