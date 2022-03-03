@@ -14,7 +14,7 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo API_KEY=${{ secrets.REACT_APP_MQ_KEY }} >> .env
+          echo REACT_APP_MQ_KEY=${{ secrets.REACT_APP_MQ_KEY }} >> .env
       - name: Build Frontend
         working-directory: ./frontend
         run: npm ci && npm run build
