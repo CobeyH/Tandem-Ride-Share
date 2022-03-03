@@ -261,7 +261,6 @@ function RideTimes({
   startTime: string;
   endTime: string;
 }) {
-  console.log(`${startTime}`);
   // make time strings pretty
   const start_date = startTime.split("T")[0];
   let start_time = startTime.split("T")[1];

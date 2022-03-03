@@ -43,9 +43,13 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
  * @returns Array of LatLng [ LatLng0, LatLng1, ... ]
  */
 function arrayToLatLngs(array: Array<number>) {
-  const result = [];
-  for (let i = 0; i < array.length; i += 2) {
-    result.push(latLng(array[i], array[i + 1]));
+  if (array.length % 2 !== 0) {
+    throw new RangeError("Array length must be even.");
+  } else {
+    const result = [];
+    for (let i = 0; i < array.length; i += 2) {
+      result.push(latLng(array[i], array[i + 1]));
+    }
+    return result;
   }
-  return result;
 }
