@@ -12,7 +12,8 @@ import {
 import { useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import { ref } from "firebase/database";
-import { auth, db, DB_GROUP_COLLECT } from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
+import { db, DBConstants } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";
@@ -27,7 +28,7 @@ const JoinGroup = () => {
   const groupId = useParams()["groupId"];
   const [user, loadingUser] = useAuthState(auth);
   const [group, loadingGroup, groupError] = useObjectVal<Group>(
-    ref(db, `${DB_GROUP_COLLECT}/${groupId}`)
+    ref(db, `${DBConstants.GROUPS}/${groupId}`)
   );
   const navigate = useNavigate();
   if (!groupId) {

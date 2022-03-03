@@ -21,7 +21,7 @@ import { User } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
-import { db, DB_USER_COLLECT, Vehicle } from "../firebase/firebase";
+import { db, DBConstants, Vehicle } from "../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [
@@ -71,7 +71,7 @@ const registerCar = async (user: User, car: Vehicle) => {
   car.carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
   //TODO: User feedback on error states
   await set(
-    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${car.carId}`),
+    ref(db, `${DBConstants.USERS}/${user?.uid}/vehicles/${car.carId}`),
     car
   );
 };

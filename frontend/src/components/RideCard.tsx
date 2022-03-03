@@ -19,16 +19,8 @@ import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
-import {
-  auth,
-  db,
-  DB_PASSENGERS_COLLECT,
-  DB_RIDE_COLLECT,
-  DB_ROUTE_COLLECT,
-  DB_USER_COLLECT,
-  User,
-  Vehicle,
-} from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
+import { db, DBConstants, User, Vehicle } from "../firebase/database";
 import { equalTo, orderByValue, query, ref, set } from "firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
@@ -44,13 +36,13 @@ export default function RideCard({
 }) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
-    ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
+    ref(db, `${DBConstants.RIDES}/${rideId}`)
   );
   const [route] = useObjectVal<RideRoute>(
-    ref(db, `${DB_ROUTE_COLLECT}/${rideId}`)
+    ref(db, `${DBConstants.ROUTES}/${rideId}`)
   );
   const [car] = useObjectVal<Vehicle>(
-    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
+    ref(db, `${DBConstants.USERS}/${user?.uid}/vehicles/${ride?.carId}`)
   );
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
@@ -145,7 +137,7 @@ export default function RideCard({
 }
 
 function setRidePassenger(passId: string, rideId: string, state: boolean) {
-  set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${passId}`), state);
+  set(ref(db, `${DBConstants.RIDES}/${rideId}/${passId}`), state);
 }
 
 function setRideDriver(
@@ -154,12 +146,15 @@ function setRideDriver(
   state: boolean,
   carId: string | undefined
 ) {
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/carId`), state ? carId : null);
+  set(
+    ref(db, `${DBConstants.RIDES}/${rideId}/driver`),
+    state ? driverId : null
+  );
+  set(ref(db, `${DBConstants.RIDES}/${rideId}/carId`), state ? carId : null);
 }
 
 function completeRide(rideId: string) {
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/isComplete`), true);
+  set(ref(db, `${DBConstants.RIDES}/${rideId}/isComplete`), true);
 }
 
 function PassengerButton({
@@ -170,7 +165,7 @@ function PassengerButton({
   userId: string;
 }) {
   const [amPassenger, loading, error] = useObjectVal(
-    ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${userId}`)
+    ref(db, `${DBConstants.PASSENGERS}/${rideId}/${userId}`)
   );
   return (
     <Button
@@ -193,7 +188,7 @@ function PassengerCounter({
 }) {
   const [passVals, passLoading, passError] = useList(
     query(
-      ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}`),
+      ref(db, `${DBConstants.PASSENGERS}/${rideId}`),
       orderByValue(),
       equalTo(true)
     )
@@ -213,7 +208,7 @@ function PassengerCounter({
 
 function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
   const [driver, loading, error] = useObjectVal<string>(
-    ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`)
+    ref(db, `${DBConstants.RIDES}/${rideId}/driver`)
   );
   const [car, setCar] = useState<Vehicle>();
   const amDriver = driver === userId;
@@ -242,7 +237,7 @@ function DriverDisplay({
   displayDriverName: boolean;
 }) {
   const [driverUser, driverLoading, driverError] = useObjectVal<User>(
-    ref(db, `${DB_USER_COLLECT}/${driverId}`)
+    ref(db, `${DBConstants.USERS}/${driverId}`)
   );
   const driver = driverLoading
     ? "Loading"

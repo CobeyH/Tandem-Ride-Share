@@ -9,15 +9,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  auth,
-  db,
-  DB_GROUP_COLLECT,
-  DB_PASSENGERS_COLLECT,
-  DB_RIDE_COLLECT,
-  DB_ROUTE_COLLECT,
-  Vehicle,
-} from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
+import { db, DBConstants, Vehicle } from "../firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
@@ -55,13 +48,13 @@ export type RideRoute = {
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
-  const newRideRef = await push(ref(db, `${DB_RIDE_COLLECT}`), ride);
+  const newRideRef = await push(ref(db, `${DBConstants.RIDES}`), ride);
   const rideId = newRideRef.key;
-  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${rideId}`), true);
+  await set(ref(db, `${DBConstants.GROUPS}/${groupId}/rides/${rideId}`), true);
   if (passList) {
     await Promise.all(
       passList.map(async (p) => {
-        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${p}`), true);
+        await set(ref(db, `${DBConstants.PASSENGERS}/${rideId}/${p}`), true);
       })
     );
   }
@@ -72,7 +65,7 @@ const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
 const createRoute = async (rideId: string, ride: Ride) => {
   const route = await getRideRoute(ride.start as LatLng, ride.end as LatLng);
   if (route) {
-    await set(ref(db, `${DB_ROUTE_COLLECT}/${rideId}`), route);
+    await set(ref(db, `${DBConstants.ROUTES}/${rideId}`), route);
   }
   return route;
 };

@@ -17,7 +17,7 @@ import { child, get, ref } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
-import { db, DB_USER_COLLECT, User } from "../firebase/firebase";
+import { db, DBConstants, User } from "../firebase/database";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
@@ -27,7 +27,7 @@ const GroupMembersList = (props: {
   const [groupMembers, setGroupMembers] = useState<User[]>();
 
   const fetchUsers = () => {
-    const userRef = ref(db, DB_USER_COLLECT);
+    const userRef = ref(db, DBConstants.USERS);
     const queryPromises = Object.keys(props.members).map((userId) => {
       return get(child(userRef, `${userId}`));
     });

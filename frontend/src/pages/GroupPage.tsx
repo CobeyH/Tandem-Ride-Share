@@ -12,7 +12,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db, DB_GROUP_COLLECT } from "../firebase/firebase";
+import { db, DBConstants } from "../firebase/database";
 import { ref } from "firebase/database";
 import { Group } from "./CreateGroup";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
@@ -33,7 +33,7 @@ export default function GroupPage() {
     navigate("/");
   }
   const [group, loading, error] = useObjectVal<Group>(
-    ref(db, `${DB_GROUP_COLLECT}/${groupId}`)
+    ref(db, `${DBConstants.GROUPS}/${groupId}`)
   );
 
   return (
