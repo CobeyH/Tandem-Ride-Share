@@ -1,4 +1,5 @@
 import { get, ref, set } from "firebase/database";
+import { useListVals } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 
 const GROUPS = "groups";
@@ -66,6 +67,12 @@ export const getUser = async (userId: string) => {
 
 export const setUser = async (user: User) => {
   return set(ref(db, `${USERS}/${user.uid}`), user);
+};
+
+export const useUserVehicles = (userId: string | undefined) => {
+  return useListVals<Vehicle>(ref(db, `${USERS}/${userId}/vehicles`), {
+    keyField: "carId",
+  });
 };
 
 export const setUserVehicle = async (userId: string, vehicle: Vehicle) => {
