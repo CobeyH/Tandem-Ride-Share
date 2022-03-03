@@ -17,7 +17,7 @@ export default function SignInRegister({
   return (
     <Center>
       <Flex>
-        <VStack align="stretch">
+        <VStack pt={5} align="stretch" spacing={3}>
           <Button
             mt={4}
             onClick={
