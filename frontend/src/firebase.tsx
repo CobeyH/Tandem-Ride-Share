@@ -44,6 +44,7 @@ export const DB_RIDE_COLLECT = "rides";
 export const DB_GROUP_CHAT_COLLECT = "chats/group";
 export const DB_RIDE_CHAT_COLLECT = "chats/ride";
 export const DB_PASSENGERS_COLLECT = "passengers";
+export const DB_ROUTE_COLLECT = "routes";
 export const DB_KEY_SLUG_OPTS = {
   replacement: "-",
   remove: undefined,
