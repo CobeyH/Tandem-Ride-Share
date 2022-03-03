@@ -19,5 +19,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARPOOLING_6112A }}'
           projectId: carpooling-6112a
         env:
-          CI: true
-          API_KEY: ${{ secrets.MQ_KEY }}
+          API_KEY: '${{ secrets.MQ_KEY }}'
