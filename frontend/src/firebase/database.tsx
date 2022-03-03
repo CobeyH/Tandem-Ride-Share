@@ -1,4 +1,4 @@
-import { equalTo, get, query, ref, set } from "firebase/database";
+import { get, ref, set } from "firebase/database";
 import { db } from "./firebase";
 
 const GROUPS = "groups";
@@ -42,8 +42,7 @@ export type User = {
 
 export const getUser = async (userId: string) => {
   return new Promise<User>((resolve, reject) => {
-    const q = query(ref(db, USERS), equalTo(userId, "uid"));
-    get(q).then(
+    get(ref(db, `${USERS}/${userId}`)).then(
       (result) => {
         if (result.exists()) {
           const user = result.val();

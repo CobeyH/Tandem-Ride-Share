@@ -53,18 +53,18 @@ export const signInWithGoogle = async () => {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
     // If the user doesn't exist then add them.
-    if (
-      !(await getUser(user.uid).catch((err) => {
+    getUser(user.uid).catch((err) => {
+      if (err === undefined) {
+        setUser({
+          uid: user.uid,
+          name: user.displayName ? user.displayName : "User",
+          authProvider: "google",
+          email: user.email ? user.email : "",
+        });
+      } else {
         console.log(err);
-      }))
-    ) {
-      await setUser({
-        uid: user.uid,
-        name: user.displayName ? user.displayName : "User",
-        authProvider: "google",
-        email: user.email ? user.email : "",
-      });
-    }
+      }
+    });
   } catch (err) {
     console.error(err);
   }
