@@ -11,8 +11,8 @@ import {
   Checkbox,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase";
-import { db, DBConstants } from "../firebase/database";
+import { auth, db } from "../firebase/firebase";
+import { DBConstants } from "../firebase/database";
 import { useNavigate } from "react-router-dom";
 import { get, query, ref, set } from "firebase/database";
 import slugify from "slugify";

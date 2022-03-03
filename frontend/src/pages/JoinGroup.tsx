@@ -12,8 +12,8 @@ import {
 import { useObjectVal } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";
 import { ref } from "firebase/database";
-import { auth } from "../firebase/firebase";
-import { db, DBConstants } from "../firebase/database";
+import { auth, db } from "../firebase/firebase";
+import { DBConstants } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";

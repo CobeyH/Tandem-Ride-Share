@@ -12,8 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
-import { db } from "../firebase/database";
+import { auth, db } from "../firebase/firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
 import { Group } from "./CreateGroup";

@@ -8,11 +8,16 @@ import {
   sendPasswordResetEmail,
   connectAuthEmulator,
 } from "firebase/auth";
-import { ref, set, connectDatabaseEmulator } from "firebase/database";
+import {
+  ref,
+  set,
+  connectDatabaseEmulator,
+  getDatabase,
+} from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { db, DBConstants, getUser, setUser } from "./database";
+import { DBConstants, getUser, setUser } from "./database";
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -33,6 +38,7 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig, "web-frontend");
 export const auth = getAuth(app);
+export const db = getDatabase(app);
 
 // Setup emulators for local development
 if (location.hostname === "localhost") {

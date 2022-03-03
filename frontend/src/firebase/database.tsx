@@ -1,7 +1,5 @@
-import { equalTo, get, getDatabase, query, ref, set } from "firebase/database";
-import { app } from "./firebase";
-
-export const db = getDatabase(app);
+import { equalTo, get, query, ref, set } from "firebase/database";
+import { db } from "./firebase";
 
 const GROUPS = "groups";
 const USERS = "users";

@@ -9,8 +9,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase";
-import { db, DBConstants, Vehicle } from "../firebase/database";
+import { auth, db } from "../firebase/firebase";
+import { DBConstants, Vehicle } from "../firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
 import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
