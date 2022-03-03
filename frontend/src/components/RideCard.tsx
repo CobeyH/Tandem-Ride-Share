@@ -14,9 +14,9 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import { Ride } from "../pages/CreateRide";
+import { Ride, RideRoute } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
-import { Marker } from "react-leaflet";
+import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import {
@@ -24,6 +24,7 @@ import {
   db,
   DB_PASSENGERS_COLLECT,
   DB_RIDE_COLLECT,
+  DB_ROUTE_COLLECT,
   DB_USER_COLLECT,
   User,
   Vehicle,
@@ -44,6 +45,9 @@ export default function RideCard({
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useObjectVal<Ride>(
     ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
+  );
+  const [route] = useObjectVal<RideRoute>(
+    ref(db, `${DB_ROUTE_COLLECT}/${rideId}`)
   );
   const [car] = useObjectVal<Vehicle>(
     ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
@@ -92,7 +96,7 @@ export default function RideCard({
                   latLngBounds([
                     latLng(ride.end.lat, ride.end.lng),
                     latLng(ride.start.lat, ride.start.lng),
-                  ])
+                  ]).pad(0.1)
                 );
               }
             }}
@@ -118,13 +122,14 @@ export default function RideCard({
                 ""
               )}
             </Flex>
-            {ride.startDate !== undefined || ride.endDate !== undefined ? (
+            {ride.startDate && ride.endDate ? (
               <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
             ) : null}
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
                 {endMarker}
+                {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
             <Flex flexDirection="row" m={2} align="center">
