@@ -1,7 +1,5 @@
-import React from "react";
-import { equalTo, get, getDatabase, query, ref } from "firebase/database";
+import { equalTo, get, getDatabase, query, ref, set } from "firebase/database";
 import { app } from "./firebase";
-import { error } from "console";
 
 export const db = getDatabase(app);
 
@@ -47,7 +45,7 @@ export type User = {
 export const getUser = async (userId: string) => {
   return new Promise<User>((resolve, reject) => {
     const q = query(ref(db, USERS), equalTo(userId, "uid"));
-    const snapshot = get(q).then(
+    get(q).then(
       (result) => {
         if (result.exists()) {
           const user = result.val();
@@ -67,4 +65,8 @@ export const getUser = async (userId: string) => {
       }
     );
   });
+};
+
+export const setUser = async (user: User) => {
+  return set(ref(db, `${USERS}/${user.uid}`), user);
 };

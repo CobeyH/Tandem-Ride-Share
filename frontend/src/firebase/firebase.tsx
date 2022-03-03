@@ -8,18 +8,11 @@ import {
   sendPasswordResetEmail,
   connectAuthEmulator,
 } from "firebase/auth";
-import {
-  query,
-  ref,
-  set,
-  get,
-  equalTo,
-  connectDatabaseEmulator,
-} from "firebase/database";
+import { ref, set, connectDatabaseEmulator } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { db, DBConstants, getUser } from "./database";
+import { db, DBConstants, getUser, setUser } from "./database";
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -54,12 +47,16 @@ export const signInWithGoogle = async () => {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
     // If the user doesn't exist then add them.
-    if (!(await getUser(user.uid))) {
-      await set(ref(db, `${DBConstants.USERS}/${user.uid}`), {
+    if (
+      !(await getUser(user.uid).catch((err) => {
+        console.log(err);
+      }))
+    ) {
+      await setUser({
         uid: user.uid,
-        name: user.displayName,
+        name: user.displayName ? user.displayName : "User",
         authProvider: "google",
-        email: user.email,
+        email: user.email ? user.email : "",
       });
     }
   } catch (err) {
