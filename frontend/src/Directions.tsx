@@ -5,7 +5,7 @@ import { RideRoute } from "./pages/CreateRide";
  * MapQuest Open Directions API functions and components.
  */
 const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/route";
-const MQ_KEY = process.env.MQ_KEY;
+const MQ_KEY = process.env.REACT_APP_MQ_KEY;
 
 export const getRideRoute = async (start: LatLng, end: LatLng) => {
   return new Promise<RideRoute>((resolve, reject) => {
