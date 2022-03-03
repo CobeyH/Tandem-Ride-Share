@@ -8,12 +8,7 @@ import {
   sendPasswordResetEmail,
   connectAuthEmulator,
 } from "firebase/auth";
-import {
-  ref,
-  set,
-  connectDatabaseEmulator,
-  getDatabase,
-} from "firebase/database";
+import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -90,11 +85,11 @@ export const registerWithEmailAndPassword = async (
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    await set(ref(db, `${DBConstants.USERS}/${user.uid}`), {
+    await setUser({
       uid: user.uid,
       name: name,
       authProvider: "local",
-      email: user.email,
+      email: email,
     });
   } catch (err) {
     console.error(err);
