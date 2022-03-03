@@ -79,3 +79,14 @@ export const setUserVehicle = async (userId: string, vehicle: Vehicle) => {
   const { carId, ...car } = vehicle;
   return set(ref(db, `${USERS}/${userId}/vehicles/${carId}`), car);
 };
+
+export const setGroupMember = async (
+  groupId: string,
+  userId: string,
+  isMember = true
+) => {
+  set(
+    ref(db, `${GROUPS}/${groupId}/members/${userId}`),
+    isMember ? true : null
+  );
+};
