@@ -110,7 +110,7 @@ export const useGroups = () => {
 
 export const setGroup = async (group: Group) => {
   const { id, ...groupData } = group;
-  await set(ref(db, `${GROUPS}/${id}`), groupData);
+  if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);
   return group;
 };
 
@@ -144,7 +144,7 @@ export const getUser = async (userId: string) => {
 
 export const setUser = async (user: User) => {
   const { uid, ...userData } = user;
-  await set(ref(db, `${USERS}/${uid}`), userData);
+  if (uid) await set(ref(db, `${USERS}/${uid}`), userData);
   return user;
 };
 
@@ -196,7 +196,7 @@ export const setRide = (ride: Ride) => {
   if (id) console.log("Unexpected ID in Ride: " + id);
   const rideRef = push(ref(db, RIDES));
   if (!rideRef.key) throw new Error("Unable to get ride id.");
-  set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
+  else set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
   return { id: rideRef.key, ...rideData } as Ride;
 };
 
@@ -209,7 +209,11 @@ export const setRidePassenger = (
   rideId: string,
   isPassenger = true
 ) => {
-  set(ref(db, `${PASSENGERS}/${rideId}/${passId}`), isPassenger ? true : null);
+  if (rideId && passId)
+    set(
+      ref(db, `${PASSENGERS}/${rideId}/${passId}`),
+      isPassenger ? true : null
+    );
 };
 
 export const setRideDriver = (
@@ -223,7 +227,7 @@ export const setRideDriver = (
 };
 
 export const completeRide = (rideId: string) => {
-  set(ref(db, `${RIDES}/${rideId}/isComplete`), true);
+  if (rideId) set(ref(db, `${RIDES}/${rideId}/isComplete`), true);
 };
 
 export const useRidePassenger = (rideId: string, passId: string) => {
@@ -237,7 +241,7 @@ export const useRidePassengers = (rideId: string) => {
 };
 
 export const setRoute = (rideId: string, route: Route) => {
-  set(ref(db, `${DBConstants.ROUTES}/${rideId}`), route);
+  if (rideId) set(ref(db, `${ROUTES}/${rideId}`), route);
 };
 
 export const useRoute = (rideId: string) => {
