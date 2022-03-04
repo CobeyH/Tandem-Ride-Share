@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Flex, Heading, VStack } from "@chakra-ui/react";
+import { Heading, VStack } from "@chakra-ui/react";
 import { db, DB_PASSENGERS_COLLECT } from "../firebase";
-import { query, ref, orderByValue, equalTo } from "firebase/database";
+import { query, ref } from "firebase/database";
 import { useList } from "react-firebase-hooks/database";
 
 const GasCalculator = (props: {

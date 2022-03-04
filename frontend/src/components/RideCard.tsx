@@ -118,7 +118,11 @@ export default function RideCard({
               <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
               <Spacer />
               {user && !viewOnly && isActive ? (
-                <PassengerButton rideId={rideId} userId={user.uid} />
+                <PassengerButton
+                  rideId={rideId}
+                  userId={user.uid}
+                  driver={ride?.driver}
+                />
               ) : (
                 ""
               )}
@@ -171,14 +175,17 @@ function completeRide(rideId: string) {
 function PassengerButton({
   rideId,
   userId,
+  driver,
 }: {
   rideId: string;
   userId: string;
+  driver: string | undefined;
 }) {
   const [amPassenger, loading, error] = useObjectVal(
     ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${userId}`)
   );
-  return (
+  const amDriver = userId == driver;
+  return amDriver ? null : (
     <Button
       disabled={loading || error !== undefined}
       onClick={() => {
