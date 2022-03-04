@@ -267,9 +267,7 @@ function RideTimes({
   const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
 
   start_time = isPm_start
-    ? `${parseInt(start_time.split(":")[0]) - 12}:${parseInt(
-        start_time.split(":")[1]
-      )}`
+    ? `0${parseInt(start_time.split(":")[0]) - 12}:${start_time.split(":")[1]}`
     : start_time;
 
   const end_date = endTime?.split("T")[0];
@@ -277,9 +275,7 @@ function RideTimes({
   const isPm_end = parseInt(end_time?.split(":")[0]) >= 12;
 
   end_time = isPm_end
-    ? `${parseInt(end_time?.split(":")[0]) - 12}:${parseInt(
-        end_time?.split(":")[1]
-      )}`
+    ? `0${parseInt(end_time?.split(":")[0]) - 12}:${end_time?.split(":")[1]}`
     : end_time;
 
   return (
