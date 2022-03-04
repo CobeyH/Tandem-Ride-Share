@@ -134,9 +134,11 @@ const CreateGroup = () => {
                   user.uid
                 ).then((group) => {
                   navigate(`/group/${group.id}`);
-                  uploadBanner(group.id).then((url) => {
-                    setGroupBanner(group.id, url?.fullPath);
-                  });
+                  if (banner !== undefined) {
+                    uploadBanner(group.id).then((url) => {
+                      setGroupBanner(group.id, url?.fullPath);
+                    });
+                  }
                 });
               }
             }}

@@ -12,11 +12,8 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db } from "../firebase/firebase";
-import { DBConstants, Group } from "../firebase/database";
-import { ref } from "firebase/database";
+import { Group, useGroup } from "../firebase/database";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import { useObjectVal } from "react-firebase-hooks/database";
 import RideCard from "../components/RideCard";
 import Header from "../components/Header";
 import { storage } from "../firebase/storage";
@@ -32,9 +29,7 @@ export default function GroupPage() {
     console.log("figure something better to do here");
     navigate("/");
   }
-  const [group, loading, error] = useObjectVal<Group>(
-    ref(db, `${DBConstants.GROUPS}/${groupId}`)
-  );
+  const [group, loading, error] = useGroup(groupId as string);
 
   return (
     <>
