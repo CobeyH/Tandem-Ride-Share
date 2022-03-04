@@ -1,7 +1,7 @@
 export const lightTheme = {
   main: "#77A2CA",
   darkButton: "#3975AE",
-  lightButton: "#E3EDf5",
+  lightButton: "#C0DAF0",
   buttonText: "#3D6890",
   form: "#E2E2E2",
   settings: "#808080",
