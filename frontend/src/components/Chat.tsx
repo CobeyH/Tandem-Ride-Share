@@ -8,15 +8,7 @@ import {
   DB_USER_COLLECT,
   User,
 } from "../firebase";
-import {
-  Box,
-  Container,
-  Heading,
-  Input,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Container, Input, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useList, useObjectVal } from "react-firebase-hooks/database";
 import slugify from "slugify";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -95,9 +87,11 @@ const Chat = (props: { dbLocation: string }) => {
           <Text>Nothing seems to be here, Say something!</Text>
         ) : (
           <ChatContents
-            contents={chat
-              .map((value) => value.val() as Message)
-              .sort(({ timestamp: fst }, { timestamp: snd }) => fst - snd)}
+            contents={[
+              ...Array.from(
+                new Set(chat.map((value) => value.val() as Message))
+              ),
+            ].sort(({ timestamp: fst }, { timestamp: snd }) => fst - snd)}
           />
         )}
         <ChatTextBox dbLocation={props.dbLocation} userId={user.uid} />
@@ -136,9 +130,10 @@ const Message = ({
   return (
     <Box>
       {userLoading || userError ? null : (
-        <Heading>{user?.name ?? sender_id}</Heading>
+        <Text>
+          {user?.name ?? sender_id}: {contents}
+        </Text>
       )}
-      <Text>{contents}</Text>
     </Box>
   );
 };
