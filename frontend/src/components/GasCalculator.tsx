@@ -20,7 +20,7 @@ const GasCalculator = (props: {
         Cost Per Person:
         {passLoading || passError || !passVals
           ? null
-          : "$" + (tripCost / passVals?.length).toFixed(2)}
+          : " $" + (tripCost / passVals?.length).toFixed(2)}
       </Heading>
     </VStack>
   );
