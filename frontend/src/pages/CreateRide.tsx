@@ -36,18 +36,23 @@ type ValidatableField<T> = {
   invalid: boolean;
 };
 
-const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
+const createRide = async (
+  ride: Ride,
+  groupId: string,
+  passList: string[] = []
+) => {
   const rideId = (await setRide(ride)).id;
   if (rideId) {
     await setGroupRide(groupId, rideId);
     createRoute(rideId, ride);
-    if (passList) {
-      await Promise.all(
-        passList.map(async (p) => {
-          setRidePassenger(p, rideId);
-        })
-      );
+    if (ride.driver) {
+      passList.push(ride.driver);
     }
+    await Promise.all(
+      passList.map(async (p) => {
+        setRidePassenger(p, rideId);
+      })
+    );
   }
   return ride;
 };

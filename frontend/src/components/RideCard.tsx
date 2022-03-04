@@ -32,6 +32,7 @@ import {
 } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
+import GasCalculator from "./GasCalculator";
 
 export default function RideCard({
   rideId,
@@ -115,7 +116,11 @@ export default function RideCard({
               <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
               <Spacer />
               {user && !viewOnly && isActive ? (
-                <PassengerButton rideId={rideId} userId={user.uid} />
+                <PassengerButton
+                  rideId={rideId}
+                  userId={user.uid}
+                  driver={ride?.driver}
+                />
               ) : (
                 ""
               )}
@@ -135,6 +140,11 @@ export default function RideCard({
                 <CompleteRideButton rideId={rideId} />
               )}
             </Flex>
+            <GasCalculator
+              fuelUsage={car?.fuelUsage}
+              distance={route?.distance}
+              rideId={rideId}
+            />
           </Collapse>
         </>
       )}
@@ -145,12 +155,15 @@ export default function RideCard({
 function PassengerButton({
   rideId,
   userId,
+  driver,
 }: {
   rideId: string;
   userId: string;
+  driver: string | undefined;
 }) {
   const [amPassenger, loading, error] = useRidePassenger(rideId, userId);
-  return (
+  const amDriver = userId === driver;
+  return amDriver ? null : (
     <Button
       disabled={loading || error !== undefined}
       onClick={() => {
@@ -193,14 +206,16 @@ function DriverButton({
   driverId?: string;
 }) {
   const [car, setCar] = useState<Vehicle>();
+  const [amPassenger] = useRidePassenger(rideId, userId);
   const amDriver = driverId === userId;
-  return (
+  return amPassenger && !amDriver ? null : (
     <>
       <ChooseCar carUpdate={setCar} />
       <Button
         isDisabled={car == undefined}
         onClick={() => {
           setRideDriver(userId, rideId, !amDriver, car?.carId);
+          setRidePassenger(userId, rideId, !amPassenger);
         }}
       >
         {amDriver ? "Leave" : "Join"}
