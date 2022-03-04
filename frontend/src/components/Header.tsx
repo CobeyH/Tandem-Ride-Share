@@ -23,6 +23,7 @@ import { logout, auth } from "../firebase";
 import { MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./AddCar";
+import { lightTheme } from "../theme/colours";
 
 export interface PageList {
   pages?: { label: string; url: string }[];
@@ -39,6 +40,7 @@ const Header = ({ pages }: PageList) => {
       wrap="wrap"
       padding={6}
       marginBlockEnd={4}
+      bg={lightTheme.main}
     >
       <Breadcrumbs pages={pages} />
       <Spacer />
