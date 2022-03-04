@@ -8,18 +8,11 @@ import {
   sendPasswordResetEmail,
   connectAuthEmulator,
 } from "firebase/auth";
-import {
-  getDatabase,
-  query,
-  ref,
-  set,
-  get,
-  equalTo,
-  connectDatabaseEmulator,
-} from "firebase/database";
+import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getUser, setUser } from "./database";
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -35,20 +28,6 @@ const firebaseConfig = {
   messagingSenderId: "158541550551",
   appId: "1:158541550551:web:927805d53ab973714ab192",
   measurementId: "G-4QXLHB625R",
-};
-
-export const DB_GROUP_COLLECT = "groups";
-export const DB_USER_COLLECT = "users";
-export const DB_RIDE_COLLECT = "rides";
-export const DB_PASSENGERS_COLLECT = "passengers";
-export const DB_ROUTE_COLLECT = "routes";
-export const DB_KEY_SLUG_OPTS = {
-  replacement: "-",
-  remove: undefined,
-  lower: true,
-  strict: true,
-  locale: "en",
-  trim: true,
 };
 
 // Initialize Firebase
@@ -68,17 +47,19 @@ export const signInWithGoogle = async () => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
-    const q = query(ref(db, DB_USER_COLLECT), equalTo(user.uid, "uid"));
-    const snapshot = await get(q);
     // If the user doesn't exist then add them.
-    if (!snapshot.exists()) {
-      await set(ref(db, `${DB_USER_COLLECT}/${user.uid}`), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
-    }
+    getUser(user.uid).catch((err) => {
+      if (err === undefined) {
+        setUser({
+          uid: user.uid,
+          name: user.displayName ? user.displayName : "User",
+          authProvider: "google",
+          email: user.email ? user.email : "",
+        });
+      } else {
+        console.log(err);
+      }
+    });
   } catch (err) {
     console.error(err);
   }
@@ -104,11 +85,11 @@ export const registerWithEmailAndPassword = async (
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    await set(ref(db, `${DB_USER_COLLECT}/${user.uid}`), {
+    await setUser({
       uid: user.uid,
       name: name,
       authProvider: "local",
-      email: user.email,
+      email: email,
     });
   } catch (err) {
     console.error(err);
@@ -127,20 +108,4 @@ export async function sendPasswordReset(email: string) {
 
 export const logout = () => {
   signOut(auth);
-};
-
-export type Vehicle = {
-  carId?: string;
-  type: string;
-  fuelUsage: number;
-  numSeats: number;
-  displayName?: string;
-};
-
-export type User = {
-  uid: string;
-  name: string;
-  authProvider: string;
-  email: string;
-  cars?: Vehicle[];
 };

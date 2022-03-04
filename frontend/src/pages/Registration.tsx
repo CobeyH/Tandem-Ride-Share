@@ -5,7 +5,7 @@ import {
   auth,
   registerWithEmailAndPassword,
   signInWithGoogle,
-} from "../firebase";
+} from "../firebase/firebase";
 import Header from "../components/Header";
 import {
   FormControl,

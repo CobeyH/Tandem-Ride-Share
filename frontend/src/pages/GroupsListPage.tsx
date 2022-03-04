@@ -12,18 +12,16 @@ import {
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase";
-import { ref } from "firebase/database";
-import { useListVals } from "react-firebase-hooks/database";
-import { Group } from "./CreateGroup";
+import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { NavConstants } from "../NavigationConstants";
 import GroupSearch from "../components/GroupSearch";
+import { useGroups } from "../firebase/database";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
-  const [groups, loadingGroups, error] = useListVals<Group>(ref(db, "groups"));
+  const [groups, loadingGroups, error] = useGroups();
 
   const navigate = useNavigate();
 
