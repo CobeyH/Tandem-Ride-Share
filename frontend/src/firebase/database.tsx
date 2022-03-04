@@ -26,6 +26,17 @@ export const DBConstants = {
   KEY_SLUG_OPTS,
 };
 
+export type Group = {
+  id: string;
+  name: string;
+  description: string;
+  isPrivate: boolean;
+  rides: { [key: string]: boolean };
+  members: { [key: string]: boolean };
+  owner: string;
+  banner?: string;
+};
+
 export type Vehicle = {
   carId?: string;
   type: string;
@@ -59,6 +70,35 @@ export type Route = {
   shape: LatLng[];
 };
 
+export const getGroup = async (groupId: string) => {
+  return new Promise<Group>((resolve, reject) => {
+    get(ref(db, `${GROUPS}/${groupId}`)).then(
+      (result) => {
+        if (result.exists()) {
+          const group = result.val();
+          group.id = groupId;
+          resolve(group);
+        } else {
+          reject(undefined);
+        }
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
+export const setGroup = async (group: Group) => {
+  const { id, ...groupData } = group;
+  await set(ref(db, `${GROUPS}/${id}`), groupData);
+  return group;
+};
+
+export const setGroupBanner = async (groupId: string, banner?: string) => {
+  return set(ref(db, `${GROUPS}/${groupId}/banner`), banner);
+};
+
 export const getUser = async (userId: string) => {
   return new Promise<User>((resolve, reject) => {
     get(ref(db, `${USERS}/${userId}`)).then(
@@ -84,7 +124,9 @@ export const getUser = async (userId: string) => {
 };
 
 export const setUser = async (user: User) => {
-  return set(ref(db, `${USERS}/${user.uid}`), user);
+  const { uid, ...userData } = user;
+  await set(ref(db, `${USERS}/${uid}`), userData);
+  return user;
 };
 
 export const useUser = (userId?: string) => {

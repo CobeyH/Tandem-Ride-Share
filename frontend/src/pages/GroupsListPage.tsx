@@ -15,11 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/firebase";
 import { ref } from "firebase/database";
 import { useListVals } from "react-firebase-hooks/database";
-import { Group } from "./CreateGroup";
 import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { NavConstants } from "../NavigationConstants";
 import GroupSearch from "../components/GroupSearch";
+import { Group } from "../firebase/database";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
