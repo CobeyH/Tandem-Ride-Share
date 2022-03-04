@@ -7,7 +7,6 @@ import {
   Container,
   Flex,
   Heading,
-  Spacer,
   Spinner,
   Text,
   VStack,
