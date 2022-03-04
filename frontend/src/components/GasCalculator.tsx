@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Heading, VStack } from "@chakra-ui/react";
-import { db, DB_PASSENGERS_COLLECT } from "../firebase";
-import { query, ref } from "firebase/database";
-import { useList } from "react-firebase-hooks/database";
+import { useRidePassengers } from "../firebase/database";
 
 const GasCalculator = (props: {
   fuelUsage: number | undefined;
@@ -10,9 +8,7 @@ const GasCalculator = (props: {
   rideId: string;
 }) => {
   const gasPrice = 1.95; //TODO: Get real value
-  const [passVals, passLoading, passError] = useList(
-    query(ref(db, `${DB_PASSENGERS_COLLECT}/${props.rideId}`))
-  );
+  const [passVals, passLoading, passError] = useRidePassengers(props.rideId);
   if (!props.fuelUsage || !props.distance) {
     return null;
   }

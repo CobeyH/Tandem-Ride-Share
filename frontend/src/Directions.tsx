@@ -1,14 +1,13 @@
 import { latLng, LatLng } from "leaflet";
-import { RideRoute } from "./pages/CreateRide";
+import { Route } from "./firebase/database";
 
 /**
  * MapQuest Open Directions API functions and components.
  */
 const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/route";
-const MQ_KEY = process.env.REACT_APP_MQ_KEY;
 
 export const getRideRoute = async (start: LatLng, end: LatLng) => {
-  return new Promise<RideRoute>((resolve, reject) => {
+  return new Promise<Route>((resolve, reject) => {
     /**
      * Here we are making the first API call to the Directions API Route
      * endpoint. Then we compose the reponse to JSON, then use the result
@@ -16,14 +15,14 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
      * a sessionId.
      */
     fetch(
-      `${MQ_DIR_URI}?key=${MQ_KEY}` +
+      `${MQ_DIR_URI}?key=${process.env.REACT_APP_MQ_KEY}` +
         `&from=${start.lat},${start.lng}&to=${end.lat},${end.lng}` +
         `&unit=k&fullShape=true`
     )
       .then((res) => res.json())
       .then(
         (result) => {
-          const route: RideRoute = {
+          const route: Route = {
             distance: result.route.distance,
             fuelUsed: result.route.fuelUsed,
             shape: arrayToLatLngs(result.route.shape.shapePoints),

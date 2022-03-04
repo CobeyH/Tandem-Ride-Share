@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Button } from "@chakra-ui/react";
-import { set, ref } from "firebase/database";
-import { db, DB_GROUP_COLLECT } from "../firebase";
-import { Group } from "../pages/CreateGroup";
+import { Group, setGroupMember } from "../firebase/database";
 import { useNavigate } from "react-router";
 
 const GroupJoinButton = (props: {
@@ -13,13 +11,8 @@ const GroupJoinButton = (props: {
   return (
     <Button
       onClick={() => {
-        set(
-          ref(
-            db,
-            `${DB_GROUP_COLLECT}/${props.group.id}/members/${props.userId}`
-          ),
-          true
-        ).then(() => {
+        if (props.userId === undefined) return;
+        setGroupMember(props.group.id, props.userId).then(() => {
           navigate(`/group/${props.group.id}`);
         });
       }}
