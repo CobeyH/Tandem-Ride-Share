@@ -187,15 +187,12 @@ export const setGroupRide = async (
   );
 };
 
-export const setRide = async (ride: Ride) => {
+export const setRide = (ride: Ride) => {
   const { id, ...rideData } = ride;
-  if (id === undefined) {
-    const rideRef = push(ref(db, RIDES));
-    if (!rideRef.key) throw new Error("Unable to get ride id.");
-    ride.id = rideRef.key;
-  }
-  await set(ref(db, `${RIDES}/${ride.id}`), rideData);
-  return ride;
+  const rideRef = push(ref(db, RIDES));
+  if (!rideRef.key) throw new Error("Unable to get ride id.");
+  set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
+  return { id: rideRef.key, ...rideData } as Ride;
 };
 
 export const useRide = (rideId: string) => {
