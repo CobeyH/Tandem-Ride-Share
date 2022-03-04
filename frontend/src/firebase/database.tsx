@@ -1,4 +1,12 @@
-import { equalTo, get, orderByValue, query, ref, set } from "firebase/database";
+import {
+  equalTo,
+  get,
+  orderByValue,
+  push,
+  query,
+  ref,
+  set,
+} from "firebase/database";
 import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
@@ -54,6 +62,7 @@ export type User = {
 };
 
 export type Ride = {
+  id?: string;
   name: string;
   start: { lat: number; lng: number };
   end: { lat: number; lng: number };
@@ -161,6 +170,28 @@ export const setGroupMember = async (
   );
 };
 
+export const setGroupRide = async (
+  groupId: string,
+  rideId: string,
+  isChild = true
+) => {
+  await set(
+    ref(db, `${GROUPS}/${groupId}/rides/${rideId}`),
+    isChild ? true : null
+  );
+};
+
+export const setRide = async (ride: Ride) => {
+  const { id, ...rideData } = ride;
+  if (id === undefined) {
+    const rideRef = push(ref(db, RIDES));
+    if (rideRef.key === null) throw new Error("Unable to get ride id.");
+    ride.id = rideRef.key;
+  }
+  await set(ref(db, `${RIDES}/${ride.id}`), rideData);
+  return ride;
+};
+
 export const useRide = (rideId: string) => {
   return useObjectVal<Ride>(ref(db, `${RIDES}/${rideId}`));
 };
@@ -195,6 +226,10 @@ export const useRidePassengers = (rideId: string) => {
   return useListVals<User>(
     query(ref(db, `${PASSENGERS}/${rideId}`), orderByValue(), equalTo(true))
   );
+};
+
+export const setRoute = (rideId: string, route: Route) => {
+  set(ref(db, `${DBConstants.ROUTES}/${rideId}`), route);
 };
 
 export const useRoute = (rideId: string) => {

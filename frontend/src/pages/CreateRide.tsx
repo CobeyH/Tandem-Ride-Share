@@ -9,10 +9,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../firebase/firebase";
-import { DBConstants, Ride, Vehicle } from "../firebase/database";
+import { auth } from "../firebase/firebase";
+import {
+  Ride,
+  setGroupRide,
+  setRide,
+  setRidePassenger,
+  setRoute,
+  Vehicle,
+} from "../firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
-import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
 import Header from "../components/Header";
 import MapView, {
@@ -31,25 +37,24 @@ type ValidatableField<T> = {
 };
 
 const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
-  const newRideRef = await push(ref(db, `${DBConstants.RIDES}`), ride);
-  const rideId = newRideRef.key;
-  await set(ref(db, `${DBConstants.GROUPS}/${groupId}/rides/${rideId}`), true);
-  if (passList) {
-    await Promise.all(
-      passList.map(async (p) => {
-        await set(ref(db, `${DBConstants.PASSENGERS}/${rideId}/${p}`), true);
-      })
-    );
+  const rideId = (await setRide(ride)).id;
+  if (rideId) {
+    await setGroupRide(groupId, rideId);
+    createRoute(rideId, ride);
+    if (passList) {
+      await Promise.all(
+        passList.map(async (p) => {
+          setRidePassenger(p, rideId);
+        })
+      );
+    }
   }
-  if (rideId) createRoute(rideId, ride);
   return ride;
 };
 
 const createRoute = async (rideId: string, ride: Ride) => {
   const route = await getRideRoute(ride.start as LatLng, ride.end as LatLng);
-  if (route) {
-    await set(ref(db, `${DBConstants.ROUTES}/${rideId}`), route);
-  }
+  if (route) setRoute(rideId, route);
   return route;
 };
 
