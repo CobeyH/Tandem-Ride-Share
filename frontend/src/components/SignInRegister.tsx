@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Center, Flex, Heading, Text, VStack } from "@chakra-ui/react";
+import { Button, Center, Flex, Text, VStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { LocationGotoState } from "../pages/JoinGroup";
 import { FaGoogle } from "react-icons/all";

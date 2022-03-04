@@ -37,6 +37,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
           value={search}
           _placeholder={{ color: "black" }}
           placeholder="Find Public Groups"
+          borderRadius={15}
         />
         <InputLeftElement color={"black"}>
           <GiMagnifyingGlass />

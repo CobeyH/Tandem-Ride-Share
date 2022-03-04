@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Heading,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Container,
-} from "@chakra-ui/react";
+import { Box, Heading, FormControl, Input, Container } from "@chakra-ui/react";
 import { auth, loginWithEmailAndPassword } from "../firebase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";

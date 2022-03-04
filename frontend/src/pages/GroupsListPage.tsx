@@ -5,7 +5,9 @@ import {
   Button,
   Center,
   Container,
+  Flex,
   Heading,
+  Spacer,
   Spinner,
   Text,
   VStack,
@@ -40,37 +42,43 @@ export default function GroupsListPage() {
           <Heading size={"md"}>My Groups</Heading>
         </Center>
         <GroupSearch groups={groups ?? []} />
-        <VStack>
-          {groups
-            ?.filter(({ members }) => {
-              if (
-                user !== null &&
-                user !== undefined &&
-                typeof (user ?? null) === "object" // we love javascript.
-              ) {
-                return members[user.uid] ?? false;
-              } else {
-                console.log("null users should be kicked back to login.");
-                return false;
-              }
-            })
-            ?.map((group, i) => (
-              <Button
-                mt={4}
-                key={i}
-                onClick={() => navigate(NavConstants.groupWithIdJoin(group.id))}
-              >
-                <Avatar
-                  bg={groupLogos[i % groupLogos.length]}
-                  size="xs"
-                  textAlign="center"
-                  name={group.name}
-                  mr={4}
-                />{" "}
-                {group.name}
-              </Button>
-            ))}
-        </VStack>
+        <Center>
+          <Flex direction="column">
+            <VStack align="stretch">
+              {groups
+                ?.filter(({ members }) => {
+                  if (
+                    user !== null &&
+                    user !== undefined &&
+                    typeof (user ?? null) === "object" // we love javascript.
+                  ) {
+                    return members[user.uid] ?? false;
+                  } else {
+                    console.log("null users should be kicked back to login.");
+                    return false;
+                  }
+                })
+                ?.map((group, i) => (
+                  <Button
+                    mt={4}
+                    key={i}
+                    textAlign="left"
+                    onClick={() =>
+                      navigate(NavConstants.groupWithIdJoin(group.id))
+                    }
+                  >
+                    <Avatar
+                      bg={groupLogos[i % groupLogos.length]}
+                      size="xs"
+                      name={group.name}
+                      mr={4}
+                    />{" "}
+                    {group.name}
+                  </Button>
+                ))}
+            </VStack>
+          </Flex>
+        </Center>
         {loadingGroups ? <Spinner /> : null}
         {error ? <Text>{JSON.stringify(error)}</Text> : null}
         <Center pt={4}>
