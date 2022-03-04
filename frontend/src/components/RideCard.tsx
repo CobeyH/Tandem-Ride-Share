@@ -206,14 +206,16 @@ function DriverButton({
   driverId?: string;
 }) {
   const [car, setCar] = useState<Vehicle>();
+  const [amPassenger] = useRidePassenger(rideId, userId);
   const amDriver = driverId === userId;
-  return (
+  return amPassenger && !amDriver ? null : (
     <>
       <ChooseCar carUpdate={setCar} />
       <Button
         isDisabled={car == undefined}
         onClick={() => {
           setRideDriver(userId, rideId, !amDriver, car?.carId);
+          setRidePassenger(userId, rideId, !amPassenger);
         }}
       >
         {amDriver ? "Leave" : "Join"}
