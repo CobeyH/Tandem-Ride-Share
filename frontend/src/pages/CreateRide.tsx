@@ -9,17 +9,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
 import {
-  auth,
-  db,
-  DB_GROUP_COLLECT,
-  DB_PASSENGERS_COLLECT,
-  DB_RIDE_COLLECT,
-  DB_ROUTE_COLLECT,
+  Ride,
+  setGroupRide,
+  setRide,
+  setRidePassenger,
+  setRoute,
   Vehicle,
-} from "../firebase";
+} from "../firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
-import { ref, set, push } from "firebase/database";
 import { Marker } from "react-leaflet";
 import Header from "../components/Header";
 import MapView, {
@@ -37,43 +36,30 @@ type ValidatableField<T> = {
   invalid: boolean;
 };
 
-export type Ride = {
-  name: string;
-  start: { lat: number; lng: number };
-  end: { lat: number; lng: number };
-  driver?: string;
-  isComplete: boolean;
-  carId?: string;
-  startDate: string;
-  endDate: string;
-};
-
-export type RideRoute = {
-  distance: number;
-  fuelUsed: number;
-  shape: LatLng[];
-};
-
-const createRide = async (ride: Ride, groupId: string, passList?: string[]) => {
-  const newRideRef = await push(ref(db, `${DB_RIDE_COLLECT}`), ride);
-  const rideId = newRideRef.key;
-  await set(ref(db, `${DB_GROUP_COLLECT}/${groupId}/rides/${rideId}`), true);
-  if (passList) {
+const createRide = async (
+  ride: Ride,
+  groupId: string,
+  passList: string[] = []
+) => {
+  const rideId = (await setRide(ride)).id;
+  if (rideId) {
+    await setGroupRide(groupId, rideId);
+    createRoute(rideId, ride);
+    if (ride.driver) {
+      passList.push(ride.driver);
+    }
     await Promise.all(
       passList.map(async (p) => {
-        await set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${p}`), true);
+        setRidePassenger(p, rideId);
       })
     );
   }
-  if (rideId) createRoute(rideId, ride);
   return ride;
 };
 
 const createRoute = async (rideId: string, ride: Ride) => {
   const route = await getRideRoute(ride.start as LatLng, ride.end as LatLng);
-  if (route) {
-    await set(ref(db, `${DB_ROUTE_COLLECT}/${rideId}`), route);
-  }
+  if (route) setRoute(rideId, route);
   return route;
 };
 

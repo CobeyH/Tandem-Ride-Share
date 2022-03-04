@@ -13,11 +13,10 @@ import {
   Badge,
   HStack,
 } from "@chakra-ui/react";
-import { child, get, ref } from "firebase/database";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
-import { db, DB_USER_COLLECT, User } from "../firebase";
+import { getUser, User } from "../firebase/database";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
@@ -27,17 +26,13 @@ const GroupMembersList = (props: {
   const [groupMembers, setGroupMembers] = useState<User[]>();
 
   const fetchUsers = () => {
-    const userRef = ref(db, DB_USER_COLLECT);
-    const queryPromises = Object.keys(props.members).map((userId) => {
-      return get(child(userRef, `${userId}`));
+    const userPromises = Object.keys(props.members).map((userId) => {
+      return getUser(userId);
     });
-    Promise.all(queryPromises).then((snapshots) => {
-      const members = snapshots.map((user) => user.val());
-      setGroupMembers(members);
-    });
+    Promise.all(userPromises).then((users) => setGroupMembers(users));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchUsers();
   }, [isOpen]);
 

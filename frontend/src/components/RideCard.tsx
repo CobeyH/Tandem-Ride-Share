@@ -14,24 +14,25 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import { Ride, RideRoute } from "../pages/CreateRide";
 import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
-import { useList, useObjectVal } from "react-firebase-hooks/database";
+import { auth } from "../firebase/firebase";
 import {
-  auth,
-  db,
-  DB_PASSENGERS_COLLECT,
-  DB_RIDE_COLLECT,
-  DB_ROUTE_COLLECT,
-  DB_USER_COLLECT,
-  User,
+  completeRide,
+  setRideDriver,
+  setRidePassenger,
+  useRide,
+  useRidePassenger,
+  useRidePassengers,
+  useRoute,
+  useUser,
+  useUserVehicle,
   Vehicle,
-} from "../firebase";
-import { equalTo, orderByValue, query, ref, set } from "firebase/database";
+} from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
+import GasCalculator from "./GasCalculator";
 
 export default function RideCard({
   rideId,
@@ -43,15 +44,9 @@ export default function RideCard({
   isActive?: boolean;
 }) {
   const [user] = useAuthState(auth);
-  const [ride, rideLoading, rideError] = useObjectVal<Ride>(
-    ref(db, `${DB_RIDE_COLLECT}/${rideId}`)
-  );
-  const [route] = useObjectVal<RideRoute>(
-    ref(db, `${DB_ROUTE_COLLECT}/${rideId}`)
-  );
-  const [car] = useObjectVal<Vehicle>(
-    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${ride?.carId}`)
-  );
+  const [ride, rideLoading, rideError] = useRide(rideId);
+  const [route] = useRoute(rideId);
+  const [car] = useUserVehicle(ride?.driver, ride?.carId);
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
 
@@ -108,7 +103,11 @@ export default function RideCard({
               />
               <Spacer />
               {user && !viewOnly && isActive ? (
-                <DriverButton rideId={rideId} userId={user.uid} />
+                <DriverButton
+                  rideId={rideId}
+                  userId={user.uid}
+                  driverId={ride.driver}
+                />
               ) : (
                 ""
               )}
@@ -117,7 +116,11 @@ export default function RideCard({
               <PassengerCounter rideId={rideId} maxPass={car?.numSeats || 4} />
               <Spacer />
               {user && !viewOnly && isActive ? (
-                <PassengerButton rideId={rideId} userId={user.uid} />
+                <PassengerButton
+                  rideId={rideId}
+                  userId={user.uid}
+                  driver={ride?.driver}
+                />
               ) : (
                 ""
               )}
@@ -137,6 +140,11 @@ export default function RideCard({
                 <CompleteRideButton rideId={rideId} />
               )}
             </Flex>
+            <GasCalculator
+              fuelUsage={car?.fuelUsage}
+              distance={route?.distance}
+              rideId={rideId}
+            />
           </Collapse>
         </>
       )}
@@ -144,35 +152,18 @@ export default function RideCard({
   ) : null;
 }
 
-function setRidePassenger(passId: string, rideId: string, state: boolean) {
-  set(ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${passId}`), state);
-}
-
-function setRideDriver(
-  driverId: string,
-  rideId: string,
-  state: boolean,
-  carId: string | undefined
-) {
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`), state ? driverId : null);
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/carId`), state ? carId : null);
-}
-
-function completeRide(rideId: string) {
-  set(ref(db, `${DB_RIDE_COLLECT}/${rideId}/isComplete`), true);
-}
-
 function PassengerButton({
   rideId,
   userId,
+  driver,
 }: {
   rideId: string;
   userId: string;
+  driver: string | undefined;
 }) {
-  const [amPassenger, loading, error] = useObjectVal(
-    ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}/${userId}`)
-  );
-  return (
+  const [amPassenger, loading, error] = useRidePassenger(rideId, userId);
+  const amDriver = userId === driver;
+  return amDriver ? null : (
     <Button
       disabled={loading || error !== undefined}
       onClick={() => {
@@ -191,13 +182,7 @@ function PassengerCounter({
   rideId: string;
   maxPass: number;
 }) {
-  const [passVals, passLoading, passError] = useList(
-    query(
-      ref(db, `${DB_PASSENGERS_COLLECT}/${rideId}`),
-      orderByValue(),
-      equalTo(true)
-    )
-  );
+  const [passVals, passLoading, passError] = useRidePassengers(rideId);
 
   return (
     <>
@@ -211,26 +196,31 @@ function PassengerCounter({
   );
 }
 
-function DriverButton({ rideId, userId }: { rideId: string; userId: string }) {
-  const [driver, loading, error] = useObjectVal<string>(
-    ref(db, `${DB_RIDE_COLLECT}/${rideId}/driver`)
-  );
+function DriverButton({
+  rideId,
+  userId,
+  driverId,
+}: {
+  rideId: string;
+  userId: string;
+  driverId?: string;
+}) {
   const [car, setCar] = useState<Vehicle>();
-  const amDriver = driver === userId;
-  return !loading && error === undefined ? (
+  const [amPassenger] = useRidePassenger(rideId, userId);
+  const amDriver = driverId === userId;
+  return amPassenger && !amDriver ? null : (
     <>
       <ChooseCar carUpdate={setCar} />
       <Button
         isDisabled={car == undefined}
         onClick={() => {
           setRideDriver(userId, rideId, !amDriver, car?.carId);
+          setRidePassenger(userId, rideId, !amPassenger);
         }}
       >
         {amDriver ? "Leave" : "Join"}
       </Button>
     </>
-  ) : (
-    <></>
   );
 }
 
@@ -241,9 +231,7 @@ function DriverDisplay({
   driverId: string | undefined;
   displayDriverName: boolean;
 }) {
-  const [driverUser, driverLoading, driverError] = useObjectVal<User>(
-    ref(db, `${DB_USER_COLLECT}/${driverId}`)
-  );
+  const [driverUser, driverLoading, driverError] = useUser(driverId);
   const driver = driverLoading
     ? "Loading"
     : driverError
@@ -294,20 +282,16 @@ function RideTimes({
   const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
 
   start_time = isPm_start
-    ? `${parseInt(start_time.split(":")[0]) - 12}:${parseInt(
-        start_time.split(":")[1]
-      )}`
-    : start_time;
+    ? `${parseInt(start_time.split(":")[0]) - 12}:${start_time.split(":")[1]}`
+    : `${parseInt(start_time.split(":")[0])}:${start_time.split(":")[1]}`;
 
   const end_date = endTime?.split("T")[0];
   let end_time = endTime?.split("T")[1];
   const isPm_end = parseInt(end_time?.split(":")[0]) >= 12;
 
   end_time = isPm_end
-    ? `${parseInt(end_time?.split(":")[0]) - 12}:${parseInt(
-        end_time?.split(":")[1]
-      )}`
-    : end_time;
+    ? `${parseInt(end_time?.split(":")[0]) - 12}:${end_time?.split(":")[1]}`
+    : `${parseInt(end_time?.split(":")[0])}:${end_time?.split(":")[1]}`;
 
   return (
     <>

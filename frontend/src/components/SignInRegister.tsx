@@ -3,7 +3,7 @@ import { Button, Center, Flex, Text, VStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { LocationGotoState } from "../pages/JoinGroup";
 import { FaGoogle } from "react-icons/all";
-import { signInWithGoogle } from "../firebase";
+import { signInWithGoogle } from "../firebase/firebase";
 
 export default function SignInRegister({
   state,
