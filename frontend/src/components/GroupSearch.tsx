@@ -3,9 +3,10 @@ import {
   Button,
   Heading,
   HStack,
+  IconButton,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -37,12 +38,16 @@ const GroupSearch = (props: { groups: Group[] }) => {
           value={search}
           _placeholder={{ color: "black" }}
           placeholder="Find Public Groups"
-          borderRadius={15}
+          borderRadius={5}
         />
-        <InputLeftElement color={"black"}>
-          <GiMagnifyingGlass />
-        </InputLeftElement>
-        <Button onClick={onOpen}>Submit</Button>
+        <InputRightElement color={"black"}>
+          <IconButton
+            size="sm"
+            aria-label=""
+            icon={<GiMagnifyingGlass />}
+            onClick={onOpen}
+          />
+        </InputRightElement>
       </InputGroup>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
