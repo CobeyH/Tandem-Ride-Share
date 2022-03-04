@@ -48,6 +48,7 @@ function ChatTextBox({
   return (
     <>
       <Input
+        placeholder={"send a message . . ."}
         onKeyDown={(e) => {
           if (e.key == "Enter") {
             set(
@@ -67,11 +68,8 @@ function ChatTextBox({
   );
 }
 
-const Chat = (props: { dbLocation: string }) => {
-  const [chat, messagesLoading, messagesError] = useList(
-    ref(db, props.dbLocation)
-  );
-  console.log({ chat });
+const Chat = ({ dbLocation }: { dbLocation: string }) => {
+  const [chat, messagesLoading, messagesError] = useList(ref(db, dbLocation));
 
   const [user, userLoading, userError] = useAuthState(auth);
 
@@ -88,18 +86,16 @@ const Chat = (props: { dbLocation: string }) => {
         ) : (
           <ChatContents
             contents={[
-              ...Array.from(
-                new Set(chat.map((value) => value.val() as Message))
-              ),
-            ].sort(({ timestamp: fst }, { timestamp: snd }) => fst - snd)}
+              ...Array.from(new Set(chat.map((v) => v.val() as Message))),
+            ].sort((fst, snd) => fst.timestamp - snd.timestamp)}
           />
         )}
-        <ChatTextBox dbLocation={props.dbLocation} userId={user.uid} />
+        <ChatTextBox dbLocation={dbLocation} userId={user.uid} />
       </Container>
     );
   } else if (!chat) {
-    set(ref(db, props.dbLocation), []).then(() => {
-      console.log(`Created an empty chat at ${props.dbLocation}`);
+    set(ref(db, dbLocation), []).then(() => {
+      console.log(`Created an empty chat at ${dbLocation}`);
     });
     return <Spinner />;
   } else {
@@ -108,15 +104,13 @@ const Chat = (props: { dbLocation: string }) => {
   }
 };
 
-const ChatContents = (props: { contents: Message[] }) => {
-  return (
-    <VStack>
-      {props.contents.map((m, i) => (
-        <Message key={i} message={m} />
-      ))}
-    </VStack>
-  );
-};
+const ChatContents = ({ contents }: { contents: Message[] }) => (
+  <VStack>
+    {contents.map((message, i) => (
+      <Message key={i} message={message} />
+    ))}
+  </VStack>
+);
 
 const Message = ({
   message: { contents, sender_id },
@@ -124,7 +118,7 @@ const Message = ({
   message: Message;
 }) => {
   const [user, userLoading, userError] = useObjectVal<User>(
-    ref(db, `${DB_USER_COLLECT}/${sender_id}`)
+    ref(db, `${DB_USER_COLLECT}/${sender_id}`) // this seems terribly inefficient, but I don't see a reasonable way around it.
   );
 
   return (
