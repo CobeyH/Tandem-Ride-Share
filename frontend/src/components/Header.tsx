@@ -18,8 +18,8 @@ import {
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
-import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { logout, auth } from "../firebase";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { logout, auth } from "../firebase/firebase";
 import { MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./AddCar";

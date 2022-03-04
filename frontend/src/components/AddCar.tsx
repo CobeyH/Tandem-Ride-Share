@@ -18,10 +18,9 @@ import {
   RadioGroup,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
-import { ref, set } from "firebase/database";
 import * as React from "react";
 import { useState } from "react";
-import { db, DB_USER_COLLECT, Vehicle } from "../firebase";
+import { setUserVehicle, Vehicle } from "../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [
@@ -70,10 +69,7 @@ const registerCar = async (user: User, car: Vehicle) => {
   }
   car.carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
   //TODO: User feedback on error states
-  await set(
-    ref(db, `${DB_USER_COLLECT}/${user?.uid}/vehicles/${car.carId}`),
-    car
-  );
+  await setUserVehicle(user.uid, car);
 };
 
 const getCarFromList = (radioIndex: string): Vehicle => {
