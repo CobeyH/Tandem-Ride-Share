@@ -9,10 +9,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useObjectVal } from "react-firebase-hooks/database";
-import { ref } from "firebase/database";
-import { auth, db } from "../firebase/firebase";
-import { DBConstants, Group } from "../firebase/database";
+import { auth } from "../firebase/firebase";
+import { Group, useGroup } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";
@@ -24,17 +22,16 @@ export type LocationGotoState = { goto?: string };
 type GroupUserProps = { group: Group; userId: string | undefined };
 
 const JoinGroup = () => {
-  const groupId = useParams()["groupId"];
-  const [user, loadingUser] = useAuthState(auth);
-  const [group, loadingGroup, groupError] = useObjectVal<Group>(
-    ref(db, `${DBConstants.GROUPS}/${groupId}`)
-  );
   const navigate = useNavigate();
+  const groupId = useParams()["groupId"];
   if (!groupId) {
     console.log("Figure something better to do here.");
     navigate("/");
     return <></>;
-  } else if (user && group?.members[user.uid]) {
+  }
+  const [user, loadingUser] = useAuthState(auth);
+  const [group, loadingGroup, groupError] = useGroup(groupId);
+  if (user && group?.members[user.uid]) {
     navigate(NavConstants.groupWithId(groupId));
   }
 
