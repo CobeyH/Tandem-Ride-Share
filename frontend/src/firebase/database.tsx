@@ -1,4 +1,4 @@
-import { get, ref, set } from "firebase/database";
+import { equalTo, get, orderByValue, query, ref, set } from "firebase/database";
 import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
@@ -53,7 +53,7 @@ export type Ride = {
   endDate: string;
 };
 
-export type RideRoute = {
+export type Route = {
   distance: number;
   fuelUsed: number;
   shape: LatLng[];
@@ -87,7 +87,17 @@ export const setUser = async (user: User) => {
   return set(ref(db, `${USERS}/${user.uid}`), user);
 };
 
-export const useUserVehicles = (userId: string | undefined) => {
+export const useUser = (userId?: string) => {
+  return useObjectVal<User>(ref(db, `${USERS}/${userId}`));
+};
+
+export const useUserVehicle = (userId?: string, vehicleId?: string) => {
+  return useObjectVal<Vehicle>(
+    ref(db, `${USERS}/${userId}/vehicles/${vehicleId}`)
+  );
+};
+
+export const useUserVehicles = (userId?: string) => {
   return useListVals<Vehicle>(ref(db, `${USERS}/${userId}/vehicles`), {
     keyField: "carId",
   });
@@ -111,4 +121,40 @@ export const setGroupMember = async (
 
 export const useRide = (rideId: string) => {
   return useObjectVal<Ride>(ref(db, `${RIDES}/${rideId}`));
+};
+
+export const setRidePassenger = (
+  passId: string,
+  rideId: string,
+  isPassenger = true
+) => {
+  set(ref(db, `${PASSENGERS}/${rideId}/${passId}`), isPassenger ? true : null);
+};
+
+export const setRideDriver = (
+  driverId: string,
+  rideId: string,
+  state: boolean,
+  carId: string | undefined
+) => {
+  set(ref(db, `${RIDES}/${rideId}/driver`), state ? driverId : null);
+  set(ref(db, `${RIDES}/${rideId}/carId`), state ? carId : null);
+};
+
+export const completeRide = (rideId: string) => {
+  set(ref(db, `${RIDES}/${rideId}/isComplete`), true);
+};
+
+export const useRidePassenger = (rideId: string, passId: string) => {
+  return useObjectVal(ref(db, `${PASSENGERS}/${rideId}/${passId}`));
+};
+
+export const useRidePassengers = (rideId: string) => {
+  return useListVals<User>(
+    query(ref(db, `${PASSENGERS}/${rideId}`), orderByValue(), equalTo(true))
+  );
+};
+
+export const useRoute = (rideId: string) => {
+  return useObjectVal<Route>(ref(db, `${ROUTES}/${rideId}`));
 };
