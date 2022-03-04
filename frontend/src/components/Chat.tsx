@@ -61,6 +61,7 @@ function ChatTextBox({
                 contents: e.currentTarget.value,
               })
             );
+            e.currentTarget.value = "";
           }
         }}
       />
