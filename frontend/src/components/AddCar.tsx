@@ -26,11 +26,9 @@ import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
-  { type: "Minicompact", fuelUsage: 7, numSeats: 4 },
   { type: "Subcompact", fuelUsage: 8, numSeats: 5 },
   { type: "Compact", fuelUsage: 8.2, numSeats: 5 },
   { type: "Mid-size", fuelUsage: 8.5, numSeats: 5 },
-  { type: "Full-Sized", fuelUsage: 9, numSeats: 5 },
   { type: "Station-Wagon", fuelUsage: 10, numSeats: 5 },
   { type: "Electric", fuelUsage: 5, numSeats: 5 },
 ];

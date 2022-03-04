@@ -3,7 +3,7 @@ export const lightTheme = {
   darkButton: "#3975AE",
   lightButton: "#C0DAF0",
   buttonText: "#3D6890",
-  form: "#E2E2E2",
+  form: "#ebebeb",
   settings: "#808080",
 };
 
