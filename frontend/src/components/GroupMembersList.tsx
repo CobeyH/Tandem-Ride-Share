@@ -46,8 +46,7 @@ const GroupMembersList = (props: {
       <IconButton
         aria-label="group-members"
         icon={<Icon as={FaUserFriends} />}
-        w={6}
-        h={6}
+        size="sm"
         onClick={onOpen}
       >
         Open
