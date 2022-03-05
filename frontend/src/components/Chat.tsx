@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Container, Input, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
@@ -44,7 +44,7 @@ const ChatContents = (props: { contents: Message[] }) => {
   return (
     <VStack>
       {props.contents.map((m, i) => (
-        <Message key={i} message={m} />
+        <MessageComponent key={i} message={m} />
       ))}
     </VStack>
   );
@@ -95,7 +95,7 @@ const Chat = ({
   } else if (!chat) {
     if (dbLocation.chatType === "group") {
       makeEmptyGroupChat(dbLocation.id);
-    } else {
+    } else if (dbLocation.chatType === "ride") {
       makeEmptyRideChat(dbLocation.id);
     }
     return <Spinner />;
@@ -105,14 +105,16 @@ const Chat = ({
   }
 };
 
-const Message = ({
+const MessageComponent = ({
   message: { contents, sender_id },
 }: {
   message: Message;
 }) => {
   const [user, setUser] = useState<"loading" | User>("loading");
 
-  useCallback(() => getUser(sender_id).then(setUser), []);
+  useEffect(() => {
+    getUser(sender_id).then(setUser);
+  }, []);
 
   return (
     <Box>
