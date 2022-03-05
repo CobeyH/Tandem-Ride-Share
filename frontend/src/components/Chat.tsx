@@ -33,6 +33,7 @@ function ChatTextBox({
         onKeyDown={(e) => {
           if (e.key == "Enter") {
             addChat(e.currentTarget.value);
+            e.currentTarget.value = "";
           }
         }}
       />
