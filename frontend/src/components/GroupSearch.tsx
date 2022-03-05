@@ -12,6 +12,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -71,6 +72,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
                   return (
                     <HStack key={i} w="full">
                       <Heading size="sm">{publicGroup.name}</Heading>
+                      <Spacer />
                       <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );
