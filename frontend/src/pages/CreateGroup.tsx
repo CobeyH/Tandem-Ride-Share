@@ -9,7 +9,6 @@ import {
   HStack,
   Textarea,
   Checkbox,
-  Container,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
