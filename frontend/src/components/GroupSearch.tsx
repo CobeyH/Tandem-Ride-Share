@@ -1,17 +1,18 @@
 import * as React from "react";
 import {
-  Button,
   Heading,
   HStack,
+  IconButton,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -37,11 +38,16 @@ const GroupSearch = (props: { groups: Group[] }) => {
           value={search}
           _placeholder={{ color: "black" }}
           placeholder="Find Public Groups"
+          borderRadius={5}
         />
-        <InputLeftElement color={"black"}>
-          <GiMagnifyingGlass />
-        </InputLeftElement>
-        <Button onClick={onOpen}>Submit</Button>
+        <InputRightElement color={"black"}>
+          <IconButton
+            size="sm"
+            aria-label=""
+            icon={<GiMagnifyingGlass />}
+            onClick={onOpen}
+          />
+        </InputRightElement>
       </InputGroup>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -66,6 +72,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
                   return (
                     <HStack key={i} w="full">
                       <Heading size="sm">{publicGroup.name}</Heading>
+                      <Spacer />
                       <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );

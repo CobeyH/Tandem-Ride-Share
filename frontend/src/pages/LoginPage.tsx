@@ -1,22 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Heading,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Container,
-} from "@chakra-ui/react";
-import {
-  signInWithGoogle,
-  auth,
-  loginWithEmailAndPassword,
-} from "../firebase/firebase";
+import { Box, Heading, FormControl, Input, Container } from "@chakra-ui/react";
+import { auth, loginWithEmailAndPassword } from "../firebase/firebase";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
-import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { lightTheme } from "../theme/colours";
 import SignInRegister from "../components/SignInRegister";
@@ -56,22 +43,16 @@ export default function Login() {
       </Box>
       <Box>
         <FormControl mt={6} isRequired>
-          <FormLabel>E-mail Address</FormLabel>
           <Input
             type="email"
-            color="white"
-            _placeholder={{ color: "white" }}
-            placeholder="test@test.com"
+            placeholder="Email"
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
         <FormControl mt={6} isRequired>
-          <FormLabel>Password</FormLabel>
           <Input
             type="password"
-            color="white"
-            _placeholder={{ color: "white" }}
-            placeholder="*******"
+            placeholder="Password"
             onChange={(event) => setPassword(event.currentTarget.value)}
           />
         </FormControl>
@@ -79,14 +60,6 @@ export default function Login() {
           onClickSignIn={handleEmailLogin}
           state={location.state as LocationGotoState}
         />
-        <Button
-          leftIcon={<FaGoogle />}
-          width="full"
-          mt={4}
-          onClick={signInWithGoogle}
-        >
-          Sign In With Google
-        </Button>
       </Box>
     </Container>
   );

@@ -12,6 +12,7 @@ import {
   useClipboard,
   Input,
   Flex,
+  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
@@ -23,14 +24,15 @@ const ShareLink = () => {
   const url = window.location.href;
   return (
     <>
-      <ExternalLinkIcon
+      <IconButton
+        size="sm"
+        icon={<ExternalLinkIcon />}
         onClick={() => {
           setValue(url + "/join");
           onOpen();
         }}
-      >
-        Invite Friends
-      </ExternalLinkIcon>
+        aria-label="Share group"
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
