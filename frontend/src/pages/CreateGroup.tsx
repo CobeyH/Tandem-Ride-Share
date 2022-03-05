@@ -62,7 +62,7 @@ const CreateGroup = () => {
   const [{ field: name, invalid: invalidName }, setName] = useState<
     ValidatableFiled<string>
   >({
-    field: user ? user.displayName + "'s Group" : "",
+    field: user?.displayName ? user.displayName + "'s Group" : "",
     invalid: false,
   });
   const [description, setDescription] = useState("");

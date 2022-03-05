@@ -21,6 +21,7 @@ import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
 import GroupMembersList from "../components/GroupMembersList";
+import { GroupChat } from "../components/Chat";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -98,6 +99,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             New Ride
           </Button>
         </VStack>
+        <GroupChat groupId={group.id} />
       </Container>
     </>
   );
