@@ -10,12 +10,15 @@ import {
 import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
+import slugify from "slugify";
 
 const GROUPS = "groups";
 const USERS = "users";
 const RIDES = "rides";
 const PASSENGERS = "passengers";
 const ROUTES = "routes";
+const GROUP_CHATS = "chats/groups";
+const RIDE_CHATS = "chats/rides";
 const KEY_SLUG_OPTS = {
   replacement: "-",
   remove: undefined,
@@ -79,6 +82,12 @@ export type Route = {
   shape: LatLng[];
 };
 
+export type Message = {
+  sender_id: string;
+  contents: string;
+  timestamp: number;
+};
+
 export const getGroup = async (groupId: string) => {
   return new Promise<Group>((resolve, reject) => {
     get(ref(db, `${GROUPS}/${groupId}`)).then(
@@ -107,6 +116,45 @@ export const useGroup = (groupId: string) => {
 export const useGroups = () => {
   return useListVals<Group>(ref(db, GROUPS), { keyField: "id" });
 };
+
+export const useGroupChat = (groupId: string) => {
+  return useListVals<Message>(ref(db, `${GROUP_CHATS}/${groupId}`), {
+    keyField: "id",
+  });
+};
+
+export const useRideChat = (groupId: string) => {
+  return useListVals<Message>(ref(db, `${RIDE_CHATS}/${groupId}`), {
+    keyField: "id",
+  });
+};
+
+export const makeEmptyGroupChat = (groupId: string) => {
+  return set(ref(db, `${GROUP_CHATS}/${groupId}`), []);
+};
+
+export const makeEmptyRideChat = (groupId: string) => {
+  return set(ref(db, `${GROUP_CHATS}/${groupId}`), []);
+};
+
+const addChatToChat = (
+  chat_location: string,
+  message: Omit<Message, "timestamp">
+) =>
+  set(ref(db, `${chat_location}/${slugify(message.sender_id + Date.now())}`), {
+    ...message,
+    timestamp: Date.now(),
+  });
+
+export const addChatToGroupChat = (
+  groupId: string,
+  message: Omit<Message, "timestamp">
+) => addChatToChat(`${GROUP_CHATS}/${groupId}`, message);
+
+export const addChatToRideChat = (
+  rideId: string,
+  message: Omit<Message, "timestamp">
+) => addChatToChat(`${RIDE_CHATS}/${rideId}`, message);
 
 export const setGroup = async (group: Group) => {
   const { id, ...groupData } = group;

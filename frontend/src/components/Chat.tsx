@@ -1,133 +1,44 @@
-import React from "react";
-import { ref, set } from "firebase/database";
-import {
-  auth,
-  db,
-  DB_GROUP_CHAT_COLLECT,
-  DB_RIDE_CHAT_COLLECT,
-  DB_USER_COLLECT,
-  User,
-} from "../firebase";
-import {
-  Box,
-  Container,
-  Heading,
-  Input,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import { useList, useObjectVal } from "react-firebase-hooks/database";
-import slugify from "slugify";
-import { useAuthState } from "react-firebase-hooks/auth";
-
-type MessageTimestamp = number; // (new Date()).getTime()
-import { ref, set } from "firebase/database";
-import {
-  auth,
-  db,
-  DB_GROUP_CHAT_COLLECT,
-  DB_RIDE_CHAT_COLLECT,
-  DB_USER_COLLECT,
-  User,
-} from "../firebase";
+import React, { useCallback, useState } from "react";
 import { Box, Container, Input, Spinner, Text, VStack } from "@chakra-ui/react";
-import { useList, useObjectVal } from "react-firebase-hooks/database";
-import slugify from "slugify";
 import { useAuthState } from "react-firebase-hooks/auth";
-
-type MessageTimestamp = number;
-
-type Message = {
-  sender_id: string;
-  contents: string;
-  timestamp: MessageTimestamp;
-};
-
-const makeMessage = ({
-  sender_id,
-  contents,
-}: Omit<Message, "timestamp">): Message => ({
-  sender_id,
-  contents,
-  timestamp: Date.now(),
-});
+import {
+  getUser,
+  useGroupChat,
+  User,
+  Message,
+  useRideChat,
+  makeEmptyGroupChat,
+  makeEmptyRideChat,
+  addChatToGroupChat,
+  addChatToRideChat,
+} from "../firebase/database";
+import { auth } from "../firebase/firebase";
 
 export const GroupChat = ({ groupId }: { groupId: string }) => (
-  <Chat dbLocation={`${DB_GROUP_CHAT_COLLECT}/${groupId}`} />
+  <Chat dbLocation={{ chatType: "group", id: groupId }} />
 );
 
 export const RideChat = ({ rideId }: { rideId: string }) => (
-  <Chat dbLocation={`${DB_RIDE_CHAT_COLLECT}/${rideId}`} />
+  <Chat dbLocation={{ chatType: "ride", id: rideId }} />
 );
 
 function ChatTextBox({
-  dbLocation,
-  userId,
+  addChat,
 }: {
-  dbLocation: string;
-  userId: string;
+  addChat: (message: string) => Promise<void>;
 }) {
   return (
     <>
       <Input
         onKeyDown={(e) => {
           if (e.key == "Enter") {
-            set(
-              ref(
-                db,
-                `${dbLocation}/${slugify(e.currentTarget.value + Date.now())}`
-              ),
-              makeMessage({
-                sender_id: userId,
-                contents: e.currentTarget.value,
-              })
-            );
+            addChat(e.currentTarget.value);
           }
         }}
       />
     </>
   );
 }
-
-const Chat = (props: { dbLocation: string }) => {
-  const [chat, messagesLoading, messagesError] = useList(
-    ref(db, props.dbLocation)
-  );
-  console.log({ chat });
-
-  const [user, userLoading, userError] = useAuthState(auth);
-
-  if (messagesLoading || userLoading) {
-    return <Spinner />;
-  } else if (messagesError || userError) {
-    console.log(messagesError);
-    return <h1>{JSON.stringify(messagesError)}</h1>;
-  } else if (chat && user) {
-    return (
-      <Container p={4}>
-        {chat.length === 0 ? (
-          <Text>Nothing seems to be here, Say something!</Text>
-        ) : (
-          <ChatContents
-            contents={chat
-              .map((value) => value.val() as Message)
-              .sort(({ timestamp: fst }, { timestamp: snd }) => fst - snd)}
-          />
-        )}
-        <ChatTextBox dbLocation={props.dbLocation} userId={user.uid} />
-      </Container>
-    );
-  } else if (!chat) {
-    set(ref(db, props.dbLocation), []).then(() => {
-      console.log(`Created an empty chat at ${props.dbLocation}`);
-    });
-    return <Spinner />;
-  } else {
-    console.log("Error: NO USER");
-    return <h1>Error: NO USER</h1>;
-  }
-};
 
 const ChatContents = (props: { contents: Message[] }) => {
   return (
@@ -138,56 +49,16 @@ const ChatContents = (props: { contents: Message[] }) => {
     </VStack>
   );
 };
-const makeMessage = ({
-  sender_id,
-  contents,
-}: Omit<Message, "timestamp">): Message => ({
-  sender_id,
-  contents,
-  timestamp: Date.now(),
-});
 
-export const GroupChat = ({ groupId }: { groupId: string }) => (
-  <Chat dbLocation={`${DB_GROUP_CHAT_COLLECT}/${groupId}`} />
-);
-
-export const RideChat = ({ rideId }: { rideId: string }) => (
-  <Chat dbLocation={`${DB_RIDE_CHAT_COLLECT}/${rideId}`} />
-);
-
-function ChatTextBox({
+const Chat = ({
   dbLocation,
-  userId,
 }: {
-  dbLocation: string;
-  userId: string;
-}) {
-  return (
-    <>
-      <Input
-        placeholder={"send a message . . ."}
-        onKeyDown={(e) => {
-          if (e.key == "Enter") {
-            set(
-              ref(
-                db,
-                `${dbLocation}/${slugify(e.currentTarget.value + Date.now())}`
-              ),
-              makeMessage({
-                sender_id: userId,
-                contents: e.currentTarget.value,
-              })
-            );
-            e.currentTarget.value = "";
-          }
-        }}
-      />
-    </>
-  );
-}
-
-const Chat = ({ dbLocation }: { dbLocation: string }) => {
-  const [chat, messagesLoading, messagesError] = useList(ref(db, dbLocation));
+  dbLocation: { chatType: "ride" | "group"; id: string };
+}) => {
+  const [chat, messagesLoading, messagesError] =
+    dbLocation.chatType === "group"
+      ? useGroupChat(dbLocation.id)
+      : useRideChat(dbLocation.id);
 
   const [user, userLoading, userError] = useAuthState(auth);
 
@@ -203,18 +74,30 @@ const Chat = ({ dbLocation }: { dbLocation: string }) => {
           <Text>Nothing seems to be here, Say something!</Text>
         ) : (
           <ChatContents
-            contents={[
-              ...Array.from(new Set(chat.map((v) => v.val() as Message))),
-            ].sort((fst, snd) => fst.timestamp - snd.timestamp)}
+            contents={[...Array.from(new Set(chat))].sort(
+              (fst, snd) => fst.timestamp - snd.timestamp
+            )}
           />
         )}
-        <ChatTextBox dbLocation={dbLocation} userId={user.uid} />
+        <ChatTextBox
+          addChat={(contents) => {
+            const message = {
+              contents,
+              sender_id: user?.uid,
+            };
+            return dbLocation.chatType === "group"
+              ? addChatToGroupChat(dbLocation.id, message)
+              : addChatToRideChat(dbLocation.id, message);
+          }}
+        />
       </Container>
     );
   } else if (!chat) {
-    set(ref(db, dbLocation), []).then(() => {
-      console.log(`Created an empty chat at ${dbLocation}`);
-    });
+    if (dbLocation.chatType === "group") {
+      makeEmptyGroupChat(dbLocation.id);
+    } else {
+      makeEmptyRideChat(dbLocation.id);
+    }
     return <Spinner />;
   } else {
     console.log("Error: NO USER");
@@ -222,26 +105,18 @@ const Chat = ({ dbLocation }: { dbLocation: string }) => {
   }
 };
 
-const ChatContents = ({ contents }: { contents: Message[] }) => (
-  <VStack>
-    {contents.map((message, i) => (
-      <Message key={i} message={message} />
-    ))}
-  </VStack>
-);
-
 const Message = ({
   message: { contents, sender_id },
 }: {
   message: Message;
 }) => {
-  const [user, userLoading, userError] = useObjectVal<User>(
-    ref(db, `${DB_USER_COLLECT}/${sender_id}`) // this seems terribly inefficient, but I don't see a reasonable way around it.
-  );
+  const [user, setUser] = useState<"loading" | User>("loading");
+
+  useCallback(() => getUser(sender_id).then(setUser), []);
 
   return (
     <Box>
-      {userLoading || userError ? null : (
+      {user === "loading" ? null : (
         <Text>
           {user?.name ?? sender_id}: {contents}
         </Text>
