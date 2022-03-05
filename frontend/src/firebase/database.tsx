@@ -10,6 +10,7 @@ import {
 import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
+import slugify from "slugify";
 
 const GROUPS = "groups";
 const USERS = "users";
