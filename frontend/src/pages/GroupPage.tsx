@@ -22,6 +22,7 @@ import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
 import GroupMembersList from "../components/GroupMembersList";
 import { GroupChat } from "../components/Chat";
+import GroupSettings from "../components/GroupSettings";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <Heading textAlign={"center"}>{group.name}</Heading>
             <ShareLink />
             <GroupMembersList members={group.members} ownerId={group.owner} />
+            <GroupSettings group={group} />
           </HStack>
           <Box bg="white" px={5} py={5} borderRadius={"4px"}>
             <Text> Description: </Text>
