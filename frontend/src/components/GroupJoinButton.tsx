@@ -10,6 +10,10 @@ const GroupJoinButton = (props: {
   const navigate = useNavigate();
   return (
     <Button
+      isDisabled={
+        // People cannot join full groups
+        Object.keys(props.group.members).length >= props.group.maxSize
+      }
       onClick={() => {
         if (props.userId === undefined) return;
         setGroupMember(props.group.id, props.userId).then(() => {
