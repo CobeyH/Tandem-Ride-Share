@@ -22,6 +22,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 import { useState } from "react";
 import { Group } from "../firebase/database";
+import GroupCapacity from "./GroupCapacity";
 
 const GroupSearch = (props: { groups: Group[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,6 +74,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
                     <HStack key={i} w="full">
                       <Heading size="sm">{publicGroup.name}</Heading>
                       <Spacer />
+                      <GroupCapacity group={publicGroup} />
                       <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );
