@@ -74,7 +74,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           <HStack>
             <Heading textAlign={"center"}>{group.name}</Heading>
             <ShareLink />
-            <GroupMembersList members={group.members} ownerId={group.owner} />
+            <GroupMembersList
+              members={group.members}
+              ownerId={group.owner}
+              maxSize={group.maxSize}
+            />
             <GroupSettings group={group} />
           </HStack>
           <Box bg="white" px={5} py={5} borderRadius={"4px"}>
