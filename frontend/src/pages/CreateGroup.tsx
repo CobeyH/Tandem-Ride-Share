@@ -137,6 +137,7 @@ const CreateGroup = () => {
                     rides: {},
                     members: {},
                     owner: user?.uid,
+                    maxSize,
                   },
                   user.uid
                 ).then((group) => {
