@@ -113,10 +113,11 @@ const CreateGroup = () => {
               isInvalid={invalidName}
             />
           </HStack>
-          <HStack>
-            <Text mb={"8px"}>Group Size:</Text>
-            <GroupSizeSlider setSize={setSize} maxSize={maxSize} />
-          </HStack>
+          <GroupSizeSlider
+            setSize={setSize}
+            isPrivate={isPrivate}
+            maxSize={maxSize}
+          />
           <HStack>
             <Text mb={"8px"}>Private Group:</Text>
             <Checkbox
