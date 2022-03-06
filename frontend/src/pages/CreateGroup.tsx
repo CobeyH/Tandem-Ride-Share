@@ -25,6 +25,7 @@ import Header from "../components/Header";
 import DropZone, { storage } from "../firebase/storage";
 import { uploadBytes } from "firebase/storage";
 import { ref as storRef } from "firebase/storage";
+import GroupSizeSlider from "../components/GroupSizeSlider";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -67,6 +68,7 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
+  const [maxSize, setSize] = useState<number>(10);
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
@@ -110,6 +112,10 @@ const CreateGroup = () => {
               onInput={(e) => setDescription(e.currentTarget.value)}
               isInvalid={invalidName}
             />
+          </HStack>
+          <HStack>
+            <Text mb={"8px"}>Group Size:</Text>
+            <GroupSizeSlider setSize={setSize} maxSize={maxSize} />
           </HStack>
           <HStack>
             <Text mb={"8px"}>Private Group:</Text>
