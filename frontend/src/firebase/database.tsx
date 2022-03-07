@@ -74,12 +74,18 @@ export type Ride = {
   carId?: string;
   startDate: string;
   endDate: string;
+  pickupPoints: { [key: string]: PickupPoint };
 };
 
 export type Route = {
   distance: number;
   fuelUsed: number;
   shape: LatLng[];
+};
+
+export type PickupPoint = {
+  location: { lat: number; lng: number };
+  members: { [key: string]: boolean };
 };
 
 export type Message = {
