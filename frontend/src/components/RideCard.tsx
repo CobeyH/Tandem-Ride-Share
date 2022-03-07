@@ -33,7 +33,7 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
-import PickupPoint from "./PickupPoint";
+import PickupMarkers from "./PickupMarkers";
 
 export default function RideCard({
   rideId,
@@ -133,6 +133,7 @@ export default function RideCard({
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
                 {endMarker}
+                <PickupMarkers pickups={ride?.pickupPoints} />
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
@@ -141,7 +142,6 @@ export default function RideCard({
                 <CompleteRideButton rideId={rideId} />
               )}
             </Flex>
-            <PickupPoint />
             <GasCalculator
               fuelUsage={car?.fuelUsage}
               distance={route?.distance}
