@@ -12,6 +12,12 @@ const PickupMarkers = (props: {
     return null;
   }
 
+  // const [pickupMembers, setPickupMembers] = useState();
+  // const userPromises = Object.keys(props.p).map((userId) => {
+  //   return getUser(userId);
+  // });
+  // Promise.all(userPromises).then((users) => setGroupMembers(users));
+
   return (
     <>
       {Object.entries(props.pickups).map(([key, point]) => {
@@ -19,21 +25,39 @@ const PickupMarkers = (props: {
           return;
         }
         return (
-          <Marker key={key} position={point.location}>
-            <Popup>
-              <Button
-                onClick={() => {
-                  console.log("Test");
-                  setUserInPickup(props.rideId, key, props.userId ?? "");
-                }}
-              >
-                Join
-              </Button>
-            </Popup>
-          </Marker>
+          <PickupMarker
+            key={key}
+            pickupId={key}
+            point={point}
+            rideId={props.rideId}
+            userId={props.userId}
+          />
         );
       })}
     </>
+  );
+};
+
+const PickupMarker = (props: {
+  pickupId: string;
+  point: {
+    location: { lat: number; lng: number };
+  };
+  rideId: string;
+  userId: string | undefined;
+}) => {
+  return (
+    <Marker position={props.point.location}>
+      <Popup onOpen={() => console.log("test 1")}>
+        <Button
+          onClick={() => {
+            setUserInPickup(props.rideId, props.pickupId, props.userId ?? "");
+          }}
+        >
+          Join
+        </Button>
+      </Popup>
+    </Marker>
   );
 };
 
