@@ -6,6 +6,7 @@ import {
   Collapse,
   Flex,
   Heading,
+  HStack,
   Icon,
   Spacer,
   Text,
@@ -34,6 +35,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
+import AddPickupPoint from "./AddPickupPoint";
 
 export default function RideCard({
   rideId,
@@ -166,14 +168,17 @@ function PassengerButton({
   const [amPassenger, loading, error] = useRidePassenger(rideId, userId);
   const amDriver = userId === driver;
   return amDriver ? null : (
-    <Button
-      disabled={loading || error !== undefined}
-      onClick={() => {
-        setRidePassenger(userId, rideId, !amPassenger);
-      }}
-    >
-      {amPassenger ? "Leave" : "Join"}
-    </Button>
+    <HStack>
+      <AddPickupPoint />
+      <Button
+        disabled={loading || error !== undefined}
+        onClick={() => {
+          setRidePassenger(userId, rideId, !amPassenger);
+        }}
+      >
+        {amPassenger ? "Leave" : "Join"}
+      </Button>
+    </HStack>
   );
 }
 

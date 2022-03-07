@@ -13,7 +13,7 @@ const PickupMarkers = (props: {
   return (
     <>
       {Object.entries(props.pickups).map(([key, point]) => {
-        if (!point.location || !point.members) {
+        if (!point.location) {
           return;
         }
         return (
