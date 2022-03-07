@@ -1,6 +1,7 @@
 import {
   useDisclosure,
   Button,
+  Box,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -12,11 +13,17 @@ import {
   Icon,
   DrawerHeader,
   Divider,
+  HStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { GroupChat } from "./Chat";
 import GroupMembersList from "./GroupMembersList";
+
+enum mode {
+  Chat,
+  Members,
+}
 
 const GroupDrawer = (props: {
   members: { [key: string]: boolean };
@@ -25,6 +32,28 @@ const GroupDrawer = (props: {
   groupId: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [currMode, setCurrMode] = useState<mode>(mode.Chat);
+
+  const renderMode = () => {
+    switch (currMode) {
+      case mode.Chat:
+        return (
+          <>
+            <Heading>Group Chat</Heading>
+            <GroupChat groupId={props.groupId} />;
+          </>
+        );
+      case mode.Members:
+        return (
+          <>
+            <Heading>Group Members</Heading>
+            <GroupMembersList {...props} isOpen={isOpen} />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -40,14 +69,19 @@ const GroupDrawer = (props: {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Group Members</DrawerHeader>
+          <DrawerHeader>
+            <HStack>
+              <Box as="button" onClick={() => setCurrMode(mode.Chat)}>
+                Group Chat
+              </Box>
+              <Divider orientation="vertical" />
+              <Box as="button" onClick={() => setCurrMode(mode.Members)}>
+                Members
+              </Box>
+            </HStack>
+          </DrawerHeader>
 
-          <DrawerBody>
-            <GroupMembersList {...props} isOpen={isOpen} />
-            <Divider />
-            <Heading>Group Chat</Heading>
-            <GroupChat groupId={props.groupId} />
-          </DrawerBody>
+          <DrawerBody>{renderMode()}</DrawerBody>
 
           <DrawerFooter>
             <Button variant="outline" mr={3} onClick={onClose}>
