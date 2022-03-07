@@ -4,7 +4,6 @@ import {
   Container,
   Flex,
   Input,
-  propNames,
   Spinner,
   Text,
   VStack,
