@@ -62,11 +62,7 @@ const PickupMarker = (props: {
     props.userId && props.memberIds ? props.memberIds[props.userId] : false;
   return (
     <Marker position={props.point.location}>
-      <Popup
-        onOpen={() => {
-          setOpen(true);
-        }}
-      >
+      <Popup onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
         {members?.map((member: User, i: number) => (
           <Heading size={"sm"} key={i}>
             {member.name}
