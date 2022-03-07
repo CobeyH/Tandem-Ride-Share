@@ -25,6 +25,7 @@ import Header from "../components/Header";
 import DropZone, { storage } from "../firebase/storage";
 import { uploadBytes } from "firebase/storage";
 import { ref as storRef } from "firebase/storage";
+import GroupSizeSlider from "../components/GroupSizeSlider";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -67,6 +68,7 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
+  const [maxSize, setSize] = useState<number>(10);
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
@@ -111,6 +113,11 @@ const CreateGroup = () => {
               isInvalid={invalidName}
             />
           </HStack>
+          <GroupSizeSlider
+            setSize={setSize}
+            isPrivate={isPrivate}
+            maxSize={maxSize}
+          />
           <HStack>
             <Text mb={"8px"}>Private Group:</Text>
             <Checkbox
@@ -130,6 +137,7 @@ const CreateGroup = () => {
                     rides: {},
                     members: {},
                     owner: user?.uid,
+                    maxSize,
                   },
                   user.uid
                 ).then((group) => {

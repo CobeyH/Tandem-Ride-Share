@@ -12,6 +12,8 @@ import {
   Icon,
   Badge,
   HStack,
+  DrawerHeader,
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -21,6 +23,7 @@ import { getUser, User } from "../firebase/database";
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
   ownerId: string | undefined;
+  maxSize: number;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupMembers, setGroupMembers] = useState<User[]>();
@@ -50,6 +53,10 @@ const GroupMembersList = (props: {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
+          <DrawerHeader>Group Members</DrawerHeader>
+          <Text pl={5}>
+            {Object.keys(props.members).length} / {props.maxSize}
+          </Text>
 
           <DrawerBody>
             {groupMembers?.map((user: User, i) => (

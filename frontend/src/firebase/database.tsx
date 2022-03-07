@@ -45,6 +45,7 @@ export type Group = {
   rides: { [key: string]: boolean };
   members: { [key: string]: boolean };
   owner: string;
+  maxSize: number;
   banner?: string;
 };
 
