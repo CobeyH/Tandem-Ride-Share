@@ -4,20 +4,62 @@ import { Route } from "./firebase/database";
 /**
  * MapQuest Open Directions API functions and components.
  */
-const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/route";
+const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/";
+const MQ_ROUTE_ENDPOINT = "route";
+const MQ_OPTIMIZED_ENDPOINT = "optimizedroute";
 
 export const getRideRoute = async (start: LatLng, end: LatLng) => {
   return new Promise<Route>((resolve, reject) => {
     /**
-     * Here we are making the first API call to the Directions API Route
-     * endpoint. Then we compose the reponse to JSON, then use the result
-     * to make a second call to the RouteShape enpoint which only accepts
-     * a sessionId.
+     * Here we are making the API call to the Directions API Route
+     * endpoint, then we compose the reponse to JSON.
      */
     fetch(
-      `${MQ_DIR_URI}?key=${process.env.REACT_APP_MQ_KEY}` +
+      `${MQ_DIR_URI + MQ_ROUTE_ENDPOINT}?key=${process.env.REACT_APP_MQ_KEY}` +
         `&from=${start.lat},${start.lng}&to=${end.lat},${end.lng}` +
         `&unit=k&fullShape=true`
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          const route: Route = {
+            distance: result.route.distance,
+            fuelUsed: result.route.fuelUsed,
+            shape: arrayToLatLngs(result.route.shape.shapePoints),
+          };
+          resolve(route);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+  });
+};
+
+export const getOptimizedRoute = async (points: LatLng[]) => {
+  const data = { locations: points };
+
+  return new Promise<Route>((resolve, reject) => {
+    /**
+     * Here we are making the API call to the Directions API Optimized
+     * Route endpoint, then we compose the reponse to JSON.
+     */
+    fetch(
+      MQ_DIR_URI +
+        MQ_OPTIMIZED_ENDPOINT +
+        "?" +
+        new URLSearchParams({
+          key: `${process.env.REACT_APP_MQ_KEY}`,
+          unit: "k",
+          fullShape: "true",
+        }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
     )
       .then((res) => res.json())
       .then(
