@@ -1,7 +1,13 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import { Marker, Popup } from "react-leaflet";
 import * as React from "react";
-import { PickupPoint, setUserInPickup } from "../firebase/database";
+import {
+  getUser,
+  PickupPoint,
+  setUserInPickup,
+  User,
+} from "../firebase/database";
+import { useEffect, useState } from "react";
 
 const PickupMarkers = (props: {
   userId: string | undefined;
@@ -11,12 +17,6 @@ const PickupMarkers = (props: {
   if (!props.pickups || !props.userId) {
     return null;
   }
-
-  // const [pickupMembers, setPickupMembers] = useState();
-  // const userPromises = Object.keys(props.p).map((userId) => {
-  //   return getUser(userId);
-  // });
-  // Promise.all(userPromises).then((users) => setGroupMembers(users));
 
   return (
     <>
@@ -31,6 +31,7 @@ const PickupMarkers = (props: {
             point={point}
             rideId={props.rideId}
             userId={props.userId}
+            memberIds={point.members}
           />
         );
       })}
@@ -45,10 +46,30 @@ const PickupMarker = (props: {
   };
   rideId: string;
   userId: string | undefined;
+  memberIds: { [key: string]: boolean };
 }) => {
+  const [members, setMembers] = useState<User[]>();
+  const [open, setOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const userPromises = Object.keys(props.memberIds).map((userId) => {
+      return getUser(userId);
+    });
+    Promise.all(userPromises).then((users) => setMembers(users));
+  }, [open]);
+
   return (
     <Marker position={props.point.location}>
-      <Popup onOpen={() => console.log("test 1")}>
+      <Popup
+        onOpen={() => {
+          setOpen(true);
+        }}
+      >
+        {members?.map((member: User, i: number) => (
+          <Heading size={"sm"} key={i}>
+            {member.name}
+          </Heading>
+        ))}
         <Button
           onClick={() => {
             setUserInPickup(props.rideId, props.pickupId, props.userId ?? "");
