@@ -1,12 +1,14 @@
 import { Button } from "@chakra-ui/react";
 import { Marker, Popup } from "react-leaflet";
 import * as React from "react";
-import { PickupPoint } from "../firebase/database";
+import { PickupPoint, setUserInPickup } from "../firebase/database";
 
 const PickupMarkers = (props: {
+  userId: string | undefined;
+  rideId: string;
   pickups: { [key: string]: PickupPoint } | undefined;
 }) => {
-  if (!props.pickups) {
+  if (!props.pickups || !props.userId) {
     return null;
   }
 
@@ -19,7 +21,13 @@ const PickupMarkers = (props: {
         return (
           <Marker key={key} position={point.location}>
             <Popup>
-              <Button>Join</Button>
+              <Button
+                onClick={() => {
+                  setUserInPickup(props.rideId, key, props.userId!);
+                }}
+              >
+                Join
+              </Button>
             </Popup>
           </Marker>
         );

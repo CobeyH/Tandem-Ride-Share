@@ -135,7 +135,11 @@ export default function RideCard({
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {startMarker}
                 {endMarker}
-                <PickupMarkers pickups={ride?.pickupPoints} />
+                <PickupMarkers
+                  pickups={ride?.pickupPoints}
+                  rideId={rideId}
+                  userId={user?.uid}
+                />
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>

@@ -163,8 +163,20 @@ export const addChatToRideChat = (
 ) => addChatToChat(`${RIDE_CHATS}/${rideId}`, message);
 
 export const addPickupToRide = (rideId: string, pickup: PickupPoint) => {
-  console.log(`${RIDES}/${rideId}/pickupPoints`);
   push(ref(db, `${RIDES}/${rideId}/pickupPoints`), pickup);
+};
+
+export const setUserInPickup = (
+  rideId: string,
+  pickupId: string,
+  userId: string,
+  isPassenger = true
+) => {
+  if (rideId && pickupId)
+    set(
+      ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/${userId}`),
+      isPassenger ? true : null
+    );
 };
 
 export const setGroup = async (group: Group) => {
