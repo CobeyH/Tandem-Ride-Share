@@ -4,6 +4,7 @@ import {
   Container,
   Flex,
   Input,
+  propNames,
   Spinner,
   Text,
   VStack,
@@ -51,12 +52,22 @@ function ChatTextBox({
 }
 
 const ChatContents = (props: { contents: Message[]; userId: string }) => {
+  let prevSender = "";
   return (
     <VStack spacing={2}>
       <Flex flexDir="column">
-        {props.contents.map((m, i) => (
-          <MessageComponent userId={props.userId} key={i} message={m} />
-        ))}
+        {props.contents.map((m, i) => {
+          const component = (
+            <MessageComponent
+              userId={props.userId}
+              key={i}
+              message={m}
+              prevSender={prevSender}
+            />
+          );
+          prevSender = m.sender_id;
+          return component;
+        })}
       </Flex>
     </VStack>
   );
@@ -121,9 +132,11 @@ const Chat = ({
 const MessageComponent = ({
   message: { contents, sender_id },
   userId,
+  prevSender,
 }: {
   message: Message;
   userId: string;
+  prevSender: string;
 }) => {
   const [sender, setSender] = useState<"loading" | User>("loading");
 
@@ -133,10 +146,12 @@ const MessageComponent = ({
 
   const amSender = sender_id === userId;
   return sender === "loading" ? null : (
-    <Box>
-      <Text pt={3} textAlign={amSender ? "right" : "left"}>
-        {sender?.name ?? sender_id}
-      </Text>
+    <Box pt={1}>
+      {sender_id !== prevSender ? (
+        <Text pt={3} textAlign={amSender ? "right" : "left"}>
+          {sender?.name ?? sender_id}
+        </Text>
+      ) : null}
       <Text
         p={2}
         borderRadius={7}
