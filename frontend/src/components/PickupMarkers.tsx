@@ -23,7 +23,8 @@ const PickupMarkers = (props: {
             <Popup>
               <Button
                 onClick={() => {
-                  setUserInPickup(props.rideId, key, props.userId!);
+                  console.log("Test");
+                  setUserInPickup(props.rideId, key, props.userId ?? "");
                 }}
               >
                 Join
