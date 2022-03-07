@@ -162,6 +162,11 @@ export const addChatToRideChat = (
   message: Omit<Message, "timestamp">
 ) => addChatToChat(`${RIDE_CHATS}/${rideId}`, message);
 
+export const addPickupToRide = (rideId: string, pickup: PickupPoint) => {
+  console.log(`${RIDES}/${rideId}/pickupPoints`);
+  push(ref(db, `${RIDES}/${rideId}/pickupPoints`), pickup);
+};
+
 export const setGroup = async (group: Group) => {
   const { id, ...groupData } = group;
   if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);

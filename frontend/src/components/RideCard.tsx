@@ -169,7 +169,7 @@ function PassengerButton({
   const amDriver = userId === driver;
   return amDriver ? null : (
     <HStack>
-      <AddPickupPoint />
+      <AddPickupPoint userId={userId} rideId={rideId} />
       <Button
         disabled={loading || error !== undefined}
         onClick={() => {
