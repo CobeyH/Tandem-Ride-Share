@@ -174,9 +174,10 @@ export const setUserInPickup = (
 ) => {
   if (rideId && pickupId)
     set(
-      ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/${userId}`),
+      ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
       isPassenger ? true : null
     );
+  setRidePassenger(userId, rideId, isPassenger);
 };
 
 export const setGroup = async (group: Group) => {
