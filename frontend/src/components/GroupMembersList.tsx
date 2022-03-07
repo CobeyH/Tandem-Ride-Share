@@ -14,16 +14,19 @@ import {
   HStack,
   DrawerHeader,
   Text,
+  Divider,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { getUser, User } from "../firebase/database";
+import { GroupChat } from "./Chat";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };
   ownerId: string | undefined;
   maxSize: number;
+  groupId: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupMembers, setGroupMembers] = useState<User[]>();
@@ -67,6 +70,9 @@ const GroupMembersList = (props: {
                 ) : null}
               </HStack>
             ))}
+            <Divider />
+            <Heading>Group Chat</Heading>
+            <GroupChat groupId={props.groupId} />
           </DrawerBody>
 
           <DrawerFooter>

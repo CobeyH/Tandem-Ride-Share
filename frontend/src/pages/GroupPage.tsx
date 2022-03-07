@@ -21,7 +21,6 @@ import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
 import GroupMembersList from "../components/GroupMembersList";
-import { GroupChat } from "../components/Chat";
 import GroupSettings from "../components/GroupSettings";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -81,6 +80,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               members={group.members}
               ownerId={group.owner}
               maxSize={group.maxSize}
+              groupId={group.id}
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}
           </HStack>
@@ -108,7 +108,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             New Ride
           </Button>
         </VStack>
-        <GroupChat groupId={group.id} />
       </Container>
     </>
   );
