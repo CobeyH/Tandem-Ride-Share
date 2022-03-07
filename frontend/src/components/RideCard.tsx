@@ -33,6 +33,7 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
+import PickupPoint from "./PickupPoint";
 
 export default function RideCard({
   rideId,
@@ -140,6 +141,7 @@ export default function RideCard({
                 <CompleteRideButton rideId={rideId} />
               )}
             </Flex>
+            <PickupPoint />
             <GasCalculator
               fuelUsage={car?.fuelUsage}
               distance={route?.distance}

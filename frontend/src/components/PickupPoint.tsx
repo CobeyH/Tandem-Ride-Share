@@ -15,7 +15,12 @@ const PickupPoint = () => {
   return (
     <Popover>
       <PopoverTrigger>
-        <IconButton aria-label="pickup-point" as={RiMapPin2Fill} />
+        <IconButton
+          aria-label="pickup-point"
+          icon={<RiMapPin2Fill />}
+          variant="ghost"
+          w="fit-content"
+        />
       </PopoverTrigger>
       <PopoverContent>
         <PopoverArrow />
