@@ -57,7 +57,7 @@ const PickupMarker = (props: {
     });
     Promise.all(userPromises).then((users) => setMembers(users));
   }, [open]);
-
+  const inPickup = props.userId ? props.memberIds[props.userId] : false;
   return (
     <Marker position={props.point.location}>
       <Popup
@@ -72,10 +72,15 @@ const PickupMarker = (props: {
         ))}
         <Button
           onClick={() => {
-            setUserInPickup(props.rideId, props.pickupId, props.userId ?? "");
+            setUserInPickup(
+              props.rideId,
+              props.pickupId,
+              props.userId ?? "",
+              !inPickup
+            );
           }}
         >
-          Join
+          {inPickup ? "Leave" : "Join"}
         </Button>
       </Popup>
     </Marker>
