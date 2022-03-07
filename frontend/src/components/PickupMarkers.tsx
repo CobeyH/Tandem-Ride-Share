@@ -52,12 +52,14 @@ const PickupMarker = (props: {
   const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!props.memberIds) return;
     const userPromises = Object.keys(props.memberIds).map((userId) => {
       return getUser(userId);
     });
     Promise.all(userPromises).then((users) => setMembers(users));
   }, [open]);
-  const inPickup = props.userId ? props.memberIds[props.userId] : false;
+  const inPickup =
+    props.userId && props.memberIds ? props.memberIds[props.userId] : false;
   return (
     <Marker position={props.point.location}>
       <Popup
