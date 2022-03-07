@@ -74,7 +74,7 @@ export type Ride = {
   carId?: string;
   startDate: string;
   endDate: string;
-  pickupPoints: { [key: string]: PickupPoint };
+  pickupPoints?: { [key: string]: PickupPoint };
 };
 
 export type Route = {
