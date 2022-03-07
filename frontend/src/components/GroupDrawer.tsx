@@ -8,7 +8,6 @@ import {
   DrawerCloseButton,
   DrawerBody,
   DrawerFooter,
-  Heading,
   IconButton,
   Icon,
   DrawerHeader,

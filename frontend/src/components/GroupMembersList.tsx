@@ -24,9 +24,6 @@ const GroupMembersList = (props: {
 
   return (
     <>
-      <Text pl={5}>
-        {Object.keys(props.members).length} / {props.maxSize}
-      </Text>
       {groupMembers?.map((user: User, i) => (
         <HStack key={i}>
           <Heading size="md">{user?.name}</Heading>
@@ -35,6 +32,9 @@ const GroupMembersList = (props: {
           ) : null}
         </HStack>
       ))}
+      <Text pl={5} align="right">
+        {Object.keys(props.members).length} / {props.maxSize}
+      </Text>
     </>
   );
 };
