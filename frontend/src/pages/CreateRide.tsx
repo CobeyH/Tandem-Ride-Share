@@ -58,7 +58,10 @@ const createRide = async (
 };
 
 const createRoute = async (rideId: string, ride: Ride) => {
-  const route = await getRideRoute(ride.start as LatLng, ride.end as LatLng);
+  const route = await getRideRoute(
+    ride.pickupPoints[ride.start].location as LatLng,
+    ride.end as LatLng
+  );
   if (route) setRoute(rideId, route);
   return route;
 };
@@ -151,14 +154,21 @@ const CreateRide = () => {
             disabled={!hasDragged}
             onClick={() => {
               if (groupId && user) {
+                const userId = user.uid;
                 const ride = {
                   id: "",
                   name: title,
-                  start: startPosition,
+                  start: "start",
                   end: endPosition,
                   maxPassengers: selectedCar?.numSeats || 4,
                   startDate,
                   isComplete: false,
+                  pickupPoints: {
+                    start: {
+                      location: startPosition,
+                      members: { [userId]: true },
+                    },
+                  },
                   endDate,
                   ...(isDriver && { driver: user.uid }),
                   ...(selectedCar !== undefined && {

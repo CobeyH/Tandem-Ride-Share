@@ -67,14 +67,14 @@ export type User = {
 export type Ride = {
   id?: string;
   name: string;
-  start: { lat: number; lng: number };
+  start: string;
   end: { lat: number; lng: number };
   driver?: string;
   isComplete: boolean;
   carId?: string;
   startDate: string;
   endDate: string;
-  pickupPoints?: { [key: string]: PickupPoint };
+  pickupPoints: { [key: string]: PickupPoint };
 };
 
 export type Route = {
@@ -163,7 +163,7 @@ export const addChatToRideChat = (
 ) => addChatToChat(`${RIDE_CHATS}/${rideId}`, message);
 
 export const addPickupToRide = (rideId: string, pickup: PickupPoint) => {
-  push(ref(db, `${RIDES}/${rideId}/pickupPoints`), pickup);
+  return push(ref(db, `${RIDES}/${rideId}/pickupPoints`), pickup);
 };
 
 export const setUserInPickup = (

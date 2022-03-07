@@ -15,7 +15,7 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import MapView, { endIcon, findMidpoint, startIcon } from "./MapView";
+import MapView, { endIcon, findMidpoint } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
 import { auth } from "../firebase/firebase";
@@ -53,10 +53,10 @@ export default function RideCard({
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
 
-  let center, startMarker, endMarker;
+  let center, endMarker, startLocation: LatLng;
   if (ride !== undefined) {
-    center = findMidpoint(ride.start as LatLng, ride.end as LatLng);
-    startMarker = <Marker position={ride.start} icon={startIcon} />;
+    startLocation = ride.pickupPoints[ride.start].location as LatLng;
+    center = findMidpoint(startLocation, ride.end as LatLng);
     endMarker = <Marker position={ride.end} icon={endIcon} />;
   }
 
@@ -93,7 +93,7 @@ export default function RideCard({
                 map.fitBounds(
                   latLngBounds([
                     latLng(ride.end.lat, ride.end.lng),
-                    latLng(ride.start.lat, ride.start.lng),
+                    startLocation,
                   ]).pad(0.1)
                 );
               }
@@ -133,7 +133,6 @@ export default function RideCard({
             ) : null}
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
-                {startMarker}
                 {endMarker}
                 <PickupMarkers
                   pickups={ride?.pickupPoints}
