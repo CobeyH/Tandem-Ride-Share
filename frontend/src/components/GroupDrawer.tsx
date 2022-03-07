@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
+import { lightTheme } from "../theme/colours";
 import { GroupChat } from "./Chat";
 import GroupMembersList from "./GroupMembersList";
 
@@ -37,19 +38,9 @@ const GroupDrawer = (props: {
   const renderMode = () => {
     switch (currMode) {
       case mode.Chat:
-        return (
-          <>
-            <Heading>Group Chat</Heading>
-            <GroupChat groupId={props.groupId} />;
-          </>
-        );
+        return <GroupChat groupId={props.groupId} />;
       case mode.Members:
-        return (
-          <>
-            <Heading>Group Members</Heading>
-            <GroupMembersList {...props} isOpen={isOpen} />
-          </>
-        );
+        return <GroupMembersList {...props} isOpen={isOpen} />;
       default:
         return null;
     }
@@ -70,12 +61,26 @@ const GroupDrawer = (props: {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>
-            <HStack>
-              <Box as="button" onClick={() => setCurrMode(mode.Chat)}>
+            <HStack pt={5}>
+              <Box
+                w="50%"
+                borderRadius={5}
+                as="button"
+                bg={currMode === mode.Chat ? lightTheme.lightButton : "white"}
+                onClick={() => setCurrMode(mode.Chat)}
+              >
                 Group Chat
               </Box>
               <Divider orientation="vertical" />
-              <Box as="button" onClick={() => setCurrMode(mode.Members)}>
+              <Box
+                w="50%"
+                borderRadius={5}
+                bg={
+                  currMode === mode.Members ? lightTheme.lightButton : "white"
+                }
+                as="button"
+                onClick={() => setCurrMode(mode.Members)}
+              >
                 Members
               </Box>
             </HStack>
