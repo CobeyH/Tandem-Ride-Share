@@ -1,5 +1,7 @@
+import { Flex, Text } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { lightTheme } from "../theme/colours";
 
 const FileDropzone = (props: {
   parentCallback: (banner: Blob | MediaSource) => void;
@@ -14,16 +16,25 @@ const FileDropzone = (props: {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
   return (
-    <div {...getRootProps()}>
+    <Flex
+      justify="center"
+      align="center"
+      textAlign="center"
+      m={2}
+      p={5}
+      borderColor="black"
+      borderWidth={1}
+      borderRadius={5}
+      {...getRootProps()}
+    >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p>Drop the file here ...</p>
+        <Text>Drop the files here...</Text>
       ) : (
-        <p>Drag and drop a banner image here, or click to select a file</p>
+        <Text>Drag files here, or click to select files</Text>
       )}
-    </div>
+    </Flex>
   );
 };
 

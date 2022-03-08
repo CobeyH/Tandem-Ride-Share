@@ -119,7 +119,9 @@ const CreateGroup = () => {
               onChange={(e) => setPrivate(e.target.checked)}
             />
           </HStack>
+          <Heading size="md"> Upload Banner</Heading>
           <FileDropzone parentCallback={handleCallback} />
+          <Heading size="md"> Upload Profile Picture</Heading>
           <FileDropzone parentCallback={handleProfilePicSubmit} />
           <Button
             onClick={() => {
