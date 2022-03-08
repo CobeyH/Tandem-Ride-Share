@@ -97,7 +97,7 @@ const CarSelector = (props: { user: User }) => {
           registerCar(props.user, {
             ...car,
             displayName,
-          }).then(() => alert("car registered"));
+          }).then(() => console.log("added a car"));
         }}
       >
         Add

@@ -145,34 +145,6 @@ const CreateRide = () => {
               isDisabled={true}
             />
           ) : null}
-          <Button
-            mt={4}
-            mb={4}
-            disabled={!hasDragged}
-            onClick={() => {
-              if (groupId && user) {
-                const ride = {
-                  id: "",
-                  name: title,
-                  start: startPosition,
-                  end: endPosition,
-                  maxPassengers: selectedCar?.numSeats || 4,
-                  startDate,
-                  isComplete: false,
-                  endDate,
-                  ...(isDriver && { driver: user.uid }),
-                  ...(selectedCar !== undefined && {
-                    carId: selectedCar?.carId,
-                  }),
-                };
-                createRide(ride, groupId).then(() =>
-                  navigate(`/group/${groupId}`)
-                );
-              }
-            }}
-          >
-            Confirm
-          </Button>
         </InputGroup>
         <Text>Start Time</Text>
         <Input
@@ -190,6 +162,35 @@ const CreateRide = () => {
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
         </MapView>
+        <Button
+          variant={"solid"}
+          mt={4}
+          mb={4}
+          disabled={!hasDragged}
+          onClick={() => {
+            if (groupId && user) {
+              const ride = {
+                id: "",
+                name: title,
+                start: startPosition,
+                end: endPosition,
+                maxPassengers: selectedCar?.numSeats || 4,
+                startDate,
+                isComplete: false,
+                endDate,
+                ...(isDriver && { driver: user.uid }),
+                ...(selectedCar !== undefined && {
+                  carId: selectedCar?.carId,
+                }),
+              };
+              createRide(ride, groupId).then(() =>
+                navigate(`/group/${groupId}`)
+              );
+            }
+          }}
+        >
+          Confirm
+        </Button>
       </Container>
     </>
   );
