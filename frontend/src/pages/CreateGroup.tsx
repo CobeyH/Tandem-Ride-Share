@@ -18,11 +18,12 @@ import {
   Group,
   setGroup,
   setGroupBanner,
+  setGroupProfilePic,
 } from "../firebase/database";
 import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
 import Header from "../components/Header";
-import { PhotoType, uploadBanner } from "../firebase/storage";
+import { PhotoType, uploadPhoto } from "../firebase/storage";
 import GroupSizeSlider from "../components/GroupSizeSlider";
 import FileDropzone from "../components/FileDropzone";
 
@@ -53,9 +54,14 @@ const createGroup = async (groupData: Omit<Group, "id">, userId: string) => {
 const CreateGroup = () => {
   // TODO: Fix type
   const [banner, setBanner] = useState<Blob | MediaSource>();
+  const [profilePic, setProfilePic] = useState<Blob | MediaSource>();
 
   const handleCallback = (childBanner: Blob | MediaSource) => {
     setBanner(childBanner);
+  };
+
+  const handleProfilePicSubmit = (childPic: Blob | MediaSource) => {
+    setProfilePic(childPic);
   };
 
   const [user] = useAuthState(auth);
@@ -114,6 +120,7 @@ const CreateGroup = () => {
             />
           </HStack>
           <FileDropzone parentCallback={handleCallback} />
+          <FileDropzone parentCallback={handleProfilePicSubmit} />
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
@@ -131,11 +138,20 @@ const CreateGroup = () => {
                 ).then((group) => {
                   navigate(`/group/${group.id}`);
                   if (banner !== undefined) {
-                    uploadBanner(group.id, PhotoType.banners, banner).then(
+                    uploadPhoto(group.id, PhotoType.banners, banner).then(
                       (url) => {
                         setGroupBanner(group.id, url?.fullPath);
                       }
                     );
+                  }
+                  if (profilePic) {
+                    uploadPhoto(
+                      group.id,
+                      PhotoType.profilePics,
+                      profilePic
+                    ).then((url) => {
+                      setGroupProfilePic(group.id, url?.fullPath);
+                    });
                   }
                 });
               }

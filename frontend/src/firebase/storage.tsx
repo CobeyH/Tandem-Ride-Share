@@ -17,15 +17,15 @@ if (location.hostname === "localhost") {
   connectStorageEmulator(storage, "localhost", 9199);
 }
 
-export const uploadBanner = async (
+export const uploadPhoto = async (
   groupId: string,
   photoType: PhotoType,
-  banner: Blob | MediaSource
+  photo: Blob | MediaSource
 ) => {
-  if (!banner) {
+  if (!photo) {
     return;
   }
-  const blobUrl = URL.createObjectURL(banner);
+  const blobUrl = URL.createObjectURL(photo);
   const blob = await fetch(blobUrl).then((r) => r.blob());
   const imageRef = ref(storage, `${photoType}/${groupId}`);
   await uploadBytes(imageRef, blob);

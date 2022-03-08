@@ -167,6 +167,13 @@ export const setGroupBanner = async (groupId: string, banner?: string) => {
   return set(ref(db, `${GROUPS}/${groupId}/banner`), banner);
 };
 
+export const setGroupProfilePic = async (
+  groupId: string,
+  profilePic?: string
+) => {
+  return set(ref(db, `${GROUPS}/${groupId}/profilePics`), profilePic);
+};
+
 export const getUser = async (userId: string) => {
   return new Promise<User>((resolve, reject) => {
     get(ref(db, `${USERS}/${userId}`)).then(
