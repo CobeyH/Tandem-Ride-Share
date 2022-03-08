@@ -20,11 +20,10 @@ import { storage } from "../firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/ShareLink";
-import GroupMembersList from "../components/GroupMembersList";
-import { GroupChat } from "../components/Chat";
 import GroupSettings from "../components/GroupSettings";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
+import GroupDrawer from "../components/GroupDrawer";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -77,10 +76,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           <HStack>
             <Heading textAlign={"center"}>{group.name}</Heading>
             <ShareLink />
-            <GroupMembersList
+            <GroupDrawer
               members={group.members}
               ownerId={group.owner}
               maxSize={group.maxSize}
+              groupId={group.id}
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}
           </HStack>
@@ -108,7 +108,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             New Ride
           </Button>
         </VStack>
-        <GroupChat groupId={group.id} />
       </Container>
     </>
   );
