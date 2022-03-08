@@ -9,6 +9,8 @@ import {
   HStack,
   Textarea,
   Checkbox,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -69,7 +71,9 @@ const CreateGroup = () => {
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
   const [maxSize, setSize] = useState<number>(10);
+  const MAX_NAME_LENGTH = 25;
 
+  const invalidLength = name.length > MAX_NAME_LENGTH;
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
 
@@ -91,18 +95,25 @@ const CreateGroup = () => {
         <Stack>
           <Heading textAlign={"center"}>Create Group</Heading>
           <HStack>
-            <Text mb={"8px"}>Name</Text>
-            <Input
-              value={name}
-              placeholder={"name"}
-              onInput={(e) =>
-                setName({
-                  field: e.currentTarget.value,
-                  invalid: isInvalidName(e.currentTarget.value),
-                })
-              }
-              isInvalid={invalidName}
-            />
+            <FormControl isInvalid={invalidLength}>
+              <Text mb={"8px"}>Name</Text>
+              <Input
+                value={name}
+                placeholder={"name"}
+                onInput={(e) => {
+                  setName({
+                    field: e.currentTarget.value,
+                    invalid: isInvalidName(e.currentTarget.value),
+                  });
+                }}
+                isInvalid={invalidName}
+              />
+              {invalidLength && (
+                <FormErrorMessage>
+                  {`Group name should be under ${MAX_NAME_LENGTH} characters`}
+                </FormErrorMessage>
+              )}
+            </FormControl>
           </HStack>
           <HStack>
             <Text mb={"8px"}>Description</Text>
@@ -128,26 +139,32 @@ const CreateGroup = () => {
           <DropZone parentCallback={handleCallback} />
           <Button
             onClick={() => {
-              if (user?.uid !== undefined) {
-                createGroup(
-                  {
-                    description,
-                    isPrivate,
-                    name,
-                    rides: {},
-                    members: {},
-                    owner: user?.uid,
-                    maxSize,
-                  },
-                  user.uid
-                ).then((group) => {
-                  navigate(`/group/${group.id}`);
-                  if (banner !== undefined) {
-                    uploadBanner(group.id).then((url) => {
-                      setGroupBanner(group.id, url?.fullPath);
-                    });
-                  }
-                });
+              if (invalidLength) {
+                alert(
+                  `Group name should be under ${MAX_NAME_LENGTH} characters`
+                );
+              } else {
+                if (user?.uid !== undefined) {
+                  createGroup(
+                    {
+                      description,
+                      isPrivate,
+                      name,
+                      rides: {},
+                      members: {},
+                      owner: user?.uid,
+                      maxSize,
+                    },
+                    user.uid
+                  ).then((group) => {
+                    navigate(`/group/${group.id}`);
+                    if (banner !== undefined) {
+                      uploadBanner(group.id).then((url) => {
+                        setGroupBanner(group.id, url?.fullPath);
+                      });
+                    }
+                  });
+                }
               }
             }}
           >
