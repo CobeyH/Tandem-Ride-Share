@@ -1,7 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { lightTheme } from "../theme/colours";
 
 const FileDropzone = (props: {
   parentCallback: (banner: Blob | MediaSource) => void;
