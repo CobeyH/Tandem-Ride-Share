@@ -22,10 +22,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
 import Header from "../components/Header";
-import DropZone, { storage } from "../firebase/storage";
-import { uploadBytes } from "firebase/storage";
-import { ref as storRef } from "firebase/storage";
+import { PhotoType, uploadBanner } from "../firebase/storage";
 import GroupSizeSlider from "../components/GroupSizeSlider";
+import FileDropzone from "../components/FileDropzone";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -73,17 +72,6 @@ const CreateGroup = () => {
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
 
-  const uploadBanner = async (groupId: string) => {
-    if (!banner) {
-      return;
-    }
-    const blobUrl = URL.createObjectURL(banner);
-    const blob = await fetch(blobUrl).then((r) => r.blob());
-    const imageRef = storRef(storage, `banners/${groupId}`);
-    await uploadBytes(imageRef, blob);
-    return imageRef;
-  };
-
   return (
     <>
       <Header pages={[{ label: "Group List", url: "/" }]} />
@@ -125,7 +113,7 @@ const CreateGroup = () => {
               onChange={(e) => setPrivate(e.target.checked)}
             />
           </HStack>
-          <DropZone parentCallback={handleCallback} />
+          <FileDropzone parentCallback={handleCallback} />
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
@@ -143,9 +131,11 @@ const CreateGroup = () => {
                 ).then((group) => {
                   navigate(`/group/${group.id}`);
                   if (banner !== undefined) {
-                    uploadBanner(group.id).then((url) => {
-                      setGroupBanner(group.id, url?.fullPath);
-                    });
+                    uploadBanner(group.id, PhotoType.banners, banner).then(
+                      (url) => {
+                        setGroupBanner(group.id, url?.fullPath);
+                      }
+                    );
                   }
                 });
               }

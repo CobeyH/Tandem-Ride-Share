@@ -1,38 +1,33 @@
-import { connectStorageEmulator, getStorage } from "firebase/storage";
-import React, { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import {
+  connectStorageEmulator,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { app } from "./firebase";
 
 export const storage = getStorage(app);
+
+export enum PhotoType {
+  banners = "banners",
+  profilePics = "profilePics",
+}
 
 if (location.hostname === "localhost") {
   connectStorageEmulator(storage, "localhost", 9199);
 }
 
-const DropZone = (props: {
-  parentCallback: (banner: Blob | MediaSource) => void;
-}) => {
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles?.[0];
-
-    if (!file) {
-      return;
-    }
-    props.parentCallback(file);
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the file here ...</p>
-      ) : (
-        <p>Drag and drop a banner image here, or click to select a file</p>
-      )}
-    </div>
-  );
+export const uploadBanner = async (
+  groupId: string,
+  photoType: PhotoType,
+  banner: Blob | MediaSource
+) => {
+  if (!banner) {
+    return;
+  }
+  const blobUrl = URL.createObjectURL(banner);
+  const blob = await fetch(blobUrl).then((r) => r.blob());
+  const imageRef = ref(storage, `${photoType}/${groupId}`);
+  await uploadBytes(imageRef, blob);
+  return imageRef;
 };
-
-export default DropZone;
