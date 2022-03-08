@@ -8,6 +8,7 @@ const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/";
 const MQ_ROUTE_ENDPOINT = "route";
 const MQ_SHAPE_ENDPOINT = "routeshape";
 const MQ_OPTIMIZED_ENDPOINT = "optimizedroute";
+const MQ_REV_GEOCODE_URI = "http://open.mapquestapi.com/geocoding/v1/reverse";
 
 export const getRideRoute = async (start: LatLng, end: LatLng) => {
   return new Promise<Route>((resolve, reject) => {
@@ -90,6 +91,40 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
       );
   });
 };
+
+export const getReverseGeocode = async (point: LatLng) => {
+  return new Promise<string>((resolve, reject) => {
+    fetch(
+      MQ_REV_GEOCODE_URI +
+        `?key=${process.env.REACT_APP_MQ_KEY}` +
+        `&location=${point.lat},${point.lng}`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        const location = res.results[0].locations[0];
+        resolve(geocodeToString(location));
+      })
+      .catch((err) => console.log(err));
+  });
+};
+
+type Geocode = {
+  street: string;
+  adminArea5: string;
+  adminArea3: string;
+  adminArea1: string;
+  postalCode: string;
+};
+
+function geocodeToString(geocode: Geocode) {
+  const arr = [
+    geocode.street,
+    geocode.adminArea5,
+    geocode.adminArea3,
+    geocode.adminArea1,
+  ];
+  return arr.join(", ");
+}
 
 /**
  * MapQuest Directions RouteShape API returns flat array of decimal lat and lng.

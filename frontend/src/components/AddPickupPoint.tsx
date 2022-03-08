@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { latLng } from "leaflet";
 import * as React from "react";
-import { getOptimizedRoute } from "../Directions";
+import { getOptimizedRoute, getReverseGeocode } from "../Directions";
 import {
   addPickupToRide,
   getRide,
@@ -30,7 +30,7 @@ const AddPickupPoint = (props: { userId: string; rideId: string }) => {
     newPickupPoint(DEFAULT_CENTER);
   }
 
-  function newPickupPoint(position: { lat: number; lng: number }) {
+  async function newPickupPoint(position: { lat: number; lng: number }) {
     const newPoint: PickupPoint = {
       members: {},
       location: {
@@ -39,6 +39,11 @@ const AddPickupPoint = (props: { userId: string; rideId: string }) => {
       },
     };
     newPoint.members[props.userId] = true;
+    await getReverseGeocode(latLng(position.lat, position.lng)).then(
+      (geocode) => {
+        newPoint.geocode = geocode;
+      }
+    );
     addPickupToRide(props.rideId, newPoint)
       .then(() => getRide(props.rideId))
       .then((ride) => {

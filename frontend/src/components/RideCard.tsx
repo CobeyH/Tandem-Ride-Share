@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AspectRatio,
   Box,
@@ -9,11 +9,12 @@ import {
   HStack,
   Icon,
   Spacer,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { BsFillPersonFill } from "react-icons/bs";
+import { BsFillPersonFill, BsGeoAlt } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
 import MapView, { endIcon, findMidpoint } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
@@ -21,6 +22,7 @@ import { latLng, LatLng, latLngBounds } from "leaflet";
 import { auth } from "../firebase/firebase";
 import {
   completeRide,
+  PickupPoint,
   setRideDriver,
   setRidePassenger,
   useRide,
@@ -128,6 +130,7 @@ export default function RideCard({
                 ""
               )}
             </Flex>
+            <PickupComponent rideId={rideId} />
             {ride.startDate && ride.endDate ? (
               <RideTimes startTime={ride.startDate} endTime={ride.endDate} />
             ) : null}
@@ -319,6 +322,44 @@ function RideTimes({
           {end_date} {end_time} {isPm_end ? "PM" : "AM"}
         </Text>
       </Flex>
+    </>
+  );
+}
+
+function PickupComponent({ rideId }: { rideId: string }) {
+  const [user] = useAuthState(auth);
+  const [ride, rideLoading, rideError] = useRide(rideId);
+  const [data, setData] = useState<PickupPoint>();
+
+  useEffect(() => {
+    if (ride && user) {
+      const p = Object.values(ride.pickupPoints).find((p) =>
+        Object.keys(p.members).includes(user.uid)
+      );
+      setData(p);
+    }
+  }, [user, ride]);
+
+  return (
+    <>
+      {rideLoading ? (
+        <Spinner />
+      ) : rideError ? (
+        <Heading>{rideError}</Heading>
+      ) : (
+        <Flex
+          flexDirection="row"
+          m={2}
+          width="100%"
+          minH="2.5rem"
+          align="center"
+        >
+          <Icon as={BsGeoAlt} w={6} h={6} />
+          <Text ms={1} me={3} isTruncated>
+            {data?.geocode}
+          </Text>
+        </Flex>
+      )}
     </>
   );
 }

@@ -86,6 +86,7 @@ export type Route = {
 export type PickupPoint = {
   location: { lat: number; lng: number };
   members: { [key: string]: boolean };
+  geocode?: string;
 };
 
 export type Message = {
