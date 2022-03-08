@@ -29,7 +29,7 @@ import MapView, {
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
-import { getRideRoute } from "../Directions";
+import { getReverseGeocode, getRideRoute } from "../Directions";
 
 type ValidatableField<T> = {
   field: T;
@@ -167,6 +167,7 @@ const CreateRide = () => {
                     start: {
                       location: startPosition,
                       members: { [userId]: true },
+                      geocode: "",
                     },
                   },
                   endDate,
@@ -175,9 +176,11 @@ const CreateRide = () => {
                     carId: selectedCar?.carId,
                   }),
                 };
-                createRide(ride, groupId).then(() =>
-                  navigate(`/group/${groupId}`)
-                );
+                getReverseGeocode(startPosition)
+                  .then((geo) => (ride.pickupPoints.start.geocode = geo))
+                  .then(() => createRide(ride, groupId))
+                  .then(() => navigate(`/group/${groupId}`))
+                  .catch((err) => console.error(err));
               }
             }}
           >
