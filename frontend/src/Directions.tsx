@@ -8,7 +8,7 @@ const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/";
 const MQ_ROUTE_ENDPOINT = "route";
 const MQ_SHAPE_ENDPOINT = "routeshape";
 const MQ_OPTIMIZED_ENDPOINT = "optimizedroute";
-const MQ_REV_GEOCODE_URI = "http://www.mapquestapi.com/geocoding/v1/reverse";
+const MQ_REV_GEOCODE_URI = "https://www.mapquestapi.com/geocoding/v1/reverse";
 
 export const getRideRoute = async (start: LatLng, end: LatLng) => {
   return new Promise<Route>((resolve, reject) => {
