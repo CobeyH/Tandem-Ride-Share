@@ -272,6 +272,25 @@ export const setRide = (ride: Ride) => {
   return { id: rideRef.key, ...rideData } as Ride;
 };
 
+export const getRide = async (rideId: string) => {
+  return new Promise<Ride>((resolve, reject) => {
+    get(ref(db, `${RIDES}/${rideId}`)).then(
+      (result) => {
+        if (result.exists()) {
+          const ride: Ride = result.val();
+          ride.id = rideId;
+          resolve(ride);
+        } else {
+          reject(undefined);
+        }
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
 export const useRide = (rideId: string) => {
   return useObjectVal<Ride>(ref(db, `${RIDES}/${rideId}`));
 };

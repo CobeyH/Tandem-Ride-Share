@@ -6,6 +6,7 @@ import { Route } from "./firebase/database";
  */
 const MQ_DIR_URI = "https://open.mapquestapi.com/directions/v2/";
 const MQ_ROUTE_ENDPOINT = "route";
+const MQ_SHAPE_ENDPOINT = "routeshape";
 const MQ_OPTIMIZED_ENDPOINT = "optimizedroute";
 
 export const getRideRoute = async (start: LatLng, end: LatLng) => {
@@ -37,9 +38,14 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
 };
 
 export const getOptimizedRoute = async (points: LatLng[]) => {
-  const data = { locations: points };
+  const data = {
+    locations: points.map((point) => {
+      return `${point.lat},${point.lng}`;
+    }),
+  };
 
   return new Promise<Route>((resolve, reject) => {
+    let distance: number, fuelUsed: number;
     /**
      * Here we are making the API call to the Directions API Optimized
      * Route endpoint, then we compose the reponse to JSON.
@@ -47,12 +53,7 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
     fetch(
       MQ_DIR_URI +
         MQ_OPTIMIZED_ENDPOINT +
-        "?" +
-        new URLSearchParams({
-          key: `${process.env.REACT_APP_MQ_KEY}`,
-          unit: "k",
-          fullShape: "true",
-        }),
+        `?key=${process.env.REACT_APP_MQ_KEY}`,
       {
         method: "POST",
         headers: {
@@ -62,18 +63,30 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
       }
     )
       .then((res) => res.json())
+      .then((res) => {
+        distance = res.route.distance;
+        fuelUsed = res.route.fuelUsed;
+        return res;
+      })
+      .then((res) =>
+        fetch(
+          MQ_DIR_URI +
+            MQ_SHAPE_ENDPOINT +
+            `?key=${process.env.REACT_APP_MQ_KEY}` +
+            `&sessionId=${res.route.sessionId}&fullShape=true`
+        )
+      )
+      .then((res) => res.json())
       .then(
-        (result) => {
+        (res) => {
           const route: Route = {
-            distance: result.route.distance,
-            fuelUsed: result.route.fuelUsed,
-            shape: arrayToLatLngs(result.route.shape.shapePoints),
+            distance: distance,
+            fuelUsed: fuelUsed,
+            shape: arrayToLatLngs(res.route.shape.shapePoints),
           };
           resolve(route);
         },
-        (error) => {
-          reject(error);
-        }
+        (err) => reject(err)
       );
   });
 };
