@@ -74,6 +74,7 @@ const CreateGroup = () => {
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
   const [maxSize, setSize] = useState<number>(10);
+  const MAX_GROUP_NAME_LENGTH = 25;
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
@@ -96,8 +97,14 @@ const CreateGroup = () => {
                 })
               }
               isInvalid={invalidName}
+              maxLength={MAX_GROUP_NAME_LENGTH}
             />
           </HStack>
+          <Text
+            color="grey.200"
+            size="sm"
+            align="right"
+          >{`${name.length} / ${MAX_GROUP_NAME_LENGTH}`}</Text>
           <HStack>
             <Text mb={"8px"}>Description</Text>
             <Textarea
