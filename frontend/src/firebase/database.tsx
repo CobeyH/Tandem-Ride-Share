@@ -189,6 +189,7 @@ export const getUser = async (userId: string) => {
             cars: user.cars,
           });
         } else {
+          console.log("failed to resolve user");
           reject(undefined);
         }
       },
