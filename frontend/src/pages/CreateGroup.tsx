@@ -18,14 +18,14 @@ import {
   Group,
   setGroup,
   setGroupBanner,
+  setGroupProfilePic,
 } from "../firebase/database";
 import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
 import Header from "../components/Header";
-import DropZone, { storage } from "../firebase/storage";
-import { uploadBytes } from "firebase/storage";
-import { ref as storRef } from "firebase/storage";
+import { PhotoType, uploadPhoto } from "../firebase/storage";
 import GroupSizeSlider from "../components/GroupSizeSlider";
+import FileDropzone from "../components/FileDropzone";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -54,9 +54,14 @@ const createGroup = async (groupData: Omit<Group, "id">, userId: string) => {
 const CreateGroup = () => {
   // TODO: Fix type
   const [banner, setBanner] = useState<Blob | MediaSource>();
+  const [profilePic, setProfilePic] = useState<Blob | MediaSource>();
 
   const handleCallback = (childBanner: Blob | MediaSource) => {
     setBanner(childBanner);
+  };
+
+  const handleProfilePicSubmit = (childPic: Blob | MediaSource) => {
+    setProfilePic(childPic);
   };
 
   const [user] = useAuthState(auth);
@@ -72,17 +77,6 @@ const CreateGroup = () => {
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
-
-  const uploadBanner = async (groupId: string) => {
-    if (!banner) {
-      return;
-    }
-    const blobUrl = URL.createObjectURL(banner);
-    const blob = await fetch(blobUrl).then((r) => r.blob());
-    const imageRef = storRef(storage, `banners/${groupId}`);
-    await uploadBytes(imageRef, blob);
-    return imageRef;
-  };
 
   return (
     <>
@@ -125,7 +119,10 @@ const CreateGroup = () => {
               onChange={(e) => setPrivate(e.target.checked)}
             />
           </HStack>
-          <DropZone parentCallback={handleCallback} />
+          <Heading size="md"> Upload Banner</Heading>
+          <FileDropzone parentCallback={handleCallback} />
+          <Heading size="md"> Upload Profile Picture</Heading>
+          <FileDropzone parentCallback={handleProfilePicSubmit} />
           <Button
             onClick={() => {
               if (user?.uid !== undefined) {
@@ -143,8 +140,19 @@ const CreateGroup = () => {
                 ).then((group) => {
                   navigate(`/group/${group.id}`);
                   if (banner !== undefined) {
-                    uploadBanner(group.id).then((url) => {
-                      setGroupBanner(group.id, url?.fullPath);
+                    uploadPhoto(group.id, PhotoType.banners, banner).then(
+                      (url) => {
+                        setGroupBanner(group.id, url?.fullPath);
+                      }
+                    );
+                  }
+                  if (profilePic) {
+                    uploadPhoto(
+                      group.id,
+                      PhotoType.profilePics,
+                      profilePic
+                    ).then((url) => {
+                      setGroupProfilePic(group.id, url?.fullPath);
                     });
                   }
                 });
