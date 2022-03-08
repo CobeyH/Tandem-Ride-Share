@@ -2,6 +2,7 @@ import { Button, Heading } from "@chakra-ui/react";
 import { Marker, Popup } from "react-leaflet";
 import * as React from "react";
 import {
+  clearUserFromPickups,
   getUser,
   PickupPoint,
   setUserInPickup,
@@ -63,8 +64,10 @@ const PickupMarker = ({
         ))}
         <Button
           onClick={() => {
-            if (user?.uid)
+            if (user?.uid) {
+              clearUserFromPickups(rideId, user.uid);
               setUserInPickup(rideId, pickupId, user.uid, !inPickup);
+            }
           }}
         >
           {inPickup ? "Leave" : "Join"}

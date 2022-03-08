@@ -4,6 +4,7 @@ import * as React from "react";
 import { getOptimizedRoute, getReverseGeocode } from "../Directions";
 import {
   addPickupToRide,
+  clearUserFromPickups,
   getRide,
   PickupPoint,
   setRoute,
@@ -46,7 +47,10 @@ const AddPickupPoint = (props: { userId: string; rideId: string }) => {
     );
     addPickupToRide(props.rideId, newPoint)
       .then((ref) => {
-        if (ref.key) setUserInPickup(props.rideId, ref.key, props.userId);
+        if (ref.key) {
+          clearUserFromPickups(props.rideId, props.userId);
+          setUserInPickup(props.rideId, ref.key, props.userId);
+        }
       })
       .then(() => getRide(props.rideId))
       .then((ride) => {

@@ -21,8 +21,8 @@ import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds } from "leaflet";
 import { auth } from "../firebase/firebase";
 import {
+  clearUserFromPickups,
   completeRide,
-  PickupPoint,
   setRideDriver,
   setRidePassenger,
   useRide,
@@ -171,10 +171,10 @@ function PassengerButton({
   const amDriver = userId === driver;
   return amDriver ? null : (
     <HStack>
-      <AddPickupPoint userId={userId} rideId={rideId} />
       <Button
         disabled={loading || error !== undefined}
         onClick={() => {
+          if (amPassenger) clearUserFromPickups(rideId, userId);
           setRidePassenger(userId, rideId, !amPassenger);
         }}
       >
@@ -325,7 +325,7 @@ function RideTimes({
 function PickupComponent({ rideId }: { rideId: string }) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useRide(rideId);
-  const [data, setData] = useState<PickupPoint>();
+  const [text, setText] = useState<string>();
 
   useEffect(() => {
     if (ride && user) {
@@ -333,7 +333,7 @@ function PickupComponent({ rideId }: { rideId: string }) {
         if (!p.members) return false;
         return Object.keys(p.members).includes(user.uid);
       });
-      setData(p);
+      setText(p?.geocode ?? "Choose pickup on map, or add one.");
     }
   }, [user, ride]);
 
@@ -344,17 +344,13 @@ function PickupComponent({ rideId }: { rideId: string }) {
       ) : rideError ? (
         <Heading>{rideError}</Heading>
       ) : (
-        <Flex
-          flexDirection="row"
-          m={2}
-          width="100%"
-          minH="2.5rem"
-          align="center"
-        >
+        <Flex flexDirection="row" m={2} minH="2.5rem" align="center">
           <Icon as={BsGeoAlt} w={6} h={6} />
           <Text ms={1} me={3} isTruncated>
-            {data?.geocode}
+            {text}
           </Text>
+          <Spacer />
+          {user ? <AddPickupPoint userId={user.uid} rideId={rideId} /> : null}
         </Flex>
       )}
     </>

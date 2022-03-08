@@ -176,39 +176,31 @@ export const setUserInPickup = (
   userId: string,
   isPassenger = true
 ) => {
-  if (rideId && pickupId)
-    getRide(rideId)
-      .then((ride) => {
-        // Remove user from any other pickup points
-        if (ride.pickupPoints) {
-          Object.keys(ride.pickupPoints).map((k) => {
-            if (
-              ride.pickupPoints[k].members &&
-              Object.keys(ride.pickupPoints[k].members).includes(userId)
-            ) {
-              set(
-                ref(
-                  db,
-                  `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`
-                ),
-                null
-              );
-            }
-          });
-        }
-      })
-      .then(() => {
-        // Set user in current pickup point
+  if (rideId && pickupId) {
+    // Set user in current pickup point
+    set(
+      ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
+      isPassenger ? true : null
+    );
+    setRidePassenger(userId, rideId, isPassenger);
+  }
+};
+
+export const clearUserFromPickups = (rideId: string, userId: string) => {
+  if (!rideId || !userId) return;
+  getRide(rideId).then((ride) => {
+    Object.keys(ride.pickupPoints).map((k) => {
+      if (
+        ride.pickupPoints[k].members &&
+        Object.keys(ride.pickupPoints[k].members).includes(userId)
+      ) {
         set(
-          ref(
-            db,
-            `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`
-          ),
-          isPassenger ? true : null
+          ref(db, `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`),
+          null
         );
-        setRidePassenger(userId, rideId, isPassenger);
-      })
-      .catch((err) => console.log(err));
+      }
+    });
+  });
 };
 
 export const usePickupPoint = (rideId: string, pickupId: string) => {
