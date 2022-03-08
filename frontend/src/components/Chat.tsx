@@ -54,7 +54,7 @@ const ChatContents = (props: { contents: Message[]; userId: string }) => {
   let prevSender = "";
   return (
     <VStack spacing={2}>
-      <Flex flexDir="column">
+      <Flex width="100%" flexDir="column">
         {props.contents.map((m, i) => {
           const component = (
             <MessageComponent
