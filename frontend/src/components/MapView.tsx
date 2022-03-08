@@ -30,6 +30,7 @@ export default function MapView(
       scrollWheelZoom={true}
       whenCreated={props.setMap}
       style={props.style}
+      closePopupOnClick={false}
     >
       <TileLayer
         url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"

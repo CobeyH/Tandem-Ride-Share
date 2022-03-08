@@ -6,8 +6,8 @@ import {
   addPickupToRide,
   getRide,
   PickupPoint,
-  setRidePassenger,
   setRoute,
+  setUserInPickup,
 } from "../firebase/database";
 import { DEFAULT_CENTER } from "./MapView";
 
@@ -45,12 +45,16 @@ const AddPickupPoint = (props: { userId: string; rideId: string }) => {
       }
     );
     addPickupToRide(props.rideId, newPoint)
+      .then((ref) => {
+        if (ref.key) setUserInPickup(props.rideId, ref.key, props.userId);
+      })
       .then(() => getRide(props.rideId))
       .then((ride) => {
+        // Fetch optimized route for new points
         const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
-        Object.keys(ride.pickupPoints).map((p) => {
-          if (p === ride.start) return;
-          routePoints.push(latLng(ride.pickupPoints[p].location));
+        Object.keys(ride.pickupPoints).map((k) => {
+          if (k === ride.start) return;
+          routePoints.push(latLng(ride.pickupPoints[k].location));
         });
         routePoints.push(latLng(ride.end));
         return getOptimizedRoute(routePoints);
@@ -59,7 +63,6 @@ const AddPickupPoint = (props: { userId: string; rideId: string }) => {
         setRoute(props.rideId, route);
       })
       .catch((err) => console.log(err));
-    setRidePassenger(props.userId, props.rideId);
   }
 
   return <Button onClick={getLocation}>Add new pickup</Button>;

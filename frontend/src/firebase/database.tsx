@@ -86,6 +86,7 @@ export type Route = {
 };
 
 export type PickupPoint = {
+  id?: string;
   location: { lat: number; lng: number };
   members: { [key: string]: boolean };
   geocode?: string;
@@ -176,11 +177,47 @@ export const setUserInPickup = (
   isPassenger = true
 ) => {
   if (rideId && pickupId)
-    set(
-      ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
-      isPassenger ? true : null
-    );
-  setRidePassenger(userId, rideId, isPassenger);
+    getRide(rideId)
+      .then((ride) => {
+        // Remove user from any other pickup points
+        if (ride.pickupPoints) {
+          Object.keys(ride.pickupPoints).map((k) => {
+            if (
+              ride.pickupPoints[k].members &&
+              Object.keys(ride.pickupPoints[k].members).includes(userId)
+            ) {
+              set(
+                ref(
+                  db,
+                  `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`
+                ),
+                null
+              );
+            }
+          });
+        }
+      })
+      .then(() => {
+        // Set user in current pickup point
+        set(
+          ref(
+            db,
+            `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`
+          ),
+          isPassenger ? true : null
+        );
+        setRidePassenger(userId, rideId, isPassenger);
+      })
+      .catch((err) => console.log(err));
+};
+
+export const usePickupPoint = (rideId: string, pickupId: string) => {
+  return useObjectVal<PickupPoint>(
+    ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}`),
+    {
+      keyField: "id",
+    }
+  );
 };
 
 export const setGroup = async (group: Group) => {

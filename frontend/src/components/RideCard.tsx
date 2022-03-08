@@ -137,11 +137,7 @@ export default function RideCard({
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {endMarker}
-                <PickupMarkers
-                  pickups={ride?.pickupPoints}
-                  rideId={rideId}
-                  userId={user?.uid}
-                />
+                <PickupMarkers pickups={ride?.pickupPoints} rideId={rideId} />
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
@@ -333,9 +329,10 @@ function PickupComponent({ rideId }: { rideId: string }) {
 
   useEffect(() => {
     if (ride && user) {
-      const p = Object.values(ride.pickupPoints).find((p) =>
-        Object.keys(p.members).includes(user.uid)
-      );
+      const p = Object.values(ride.pickupPoints).find((p) => {
+        if (!p.members) return false;
+        return Object.keys(p.members).includes(user.uid);
+      });
       setData(p);
     }
   }, [user, ride]);

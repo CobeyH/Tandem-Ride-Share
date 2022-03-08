@@ -5,64 +5,57 @@ import {
   getUser,
   PickupPoint,
   setUserInPickup,
+  usePickupPoint,
   User,
 } from "../firebase/database";
 import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
 
 const PickupMarkers = (props: {
-  userId: string | undefined;
   rideId: string;
   pickups: { [key: string]: PickupPoint } | undefined;
 }) => {
-  if (!props.pickups || !props.userId) {
-    return null;
-  }
-
+  if (!props.pickups) return null;
   return (
     <>
       {Object.entries(props.pickups).map(([key, point]) => {
         if (!point.location) {
           return;
         }
-        return (
-          <PickupMarker
-            key={key}
-            pickupId={key}
-            point={point}
-            rideId={props.rideId}
-            userId={props.userId}
-            memberIds={point.members}
-          />
-        );
+        return <PickupMarker key={key} pickupId={key} rideId={props.rideId} />;
       })}
     </>
   );
 };
 
-const PickupMarker = (props: {
+const PickupMarker = ({
+  pickupId,
+  rideId,
+}: {
   pickupId: string;
-  point: {
-    location: { lat: number; lng: number };
-  };
   rideId: string;
-  userId: string | undefined;
-  memberIds: { [key: string]: boolean };
 }) => {
+  const [pickup] = usePickupPoint(rideId, pickupId);
   const [members, setMembers] = useState<User[]>();
-  const [open, setOpen] = useState<boolean>(false);
+  const [user] = useAuthState(auth);
 
   useEffect(() => {
-    if (!props.memberIds) return;
-    const userPromises = Object.keys(props.memberIds).map((userId) => {
-      return getUser(userId);
-    });
-    Promise.all(userPromises).then((users) => setMembers(users));
-  }, [open]);
+    if (!pickup?.members) setMembers(undefined);
+    else {
+      const userPromises = Object.keys(pickup.members).map((userId) => {
+        return getUser(userId);
+      });
+      Promise.all(userPromises).then((users) => setMembers(users));
+    }
+  }, [pickup]);
   const inPickup =
-    props.userId && props.memberIds ? props.memberIds[props.userId] : false;
+    user?.uid && pickup?.members ? pickup.members[user.uid] : false;
+
+  if (!pickup) return <></>;
   return (
-    <Marker position={props.point.location}>
-      <Popup onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
+    <Marker position={pickup.location}>
+      <Popup>
         {members?.map((member: User, i: number) => (
           <Heading size={"sm"} key={i}>
             {member.name}
@@ -70,12 +63,8 @@ const PickupMarker = (props: {
         ))}
         <Button
           onClick={() => {
-            setUserInPickup(
-              props.rideId,
-              props.pickupId,
-              props.userId ?? "",
-              !inPickup
-            );
+            if (user?.uid)
+              setUserInPickup(rideId, pickupId, user.uid, !inPickup);
           }}
         >
           {inPickup ? "Leave" : "Join"}
