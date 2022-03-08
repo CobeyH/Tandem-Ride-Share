@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Input, Spinner, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Flex,
+  Input,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   getUser,
@@ -13,6 +21,7 @@ import {
   addChatToRideChat,
 } from "../firebase/database";
 import { auth } from "../firebase/firebase";
+import { lightTheme } from "../theme/colours";
 
 export const GroupChat = ({ groupId }: { groupId: string }) => (
   <Chat dbLocation={{ chatType: "group", id: groupId }} />
@@ -41,12 +50,24 @@ function ChatTextBox({
   );
 }
 
-const ChatContents = (props: { contents: Message[] }) => {
+const ChatContents = (props: { contents: Message[]; userId: string }) => {
+  let prevSender = "";
   return (
-    <VStack>
-      {props.contents.map((m, i) => (
-        <MessageComponent key={i} message={m} />
-      ))}
+    <VStack spacing={2}>
+      <Flex width="100%" flexDir="column">
+        {props.contents.map((m, i) => {
+          const component = (
+            <MessageComponent
+              userId={props.userId}
+              key={i}
+              message={m}
+              prevSender={prevSender}
+            />
+          );
+          prevSender = m.sender_id;
+          return component;
+        })}
+      </Flex>
     </VStack>
   );
 };
@@ -70,7 +91,7 @@ const Chat = ({
     return <h1>{JSON.stringify(messagesError)}</h1>;
   } else if (chat && user) {
     return (
-      <Container p={4}>
+      <Container p={3}>
         {chat.length === 0 ? (
           <Text>Nothing seems to be here, Say something!</Text>
         ) : (
@@ -78,6 +99,7 @@ const Chat = ({
             contents={[...Array.from(new Set(chat))].sort(
               (fst, snd) => fst.timestamp - snd.timestamp
             )}
+            userId={user?.uid}
           />
         )}
         <ChatTextBox
@@ -108,22 +130,35 @@ const Chat = ({
 
 const MessageComponent = ({
   message: { contents, sender_id },
+  userId,
+  prevSender,
 }: {
   message: Message;
+  userId: string;
+  prevSender: string;
 }) => {
-  const [user, setUser] = useState<"loading" | User>("loading");
+  const [sender, setSender] = useState<"loading" | User>("loading");
 
   useEffect(() => {
-    getUser(sender_id).then(setUser);
+    getUser(sender_id).then(setSender);
   }, []);
 
-  return (
-    <Box>
-      {user === "loading" ? null : (
-        <Text>
-          {user?.name ?? sender_id}: {contents}
+  const amSender = sender_id === userId;
+  return sender === "loading" ? null : (
+    <Box pt={1}>
+      {sender_id !== prevSender ? (
+        <Text pt={3} textAlign={amSender ? "right" : "left"}>
+          {sender?.name ?? sender_id}
         </Text>
-      )}
+      ) : null}
+      <Text
+        p={2}
+        borderRadius={7}
+        align={amSender ? "right" : "left"}
+        background={amSender ? lightTheme.lightButton : lightTheme.darkButton}
+      >
+        {contents}
+      </Text>
     </Box>
   );
 };
