@@ -14,6 +14,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -73,6 +74,7 @@ const Settings = (props: { user: User }) => {
         isCentered={true}
       >
         <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+          <ModalCloseButton />
           <ModalHeader>
             {user?.displayName}
             <ColorModeSwitcher float={"right"} />
