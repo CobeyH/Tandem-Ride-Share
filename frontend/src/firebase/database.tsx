@@ -359,9 +359,12 @@ export const setRideDriver = (
   if (!rideId) return;
   set(
     ref(db, `${RIDES}/${rideId}/driver`),
-    state || !driverId ? driverId : null
+    state ? (driverId ? driverId : null) : null
   );
-  set(ref(db, `${RIDES}/${rideId}/carId`), state || !carId ? carId : null);
+  set(
+    ref(db, `${RIDES}/${rideId}/carId`),
+    state ? (carId ? carId : null) : null
+  );
 };
 
 export const completeRide = (rideId: string) => {
