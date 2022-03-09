@@ -38,7 +38,7 @@ import {
   useUserVehicle,
 } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
-//import ChooseCar from "./ChooseCar";
+import ChooseCar from "./ChooseCar";
 //import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
 //import AddPickupPoint from "./AddPickupPoint";
@@ -208,6 +208,7 @@ function DriverBar({
 }) {
   const [authUser] = useAuthState(auth);
   const [user] = useUser(authUser?.uid);
+  const [ride] = useRide(rideId);
   const [driverChecked, setDriverChecked] = useState<boolean | undefined>(
     authUser?.uid === driverId
   );
@@ -223,25 +224,38 @@ function DriverBar({
       setRideDriver(
         user.uid,
         rideId,
-        driverChecked,
-        Object.keys(user.vehicles).pop()
+        Object.keys(user.vehicles).pop(),
+        driverChecked
       );
     }
   }, [driverChecked]);
 
   return (
-    <RideCardBar>
-      <DriverIcon isDriver={driverId !== undefined} />
-      <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
-      <Spacer />
-      {amPassenger && (driverUser?.uid === user?.uid || !driverUser) ? (
-        <Switch
-          id="am-driver"
-          isChecked={driverChecked}
-          onChange={() => setDriverChecked(!driverChecked)}
-        />
+    <>
+      <RideCardBar>
+        <DriverIcon isDriver={driverId !== undefined} />
+        <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
+        <Spacer />
+        {amPassenger && (driverUser?.uid === user?.uid || !driverUser) ? (
+          <Switch
+            id="am-driver"
+            isChecked={driverChecked}
+            onChange={() => setDriverChecked(!driverChecked)}
+          />
+        ) : null}
+      </RideCardBar>
+      {authUser?.uid === driverId ? (
+        <RideCardBar>
+          <Text>Vehicle: </Text>
+          <ChooseCar
+            carUpdate={(v) => {
+              setRideDriver(driverId, rideId, v.carId);
+            }}
+            carId={ride?.carId}
+          />
+        </RideCardBar>
       ) : null}
-    </RideCardBar>
+    </>
   );
 }
 
@@ -441,7 +455,7 @@ function StatusButtonBar({
         disabled={!ride}
         onClick={() => {
           if (amPassenger) clearUserFromPickups(rideId, userId);
-          if (amDriver) setRideDriver(userId, rideId, false, undefined);
+          if (amDriver) setRideDriver(userId, rideId, undefined, false);
           if (ride) setUserInPickup(rideId, ride?.start, userId);
           setRidePassenger(userId, rideId, !amPassenger);
         }}
