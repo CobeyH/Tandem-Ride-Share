@@ -230,6 +230,10 @@ function DriverBar({
     }
   }, [driverChecked]);
 
+  useEffect(() => {
+    setDriverChecked(authUser?.uid === driverId);
+  }, [amPassenger, driverId, authUser]);
+
   return (
     <>
       <RideCardBar>
