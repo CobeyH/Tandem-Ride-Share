@@ -9,6 +9,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { BsQuestionCircleFill } from "react-icons/all";
 import { FaCarSide, FaShuttleVan, FaGasPump } from "react-icons/fa";
 import { Vehicle } from "../firebase/database";
 import { lightTheme } from "../theme/colours";
@@ -47,9 +48,25 @@ const CarStatsSlider = (props: {
         </Slider>
         <Box pl={3}>{props.car.numSeats}</Box>
       </HStack>
-      <Heading as="h2" size="l">
-        Fuel Usage
-      </Heading>
+      <HStack
+        onMouseEnter={() => setTooltipOpen(true)}
+        onMouseLeave={() => setTooltipOpen(false)}
+        onTouchStart={() => setTooltipOpen(true)}
+        onTouchEnd={() => setTooltipOpen(false)}
+      >
+        <Tooltip
+          isOpen={tooltipOpen}
+          label="L/100km"
+          hasArrow
+          bg={lightTheme.darkButton}
+          placement="right"
+        >
+          <Heading as="h2" size="l">
+            Fuel Usage
+          </Heading>
+        </Tooltip>
+        <BsQuestionCircleFill />
+      </HStack>
       <HStack>
         <Slider
           onChange={(value) =>
@@ -67,21 +84,7 @@ const CarStatsSlider = (props: {
             <Box color="tomato" as={FaGasPump} />
           </SliderThumb>
         </Slider>
-        <Tooltip
-          isOpen={tooltipOpen}
-          label="L/100km"
-          hasArrow
-          bg={lightTheme.darkButton}
-        >
-          <Box
-            onMouseEnter={() => setTooltipOpen(true)}
-            onMouseLeave={() => setTooltipOpen(false)}
-            onTouchStart={() => setTooltipOpen(true)}
-            onTouchEnd={() => setTooltipOpen(false)}
-          >
-            {props.car.fuelUsage}{" "}
-          </Box>
-        </Tooltip>
+        <Box>{props.car.fuelUsage}</Box>
       </HStack>
     </>
   );
