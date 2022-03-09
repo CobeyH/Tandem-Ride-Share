@@ -21,10 +21,9 @@ const ChooseCar = (props: {
         }
         props.carUpdate(cars[parseInt(e.target.value)]);
       }}
-      value={props.carId}
     >
       {cars?.map((v: Vehicle, i: number) => (
-        <option key={i} value={i}>
+        <option key={i} value={i} selected={v.carId === props.carId}>
           {v.displayName}
         </option>
       ))}
