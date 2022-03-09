@@ -7,10 +7,11 @@ import {
   ref,
   set,
 } from "firebase/database";
-import { LatLng } from "leaflet";
+import { latLng, LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 import slugify from "slugify";
+import { getOptimizedRoute } from "../Directions";
 
 const GROUPS = "groups";
 const USERS = "users";
@@ -182,6 +183,12 @@ export const setUserInPickup = (
       ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
       isPassenger ? true : null
     );
+    if (isPassenger)
+      getRide(rideId).then((ride) => {
+        if (ride.driver === userId) {
+          setRideStart(rideId, pickupId);
+        }
+      });
   }
 };
 
@@ -348,6 +355,12 @@ export const setRidePassenger = (
       ref(db, `${PASSENGERS}/${rideId}/${passId}`),
       isPassenger ? true : null
     );
+  if (!isPassenger)
+    getRide(rideId).then((ride) => {
+      if (ride.driver === passId) {
+        setRideDriver(passId, rideId, undefined, false);
+      }
+    });
 };
 
 export const setRideDriver = (
@@ -365,6 +378,35 @@ export const setRideDriver = (
     ref(db, `${RIDES}/${rideId}/carId`),
     state ? (carId ? carId : null) : null
   );
+  if (state && driverId) {
+    getRide(rideId)
+      .then((ride) => {
+        const driverPointKey = Object.keys(ride.pickupPoints).find((k) => {
+          if (!ride.pickupPoints[k].members) return false;
+          return Object.keys(ride.pickupPoints[k].members).includes(driverId);
+        });
+        if (driverPointKey) setRideStart(rideId, driverPointKey);
+      })
+      .catch((err) => console.log(err));
+  }
+};
+
+export const setRideStart = (rideId: string, pickupId: string) => {
+  set(ref(db, `${RIDES}/${rideId}/start`), pickupId)
+    .then(() => getRide(rideId))
+    .then((ride) => {
+      // Fetch optimized route for new points
+      const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+      Object.keys(ride.pickupPoints).map((k) => {
+        if (k === ride.start) return;
+        routePoints.push(latLng(ride.pickupPoints[k].location));
+      });
+      routePoints.push(latLng(ride.end));
+      return getOptimizedRoute(routePoints);
+    })
+    .then((route) => {
+      setRoute(rideId, route);
+    });
 };
 
 export const completeRide = (rideId: string) => {

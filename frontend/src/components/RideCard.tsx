@@ -39,9 +39,8 @@ import {
 } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
-//import GasCalculator from "./GasCalculator";
+import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
-//import AddPickupPoint from "./AddPickupPoint";
 import { getOptimizedRoute, getReverseGeocode } from "../Directions";
 
 export default function RideCard({
@@ -58,6 +57,7 @@ export default function RideCard({
   const [route] = useRoute(rideId);
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<Map | undefined>(undefined);
+  const [car] = useUserVehicle(ride?.driver, ride?.carId);
 
   let center, endMarker, startLocation: LatLng;
   if (ride !== undefined) {
@@ -126,6 +126,11 @@ export default function RideCard({
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
+            <GasCalculator
+              fuelUsage={car?.fuelUsage}
+              distance={route?.distance}
+              rideId={rideId}
+            />
             {
               /** Join / Complete Bar */
               user ? (
@@ -136,18 +141,6 @@ export default function RideCard({
                 />
               ) : null
             }
-            {/** 
-            <Flex flexDirection="row" m={2} align="center">
-              {user && !ride?.isComplete && user.uid == ride.driver && (
-                <CompleteRideButton rideId={rideId} />
-              )}
-            </Flex>
-            <GasCalculator
-              fuelUsage={car?.fuelUsage}
-              distance={route?.distance}
-              rideId={rideId}
-            />
-            */}
           </Collapse>
         </>
       )}
