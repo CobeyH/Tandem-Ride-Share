@@ -30,7 +30,7 @@ import MapView, {
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
-import { getRideRoute } from "../Directions";
+import { getReverseGeocode, getRideRoute } from "../Directions";
 
 const createRide = async (
   ride: Ride,
@@ -41,9 +41,6 @@ const createRide = async (
   if (rideId) {
     await setGroupRide(groupId, rideId);
     createRoute(rideId, ride);
-    if (ride.driver) {
-      passList.push(ride.driver);
-    }
     await Promise.all(
       passList.map(async (p) => {
         setRidePassenger(p, rideId);
@@ -54,7 +51,10 @@ const createRide = async (
 };
 
 const createRoute = async (rideId: string, ride: Ride) => {
-  const route = await getRideRoute(ride.start as LatLng, ride.end as LatLng);
+  const route = await getRideRoute(
+    ride.pickupPoints[ride.start].location as LatLng,
+    ride.end as LatLng
+  );
   if (route) setRoute(rideId, route);
   return route;
 };
@@ -172,23 +172,33 @@ const CreateRide = () => {
             disabled={!isValidRide}
             onClick={() => {
               if (groupId && user) {
+                const userId = user.uid;
                 const ride = {
                   id: "",
                   name: title,
-                  start: startPosition,
+                  start: "start",
                   end: endPosition,
                   maxPassengers: selectedCar?.numSeats || 4,
                   startDate,
                   isComplete: false,
+                  pickupPoints: {
+                    start: {
+                      location: startPosition,
+                      members: { [userId]: true },
+                      geocode: "",
+                    },
+                  },
                   endDate,
                   ...(isDriver && { driver: user.uid }),
                   ...(selectedCar !== undefined && {
                     carId: selectedCar?.carId,
                   }),
                 };
-                createRide(ride, groupId).then(() =>
-                  navigate(`/group/${groupId}`)
-                );
+                getReverseGeocode(startPosition)
+                  .then((geo) => (ride.pickupPoints.start.geocode = geo))
+                  .then(() => createRide(ride, groupId, [userId]))
+                  .then(() => navigate(`/group/${groupId}`))
+                  .catch((err) => console.error(err));
               }
             }}
           >

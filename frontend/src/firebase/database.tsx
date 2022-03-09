@@ -7,10 +7,11 @@ import {
   ref,
   set,
 } from "firebase/database";
-import { LatLng } from "leaflet";
+import { latLng, LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 import slugify from "slugify";
+import { getOptimizedRoute } from "../Directions";
 
 const GROUPS = "groups";
 const USERS = "users";
@@ -63,25 +64,33 @@ export type User = {
   name: string;
   authProvider: string;
   email: string;
-  cars?: Vehicle[];
+  vehicles?: Vehicle[];
 };
 
 export type Ride = {
   id?: string;
   name: string;
-  start: { lat: number; lng: number };
+  start: string;
   end: { lat: number; lng: number };
   driver?: string;
   isComplete: boolean;
   carId?: string;
   startDate: string;
   endDate: string;
+  pickupPoints: { [key: string]: PickupPoint };
 };
 
 export type Route = {
   distance: number;
   fuelUsed: number;
   shape: LatLng[];
+};
+
+export type PickupPoint = {
+  id?: string;
+  location: { lat: number; lng: number };
+  members: { [key: string]: boolean };
+  geocode?: string;
 };
 
 export type Message = {
@@ -158,6 +167,57 @@ export const addChatToRideChat = (
   message: Omit<Message, "timestamp">
 ) => addChatToChat(`${RIDE_CHATS}/${rideId}`, message);
 
+export const addPickupToRide = (rideId: string, pickup: PickupPoint) => {
+  return push(ref(db, `${RIDES}/${rideId}/pickupPoints`), pickup);
+};
+
+export const setUserInPickup = (
+  rideId: string,
+  pickupId: string,
+  userId: string,
+  isPassenger = true
+) => {
+  if (rideId && pickupId) {
+    // Set user in current pickup point
+    set(
+      ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
+      isPassenger ? true : null
+    );
+    if (isPassenger)
+      getRide(rideId).then((ride) => {
+        if (ride.driver === userId) {
+          setRideStart(rideId, pickupId);
+        }
+      });
+  }
+};
+
+export const clearUserFromPickups = async (rideId: string, userId: string) => {
+  if (!rideId || !userId) return;
+  return getRide(rideId).then((ride) => {
+    Object.keys(ride.pickupPoints).map((k) => {
+      if (
+        ride.pickupPoints[k].members &&
+        Object.keys(ride.pickupPoints[k].members).includes(userId)
+      ) {
+        set(
+          ref(db, `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`),
+          null
+        );
+      }
+    });
+  });
+};
+
+export const usePickupPoint = (rideId: string, pickupId: string) => {
+  return useObjectVal<PickupPoint>(
+    ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}`),
+    {
+      keyField: "id",
+    }
+  );
+};
+
 export const setGroup = async (group: Group) => {
   const { id, ...groupData } = group;
   if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);
@@ -186,7 +246,7 @@ export const getUser = async (userId: string) => {
             name: user.name,
             authProvider: user.authProvider,
             email: user.email,
-            cars: user.cars,
+            vehicles: user.vehicles,
           });
         } else {
           console.log("failed to resolve user");
@@ -201,18 +261,22 @@ export const getUser = async (userId: string) => {
 };
 
 export const setUser = async (user: User) => {
-  const { uid, ...userData } = user;
+  const { uid: uid, ...userData } = user;
   if (uid) await set(ref(db, `${USERS}/${uid}`), userData);
   return user;
 };
 
 export const useUser = (userId?: string) => {
-  return useObjectVal<User>(ref(db, `${USERS}/${userId}`));
+  return useObjectVal<User>(ref(db, `${USERS}/${userId}`), {
+    keyField: "uid",
+  });
 };
 
 export const useUserVehicle = (userId?: string, vehicleId?: string) => {
   return useObjectVal<Vehicle>(
-    ref(db, `${USERS}/${userId}/vehicles/${vehicleId}`)
+    userId && vehicleId
+      ? ref(db, `${USERS}/${userId}/vehicles/${vehicleId}`)
+      : null
   );
 };
 
@@ -258,6 +322,25 @@ export const setRide = (ride: Ride) => {
   return { id: rideRef.key, ...rideData } as Ride;
 };
 
+export const getRide = async (rideId: string) => {
+  return new Promise<Ride>((resolve, reject) => {
+    get(ref(db, `${RIDES}/${rideId}`)).then(
+      (result) => {
+        if (result.exists()) {
+          const ride: Ride = result.val();
+          ride.id = rideId;
+          resolve(ride);
+        } else {
+          reject(undefined);
+        }
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
 export const useRide = (rideId: string) => {
   return useObjectVal<Ride>(ref(db, `${RIDES}/${rideId}`));
 };
@@ -272,24 +355,68 @@ export const setRidePassenger = (
       ref(db, `${PASSENGERS}/${rideId}/${passId}`),
       isPassenger ? true : null
     );
+  if (!isPassenger)
+    getRide(rideId).then((ride) => {
+      if (ride.driver === passId) {
+        setRideDriver(passId, rideId, undefined, false);
+      }
+    });
 };
 
 export const setRideDriver = (
-  driverId: string,
-  rideId: string,
-  state: boolean,
-  carId: string | undefined
+  driverId?: string,
+  rideId?: string,
+  carId?: string,
+  state = true
 ) => {
-  set(ref(db, `${RIDES}/${rideId}/driver`), state ? driverId : null);
-  set(ref(db, `${RIDES}/${rideId}/carId`), state ? carId : null);
+  if (!rideId) return;
+  set(
+    ref(db, `${RIDES}/${rideId}/driver`),
+    state ? (driverId ? driverId : null) : null
+  );
+  set(
+    ref(db, `${RIDES}/${rideId}/carId`),
+    state ? (carId ? carId : null) : null
+  );
+  if (state && driverId) {
+    getRide(rideId)
+      .then((ride) => {
+        const driverPointKey = Object.keys(ride.pickupPoints).find((k) => {
+          if (!ride.pickupPoints[k].members) return false;
+          return Object.keys(ride.pickupPoints[k].members).includes(driverId);
+        });
+        if (driverPointKey) setRideStart(rideId, driverPointKey);
+      })
+      .catch((err) => console.log(err));
+  }
+};
+
+export const setRideStart = (rideId: string, pickupId: string) => {
+  set(ref(db, `${RIDES}/${rideId}/start`), pickupId)
+    .then(() => getRide(rideId))
+    .then((ride) => {
+      // Fetch optimized route for new points
+      const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+      Object.keys(ride.pickupPoints).map((k) => {
+        if (k === ride.start) return;
+        routePoints.push(latLng(ride.pickupPoints[k].location));
+      });
+      routePoints.push(latLng(ride.end));
+      return getOptimizedRoute(routePoints);
+    })
+    .then((route) => {
+      setRoute(rideId, route);
+    });
 };
 
 export const completeRide = (rideId: string) => {
   if (rideId) set(ref(db, `${RIDES}/${rideId}/isComplete`), true);
 };
 
-export const useRidePassenger = (rideId: string, passId: string) => {
-  return useObjectVal(ref(db, `${PASSENGERS}/${rideId}/${passId}`));
+export const useRidePassenger = (rideId?: string, passId?: string) => {
+  return useObjectVal(
+    rideId && passId ? ref(db, `${PASSENGERS}/${rideId}/${passId}`) : null
+  );
 };
 
 export const useRidePassengers = (rideId: string) => {
