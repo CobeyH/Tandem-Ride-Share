@@ -7,6 +7,10 @@ const Button: ComponentStyleConfig = {
       bg: lightTheme.lightButton,
       textColor: lightTheme.buttonText,
     },
+    "tandem-registration": {
+      bg: "green.200",
+      textColor: "white",
+    },
   },
   defaultProps: {
     variant: "tandem-base",
