@@ -22,7 +22,7 @@ import Fonts from "./theme/components/font";
 import ProductPage from "./pages/ProductPage";
 
 export const App = () => {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   return (
     <ChakraProvider theme={extendedTheme}>
