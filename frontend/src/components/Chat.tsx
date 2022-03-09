@@ -38,14 +38,17 @@ function ChatTextBox({
 }) {
   return (
     <>
-      <Input
-        onKeyDown={(e) => {
-          if (e.key == "Enter") {
-            addChat(e.currentTarget.value);
-            e.currentTarget.value = "";
-          }
-        }}
-      />
+      <Box p="2">
+        <Input
+          style={{ position: "absolute", right: 0, left: 0, bottom: 60 }}
+          onKeyDown={(e) => {
+            if (e.key == "Enter") {
+              addChat(e.currentTarget.value);
+              e.currentTarget.value = "";
+            }
+          }}
+        />
+      </Box>
     </>
   );
 }
