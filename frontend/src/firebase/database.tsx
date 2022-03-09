@@ -59,7 +59,7 @@ export type Vehicle = {
 };
 
 export type User = {
-  id: string;
+  uid: string;
   name: string;
   authProvider: string;
   email: string;
@@ -235,7 +235,7 @@ export const getUser = async (userId: string) => {
         if (result.exists()) {
           const user = result.val();
           resolve({
-            id: userId,
+            uid: userId,
             name: user.name,
             authProvider: user.authProvider,
             email: user.email,
@@ -254,7 +254,7 @@ export const getUser = async (userId: string) => {
 };
 
 export const setUser = async (user: User) => {
-  const { id: uid, ...userData } = user;
+  const { uid: uid, ...userData } = user;
   if (uid) await set(ref(db, `${USERS}/${uid}`), userData);
   return user;
 };

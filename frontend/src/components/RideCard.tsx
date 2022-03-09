@@ -222,7 +222,7 @@ function DriverBar({
   useEffect(() => {
     if (driverChecked !== undefined && user?.vehicles) {
       setRideDriver(
-        user.id,
+        user.uid,
         rideId,
         Object.keys(user.vehicles).pop(),
         driverChecked
@@ -236,7 +236,7 @@ function DriverBar({
         <DriverIcon isDriver={driverId !== undefined} />
         <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
         <Spacer />
-        {amPassenger && (driverUser?.id === user?.id || !driverUser) ? (
+        {amPassenger && (driverUser?.uid === user?.uid || !driverUser) ? (
           <Switch
             id="am-driver"
             isChecked={driverChecked}
