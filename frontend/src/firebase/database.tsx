@@ -63,7 +63,7 @@ export type User = {
   name: string;
   authProvider: string;
   email: string;
-  cars?: Vehicle[];
+  vehicles?: Vehicle[];
 };
 
 export type Ride = {
@@ -239,7 +239,7 @@ export const getUser = async (userId: string) => {
             name: user.name,
             authProvider: user.authProvider,
             email: user.email,
-            cars: user.cars,
+            vehicles: user.vehicles,
           });
         } else {
           console.log("failed to resolve user");

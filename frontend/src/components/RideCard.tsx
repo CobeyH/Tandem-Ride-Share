@@ -9,6 +9,7 @@ import {
   Icon,
   Spacer,
   Spinner,
+  Switch,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -102,7 +103,11 @@ export default function RideCard({
               }
             }}
           >
-            <DriverBar driverId={ride.driver} />
+            <DriverBar
+              rideId={rideId}
+              driverId={ride.driver}
+              amPassenger={Boolean(userPassenger)}
+            />
             <PassengerBar rideId={rideId} />
             {ride.startDate && ride.endDate ? (
               <RideTimesBar startTime={ride.startDate} endTime={ride.endDate} />
@@ -192,7 +197,20 @@ function RideCardBar({ children }: { children?: ReactNode }) {
   );
 }
 
-function DriverBar({ driverId }: { driverId?: string }) {
+function DriverBar({
+  rideId,
+  driverId,
+  amPassenger,
+}: {
+  rideId: string;
+  driverId?: string;
+  amPassenger: boolean;
+}) {
+  const [authUser] = useAuthState(auth);
+  const [user] = useUser(authUser?.uid);
+  const [driverChecked, setDriverChecked] = useState<boolean | undefined>(
+    undefined
+  );
   const [driverUser, driverLoading, driverError] = useUser(driverId);
   const driver = driverLoading
     ? "Loading"
@@ -200,10 +218,29 @@ function DriverBar({ driverId }: { driverId?: string }) {
     ? "Error"
     : driverUser?.name;
 
+  useEffect(() => {
+    if (driverChecked !== undefined && user?.vehicles) {
+      setRideDriver(
+        user.uid,
+        rideId,
+        driverChecked,
+        Object.keys(user.vehicles).pop()
+      );
+    }
+  }, [driverChecked]);
+
   return (
     <RideCardBar>
       <DriverIcon isDriver={driverId !== undefined} />
       <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
+      <Spacer />
+      {amPassenger && (driverUser?.uid === user?.uid || !driverUser) ? (
+        <Switch
+          id="am-driver"
+          isChecked={driverChecked}
+          onChange={() => setDriverChecked(!driverChecked)}
+        />
+      ) : null}
     </RideCardBar>
   );
 }
