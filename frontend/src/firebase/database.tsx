@@ -182,13 +182,12 @@ export const setUserInPickup = (
       ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
       isPassenger ? true : null
     );
-    setRidePassenger(userId, rideId, isPassenger);
   }
 };
 
-export const clearUserFromPickups = (rideId: string, userId: string) => {
+export const clearUserFromPickups = async (rideId: string, userId: string) => {
   if (!rideId || !userId) return;
-  getRide(rideId).then((ride) => {
+  return getRide(rideId).then((ride) => {
     Object.keys(ride.pickupPoints).map((k) => {
       if (
         ride.pickupPoints[k].members &&
@@ -266,7 +265,9 @@ export const useUser = (userId?: string) => {
 
 export const useUserVehicle = (userId?: string, vehicleId?: string) => {
   return useObjectVal<Vehicle>(
-    ref(db, `${USERS}/${userId}/vehicles/${vehicleId}`)
+    userId && vehicleId
+      ? ref(db, `${USERS}/${userId}/vehicles/${vehicleId}`)
+      : null
   );
 };
 
@@ -361,8 +362,10 @@ export const completeRide = (rideId: string) => {
   if (rideId) set(ref(db, `${RIDES}/${rideId}/isComplete`), true);
 };
 
-export const useRidePassenger = (rideId: string, passId: string) => {
-  return useObjectVal(ref(db, `${PASSENGERS}/${rideId}/${passId}`));
+export const useRidePassenger = (rideId?: string, passId?: string) => {
+  return useObjectVal(
+    rideId && passId ? ref(db, `${PASSENGERS}/${rideId}/${passId}`) : null
+  );
 };
 
 export const useRidePassengers = (rideId: string) => {
