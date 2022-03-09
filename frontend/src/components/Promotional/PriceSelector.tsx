@@ -1,6 +1,6 @@
 import { Box, Button, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 import * as React from "react";
-import { SiHive, SiMarketo, SiMicrosoft } from "react-icons/si";
+import { FaUserAlt, FaUserFriends, FaUsers } from "react-icons/all";
 import { PricingCard } from "./PricingCard";
 
 const PriceSelector = () => (
@@ -20,62 +20,40 @@ const PriceSelector = () => (
     >
       <PricingCard
         data={{
-          price: "$29",
-          name: "Application UI",
-          features: [
-            "All application UI components",
-            "Lifetime access",
-            "Use on unlimited projects",
-            "Free Updates",
-          ],
+          price: "Free",
+          name: "Friend Group",
+          features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
         }}
-        icon={SiMicrosoft}
+        icon={FaUserAlt}
         button={<Button borderWidth="2px">Buy now</Button>}
       />
       <PricingCard
         zIndex={1}
-        isPopular
         transform={{ lg: "scale(1.05)" }}
         data={{
-          price: "$49",
-          name: "Bundle",
-          features: [
-            "All application UI components",
-            "Lifetime access",
-            "Use on unlimited projects",
-            "Use on unlimited projects",
-            "Free Updates",
-          ],
+          price: "$5",
+          name: "Small Organization",
+          features: ["Limit 25 people", "Gas calculator", "Optimized Pickups"],
         }}
-        icon={SiHive}
+        icon={FaUserFriends}
         button={<Button>Buy now</Button>}
       />
       <PricingCard
         data={{
-          price: "$29",
-          name: "Marketing UI",
-          features: [
-            "All application UI components",
-            "Lifetime access",
-            "Use on unlimited projects",
-            "Free Updates",
-          ],
+          price: "$10",
+          name: "Large Organization",
+          features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
         }}
-        icon={SiMarketo}
+        icon={FaUserFriends}
         button={<Button borderWidth="2px">Buy now</Button>}
       />
       <PricingCard
         data={{
           price: "$29",
-          name: "Marketing UI",
-          features: [
-            "All application UI components",
-            "Lifetime access",
-            "Use on unlimited projects",
-            "Free Updates",
-          ],
+          name: "Enterprise",
+          features: ["No group limits", "Gas calculator", "Optimized Pickups"],
         }}
-        icon={SiMarketo}
+        icon={FaUsers}
         button={<Button borderWidth="2px">Buy now</Button>}
       />
     </SimpleGrid>

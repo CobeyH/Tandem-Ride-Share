@@ -1,12 +1,8 @@
 import { Box, BoxProps, useColorModeValue } from "@chakra-ui/react";
 import * as React from "react";
 
-export interface CardProps extends BoxProps {
-  isPopular?: boolean;
-}
-
-export const Card = (props: CardProps) => {
-  const { children, isPopular, ...rest } = props;
+export const Card = (props: BoxProps) => {
+  const { children, ...rest } = props;
   return (
     <Box
       bg={useColorModeValue("white", "gray.700")}

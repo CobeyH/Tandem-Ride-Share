@@ -1,4 +1,5 @@
 import {
+  BoxProps,
   Flex,
   Heading,
   Icon,
@@ -11,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiCheckCircle } from "react-icons/hi";
-import { Card, CardProps } from "./Card";
+import { Card } from "./Card";
 
 export interface PricingCardData {
   features: string[];
@@ -19,7 +20,7 @@ export interface PricingCardData {
   price: string;
 }
 
-interface PricingCardProps extends CardProps {
+interface PricingCardProps extends BoxProps {
   data: PricingCardData;
   icon: React.ElementType;
   button: React.ReactElement;
@@ -48,9 +49,11 @@ export const PricingCard = (props: PricingCardProps) => {
         <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
           {price}
         </Heading>
-        <Text fontWeight="inherit" fontSize="2xl">
-          / yr
-        </Text>
+        {price === "Free" ? null : (
+          <Text fontWeight="inherit" fontSize="2xl">
+            / month
+          </Text>
+        )}
       </Flex>
       <List spacing="4" mb="8" maxW="28ch" mx="auto">
         {features.map((feature, index) => (
