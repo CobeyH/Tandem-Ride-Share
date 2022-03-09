@@ -2,7 +2,7 @@
 ![smol](https://user-images.githubusercontent.com/51931484/157334498-2952ad7f-9b7a-4fe8-b9ae-97932ff16fa9.png)
 
 
-Tandum is a application built to make carpooling delightful - [check it out](https://carpooling-6112a.web.app/).
+Tandem is a application built to make carpooling delightful - [check it out](https://carpooling-6112a.web.app/).
 
 # Members
 
@@ -22,7 +22,7 @@ Checkout [who built this](https://github.com/CobeyH/SENG-480A/wiki/Team-Contribu
 
 Try to make an issue before trying to fix it, you may find someone is already on it!
 
-Barring that, make a pull request with your changes - we prefer alough do not enfore a linear git history.
+Barring that, make a pull request with your changes - we prefer, although do not enforce, a linear git history.
 
 Someone *should* come along and review your code, if it looks good your changes should be live as soon as they are merged!
 
@@ -32,7 +32,7 @@ All that is needed to run it is [node](https://nodejs.org/en/). Make sure to add
 
 ### Installing Node
 
-Of course downloading node off thier site and using thier installer is an option. *But* I recommend using
+Of course downloading node off thier site and using their installer is an option. *But* I recommend using
 
 Windows - [chocolatey](https://chocolatey.org/)
 
@@ -58,4 +58,4 @@ To start developing run `npm start`. This should open your default browser to th
 
 # License
 
-We're GPL-3.0 licensed, if you don't like the lisence in [its full glory](https://github.com/CobeyH/SENG-480A/blob/main/LICENSE), [this](https://choosealicense.com/licenses/gpl-3.0/) is a nice synapsis
+We're GPL-3.0 licensed, if you don't like the license in [its full glory](https://github.com/CobeyH/SENG-480A/blob/main/LICENSE), [this](https://choosealicense.com/licenses/gpl-3.0/) is a nice synopsis.
