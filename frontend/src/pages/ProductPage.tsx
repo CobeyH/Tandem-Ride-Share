@@ -17,7 +17,7 @@ import { storage } from "../firebase/storage";
 import { NavConstants } from "../NavigationConstants";
 
 const ProductPage = () => {
-  const logoRef = ref(storage, "Logos/Logo_White.png");
+  const logoRef = ref(storage, "promotional/Logo_White.png");
   const [logo, logoLoading] = useDownloadURL(logoRef);
   const navigate = useNavigate();
   return (
