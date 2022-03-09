@@ -41,9 +41,6 @@ const createRide = async (
   if (rideId) {
     await setGroupRide(groupId, rideId);
     createRoute(rideId, ride);
-    if (ride.driver) {
-      passList.push(ride.driver);
-    }
     await Promise.all(
       passList.map(async (p) => {
         setRidePassenger(p, rideId);
@@ -199,7 +196,7 @@ const CreateRide = () => {
                 };
                 getReverseGeocode(startPosition)
                   .then((geo) => (ride.pickupPoints.start.geocode = geo))
-                  .then(() => createRide(ride, groupId))
+                  .then(() => createRide(ride, groupId, [userId]))
                   .then(() => navigate(`/group/${groupId}`))
                   .catch((err) => console.error(err));
               }
