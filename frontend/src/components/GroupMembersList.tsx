@@ -27,7 +27,7 @@ const GroupMembersList = (props: {
       {groupMembers?.map((user: User, i) => (
         <HStack key={i}>
           <Heading size="md">{user?.name}</Heading>
-          {user?.uid === props.ownerId ? (
+          {user?.id === props.ownerId ? (
             <Badge colorScheme={"blue"}>Owner</Badge>
           ) : null}
         </HStack>

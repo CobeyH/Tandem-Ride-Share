@@ -52,7 +52,7 @@ export const signInWithGoogle = async () => {
     getUser(user.uid).catch((err) => {
       if (err === undefined) {
         setUser({
-          uid: user.uid,
+          id: user.uid,
           name: user.displayName ? user.displayName : "User",
           authProvider: "google",
           email: user.email ? user.email : "",
@@ -87,7 +87,7 @@ export const registerWithEmailAndPassword = async (
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     await setUser({
-      uid: user.uid,
+      id: user.uid,
       name: name,
       authProvider: "local",
       email: email,
