@@ -12,6 +12,7 @@ import {
   MenuItem,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   Radio,
@@ -51,6 +52,7 @@ const AddCar = (props: { user: User }) => {
       {
         <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
           <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+            <ModalCloseButton />
             <ModalHeader>Add A Car</ModalHeader>
             <CarSelector user={props.user} onDone={onClose} />
           </ModalContent>
