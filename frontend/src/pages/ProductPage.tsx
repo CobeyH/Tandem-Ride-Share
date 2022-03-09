@@ -12,6 +12,7 @@ import { ref } from "firebase/storage";
 import * as React from "react";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { useNavigate } from "react-router-dom";
+import PriceSelector from "../components/Promotional/PriceSelector";
 import { storage } from "../firebase/storage";
 import { NavConstants } from "../NavigationConstants";
 
@@ -39,6 +40,7 @@ const ProductPage = () => {
           <Image src={logo} alt="white logo" objectFit="cover" />
         </AspectRatio>
       )}
+      <PriceSelector />
     </>
   );
 };
