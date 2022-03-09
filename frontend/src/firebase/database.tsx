@@ -356,7 +356,7 @@ export const setRideDriver = (
   carId?: string,
   state = true
 ) => {
-  if (!rideId || !carId) return;
+  if (!rideId) return;
   set(ref(db, `${RIDES}/${rideId}/driver`), state ? driverId : null);
   set(ref(db, `${RIDES}/${rideId}/carId`), state ? carId : null);
 };
