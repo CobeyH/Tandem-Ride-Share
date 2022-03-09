@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -30,11 +31,6 @@ import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
 import { getRideRoute } from "../Directions";
-
-type ValidatableField<T> = {
-  field: T;
-  invalid: boolean;
-};
 
 const createRide = async (
   ride: Ride,
@@ -66,17 +62,10 @@ const createRoute = async (rideId: string, ride: Ride) => {
 const CreateRide = () => {
   const { groupId } = useParams();
   const [user] = useAuthState(auth);
-  const [{ field: title, invalid: invalidTitle }, setTitle] = useState<
-    ValidatableField<string>
-  >({
-    field: "",
-    invalid: false,
-  });
-  const isInvalidTitle = (name: string) => name.length === 0;
+  const [title, setTitle] = useState<string>("");
 
   const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
-  const [hasDragged, setHasDragged] = useState(false);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
   const [isDriver, setIsDriver] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
@@ -87,13 +76,11 @@ const CreateRide = () => {
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
-    setHasDragged(true);
     map?.invalidateSize();
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
   function onDragEnd(position: LatLng) {
     setEndPosition(position);
-    setHasDragged(true); // enable 'Create' button after user move the icon
     map?.invalidateSize();
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
@@ -105,6 +92,12 @@ const CreateRide = () => {
       setSelectedCar(undefined);
     }
   }, [isDriver]);
+
+  const isValidTitle = (title: string) => title.length !== 0;
+  const isValidStartAndEnd = (start: LatLng, end: LatLng) => start !== end;
+
+  const isValidRide =
+    isValidStartAndEnd(startPosition, endPosition) && isValidTitle(title);
 
   return (
     <>
@@ -121,13 +114,9 @@ const CreateRide = () => {
             mt={4}
             value={title}
             placeholder={"Ride Name"}
-            onInput={(e) =>
-              setTitle({
-                field: e.currentTarget.value,
-                invalid: isInvalidTitle(e.currentTarget.value),
-              })
-            }
-            isInvalid={invalidTitle}
+            onInput={(e) => {
+              setTitle(e.currentTarget.value);
+            }}
           />
           <Checkbox
             isChecked={isDriver}
@@ -145,10 +134,42 @@ const CreateRide = () => {
               isDisabled={true}
             />
           ) : null}
+        </InputGroup>
+        <Text>Start Time</Text>
+        <Input
+          mb="4"
+          type="datetime-local"
+          onInput={(e) => setStartDate(e.currentTarget.value)}
+        />
+        <Text>End Time</Text>
+        <Input
+          mb="4"
+          type="datetime-local"
+          onInput={(e) => setEndDate(e.currentTarget.value)}
+        />
+        <MapView style={{ height: "50vh" }} setMap={setMap}>
+          <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
+          <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
+        </MapView>
+        <Tooltip
+          hasArrow
+          label={
+            isValidTitle(title)
+              ? isValidStartAndEnd(startPosition, endPosition)
+                ? "Create a ride"
+                : "Need a valid start and end"
+              : "Need a valid title"
+          }
+          bg="gray.300"
+          color="black"
+          shouldWrapChildren
+          placement={"top"}
+        >
           <Button
+            variant={"solid"}
             mt={4}
             mb={4}
-            disabled={!hasDragged}
+            disabled={!isValidRide}
             onClick={() => {
               if (groupId && user) {
                 const ride = {
@@ -173,23 +194,7 @@ const CreateRide = () => {
           >
             Confirm
           </Button>
-        </InputGroup>
-        <Text>Start Time</Text>
-        <Input
-          mb="4"
-          type="datetime-local"
-          onInput={(e) => setStartDate(e.currentTarget.value)}
-        />
-        <Text>End Time</Text>
-        <Input
-          mb="4"
-          type="datetime-local"
-          onInput={(e) => setEndDate(e.currentTarget.value)}
-        />
-        <MapView style={{ height: "50vh" }} setMap={setMap}>
-          <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
-          <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
-        </MapView>
+        </Tooltip>
       </Container>
     </>
   );

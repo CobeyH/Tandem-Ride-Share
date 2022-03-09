@@ -12,10 +12,13 @@ import {
   MenuItem,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   Radio,
   RadioGroup,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import * as React from "react";
@@ -41,19 +44,17 @@ const trucks: Vehicle[] = [
 ];
 
 const AddCar = (props: { user: User }) => {
-  const [carModalOpen, setCarModalOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <MenuItem onClick={() => setCarModalOpen(true)}>
+    <MenuItem onClick={onOpen}>
       Add A Car
       {
-        <Modal
-          isOpen={carModalOpen}
-          onClose={() => setCarModalOpen(false)}
-          isCentered={true}
-        >
+        <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
           <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+            <ModalCloseButton />
             <ModalHeader>Add A Car</ModalHeader>
-            <CarSelector user={props.user} />
+            <CarSelector user={props.user} onDone={onClose} />
           </ModalContent>
         </Modal>
       }
@@ -75,9 +76,10 @@ const getCarFromList = (radioIndex: string): Vehicle => {
   return index < cars.length ? cars[index] : trucks[index - cars.length];
 };
 
-const CarSelector = (props: { user: User }) => {
+const CarSelector = (props: { user: User; onDone?: () => void }) => {
   const [displayName, setDisplayName] = useState("");
   const [car, setCar] = useState<Vehicle>(cars[0]);
+  const toast = useToast();
 
   return (
     <ModalBody>
@@ -97,7 +99,18 @@ const CarSelector = (props: { user: User }) => {
           registerCar(props.user, {
             ...car,
             displayName,
-          }).then(() => alert("car registered"));
+          }).then(() => {
+            toast({
+              title: "Car created",
+              description: `We've created a car with ${car.numSeats} seats.`,
+              status: "success",
+              duration: 4000,
+              isClosable: true,
+            });
+            if (props.onDone) {
+              props.onDone();
+            }
+          });
         }}
       >
         Add

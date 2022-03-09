@@ -18,7 +18,10 @@ import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { NavConstants } from "../NavigationConstants";
 import GroupSearch from "../components/GroupSearch";
-import { useGroups } from "../firebase/database";
+import { Group, useGroups } from "../firebase/database";
+import { useDownloadURL } from "react-firebase-hooks/storage";
+import { ref } from "firebase/storage";
+import { storage } from "../firebase/storage";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -56,22 +59,7 @@ export default function GroupsListPage() {
                   }
                 })
                 ?.map((group, i) => (
-                  <Button
-                    mt={4}
-                    key={i}
-                    textAlign="left"
-                    onClick={() =>
-                      navigate(NavConstants.groupWithIdJoin(group.id))
-                    }
-                  >
-                    <Avatar
-                      bg={groupLogos[i % groupLogos.length]}
-                      size="xs"
-                      name={group.name}
-                      mr={4}
-                    />{" "}
-                    {group.name}
-                  </Button>
+                  <GroupListElement key={i} group={group} index={i} />
                 ))}
             </VStack>
           </Flex>
@@ -85,3 +73,31 @@ export default function GroupsListPage() {
     </>
   );
 }
+
+const GroupListElement = (props: { group: Group; index: number }) => {
+  const navigate = useNavigate();
+  const profileRef = ref(storage, `${props.group.profilePic}`);
+  const [profilePic, profilePicLoading] = props.group.profilePic
+    ? useDownloadURL(profileRef)
+    : [undefined, false];
+  return (
+    <>
+      <Button
+        mt={4}
+        textAlign="left"
+        onClick={() => navigate(NavConstants.groupWithIdJoin(props.group.id))}
+      >
+        {profilePicLoading ? null : (
+          <Avatar
+            bg={groupLogos[props.index % groupLogos.length]}
+            src={profilePic}
+            size="xs"
+            name={props.group.name}
+            mr={4}
+          />
+        )}
+        {props.group.name}
+      </Button>
+    </>
+  );
+};

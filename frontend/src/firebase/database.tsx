@@ -47,6 +47,7 @@ export type Group = {
   owner: string;
   maxSize: number;
   banner?: string;
+  profilePic?: string;
 };
 
 export type Vehicle = {
@@ -165,6 +166,13 @@ export const setGroup = async (group: Group) => {
 
 export const setGroupBanner = async (groupId: string, banner?: string) => {
   return set(ref(db, `${GROUPS}/${groupId}/banner`), banner);
+};
+
+export const setGroupProfilePic = async (
+  groupId: string,
+  profilePic?: string
+) => {
+  return set(ref(db, `${GROUPS}/${groupId}/profilePic`), profilePic);
 };
 
 export const getUser = async (userId: string) => {
