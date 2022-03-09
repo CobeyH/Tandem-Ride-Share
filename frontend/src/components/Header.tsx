@@ -47,7 +47,7 @@ const Header = ({ pages }: PageList) => {
       {user ? (
         <Menu>
           <MenuButton as={Button}>Profile</MenuButton>
-          <MenuList>
+          <MenuList zIndex={3}>
             <Settings user={user} />
             <AddCar user={user} />
             <MenuDivider />

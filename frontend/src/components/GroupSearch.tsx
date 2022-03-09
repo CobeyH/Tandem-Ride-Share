@@ -44,7 +44,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
         <InputRightElement color={"black"}>
           <IconButton
             size="sm"
-            aria-label=""
+            aria-label="Search Groups"
             icon={<GiMagnifyingGlass />}
             onClick={onOpen}
           />
