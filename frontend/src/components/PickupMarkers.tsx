@@ -5,6 +5,7 @@ import {
   clearUserFromPickups,
   getUser,
   PickupPoint,
+  setRidePassenger,
   setUserInPickup,
   usePickupPoint,
   User,
@@ -67,6 +68,7 @@ const PickupMarker = ({
             if (user?.uid) {
               clearUserFromPickups(rideId, user.uid);
               setUserInPickup(rideId, pickupId, user.uid, !inPickup);
+              setRidePassenger(user.uid, rideId, !inPickup);
             }
           }}
         >
