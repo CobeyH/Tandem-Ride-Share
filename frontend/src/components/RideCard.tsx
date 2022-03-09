@@ -209,7 +209,7 @@ function DriverBar({
   const [authUser] = useAuthState(auth);
   const [user] = useUser(authUser?.uid);
   const [driverChecked, setDriverChecked] = useState<boolean | undefined>(
-    undefined
+    authUser?.uid === driverId
   );
   const [driverUser, driverLoading, driverError] = useUser(driverId);
   const driver = driverLoading
