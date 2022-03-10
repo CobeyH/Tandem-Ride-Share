@@ -31,6 +31,7 @@ import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
 import { getReverseGeocode, getRideRoute } from "../Directions";
+import { lightTheme } from "../theme/colours";
 
 const createRide = async (
   ride: Ride,
@@ -160,6 +161,7 @@ const CreateRide = () => {
         >
           <Button
             variant={"solid"}
+            bg={!isValidRide ? "grey.100" : lightTheme.lightButton}
             mt={4}
             mb={4}
             disabled={!isValidRide}
