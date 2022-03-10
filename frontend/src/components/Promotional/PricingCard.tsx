@@ -30,13 +30,13 @@ interface PricingCardProps extends BoxProps {
 export const PricingCard = (props: PricingCardProps) => {
   const { data, icon, button, ...rest } = props;
   const { features, price, name } = data;
-  const accentColor = useColorModeValue(styleColors.green, "blue.200");
+  const accentColor = useColorModeValue(styleColors.green, styleColors.green);
 
   return (
     <Card rounded={{ sm: "xl" }} {...rest}>
       <VStack spacing={6}>
         <Icon aria-hidden as={icon} fontSize="4xl" color={accentColor} />
-        <Heading size="md" fontWeight="extrabold">
+        <Heading size="md" fontWeight="extrabold" color={styleColors.deepBlue}>
           {name}
         </Heading>
       </VStack>
@@ -56,7 +56,13 @@ export const PricingCard = (props: PricingCardProps) => {
           </Text>
         )}
       </Flex>
-      <List spacing="4" mb="8" maxW="28ch" mx="auto">
+      <List
+        spacing="4"
+        mb="8"
+        maxW="28ch"
+        mx="auto"
+        color={styleColors.deepBlue}
+      >
         {features.map((feature, index) => (
           <ListItem fontWeight="medium" key={index}>
             <ListIcon

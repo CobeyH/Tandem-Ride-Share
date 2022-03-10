@@ -8,26 +8,30 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { ImQuotesLeft } from "react-icons/all";
+import { styleColors } from "../../theme/colours";
 import { Quotee } from "./Quotee";
 
 export const Testimonal = () => (
-  <Box
-    as="section"
-    bg={useColorModeValue("${rgba(1, 1, 1, 0.35)}", "gray.800")}
-  >
+  <Box as="section" bg={useColorModeValue("gray.200", "gray.800")}>
     <Box
       maxW="3xl"
       mx="auto"
       px={{ base: "6", md: "8" }}
       pt="12"
       pb="16"
-      borderColor="black"
-      borderWidth={2}
+      borderColor={styleColors.deepBlue}
+      borderWidth={0}
       borderRadius={15}
+      bgColor="rgba(256,256,256,0.5)"
     >
       <Flex direction="column" align="center" textAlign="center">
-        <ImQuotesLeft color={useColorModeValue("gray.300", "gray.600")} />
-        <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="medium" mt="6">
+        <ImQuotesLeft
+          color={useColorModeValue(
+            "${styleColors.deepBlue}",
+            "${styleColors.deepBlue}"
+          )}
+        />
+        <Text fontSize={{ base: "l", md: "xl" }} fontWeight="medium" mt="6">
           &ldquo;Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
           expedita voluptas culpa sapiente alias molestiae. Numquam corrupti in
           laborum sed rerum et corporis.&rdquo;
@@ -39,16 +43,6 @@ export const Testimonal = () => (
           mt="8"
         />
       </Flex>
-      <HStack
-        justify="center"
-        spacing="4"
-        mt="8"
-        color={useColorModeValue("gray.300", "gray.600")}
-      >
-        <Circle size="3" bg="blue.500" />
-        <Circle size="2" bg="currentColor" />
-        <Circle size="2" bg="currentColor" />
-      </HStack>
     </Box>
   </Box>
 );

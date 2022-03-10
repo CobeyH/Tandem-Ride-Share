@@ -1,5 +1,7 @@
-import { Box, BoxProps, Img, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Center, Img, Text } from "@chakra-ui/react";
 import * as React from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { styleColors } from "../../theme/colours";
 
 interface Props extends BoxProps {
   name: string;
@@ -11,19 +13,19 @@ export const Quotee = (props: Props) => {
   const { name, jobTitle, imageSrc, ...boxProps } = props;
   return (
     <Box {...boxProps}>
-      <Img
-        src={imageSrc}
-        mx="auto"
-        objectFit="cover"
-        w="16"
-        h="16"
-        rounded="full"
-      />
+      <Center>
+        <FaUserCircle color={styleColors.medGreen} size={70}></FaUserCircle>
+      </Center>
       <Box mt="3">
-        <Text as="cite" fontStyle="normal" fontWeight="bold">
+        <Text
+          as="cite"
+          color={styleColors.deepBlue}
+          fontStyle="normal"
+          fontWeight="bold"
+        >
           {name}
         </Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text fontSize="sm" fontWeight="medium" color={styleColors.darkBlue}>
           {jobTitle}
         </Text>
       </Box>

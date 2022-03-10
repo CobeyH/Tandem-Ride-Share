@@ -9,6 +9,7 @@ export const lightTheme = {
 
 export const styleColors = {
   lightBlue: "#E3EDF5",
+  paleBlue: "#C0DAF0",
   mainBlue: "#77A2CA",
   medBlue: "#3975AE",
   darkBlue: "#3D6890",

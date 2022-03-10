@@ -20,7 +20,7 @@ const PriceSelector = () => (
           features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
         }}
         icon={FaUserAlt}
-        button={<Button borderWidth="2px">Buy now</Button>}
+        button={<Button>Buy now</Button>}
       />
       <PricingCard
         zIndex={1}
@@ -40,7 +40,7 @@ const PriceSelector = () => (
           features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
         }}
         icon={FaUserFriends}
-        button={<Button borderWidth="2px">Buy now</Button>}
+        button={<Button>Buy now</Button>}
       />
       <PricingCard
         data={{
@@ -49,7 +49,7 @@ const PriceSelector = () => (
           features: ["No group limits", "Gas calculator", "Optimized Pickups"],
         }}
         icon={FaUsers}
-        button={<Button borderWidth="2px">Buy now</Button>}
+        button={<Button>Buy now</Button>}
       />
     </SimpleGrid>
   </Box>
