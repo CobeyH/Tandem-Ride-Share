@@ -1,4 +1,4 @@
-import { Input, Menu, MenuItem, MenuList } from "@chakra-ui/react";
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { LatLng } from "leaflet";
 import * as React from "react";
 import { useState } from "react";
@@ -12,6 +12,7 @@ const COLLECTION = "address,poi";
 const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
   const [query, setQuery] = useState("");
   const [displayedLocs, setDisplayedLocs] = useState<Location[]>();
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   function getLocations() {
     if (query.length <= 2) {
@@ -34,18 +35,21 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
       .then((res) => {
         console.log(res.results);
         setDisplayedLocs(res.results as Location[]);
+        setMenuOpen(displayedLocs !== undefined && displayedLocs.length > 0);
       });
   }
   return (
     <>
       <Input
+        value={query}
         onChange={(e) => {
           setQuery(e.currentTarget.value);
           getLocations();
         }}
       />
-      <Menu isOpen={displayedLocs && displayedLocs.length > 0}>
+      <Menu isOpen={menuOpen}>
         <MenuList>
+          <MenuButton></MenuButton>
           {displayedLocs?.map((l: Location) => {
             return (
               <MenuItem
@@ -53,6 +57,8 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
                   const position = l.place.geometry.coordinates;
                   const latLng = new LatLng(position[1], position[0]);
                   props.setLatLng(latLng);
+                  setMenuOpen(false);
+                  setQuery(l.displayString);
                 }}
                 key={l.id}
               >
