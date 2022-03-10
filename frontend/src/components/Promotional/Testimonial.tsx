@@ -11,7 +11,10 @@ import { ImQuotesLeft } from "react-icons/all";
 import { Quotee } from "./Quotee";
 
 export const Testimonal = () => (
-  <Box as="section" bg={useColorModeValue("gray.50", "gray.800")}>
+  <Box
+    as="section"
+    bg={useColorModeValue("${rgba(1, 1, 1, 0.35)}", "gray.800")}
+  >
     <Box
       maxW="3xl"
       mx="auto"
@@ -49,3 +52,6 @@ export const Testimonal = () => (
     </Box>
   </Box>
 );
+function rgba(arg0: number, arg1: number, arg2: number, arg3: number): any {
+  throw new Error("Function not implemented.");
+}
