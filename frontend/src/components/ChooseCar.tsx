@@ -1,4 +1,4 @@
-import { Button, Menu, MenuItem, Select, Spinner } from "@chakra-ui/react";
+import { Menu, Select, Spinner } from "@chakra-ui/react";
 import * as React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useUserVehicles, Vehicle } from "../firebase/database";
