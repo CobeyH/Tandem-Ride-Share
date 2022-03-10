@@ -28,6 +28,7 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
   function getLocations() {
     if (query.length <= 2) {
       setDisplayedLocs([]);
+      setMenuOpen(false);
       return;
     }
     /**
