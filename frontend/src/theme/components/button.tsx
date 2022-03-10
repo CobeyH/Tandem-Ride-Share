@@ -1,5 +1,5 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
-import { lightTheme, styleColors } from "../colours";
+import { styleColors } from "../colours";
 
 const Button: ComponentStyleConfig = {
   variants: {

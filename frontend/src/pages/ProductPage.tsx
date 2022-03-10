@@ -1,9 +1,7 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  AspectRatio,
   Box,
   Button,
-  Heading,
   Text,
   HStack,
   Image,
@@ -11,8 +9,6 @@ import {
   Spinner,
   Center,
   VStack,
-  Fade,
-  SimpleGrid,
   Grid,
   GridItem,
   Menu,
@@ -28,7 +24,7 @@ import PriceSelector from "../components/Promotional/PriceSelector";
 import { Testimonal as Testimonial } from "../components/Promotional/Testimonial";
 import { storage } from "../firebase/storage";
 import { NavConstants } from "../NavigationConstants";
-import { lightTheme, styleColors } from "../theme/colours";
+import { styleColors } from "../theme/colours";
 
 const ProductPage = () => {
   const logoRef_white = ref(storage, "promotional/logo_white.svg");

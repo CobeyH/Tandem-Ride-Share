@@ -1,18 +1,11 @@
-import {
-  Box,
-  Circle,
-  Flex,
-  HStack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import * as React from "react";
 import { ImQuotesLeft } from "react-icons/all";
 import { styleColors } from "../../theme/colours";
 import { Quotee } from "./Quotee";
 
 export const Testimonal = () => (
-  <Box as="section" bg={useColorModeValue("gray.200", "gray.800")}>
+  <Box as="section">
     <Box
       maxW="3xl"
       mx="auto"
@@ -46,6 +39,3 @@ export const Testimonal = () => (
     </Box>
   </Box>
 );
-function rgba(arg0: number, arg1: number, arg2: number, arg3: number): any {
-  throw new Error("Function not implemented.");
-}

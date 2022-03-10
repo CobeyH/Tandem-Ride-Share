@@ -1,4 +1,4 @@
-import { Box, Button, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid } from "@chakra-ui/react";
 import * as React from "react";
 import { FaUserAlt, FaUserFriends, FaUsers } from "react-icons/all";
 import { PricingCard } from "./PricingCard";

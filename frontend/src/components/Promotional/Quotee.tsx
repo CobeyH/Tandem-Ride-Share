@@ -1,4 +1,4 @@
-import { Box, BoxProps, Center, Img, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Center, Text } from "@chakra-ui/react";
 import * as React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { styleColors } from "../../theme/colours";
@@ -10,7 +10,7 @@ interface Props extends BoxProps {
 }
 
 export const Quotee = (props: Props) => {
-  const { name, jobTitle, imageSrc, ...boxProps } = props;
+  const { name, jobTitle, ...boxProps } = props;
   return (
     <Box {...boxProps}>
       <Center>
