@@ -312,23 +312,6 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
     };
   }, [addingPickup, ref, map]);
 
-  function getCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        const latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        } as LatLng;
-        if (user) newPickupPoint(user.uid, rideId, latlng);
-        setAddingPickup(false);
-      },
-      (error) => {
-        alert("Failed to get user location");
-        console.log(error);
-      }
-    );
-  }
-
   async function newPickupPoint(
     userId: string,
     rideId: string,
@@ -382,16 +365,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           <Heading>{rideError}</Heading>
         ) : (
           <>
-            {addingPickup ? (
-              <IconButton
-                aria-label="current-location"
-                icon={<BsGeoAlt />}
-                onClick={getCurrentLocation}
-                isRound
-              ></IconButton>
-            ) : (
-              <Icon as={BsGeoAlt} w={6} h={6} />
-            )}
+            <Icon as={BsGeoAlt} w={6} h={6} />
             <Text isTruncated>
               {addingPickup ? "Click on map or use current location:" : text}
             </Text>
