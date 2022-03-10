@@ -48,6 +48,11 @@ Run `node --version` in a terminal. The output should look something like
 v16.13.2
 ```
 
+### Hitting MapQuest Api
+
+This app relies on the MapQuest API for some features, in order to use them acquire a key from [here](https://www.mapquest.com/)
+and create an `.env` file in `frontend` with `REACT_APP_MQ_KEY=<YOUR KEY>`.
+
 ## Running a Development Server
 
 While in the `frontend` directory run `npm install` to install dependancies.

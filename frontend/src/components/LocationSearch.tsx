@@ -1,57 +1,41 @@
 import {
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+  AsyncSelect,
+  chakraComponents,
+  GroupBase,
+  MenuProps,
+} from "chakra-react-select";
 import { LatLng } from "leaflet";
 import * as React from "react";
-import { useState } from "react";
-import { BsGeoAlt } from "react-icons/all";
-import { getReverseGeocode } from "../Directions";
 import { Location } from "../firebase/database";
 import { DEFAULT_CENTER } from "./MapView";
+import { Box } from "@chakra-ui/react";
 
 const MQ_PREDICTION_URI = "http://www.mapquestapi.com/search/v3/prediction";
 const RESULT_LIMIT = 5;
 const COLLECTION = "address,poi";
 
+type Option = { label: string; value: string };
+type LocationSuggestion = Option & Location;
+
 const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
-  const [query, setQuery] = useState("");
-  const [displayedLocs, setDisplayedLocs] = useState<Location[]>();
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
-  function getLocations() {
-    if (query.length <= 2) {
-      setDisplayedLocs([]);
-      setMenuOpen(false);
-      return;
+  const getLocations = async (query: string): Promise<Location[]> => {
+    if (query.length >= 2) {
+      const res = await fetch(
+        `${MQ_PREDICTION_URI}?key=${process.env.REACT_APP_MQ_KEY}` +
+          `&q=${query}` +
+          `&limit=${RESULT_LIMIT}` +
+          `&collection=${COLLECTION}` +
+          `&location=${DEFAULT_CENTER.lng},${DEFAULT_CENTER.lat}`
+      );
+      const json = await res.json();
+      console.log({ json });
+      return json.results as Location[];
+    } else {
+      return [];
     }
-    /**
-     * Here we are making the API call to the Prediction API
-     * endpoint, then we compose the reponse to JSON.
-     */
-    return fetch(
-      `${MQ_PREDICTION_URI}?key=${process.env.REACT_APP_MQ_KEY}` +
-        `&q=${query}` +
-        `&limit=${RESULT_LIMIT}` +
-        `&collection=${COLLECTION}` +
-        `&location=${DEFAULT_CENTER.lng},${DEFAULT_CENTER.lat}`
-    )
-      .then((res) => res.json())
-      .catch((error) => console.log(error))
-      .then((res) => {
-        console.log(res.results);
-        setDisplayedLocs(res.results as Location[]);
-        setMenuOpen(displayedLocs !== undefined && displayedLocs.length > 0);
-      });
-  }
+  };
 
-  function getCurrentLocation() {
+  const getCurrentLocation = async () => {
     navigator.geolocation.getCurrentPosition(
       function (position) {
         const latlng = {
@@ -59,57 +43,58 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
           lng: position.coords.longitude,
         } as LatLng;
         props.setLatLng(latlng);
-        getReverseGeocode(latlng)
-          .then((geo) => setQuery(geo))
-          .catch((err) => console.error(err));
       },
       (error) => {
         alert("Failed to get user location");
         console.log(error);
       }
     );
-  }
+  }; // todo
+
+  const customComponents = {
+    Menu: ({
+      children,
+      ...props
+    }: MenuProps<LocationSuggestion, false, GroupBase<LocationSuggestion>>) => {
+      if (props.options.length === 0) {
+        return null;
+      } else {
+        return (
+          <chakraComponents.Menu {...props}>{children}</chakraComponents.Menu>
+        );
+      }
+    },
+  };
 
   return (
-    <>
-      <InputGroup>
-        <Input
-          value={query}
-          onChange={(e) => {
-            setQuery(e.currentTarget.value);
-            getLocations();
-          }}
-        />
-        <InputRightElement>
-          <IconButton
-            aria-label="current-location"
-            icon={<BsGeoAlt />}
-            onClick={getCurrentLocation}
-          ></IconButton>
-        </InputRightElement>
-      </InputGroup>
-      <Menu isOpen={menuOpen}>
-        <MenuList>
-          <MenuButton></MenuButton>
-          {displayedLocs?.map((l: Location) => {
-            return (
-              <MenuItem
-                onClick={() => {
-                  const position = l.place.geometry.coordinates;
-                  const latLng = new LatLng(position[1], position[0]);
-                  props.setLatLng(latLng);
-                  setMenuOpen(false);
-                  setQuery(l.displayString);
-                }}
-                key={l.id}
-              >
-                {l.displayString}
-              </MenuItem>
-            );
-          })}
-        </MenuList>
-      </Menu>
-    </>
+    <Box pb={4}>
+      <AsyncSelect<LocationSuggestion, false, GroupBase<LocationSuggestion>>
+        name={"Location"}
+        defaultOptions={true}
+        placeholder={"The address"}
+        onChange={(newValue) => {
+          if (newValue !== null) {
+            const [lat, lng] = newValue.place.geometry.coordinates;
+            props.setLatLng(new LatLng(lat, lng));
+          }
+        }}
+        loadOptions={(inputValue, callback) => {
+          getLocations(inputValue).then((locs) =>
+            callback([
+              ...locs.map((loc) => ({
+                ...loc,
+                label: loc.displayString,
+                value: loc.name,
+              })),
+            ])
+          );
+        }}
+        components={customComponents}
+        chakraStyles={{
+          menu: (provided) => ({ ...provided, zIndex: 10000 }), // leaflet sets their Z-index to something dumb
+        }}
+      />
+    </Box>
   );
 };
 
