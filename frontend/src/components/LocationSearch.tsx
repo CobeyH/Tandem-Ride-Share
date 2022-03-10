@@ -35,21 +35,21 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
     }
   };
 
-  const getCurrentLocation = async () => {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        const latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        } as LatLng;
-        props.setLatLng(latlng);
-      },
-      (error) => {
-        alert("Failed to get user location");
-        console.log(error);
-      }
-    );
-  }; // todo
+  // const getCurrentLocation = async () => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     function (position) {
+  //       const latlng = {
+  //         lat: position.coords.latitude,
+  //         lng: position.coords.longitude,
+  //       } as LatLng;
+  //       props.setLatLng(latlng);
+  //     },
+  //     (error) => {
+  //       alert("Failed to get user location");
+  //       console.log(error);
+  //     }
+  //   );
+  // }; // todo
 
   const customComponents = {
     Menu: ({
