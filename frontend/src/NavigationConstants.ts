@@ -1,5 +1,5 @@
 const LOGIN = "/login";
-const HOME = "/";
+const PRODUCT_PAGE = "/";
 const GROUP_NEW = `/group/new`;
 const groupWithId = (id: string) => `/group/${id}`;
 const groupWithIdJoin = (id: string) => `${groupWithId(id)}/join`;
@@ -7,7 +7,7 @@ const REGISTER = "/register";
 
 export const NavConstants = {
   LOGIN,
-  HOME,
+  PRODUCT_PAGE,
   GROUP_NEW,
   groupWithId,
   groupWithIdJoin,
