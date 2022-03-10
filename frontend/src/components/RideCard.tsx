@@ -43,7 +43,6 @@ import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
 import { getOptimizedRoute, getReverseGeocode } from "../Directions";
-import { MdMyLocation } from "react-icons/all";
 
 export default function RideCard({
   rideId,
