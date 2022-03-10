@@ -9,6 +9,7 @@ import {
   HStack,
   Textarea,
   Checkbox,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -120,7 +121,12 @@ const CreateGroup = () => {
             maxSize={maxSize}
           />
           <HStack>
-            <Text mb={"8px"}>Private Group:</Text>
+            <Tooltip
+              label="Private groups are only joinable through an invite link from a group member"
+              hasArrow
+            >
+              <Text mb={"8px"}>Private Group:</Text>
+            </Tooltip>
             <Checkbox
               isChecked={isPrivate}
               onChange={(e) => setPrivate(e.target.checked)}

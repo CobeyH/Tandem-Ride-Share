@@ -1,8 +1,9 @@
-import { Select, Spinner } from "@chakra-ui/react";
+import { Menu, Select, Spinner } from "@chakra-ui/react";
 import * as React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useUserVehicles, Vehicle } from "../firebase/database";
 import { auth } from "../firebase/firebase";
+import AddCar from "./AddCar";
 
 const ChooseCar = (props: {
   carUpdate: (car: Vehicle) => void;
@@ -10,9 +11,14 @@ const ChooseCar = (props: {
 }) => {
   const [user] = useAuthState(auth);
   const [cars, loadingCars] = useUserVehicles(user?.uid);
+  if (!user) return null;
 
   return loadingCars ? (
     <Spinner />
+  ) : !cars || cars.length == 0 ? (
+    <Menu>
+      <AddCar user={user} />
+    </Menu>
   ) : (
     <Select
       onChange={(e) => {
