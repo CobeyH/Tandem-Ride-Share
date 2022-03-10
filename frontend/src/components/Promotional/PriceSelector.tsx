@@ -4,12 +4,7 @@ import { FaUserAlt, FaUserFriends, FaUsers } from "react-icons/all";
 import { PricingCard } from "./PricingCard";
 
 const PriceSelector = () => (
-  <Box
-    as="section"
-    bg={useColorModeValue("gray.50", "gray.800")}
-    py="14"
-    px={{ base: "4", md: "8" }}
-  >
+  <Box as="section" bg="" py="14" px={{ base: "4", md: "8" }}>
     <SimpleGrid
       columns={{ base: 1, lg: 4 }}
       spacing={{ base: "8", lg: "0" }}

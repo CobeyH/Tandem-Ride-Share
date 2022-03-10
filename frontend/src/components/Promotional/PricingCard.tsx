@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiCheckCircle } from "react-icons/hi";
+import { styleColors } from "../../theme/colours";
 import { Card } from "./Card";
 
 export interface PricingCardData {
@@ -29,7 +30,7 @@ interface PricingCardProps extends BoxProps {
 export const PricingCard = (props: PricingCardProps) => {
   const { data, icon, button, ...rest } = props;
   const { features, price, name } = data;
-  const accentColor = useColorModeValue("blue.600", "blue.200");
+  const accentColor = useColorModeValue(styleColors.green, "blue.200");
 
   return (
     <Card rounded={{ sm: "xl" }} {...rest}>

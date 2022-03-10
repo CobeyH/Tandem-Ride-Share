@@ -7,6 +7,20 @@ export const lightTheme = {
   settings: "#808080",
 };
 
+export const styleColors = {
+  lightBlue: "#E3EDF5",
+  mainBlue: "#77A2CA",
+  medBlue: "#3975AE",
+  darkBlue: "#3D6890",
+  deepBlue: "#082946",
+  lightPeri: "#9394D4",
+  periwinkle: "#6667AB",
+  lightMint: "#DAFFED",
+  mint: "#B5F0D3",
+  green: "#ADFC92",
+  medGreen: "#8CDD70",
+};
+
 export const groupLogos = [
   "#3975AE",
   "#EC9A29",

@@ -1,5 +1,5 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
-import { lightTheme } from "../colours";
+import { lightTheme, styleColors } from "../colours";
 
 const Button: ComponentStyleConfig = {
   variants: {
@@ -7,9 +7,12 @@ const Button: ComponentStyleConfig = {
       bg: lightTheme.lightButton,
       textColor: lightTheme.buttonText,
     },
-    "tandem-registration": {
-      bg: "green.200",
+    "tandem-product": {
+      bg: "",
       textColor: "white",
+      border: "2px",
+      color: "white",
+      _hover: { bg: styleColors.lightBlue },
     },
   },
   defaultProps: {
