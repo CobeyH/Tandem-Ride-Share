@@ -7,7 +7,6 @@ import {
   Flex,
   Heading,
   Icon,
-  IconButton,
   Spacer,
   Spinner,
   Switch,
