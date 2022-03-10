@@ -76,7 +76,6 @@ export type Ride = {
   isComplete: boolean;
   carId?: string;
   startDate: string;
-  endDate: string;
   pickupPoints: { [key: string]: PickupPoint };
 };
 

@@ -7,6 +7,7 @@ import {
   Flex,
   Heading,
   Icon,
+  IconButton,
   Spacer,
   Spinner,
   Switch,
@@ -109,8 +110,8 @@ export default function RideCard({
               amPassenger={Boolean(userPassenger)}
             />
             <PassengerBar rideId={rideId} />
-            {ride.startDate && ride.endDate ? (
-              <RideTimesBar startTime={ride.startDate} endTime={ride.endDate} />
+            {ride.startDate ? (
+              <RideTimesBar startTime={ride.startDate} />
             ) : null}
             {
               /** Pickup Bar */
@@ -311,6 +312,23 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
     };
   }, [addingPickup, ref, map]);
 
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const latlng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        } as LatLng;
+        if (user) newPickupPoint(user.uid, rideId, latlng);
+        setAddingPickup(false);
+      },
+      (error) => {
+        alert("Failed to get user location");
+        console.log(error);
+      }
+    );
+  }
+
   async function newPickupPoint(
     userId: string,
     rideId: string,
@@ -364,9 +382,18 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           <Heading>{rideError}</Heading>
         ) : (
           <>
-            <Icon as={BsGeoAlt} w={6} h={6} />
+            {addingPickup ? (
+              <IconButton
+                aria-label="current-location"
+                icon={<BsGeoAlt />}
+                onClick={getCurrentLocation}
+                isRound
+              ></IconButton>
+            ) : (
+              <Icon as={BsGeoAlt} w={6} h={6} />
+            )}
             <Text isTruncated>
-              {addingPickup ? "Click on map to add point:" : text}
+              {addingPickup ? "Click on map or use current location:" : text}
             </Text>
             <Spacer />
             {user ? (
@@ -385,13 +412,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
   );
 }
 
-function RideTimesBar({
-  startTime,
-  endTime,
-}: {
-  startTime: string;
-  endTime: string;
-}) {
+function RideTimesBar({ startTime }: { startTime: string }) {
   // make time strings pretty
   const start_date = startTime?.split("T")[0];
   let start_time = startTime?.split("T")[1];
@@ -401,14 +422,6 @@ function RideTimesBar({
     ? `${parseInt(start_time.split(":")[0]) - 12}:${start_time.split(":")[1]}`
     : `${parseInt(start_time.split(":")[0])}:${start_time.split(":")[1]}`;
 
-  const end_date = endTime?.split("T")[0];
-  let end_time = endTime?.split("T")[1];
-  const isPm_end = parseInt(end_time?.split(":")[0]) >= 12;
-
-  end_time = isPm_end
-    ? `${parseInt(end_time?.split(":")[0]) - 12}:${end_time?.split(":")[1]}`
-    : `${parseInt(end_time?.split(":")[0])}:${end_time?.split(":")[1]}`;
-
   return (
     <>
       <RideCardBar>
@@ -416,13 +429,6 @@ function RideTimesBar({
         <Spacer />
         <Text>
           {start_date} {start_time} {isPm_start ? "PM" : "AM"}
-        </Text>
-      </RideCardBar>
-      <RideCardBar>
-        <Text>End Date</Text>
-        <Spacer />
-        <Text>
-          {end_date} {end_time} {isPm_end ? "PM" : "AM"}
         </Text>
       </RideCardBar>
     </>

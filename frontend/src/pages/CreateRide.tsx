@@ -72,7 +72,6 @@ const CreateRide = () => {
     undefined
   );
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -141,12 +140,6 @@ const CreateRide = () => {
           type="datetime-local"
           onInput={(e) => setStartDate(e.currentTarget.value)}
         />
-        <Text>End Time</Text>
-        <Input
-          mb="4"
-          type="datetime-local"
-          onInput={(e) => setEndDate(e.currentTarget.value)}
-        />
         <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
@@ -188,7 +181,6 @@ const CreateRide = () => {
                       geocode: "",
                     },
                   },
-                  endDate,
                   ...(isDriver && { driver: user.uid }),
                   ...(selectedCar !== undefined && {
                     carId: selectedCar?.carId,
