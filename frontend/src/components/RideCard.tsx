@@ -109,8 +109,8 @@ export default function RideCard({
               amPassenger={Boolean(userPassenger)}
             />
             <PassengerBar rideId={rideId} />
-            {ride.startDate && ride.endDate ? (
-              <RideTimesBar startTime={ride.startDate} endTime={ride.endDate} />
+            {ride.startDate ? (
+              <RideTimesBar startTime={ride.startDate} />
             ) : null}
             {
               /** Pickup Bar */
@@ -385,13 +385,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
   );
 }
 
-function RideTimesBar({
-  startTime,
-  endTime,
-}: {
-  startTime: string;
-  endTime: string;
-}) {
+function RideTimesBar({ startTime }: { startTime: string }) {
   // make time strings pretty
   const start_date = startTime?.split("T")[0];
   let start_time = startTime?.split("T")[1];
@@ -400,14 +394,6 @@ function RideTimesBar({
   start_time = isPm_start
     ? `${parseInt(start_time.split(":")[0]) - 12}:${start_time.split(":")[1]}`
     : `${parseInt(start_time.split(":")[0])}:${start_time.split(":")[1]}`;
-
-  const end_date = endTime?.split("T")[0];
-  let end_time = endTime?.split("T")[1];
-  const isPm_end = parseInt(end_time?.split(":")[0]) >= 12;
-
-  end_time = isPm_end
-    ? `${parseInt(end_time?.split(":")[0]) - 12}:${end_time?.split(":")[1]}`
-    : `${parseInt(end_time?.split(":")[0])}:${end_time?.split(":")[1]}`;
 
   return (
     <>
@@ -421,9 +407,6 @@ function RideTimesBar({
       <RideCardBar>
         <Text>End Date</Text>
         <Spacer />
-        <Text>
-          {end_date} {end_time} {isPm_end ? "PM" : "AM"}
-        </Text>
       </RideCardBar>
     </>
   );
