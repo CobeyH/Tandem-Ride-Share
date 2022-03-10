@@ -98,6 +98,17 @@ export type Message = {
   timestamp: number;
 };
 
+export type Location = {
+  id: string;
+  displayString: string;
+  name: string;
+  place: {
+    geometry: {
+      coordinates: number[];
+    };
+  };
+};
+
 export const getGroup = async (groupId: string) => {
   return new Promise<Group>((resolve, reject) => {
     get(ref(db, `${GROUPS}/${groupId}`)).then(
