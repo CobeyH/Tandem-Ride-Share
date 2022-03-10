@@ -320,7 +320,6 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         } as LatLng;
-        console.log(latlng);
         if (user) newPickupPoint(user.uid, rideId, latlng);
         setAddingPickup(false);
       },
@@ -387,14 +386,15 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
             {addingPickup ? (
               <IconButton
                 aria-label="current-location"
-                icon={<MdMyLocation />}
+                icon={<BsGeoAlt />}
                 onClick={getCurrentLocation}
+                isRound
               ></IconButton>
             ) : (
               <Icon as={BsGeoAlt} w={6} h={6} />
             )}
             <Text isTruncated>
-              {addingPickup ? "Click on map to add point:" : text}
+              {addingPickup ? "Click on map or use current location:" : text}
             </Text>
             <Spacer />
             {user ? (
