@@ -1,7 +1,18 @@
-import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import {
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 import { LatLng } from "leaflet";
 import * as React from "react";
 import { useState } from "react";
+import { BsGeoAlt } from "react-icons/all";
+import { getReverseGeocode } from "../Directions";
 import { Location } from "../firebase/database";
 import { DEFAULT_CENTER } from "./MapView";
 
@@ -38,15 +49,44 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
         setMenuOpen(displayedLocs !== undefined && displayedLocs.length > 0);
       });
   }
+
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const latlng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        } as LatLng;
+        props.setLatLng(latlng);
+        getReverseGeocode(latlng)
+          .then((geo) => setQuery(geo))
+          .catch((err) => console.error(err));
+      },
+      (error) => {
+        alert("Failed to get user location");
+        console.log(error);
+      }
+    );
+  }
+
   return (
     <>
-      <Input
-        value={query}
-        onChange={(e) => {
-          setQuery(e.currentTarget.value);
-          getLocations();
-        }}
-      />
+      <InputGroup>
+        <Input
+          value={query}
+          onChange={(e) => {
+            setQuery(e.currentTarget.value);
+            getLocations();
+          }}
+        />
+        <InputRightElement>
+          <IconButton
+            aria-label="current-location"
+            icon={<BsGeoAlt />}
+            onClick={getCurrentLocation}
+          ></IconButton>
+        </InputRightElement>
+      </InputGroup>
       <Menu isOpen={menuOpen}>
         <MenuList>
           <MenuButton></MenuButton>
