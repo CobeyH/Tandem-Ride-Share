@@ -143,7 +143,7 @@ const CreateRide = () => {
           onInput={(e) => setStartDate(e.currentTarget.value)}
         />
         <Text>Start Location</Text>
-        <LocationSearch />
+        <LocationSearch setLatLng={setStartPosition} />
         <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
