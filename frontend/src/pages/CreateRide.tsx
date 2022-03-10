@@ -32,6 +32,7 @@ import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
 import { getReverseGeocode, getRideRoute } from "../Directions";
 import { lightTheme } from "../theme/colours";
+import LocationSearch from "../components/LocationSearch";
 
 const createRide = async (
   ride: Ride,
@@ -141,6 +142,8 @@ const CreateRide = () => {
           type="datetime-local"
           onInput={(e) => setStartDate(e.currentTarget.value)}
         />
+        <Text>Start Location</Text>
+        <LocationSearch />
         <MapView style={{ height: "50vh" }} setMap={setMap}>
           <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
           <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
