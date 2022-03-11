@@ -61,7 +61,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <>
-      <Header pages={[{ label: "Group List", url: "/" }]} />
+      <Header pages={[{ label: "My Groups", url: "/" }]} />
       {!bannerLoading && banner !== undefined ? (
         <Image
           src={banner}
