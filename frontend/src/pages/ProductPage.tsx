@@ -38,7 +38,7 @@ const ProductPage = () => {
       <Box
         w="100vw"
         h="-webkit-fit-content"
-        bgGradient={`linear(to-r, ${styleColors.mainBlue}, white)`}
+        bgGradient={`linear(to-r, ${styleColors.mainBlue}, ${styleColors.lightBlue})`}
       >
         <Box
           w="100vw"
@@ -144,7 +144,7 @@ const ProductPage = () => {
                     Carpooling made social.
                   </Text>
                 </VStack>
-                <Text color="white" fontSize={18} align="center">
+                <Text color={styleColors.deepBlue} fontSize={18} align="center">
                   Connect your circles and get where you need to go together.
                 </Text>
                 <Box p={35}>
@@ -168,7 +168,7 @@ const ProductPage = () => {
           <Center>
             <Box w="90vw" pt={10} pb={200}>
               <Text
-                bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue}, white)`}
+                bgGradient={`linear(to-r, ${styleColors.darkBlue}, ${styleColors.medBlue}, white)`}
                 bgClip="text"
                 fontWeight="extrabold"
                 fontSize={50}
@@ -199,7 +199,7 @@ const ProductPage = () => {
           </Center>
           <VStack pb={25}>
             <Text
-              bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue}, ${styleColors.paleBlue})`}
+              bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
               bgClip="text"
               fontWeight="extrabold"
               fontSize={50}
