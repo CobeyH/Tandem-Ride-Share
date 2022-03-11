@@ -206,6 +206,7 @@ const CreateRide = () => {
                   .then(() => createRide(ride, groupId, [userId]))
                   .then(() => navigate(`/group/${groupId}`))
                   .catch((err) => console.error(err));
+                console.log({ ride });
               }
             }}
           >
