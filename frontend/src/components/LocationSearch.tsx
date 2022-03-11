@@ -1,6 +1,7 @@
 import {
   AsyncSelect,
   chakraComponents,
+  DropdownIndicatorProps,
   GroupBase,
   MenuProps,
 } from "chakra-react-select";
@@ -63,6 +64,24 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
         );
       }
     },
+    DropdownIndicator: ({
+      children,
+      ...props
+    }: DropdownIndicatorProps<
+      LocationSuggestion,
+      false,
+      GroupBase<LocationSuggestion>
+    >) => {
+      if (props.options.length === 0) {
+        return null;
+      } else {
+        return (
+          <chakraComponents.DropdownIndicator {...props}>
+            {children}
+          </chakraComponents.DropdownIndicator>
+        );
+      }
+    },
   };
 
   return (
@@ -82,15 +101,14 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
           }
         }}
         loadOptions={(inputValue, callback) => {
-          getLocations(inputValue).then((locs) =>
-            callback([
-              ...locs.map((loc) => ({
-                ...loc,
-                label: loc.displayString,
-                value: loc.name,
-              })),
-            ])
-          );
+          getLocations(inputValue).then((locs) => {
+            const suggestions = locs.map((loc) => ({
+              ...loc,
+              label: loc.displayString,
+              value: loc.name,
+            }));
+            callback(suggestions);
+          });
         }}
         components={customComponents}
         chakraStyles={{
