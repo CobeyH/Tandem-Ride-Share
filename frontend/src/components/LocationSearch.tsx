@@ -28,7 +28,6 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
           `&location=${DEFAULT_CENTER.lng},${DEFAULT_CENTER.lat}`
       );
       const json = await res.json();
-      console.log({ json });
       return json.results as Location[];
     } else {
       return [];
@@ -69,13 +68,17 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
   return (
     <Box pb={4}>
       <AsyncSelect<LocationSuggestion, false, GroupBase<LocationSuggestion>>
+        isClearable
         name={"Location"}
         defaultOptions={true}
         placeholder={"The address"}
         onChange={(newValue) => {
           if (newValue !== null) {
-            const [lat, lng] = newValue.place.geometry.coordinates;
-            props.setLatLng(new LatLng(lat, lng));
+            const [lng, lat] = newValue.place.geometry.coordinates;
+            const latLng = new LatLng(lat, lng);
+            props.setLatLng(latLng);
+          } else {
+            props.setLatLng(DEFAULT_CENTER);
           }
         }}
         loadOptions={(inputValue, callback) => {
