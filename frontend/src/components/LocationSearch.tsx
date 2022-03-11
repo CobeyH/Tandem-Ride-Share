@@ -10,7 +10,7 @@ import { Location } from "../firebase/database";
 import { DEFAULT_CENTER } from "./MapView";
 import { Box } from "@chakra-ui/react";
 
-const MQ_PREDICTION_URI = "http://www.mapquestapi.com/search/v3/prediction";
+const MQ_PREDICTION_URI = "https://www.mapquestapi.com/search/v3/prediction";
 const RESULT_LIMIT = 5;
 const COLLECTION = "address,poi";
 
