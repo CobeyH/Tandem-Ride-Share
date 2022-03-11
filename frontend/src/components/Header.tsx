@@ -40,7 +40,6 @@ const Header = ({ pages }: PageList) => {
       justify="space-between"
       wrap="wrap"
       padding={6}
-      marginBlockEnd={4}
       bg={lightTheme.main}
     >
       <Breadcrumbs pages={pages} />
