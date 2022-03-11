@@ -74,7 +74,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Container>
         <VStack spacing="24px" align="c">
           <HStack>
-            <Heading textAlign={"center"}>{group.name}</Heading>
             <ShareLink />
             <GroupDrawer
               members={group.members}
@@ -84,6 +83,8 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}
           </HStack>
+
+          <Heading textAlign={"center"}>{group.name}</Heading>
           <Box bg="white" px={5} py={5} borderRadius={"4px"}>
             <Text> Description: </Text>
             <Text> {group.description}</Text>

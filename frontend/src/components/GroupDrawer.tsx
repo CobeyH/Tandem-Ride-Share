@@ -8,7 +8,6 @@ import {
   DrawerCloseButton,
   DrawerBody,
   DrawerFooter,
-  IconButton,
   Icon,
   DrawerHeader,
   Divider,
@@ -47,14 +46,14 @@ const GroupDrawer = (props: {
 
   return (
     <>
-      <IconButton
+      <Button
         aria-label="group-members"
-        icon={<Icon as={BsFillChatFill} />}
+        rightIcon={<Icon as={BsFillChatFill} />}
         size="sm"
         onClick={onOpen}
       >
-        Open
-      </IconButton>
+        Chat
+      </Button>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
