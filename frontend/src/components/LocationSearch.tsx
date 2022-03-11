@@ -121,6 +121,7 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
             }));
             callback(suggestions);
           });
+
         }}
         components={customComponents}
         chakraStyles={{
