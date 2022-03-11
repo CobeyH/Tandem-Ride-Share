@@ -7,7 +7,6 @@ import {
   Flex,
   Heading,
   Icon,
-  IconButton,
   Spacer,
   Spinner,
   Switch,
@@ -43,6 +42,7 @@ import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
 import { getOptimizedRoute, getReverseGeocode } from "../Directions";
+import LocationSearch from "./LocationSearch";
 
 export default function RideCard({
   rideId,
@@ -312,23 +312,6 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
     };
   }, [addingPickup, ref, map]);
 
-  function getCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        const latlng = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        } as LatLng;
-        if (user) newPickupPoint(user.uid, rideId, latlng);
-        setAddingPickup(false);
-      },
-      (error) => {
-        alert("Failed to get user location");
-        console.log(error);
-      }
-    );
-  }
-
   async function newPickupPoint(
     userId: string,
     rideId: string,
@@ -382,28 +365,29 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           <Heading>{rideError}</Heading>
         ) : (
           <>
-            {addingPickup ? (
-              <IconButton
-                aria-label="current-location"
-                icon={<BsGeoAlt />}
-                onClick={getCurrentLocation}
-                isRound
-              ></IconButton>
-            ) : (
-              <Icon as={BsGeoAlt} w={6} h={6} />
-            )}
-            <Text isTruncated>
-              {addingPickup ? "Click on map or use current location:" : text}
-            </Text>
-            <Spacer />
+            <Icon as={BsGeoAlt} w={6} h={6} />
             {user ? (
-              <Button
-                onClick={() => {
-                  setAddingPickup(!addingPickup);
-                }}
-              >
-                {addingPickup ? "Cancel" : "Add New Pickup"}
-              </Button>
+              <>
+                {addingPickup ? (
+                  <LocationSearch
+                    setLatLng={(latLng) =>
+                      newPickupPoint(user?.uid, rideId, latLng)
+                    }
+                  />
+                ) : (
+                  <>
+                    <Text isTruncated>{text}</Text>
+                    <Spacer />
+                  </>
+                )}
+                <Button
+                  onClick={() => {
+                    setAddingPickup(!addingPickup);
+                  }}
+                >
+                  {addingPickup ? "Cancel" : "Add New Pickup"}
+                </Button>
+              </>
             ) : null}
           </>
         )}

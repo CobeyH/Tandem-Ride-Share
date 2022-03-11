@@ -19,15 +19,16 @@ import { NavConstants } from "./NavigationConstants";
 import { useEffect } from "react";
 import extendedTheme from "./theme/style";
 import Fonts from "./theme/components/font";
+import ProductPage from "./pages/ProductPage";
 
 export const App = () => {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   return (
     <ChakraProvider theme={extendedTheme}>
       <Fonts />
       <Router>
-        {loading || user ? (
+        {user ? (
           <Routes>
             <Route path="/login" element={<LoginForm />} />
             <Route path="/" element={<GroupsListPage />} />
@@ -39,10 +40,14 @@ export const App = () => {
           </Routes>
         ) : (
           <Routes>
+            <Route path="/" element={<ProductPage />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<Register />} />
             <Route path="/group/:groupId/join" element={<JoinGroup />} />
-            <Route path="*" element={<Redirect to={NavConstants.LOGIN} />} />
+            <Route
+              path="*"
+              element={<Redirect to={NavConstants.PRODUCT_PAGE} />}
+            />
           </Routes>
         )}
       </Router>

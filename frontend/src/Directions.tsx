@@ -93,19 +93,14 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
 };
 
 export const getReverseGeocode = async (point: LatLng) => {
-  return new Promise<string>((resolve, reject) => {
-    fetch(
-      MQ_REV_GEOCODE_URI +
-        `?key=${process.env.REACT_APP_MQ_KEY}` +
-        `&location=${point.lat},${point.lng}`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        const location = res.results[0].locations[0];
-        resolve(geocodeToString(location));
-      })
-      .catch((err) => reject(err));
-  });
+  const res = await fetch(
+    MQ_REV_GEOCODE_URI +
+      `?key=${process.env.REACT_APP_MQ_KEY}` +
+      `&location=${point.lat},${point.lng}`
+  );
+  const json = await res.json();
+  const location = json.results[0].locations[0];
+  return geocodeToString(location);
 };
 
 type Geocode = {

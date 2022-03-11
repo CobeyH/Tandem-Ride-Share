@@ -32,6 +32,7 @@ import ChooseCar from "../components/ChooseCar";
 import CarStatsSlider from "../components/CarStatsSlider";
 import { getReverseGeocode, getRideRoute } from "../Directions";
 import { lightTheme } from "../theme/colours";
+import LocationSearch from "../components/LocationSearch";
 
 const createRide = async (
   ride: Ride,
@@ -141,9 +142,21 @@ const CreateRide = () => {
           type="datetime-local"
           onInput={(e) => setStartDate(e.currentTarget.value)}
         />
+        <Text>Start Location</Text>
+        <LocationSearch setLatLng={setStartPosition} />
+        <Text>End Location</Text>
+        <LocationSearch setLatLng={setEndPosition} />
         <MapView style={{ height: "50vh" }} setMap={setMap}>
-          <DraggableMarker onDragEnd={onDragStart} icon={startIcon} />
-          <DraggableMarker onDragEnd={onDragEnd} icon={endIcon} />
+          <DraggableMarker
+            position={startPosition}
+            onDragEnd={onDragStart}
+            icon={startIcon}
+          />
+          <DraggableMarker
+            position={endPosition}
+            onDragEnd={onDragEnd}
+            icon={endIcon}
+          />
         </MapView>
         <Tooltip
           hasArrow
@@ -193,6 +206,7 @@ const CreateRide = () => {
                   .then(() => createRide(ride, groupId, [userId]))
                   .then(() => navigate(`/group/${groupId}`))
                   .catch((err) => console.error(err));
+                console.log({ ride });
               }
             }}
           >
@@ -209,6 +223,7 @@ export default CreateRide;
 interface MarkerProperties {
   onDragEnd: (position: L.LatLng) => void;
   icon: L.Icon;
+  position: L.LatLng;
 }
 
 const DraggableMarker = (props: MarkerProperties) => {
@@ -229,7 +244,7 @@ const DraggableMarker = (props: MarkerProperties) => {
     <Marker
       draggable={true}
       eventHandlers={eventHandlers}
-      position={DEFAULT_CENTER}
+      position={props.position}
       ref={markerRef}
       icon={props.icon}
     />

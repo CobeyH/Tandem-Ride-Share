@@ -1,11 +1,18 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
-import { lightTheme } from "../colours";
+import { styleColors } from "../colours";
 
 const Button: ComponentStyleConfig = {
   variants: {
     "tandem-base": {
-      bg: lightTheme.lightButton,
-      textColor: lightTheme.buttonText,
+      bg: styleColors.paleBlue,
+      textColor: styleColors.deepBlue,
+    },
+    "tandem-product": {
+      bg: "",
+      textColor: "white",
+      border: "2px",
+      color: "white",
+      _hover: { bg: styleColors.paleBlue },
     },
   },
   defaultProps: {
