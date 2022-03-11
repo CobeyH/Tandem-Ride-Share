@@ -104,7 +104,7 @@ const CreateRide = () => {
     <>
       <Header
         pages={[
-          { label: "Group List", url: "/" },
+          { label: "My Groups", url: "/" },
           { label: "Group", url: `/group/${groupId}` },
         ]}
       />

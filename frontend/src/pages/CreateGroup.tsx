@@ -82,7 +82,7 @@ const CreateGroup = () => {
 
   return (
     <>
-      <Header pages={[{ label: "Group List", url: "/" }]} />
+      <Header pages={[{ label: "My Groups", url: "/" }]} />
       <InputGroup paddingInline={5}>
         <Stack>
           <Heading textAlign={"center"}>Create Group</Heading>

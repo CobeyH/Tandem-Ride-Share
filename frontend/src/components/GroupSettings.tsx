@@ -1,7 +1,6 @@
 import { IoMdSettings } from "react-icons/all";
 import {
   useDisclosure,
-  IconButton,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -21,14 +20,17 @@ const GroupSettings = (props: { group: Group }) => {
   const [maxSize, setSize] = useState<number>(props.group.maxSize);
   return (
     <>
-      <IconButton
+      <Button
         size="sm"
-        icon={<IoMdSettings />}
+        rightIcon={<IoMdSettings />}
         onClick={() => {
           onOpen();
         }}
         aria-label="Share group"
-      />
+      >
+        {" "}
+        Settings{" "}
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

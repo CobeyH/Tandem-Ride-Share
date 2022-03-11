@@ -61,20 +61,13 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <>
-      <Header pages={[{ label: "Group List", url: "/" }]} />
+      <Header pages={[{ label: "My Groups", url: "/" }]} />
       {!bannerLoading && banner !== undefined ? (
-        <Image
-          src={banner}
-          width="100%"
-          maxHeight="200px"
-          objectFit="cover"
-          pb={5}
-        />
+        <Image src={banner} width="100%" maxHeight="200px" objectFit="cover" />
       ) : null}
       <Container>
         <VStack spacing="24px" align="c">
-          <HStack>
-            <Heading textAlign={"center"}>{group.name}</Heading>
+          <HStack pt={5}>
             <ShareLink />
             <GroupDrawer
               members={group.members}
@@ -84,6 +77,8 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}
           </HStack>
+
+          <Heading textAlign={"center"}>{group.name}</Heading>
           <Box bg="white" px={5} py={5} borderRadius={"4px"}>
             <Text> Description: </Text>
             <Text> {group.description}</Text>

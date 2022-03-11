@@ -8,14 +8,13 @@ import {
   DrawerCloseButton,
   DrawerBody,
   DrawerFooter,
-  IconButton,
   Icon,
   DrawerHeader,
   Divider,
   HStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { FaUserFriends } from "react-icons/fa";
+import { BsFillChatFill } from "react-icons/all";
 import { lightTheme } from "../theme/colours";
 import { GroupChat } from "./Chat";
 import GroupMembersList from "./GroupMembersList";
@@ -47,14 +46,14 @@ const GroupDrawer = (props: {
 
   return (
     <>
-      <IconButton
+      <Button
         aria-label="group-members"
-        icon={<Icon as={FaUserFriends} />}
+        rightIcon={<Icon as={BsFillChatFill} />}
         size="sm"
         onClick={onOpen}
       >
-        Open
-      </IconButton>
+        Chat
+      </Button>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
