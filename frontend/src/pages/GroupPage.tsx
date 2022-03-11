@@ -78,7 +78,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <GroupDrawer
               members={group.members}
               ownerId={group.owner}
-              maxSize={group.maxSize}
+              plan={group.plan}
               groupId={group.id}
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}

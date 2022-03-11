@@ -1,58 +1,108 @@
 import { Box, Button, SimpleGrid } from "@chakra-ui/react";
-import * as React from "react";
+import React, { useState } from "react";
+import { IconType } from "react-icons";
 import { FaUserAlt, FaUserFriends, FaUsers } from "react-icons/all";
 import { PricingCard } from "./PricingCard";
 
-const PriceSelector = () => (
-  <Box as="section" bg="" py="14" px={{ base: "4", md: "8" }}>
-    <SimpleGrid
-      columns={{ base: 1, lg: 4 }}
-      spacing={{ base: "8", lg: "0" }}
-      maxW="7xl"
-      mx="auto"
-      justifyItems="center"
-      alignItems="center"
-    >
-      <PricingCard
-        data={{
-          price: "Free",
-          name: "Friend Group",
-          features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
-        }}
-        icon={FaUserAlt}
-        button={<Button>Buy now</Button>}
-      />
-      <PricingCard
-        zIndex={1}
-        transform={{ lg: "scale(1.05)" }}
-        data={{
-          price: "$5",
-          name: "Small Organization",
-          features: ["Limit 25 people", "Gas calculator", "Optimized Pickups"],
-        }}
-        icon={FaUserFriends}
-        button={<Button>Buy now</Button>}
-      />
-      <PricingCard
-        data={{
-          price: "$10",
-          name: "Large Organization",
-          features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
-        }}
-        icon={FaUserFriends}
-        button={<Button>Buy now</Button>}
-      />
-      <PricingCard
-        data={{
-          price: "$29",
-          name: "Enterprise",
-          features: ["No group limits", "Gas calculator", "Optimized Pickups"],
-        }}
-        icon={FaUsers}
-        button={<Button>Buy now</Button>}
-      />
-    </SimpleGrid>
-  </Box>
-);
+type CardInfo = {
+  data: {
+    price: string;
+    numericPrice: number;
+    name: PlanTypes;
+    features: string[];
+    limit?: number;
+  };
+  icon: IconType;
+};
+
+export type PlanTypes =
+  | "Friend Group"
+  | "Small Organization"
+  | "Large Organization"
+  | "Enterprise";
+
+const PriceSelector = (props: {
+  showSelectors: boolean;
+  updateGroupPlan?: (newPlan: PlanTypes) => void;
+}) => {
+  const [selectedCard, setSelectedCard] = useState("Free");
+  const cardData: CardInfo[] = [
+    {
+      data: {
+        price: "Free",
+        numericPrice: 0,
+        limit: 10,
+        name: "Friend Group",
+        features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
+      },
+      icon: FaUserAlt,
+    },
+    {
+      data: {
+        price: "$5",
+        limit: 25,
+        numericPrice: 5,
+        name: "Small Organization",
+        features: ["Limit 25 people", "Gas calculator", "Optimized Pickups"],
+      },
+      icon: FaUserFriends,
+    },
+    {
+      data: {
+        price: "$10",
+        numericPrice: 10,
+        limit: 50,
+        name: "Large Organization",
+        features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
+      },
+      icon: FaUserFriends,
+    },
+    {
+      data: {
+        price: "$29",
+        numericPrice: 29,
+        name: "Enterprise",
+        features: ["No group limits", "Gas calculator", "Optimized Pickups"],
+      },
+      icon: FaUsers,
+    },
+  ];
+  return (
+    <Box as="section" bg="" py="14" px={{ base: "4", md: "8" }}>
+      <SimpleGrid
+        columns={{ base: 1, lg: 4 }}
+        spacing={{ base: "8", lg: "0" }}
+        maxW="7xl"
+        mx="auto"
+        justifyItems="center"
+        alignItems="center"
+      >
+        {cardData.map((card: CardInfo) => (
+          <PricingCard
+            key={card.data.name}
+            data={card.data}
+            icon={card.icon}
+            highlight={card.data.name == selectedCard}
+            button={
+              card.data.name == selectedCard ? (
+                <></>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setSelectedCard(card.data.name);
+                    if (props.updateGroupPlan)
+                      props.updateGroupPlan(card.data.name);
+                  }}
+                >
+                  Select
+                </Button>
+              )
+            }
+          />
+        ))}
+      </SimpleGrid>
+    </Box>
+  );
+};
 
 export default PriceSelector;

@@ -17,7 +17,7 @@ import { Group, setGroup } from "../firebase/database";
 
 const GroupSettings = (props: { group: Group }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [maxSize, setSize] = useState<number>(props.group.maxSize);
+  const [maxSize, setSize] = useState<number | undefined>(props.group.maxSize);
   return (
     <>
       <Button

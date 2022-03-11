@@ -25,8 +25,10 @@ import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
 import Header from "../components/Header";
 import { PhotoType, uploadPhoto } from "../firebase/storage";
-import GroupSizeSlider from "../components/GroupSizeSlider";
 import FileDropzone from "../components/FileDropzone";
+import PriceSelector, {
+  PlanTypes,
+} from "../components/Promotional/PriceSelector";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -74,7 +76,7 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
-  const [maxSize, setSize] = useState<number>(10);
+  const [plan, setPlan] = useState<PlanTypes>("Free");
   const MAX_GROUP_NAME_LENGTH = 25;
 
   const isInvalidName = (name: string) => name.length === 0;
@@ -115,11 +117,7 @@ const CreateGroup = () => {
               isInvalid={invalidName}
             />
           </HStack>
-          <GroupSizeSlider
-            setSize={setSize}
-            isPrivate={isPrivate}
-            maxSize={maxSize}
-          />
+          <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
           <HStack>
             <Tooltip
               label="Private groups are only joinable through an invite link from a group member"
