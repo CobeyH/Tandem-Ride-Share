@@ -63,17 +63,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
     <>
       <Header pages={[{ label: "My Groups", url: "/" }]} />
       {!bannerLoading && banner !== undefined ? (
-        <Image
-          src={banner}
-          width="100%"
-          maxHeight="200px"
-          objectFit="cover"
-          pb={5}
-        />
+        <Image src={banner} width="100%" maxHeight="200px" objectFit="cover" />
       ) : null}
       <Container>
         <VStack spacing="24px" align="c">
-          <HStack>
+          <HStack pt={5}>
             <ShareLink />
             <GroupDrawer
               members={group.members}
