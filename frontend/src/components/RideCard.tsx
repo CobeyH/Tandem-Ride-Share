@@ -42,6 +42,7 @@ import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
 import { getOptimizedRoute, getReverseGeocode } from "../Directions";
+import LocationSearch from "./LocationSearch";
 
 export default function RideCard({
   rideId,
@@ -365,18 +366,28 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         ) : (
           <>
             <Icon as={BsGeoAlt} w={6} h={6} />
-            <Text isTruncated>
-              {addingPickup ? "Click on map or use current location:" : text}
-            </Text>
-            <Spacer />
             {user ? (
-              <Button
-                onClick={() => {
-                  setAddingPickup(!addingPickup);
-                }}
-              >
-                {addingPickup ? "Cancel" : "Add New Pickup"}
-              </Button>
+              <>
+                {addingPickup ? (
+                  <LocationSearch
+                    setLatLng={(latLng) =>
+                      newPickupPoint(user?.uid, rideId, latLng)
+                    }
+                  />
+                ) : (
+                  <>
+                    <Text isTruncated>{text}</Text>
+                    <Spacer />
+                  </>
+                )}
+                <Button
+                  onClick={() => {
+                    setAddingPickup(!addingPickup);
+                  }}
+                >
+                  {addingPickup ? "Cancel" : "Add New Pickup"}
+                </Button>
+              </>
             ) : null}
           </>
         )}
