@@ -10,6 +10,7 @@ import * as React from "react";
 import { Location } from "../firebase/database";
 import { DEFAULT_CENTER } from "./MapView";
 import { Box } from "@chakra-ui/react";
+import { useState } from "react";
 
 const MQ_PREDICTION_URI = "https://www.mapquestapi.com/search/v3/prediction";
 const RESULT_LIMIT = 5;
@@ -19,6 +20,8 @@ type Option = { label: string; value: string };
 type LocationSuggestion = Option & Location;
 
 const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
+  const [input, setInput] = useState<string>("");
+
   const getLocations = async (query: string): Promise<Location[]> => {
     if (query.length >= 2) {
       const res = await fetch(
@@ -88,6 +91,15 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
     <Box pb={4} flexGrow={2}>
       <AsyncSelect<LocationSuggestion, false, GroupBase<LocationSuggestion>>
         isClearable
+        isSearchable
+        inputValue={input}
+        onInputChange={(newInput, { action }) => {
+          if (action === "set-value" || action === "input-change") {
+            setInput(newInput);
+          }
+          return newInput;
+        }}
+        cacheOptions={true}
         name={"Location"}
         defaultOptions={true}
         placeholder={"The address"}
