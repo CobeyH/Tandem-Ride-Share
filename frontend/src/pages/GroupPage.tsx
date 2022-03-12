@@ -14,16 +14,16 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { Group, useGroup } from "../firebase/database";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import RideCard from "../components/RideCard";
+import RideCard from "../components/Rides/RideCard";
 import Header from "../components/Header";
 import { storage } from "../firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
-import ShareLink from "../components/ShareLink";
-import GroupSettings from "../components/GroupSettings";
+import ShareLink from "../components/Groups/ShareLink";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
-import GroupDrawer from "../components/GroupDrawer";
+import GroupDrawer from "../components/Groups/GroupDrawer";
+import GroupSettings from "../components/Groups/GroupSettings";
 
 export default function GroupPage() {
   const navigate = useNavigate();

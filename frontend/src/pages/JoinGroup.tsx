@@ -14,9 +14,9 @@ import { Group, useGroup } from "../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { NavConstants } from "../NavigationConstants";
-import RideCard from "../components/RideCard";
-import GroupJoinButton from "../components/GroupJoinButton";
+import RideCard from "../components/Rides/RideCard";
 import SignInRegisterButton from "../components/SignInRegister";
+import GroupJoinButton from "../components/Groups/GroupJoinButton";
 
 export type LocationGotoState = { goto?: string };
 type GroupUserProps = { group: Group; userId: string | undefined };

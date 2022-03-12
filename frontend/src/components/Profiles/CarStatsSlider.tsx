@@ -11,8 +11,8 @@ import {
 import React, { useState } from "react";
 import { BsQuestionCircleFill } from "react-icons/all";
 import { FaCarSide, FaShuttleVan, FaGasPump } from "react-icons/fa";
-import { Vehicle } from "../firebase/database";
-import { lightTheme } from "../theme/colours";
+import { Vehicle } from "../../firebase/database";
+import { lightTheme } from "../../theme/colours";
 
 const CarStatsSlider = (props: {
   isDisabled?: boolean;

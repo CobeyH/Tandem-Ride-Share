@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "@chakra-ui/react";
-import { Group, setGroupMember } from "../firebase/database";
 import { useNavigate } from "react-router";
+import { Group, setGroupMember } from "../../firebase/database";
 
 const GroupJoinButton = (props: {
   group: Group;

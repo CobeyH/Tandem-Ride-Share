@@ -19,7 +19,7 @@ import { AiFillCar } from "react-icons/ai";
 import MapView, { endIcon, findMidpoint } from "./MapView";
 import { Marker, Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds, LeafletMouseEvent, Map } from "leaflet";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import {
   addPickupToRide,
   clearUserFromPickups,
@@ -36,12 +36,12 @@ import {
   useRoute,
   useUser,
   useUserVehicle,
-} from "../firebase/database";
+} from "../../firebase/database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
-import { getOptimizedRoute, getReverseGeocode } from "../Directions";
+import { getOptimizedRoute, getReverseGeocode } from "../../Directions";
 import LocationSearch from "./LocationSearch";
 
 export default function RideCard({

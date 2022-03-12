@@ -26,13 +26,13 @@ import MapView, {
   DEFAULT_CENTER,
   endIcon,
   startIcon,
-} from "../components/MapView";
+} from "../components/Rides/MapView";
 import { LatLng, latLngBounds } from "leaflet";
-import ChooseCar from "../components/ChooseCar";
-import CarStatsSlider from "../components/CarStatsSlider";
+import ChooseCar from "../components/Rides/ChooseCar";
+import CarStatsSlider from "../components/Profiles/CarStatsSlider";
 import { getReverseGeocode, getRideRoute } from "../Directions";
 import { lightTheme } from "../theme/colours";
-import LocationSearch from "../components/LocationSearch";
+import LocationSearch from "../components/Rides/LocationSearch";
 
 const createRide = async (
   ride: Ride,

@@ -9,10 +9,10 @@ import {
   setUserInPickup,
   usePickupPoint,
   User,
-} from "../firebase/database";
+} from "../../firebase/database";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 
 const PickupMarkers = (props: {
   rideId: string;

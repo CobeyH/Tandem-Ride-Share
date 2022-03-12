@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { latLng } from "leaflet";
 import * as React from "react";
-import { getOptimizedRoute, getReverseGeocode } from "../Directions";
+import { getOptimizedRoute, getReverseGeocode } from "../../Directions";
 import {
   addPickupToRide,
   clearUserFromPickups,
@@ -9,7 +9,7 @@ import {
   PickupPoint,
   setRoute,
   setUserInPickup,
-} from "../firebase/database";
+} from "../../firebase/database";
 import { DEFAULT_CENTER } from "./MapView";
 
 const AddPickupPoint = (props: { userId: string; rideId: string }) => {

@@ -25,8 +25,8 @@ import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
 import Header from "../components/Header";
 import { PhotoType, uploadPhoto } from "../firebase/storage";
-import GroupSizeSlider from "../components/GroupSizeSlider";
 import FileDropzone from "../components/FileDropzone";
+import GroupSizeSlider from "../components/Groups/GroupSizeSlider";
 
 type ValidatableFiled<T> = {
   field: T;

@@ -1,6 +1,6 @@
 import { Heading, Badge, HStack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { getUser, User } from "../firebase/database";
+import { getUser, User } from "../../firebase/database";
 
 const GroupMembersList = (props: {
   members: { [key: string]: boolean };

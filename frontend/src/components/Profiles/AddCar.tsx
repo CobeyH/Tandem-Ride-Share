@@ -23,7 +23,7 @@ import {
 import { User } from "firebase/auth";
 import * as React from "react";
 import { useState } from "react";
-import { setUserVehicle, Vehicle } from "../firebase/database";
+import { setUserVehicle, Vehicle } from "../../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
 
 const cars: Vehicle[] = [
