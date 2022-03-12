@@ -4,6 +4,7 @@ import {
   Input,
   InputRightElement,
   IconButton,
+  FormLabel,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
@@ -12,7 +13,7 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 const PasswordField = (props: { setPassword: (newPass: string) => void }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
-    <FormControl mt={6} isRequired>
+    <FormControl mt={6}>
       <InputGroup>
         <Input
           type={showPassword ? "text" : "password"}

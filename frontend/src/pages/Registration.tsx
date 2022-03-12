@@ -55,18 +55,16 @@ function Register() {
       </Box>
       <VStack>
         <FormControl mt={6} isRequired>
-          <FormLabel>Full Name</FormLabel>
           <Input
             type="fullName"
-            placeholder="Full name"
+            placeholder="Full Name"
             onChange={(event) => setName(event.currentTarget.value)}
           />
         </FormControl>
         <FormControl mt={6} isRequired>
-          <FormLabel>E-mail Address</FormLabel>
           <Input
             type="email"
-            placeholder="test@test.com"
+            placeholder="Email Address"
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
