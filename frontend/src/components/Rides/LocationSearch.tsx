@@ -7,10 +7,10 @@ import {
 } from "chakra-react-select";
 import { LatLng } from "leaflet";
 import * as React from "react";
-import { Location } from "../firebase/database";
-import { DEFAULT_CENTER } from "./MapView";
+import { Location } from "../../firebase/database";
 import { Box } from "@chakra-ui/react";
 import { useState } from "react";
+import { DEFAULT_CENTER } from "./MapView";
 
 const MQ_PREDICTION_URI = "https://www.mapquestapi.com/search/v3/prediction";
 const RESULT_LIMIT = 5;

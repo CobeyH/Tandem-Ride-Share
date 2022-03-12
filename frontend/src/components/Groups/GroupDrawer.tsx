@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsFillChatFill } from "react-icons/all";
-import { lightTheme } from "../theme/colours";
+import { lightTheme } from "../../theme/colours";
 import { GroupChat } from "./Chat";
 import GroupMembersList from "./GroupMembersList";
 

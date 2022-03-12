@@ -19,9 +19,9 @@ import {
   makeEmptyRideChat,
   addChatToGroupChat,
   addChatToRideChat,
-} from "../firebase/database";
-import { auth } from "../firebase/firebase";
-import { lightTheme } from "../theme/colours";
+} from "../../firebase/database";
+import { auth } from "../../firebase/firebase";
+import { lightTheme } from "../../theme/colours";
 
 export const GroupChat = ({ groupId }: { groupId: string }) => (
   <Chat dbLocation={{ chatType: "group", id: groupId }} />

@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
+import { Group, setGroup } from "../../firebase/database";
 import GroupSizeSlider from "./GroupSizeSlider";
-import { Group, setGroup } from "../firebase/database";
 
 const GroupSettings = (props: { group: Group }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

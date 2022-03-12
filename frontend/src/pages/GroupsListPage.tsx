@@ -17,7 +17,7 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { NavConstants } from "../NavigationConstants";
-import GroupSearch from "../components/GroupSearch";
+import GroupSearch from "../components/Groups/GroupSearch";
 import { Group, useGroups } from "../firebase/database";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref } from "firebase/storage";
