@@ -16,7 +16,7 @@
     "@types/react-dom": "^16.9.14",
     "@types/react-router-dom": "^5.3.3",
     "firebase": "^9.6.6",
-    "framer-motion": "^4.1.17",
+    "framer-motion": "^5.0.0",
     "leaflet": "^1.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
