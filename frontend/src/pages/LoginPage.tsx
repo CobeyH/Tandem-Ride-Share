@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import { LocationGotoState } from "./JoinGroup";
 import { lightTheme } from "../theme/colours";
 import SignInRegister from "../components/SignInRegister";
+import PasswordField from "../components/PasswordField";
 export default function Login() {
   const location = useLocation();
 
@@ -30,7 +31,6 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleEmailLogin = () => {
     loginWithEmailAndPassword(email, password);
   };
@@ -49,13 +49,7 @@ export default function Login() {
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
-        <FormControl mt={6} isRequired>
-          <Input
-            type="password"
-            placeholder="Password"
-            onChange={(event) => setPassword(event.currentTarget.value)}
-          />
-        </FormControl>
+        <PasswordField setPassword={setPassword} />
         <SignInRegister
           onClickSignIn={handleEmailLogin}
           state={location.state as LocationGotoState}

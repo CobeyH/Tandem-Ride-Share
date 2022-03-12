@@ -21,6 +21,7 @@ import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
 import { lightTheme } from "../theme/colours";
+import PasswordField from "../components/PasswordField";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -69,14 +70,7 @@ function Register() {
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
-        <FormControl mt={6} isRequired>
-          <FormLabel>Password</FormLabel>
-          <Input
-            type="password"
-            placeholder="Password"
-            onChange={(event) => setPassword(event.currentTarget.value)}
-          />
-        </FormControl>
+        <PasswordField setPassword={setPassword} />
         <Button width="full" mt={4} onClick={register}>
           Register
         </Button>
