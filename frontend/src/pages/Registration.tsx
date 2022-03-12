@@ -9,7 +9,6 @@ import {
 import Header from "../components/Header";
 import {
   FormControl,
-  FormLabel,
   Input,
   Button,
   Box,
@@ -21,6 +20,7 @@ import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
 import { lightTheme } from "../theme/colours";
+import PasswordField from "../components/PasswordField";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -54,29 +54,20 @@ function Register() {
       </Box>
       <VStack>
         <FormControl mt={6} isRequired>
-          <FormLabel>Full Name</FormLabel>
           <Input
             type="fullName"
-            placeholder="Full name"
+            placeholder="Full Name"
             onChange={(event) => setName(event.currentTarget.value)}
           />
         </FormControl>
         <FormControl mt={6} isRequired>
-          <FormLabel>E-mail Address</FormLabel>
           <Input
             type="email"
-            placeholder="test@test.com"
+            placeholder="Email Address"
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
-        <FormControl mt={6} isRequired>
-          <FormLabel>Password</FormLabel>
-          <Input
-            type="password"
-            placeholder="Password"
-            onChange={(event) => setPassword(event.currentTarget.value)}
-          />
-        </FormControl>
+        <PasswordField setPassword={setPassword} />
         <Button width="full" mt={4} onClick={register}>
           Register
         </Button>
