@@ -2,7 +2,7 @@
 ![smol](https://user-images.githubusercontent.com/51931484/157334498-2952ad7f-9b7a-4fe8-b9ae-97932ff16fa9.png)
 
 
-Tandem is a application built to make carpooling delightful - [check it out](https://carpooling-6112a.web.app/).
+Tandem is a application built to make carpooling delightful - [check out our product and application page](https://carpooling-6112a.web.app/).
 
 # Members
 
