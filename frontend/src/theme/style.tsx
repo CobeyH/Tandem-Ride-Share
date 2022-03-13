@@ -6,7 +6,9 @@ import { mode } from "@chakra-ui/theme-tools";
 import { Dict } from "@chakra-ui/utils";
 // Component Styles
 import Button from "./components/button";
+import Text from "./components/text";
 import { Input } from "./components/input";
+import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 
 const styles = {
   styles: {
@@ -22,6 +24,8 @@ const styles = {
   components: {
     Button,
     Input,
+    Text,
+    Steps,
   },
   fonts: {
     heading: "Montserrat",
