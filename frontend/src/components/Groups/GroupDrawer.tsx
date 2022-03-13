@@ -13,7 +13,7 @@ import {
   Divider,
   HStack,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { BsFillChatFill } from "react-icons/all";
 import { lightTheme } from "../../theme/colours";
 import { GroupChat } from "./Chat";
