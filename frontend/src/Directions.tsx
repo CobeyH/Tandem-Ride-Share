@@ -92,7 +92,7 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
   });
 };
 
-export const getReverseGeocode = async (point: LatLng) => {
+export const getReverseGeocode = async (point: LatLng): Promise<Geocode> => {
   const res = await fetch(
     MQ_REV_GEOCODE_URI +
       `?key=${process.env.REACT_APP_MQ_KEY}` +
@@ -100,10 +100,15 @@ export const getReverseGeocode = async (point: LatLng) => {
   );
   const json = await res.json();
   const location = json.results[0].locations[0];
+  return location as Geocode;
+};
+
+export const getReverseGeocodeAsString = async (point: LatLng) => {
+  const location = await getReverseGeocode(point);
   return geocodeToString(location);
 };
 
-type Geocode = {
+export type Geocode = {
   street: string;
   adminArea5: string;
   adminArea3: string;

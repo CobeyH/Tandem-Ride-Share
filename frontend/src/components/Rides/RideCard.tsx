@@ -41,7 +41,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
-import { getOptimizedRoute, getReverseGeocode } from "../../Directions";
+import { getOptimizedRoute, getReverseGeocodeAsString } from "../../Directions";
 import LocationSearch from "./LocationSearch";
 
 export default function RideCard({
@@ -325,7 +325,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
       },
     };
     newPoint.members[userId] = true;
-    await getReverseGeocode(latLng(position.lat, position.lng)).then(
+    await getReverseGeocodeAsString(latLng(position.lat, position.lng)).then(
       (geocode) => {
         newPoint.geocode = geocode;
       }

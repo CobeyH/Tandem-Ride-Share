@@ -30,7 +30,7 @@ import MapView, {
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/Rides/ChooseCar";
 import CarStatsSlider from "../components/Profiles/CarStatsSlider";
-import { getReverseGeocode, getRideRoute } from "../Directions";
+import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
 import { lightTheme } from "../theme/colours";
 import LocationSearch from "../components/Rides/LocationSearch";
 
@@ -201,7 +201,7 @@ const CreateRide = () => {
                     carId: selectedCar?.carId,
                   }),
                 };
-                getReverseGeocode(startPosition)
+                getReverseGeocodeAsString(startPosition)
                   .then((geo) => (ride.pickupPoints.start.geocode = geo))
                   .then(() => createRide(ride, groupId, [userId]))
                   .then(() => navigate(`/group/${groupId}`))
