@@ -114,7 +114,7 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
-          <Text textAlign={"left"}>
+          <Text textAlign={"left"} variant="help-text">
             The name will be used to identify your car when you join a ride.
           </Text>
         </Step>
