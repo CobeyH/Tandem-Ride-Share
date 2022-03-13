@@ -20,7 +20,7 @@ import { User } from "firebase/auth";
 const ShareLink = (props: { user: User | null | undefined }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = useState("");
-  const context = `${props.user?.displayName} invited you to join their Tandem group! Follow the link to join the group: `;
+  const context = `${props.user?.displayName} invited you to join their Tandem group! Follow the link to join the group: \n`;
   const { hasCopied, onCopy } = useClipboard(context + value);
   const url = window.location.href;
   return (
