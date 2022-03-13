@@ -27,6 +27,7 @@ import * as React from "react";
 import { useState } from "react";
 import { setUserVehicle, Vehicle } from "../../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
+import { FaCarSide, FaClipboard, FaWrench } from "react-icons/all";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -78,26 +79,11 @@ const getCarFromList = (radioIndex: string): Vehicle => {
   return index < cars.length ? cars[index] : trucks[index - cars.length];
 };
 
-const steps = [
-  {
-    label: "Name",
-    content: <Button />,
-  },
-  {
-    label: "Type",
-    content: <Button> 2</Button>,
-  },
-  {
-    label: "Configure",
-    content: <Button> 3</Button>,
-  },
-];
-
 const CarSelector = (props: { user: User; onDone?: () => void }) => {
   const [displayName, setDisplayName] = useState("");
   const [car, setCar] = useState<Vehicle>(cars[0]);
   const toast = useToast();
-  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, reset, activeStep } = useSteps({
     initialStep: 0,
   });
 
@@ -122,7 +108,7 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
   return (
     <ModalBody>
       <Steps activeStep={activeStep} orientation="vertical">
-        <Step label="Name Your Car">
+        <Step label="Name Your Car" icon={FaClipboard}>
           <Input
             isRequired={true}
             value={displayName}
@@ -132,14 +118,14 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
             The name will be used to identify your car when you join a ride.
           </Text>
         </Step>
-        <Step label="Choose Car Type">
+        <Step label="Choose Car Type" icon={FaCarSide}>
           <CarAccordion carUpdate={setCar} />
         </Step>
-        <Step label="Configure">
+        <Step label="Configure" icon={FaWrench}>
           <CarStatsSlider car={car} updateCar={setCar} />
         </Step>
       </Steps>
-      {activeStep === steps.length ? (
+      {activeStep === 3 ? (
         <Flex p={4}>
           <Button mx="auto" size="sm" onClick={reset}>
             Reset
@@ -164,7 +150,7 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
             onClick={nextStep}
             isDisabled={activeStep === 0 && !displayName}
           >
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            {activeStep === 2 ? "Finish" : "Next"}
           </Button>
         </Flex>
       )}
