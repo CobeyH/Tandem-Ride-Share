@@ -6,7 +6,6 @@ import {
   HStack,
   Image,
   Spacer,
-  Spinner,
   Center,
   VStack,
   Grid,
@@ -16,22 +15,14 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { ref } from "firebase/storage";
 import * as React from "react";
-import { useDownloadURL } from "react-firebase-hooks/storage";
 import { useNavigate } from "react-router-dom";
 import PriceSelector from "../components/Promotional/PriceSelector";
 import { Testimonal as Testimonial } from "../components/Promotional/Testimonial";
-import { storage } from "../firebase/storage";
 import { NavConstants } from "../NavigationConstants";
 import { styleColors } from "../theme/colours";
 
 const ProductPage = () => {
-  const logoRef_white = ref(storage, "promotional/logo_white.svg");
-  const [logo_white, logoLoading_white] = useDownloadURL(logoRef_white);
-  const logoRef_darkBlue = ref(storage, "promotional/logo_darkBlue.svg");
-  const [logo_darkBlue, logoLoading_darkBlue] =
-    useDownloadURL(logoRef_darkBlue);
   const navigate = useNavigate();
   return (
     <>
@@ -47,16 +38,7 @@ const ProductPage = () => {
         >
           <Box bg={styleColors.mainBlue} w="100vw" p={4} textAlign="center">
             <HStack>
-              {logoLoading_white ? (
-                <Spinner />
-              ) : (
-                <Image
-                  src={logo_white}
-                  alt="white logo"
-                  objectFit="cover"
-                  maxW="70px"
-                />
-              )}
+              <Image src={"/logo_white.svg"} objectFit="cover" maxW="70px" />
               <Text color="white" fontSize={30} p={1}>
                 Tandem
               </Text>
@@ -148,16 +130,12 @@ const ProductPage = () => {
                   Connect your circles and get where you need to go together.
                 </Text>
                 <Box p={35}>
-                  {logoLoading_white ? (
-                    <Spinner />
-                  ) : (
-                    <Image
-                      src={logo_white}
-                      alt="white logo"
-                      objectFit="cover"
-                      maxW="200px"
-                    />
-                  )}
+                  <Image
+                    src={"/logo_white.svg"}
+                    alt="white logo"
+                    objectFit="cover"
+                    maxW="200px"
+                  />
                   <Text color="white" fontSize={30} align="center">
                     Ride Tandem.
                   </Text>
@@ -214,16 +192,12 @@ const ProductPage = () => {
           <Spacer />
           <Box w="100vw" bgColor="white" textAlign="center">
             <HStack p={4}>
-              {logoLoading_darkBlue ? (
-                <Spinner />
-              ) : (
-                <Image
-                  src={logo_darkBlue}
-                  alt="dark blue logo"
-                  objectFit="cover"
-                  maxW="50px"
-                />
-              )}
+              <Image
+                src={"/logo_darkBlue.svg"}
+                alt="dark blue logo"
+                objectFit="cover"
+                maxW="50px"
+              />
               <Text color={styleColors.darkBlue} fontSize="100%" p={1}>
                 Tandem
               </Text>
