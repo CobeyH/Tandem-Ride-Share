@@ -23,35 +23,49 @@ import {
 import { auth } from "../../firebase/firebase";
 import { lightTheme } from "../../theme/colours";
 
-export const GroupChat = ({ groupId }: { groupId: string }) => (
-  <Chat dbLocation={{ chatType: "group", id: groupId }} />
+export const GroupChat = ({
+  groupId,
+  scrollToBottom,
+}: {
+  groupId: string;
+  scrollToBottom: () => void;
+}) => (
+  <Chat
+    dbLocation={{ chatType: "group", id: groupId }}
+    scrollToBottom={scrollToBottom}
+  />
 );
 
-export const RideChat = ({ rideId }: { rideId: string }) => (
-  <Chat dbLocation={{ chatType: "ride", id: rideId }} />
+export const RideChat = ({
+  rideId,
+  scrollToBottom,
+}: {
+  rideId: string;
+  scrollToBottom: () => void;
+}) => (
+  <Chat
+    dbLocation={{ chatType: "ride", id: rideId }}
+    scrollToBottom={scrollToBottom}
+  />
 );
 
-function ChatTextBox({
+const ChatTextBox = ({
   addChat,
 }: {
   addChat: (message: string) => Promise<void>;
-}) {
-  return (
-    <>
-      <Box p="2">
-        <Input
-          style={{ position: "absolute", right: 0, left: 0, bottom: 60 }}
-          onKeyDown={(e) => {
-            if (e.key == "Enter") {
-              addChat(e.currentTarget.value);
-              e.currentTarget.value = "";
-            }
-          }}
-        />
-      </Box>
-    </>
-  );
-}
+}) => (
+  <Box p="2">
+    <Input
+      style={{ position: "absolute", right: 0, left: 0, bottom: 60 }}
+      onKeyDown={(e) => {
+        if (e.key == "Enter" && e.currentTarget.value !== "") {
+          addChat(e.currentTarget.value);
+          e.currentTarget.value = "";
+        }
+      }}
+    />
+  </Box>
+);
 
 const ChatContents = (props: { contents: Message[]; userId: string }) => {
   let prevSender = "";
@@ -77,13 +91,19 @@ const ChatContents = (props: { contents: Message[]; userId: string }) => {
 
 const Chat = ({
   dbLocation,
+  scrollToBottom,
 }: {
   dbLocation: { chatType: "ride" | "group"; id: string };
+  scrollToBottom: () => void;
 }) => {
   const [chat, messagesLoading, messagesError] =
     dbLocation.chatType === "group"
       ? useGroupChat(dbLocation.id)
       : useRideChat(dbLocation.id);
+
+  React.useEffect(() => {
+    scrollToBottom();
+  });
 
   const [user, userLoading, userError] = useAuthState(auth);
 
@@ -99,9 +119,12 @@ const Chat = ({
           <Text>Nothing seems to be here, Say something!</Text>
         ) : (
           <ChatContents
-            contents={[...Array.from(new Set(chat))].sort(
-              (fst, snd) => fst.timestamp - snd.timestamp
-            )}
+            contents={[
+              ...Array.from(new Set(chat.map((it) => JSON.stringify(it)))).map(
+                // please fix this if you can figure out a better way.
+                (it) => JSON.parse(it)
+              ),
+            ].sort((fst, snd) => fst.timestamp - snd.timestamp)}
             userId={user?.uid}
           />
         )}

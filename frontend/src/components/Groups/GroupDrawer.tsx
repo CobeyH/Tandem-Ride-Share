@@ -13,7 +13,7 @@ import {
   Divider,
   HStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BsFillChatFill } from "react-icons/all";
 import { lightTheme } from "../../theme/colours";
 import { GroupChat } from "./Chat";
@@ -32,11 +32,21 @@ const GroupDrawer = (props: {
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currMode, setCurrMode] = useState<mode>(mode.Chat);
+  const ref = useRef<null | HTMLDivElement>(null);
 
+  const scrollToBottom = () => {
+    const scrollHeight = ref?.current?.scrollHeight ?? 0;
+    console.log(scrollHeight);
+    if (ref?.current) {
+      ref.current?.scrollTo(0, 100000000);
+    }
+  };
   const renderMode = () => {
     switch (currMode) {
       case mode.Chat:
-        return <GroupChat groupId={props.groupId} />;
+        return (
+          <GroupChat groupId={props.groupId} scrollToBottom={scrollToBottom} />
+        );
       case mode.Members:
         return <GroupMembersList {...props} isOpen={isOpen} />;
       default:
@@ -84,7 +94,7 @@ const GroupDrawer = (props: {
             </HStack>
           </DrawerHeader>
 
-          <DrawerBody>{renderMode()}</DrawerBody>
+          <DrawerBody ref={ref}>{renderMode()}</DrawerBody>
 
           <DrawerFooter>
             <Button variant="outline" mr={3} onClick={onClose}>
