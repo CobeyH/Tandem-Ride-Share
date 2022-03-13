@@ -54,8 +54,13 @@ const PickupMarker = ({
   const [members, setMembers] = useState<User[]>();
   const [user] = useAuthState(auth);
 
+  const getLocation = React.useCallback(
+    (location) => getReverseGeocode(new LatLng(location.lat, location.lng)),
+    [location]
+  );
+
   React.useEffect(() => {
-    getReverseGeocode(new LatLng(location.lat, location.lng)).then(setAddress);
+    getLocation(location).then(setAddress);
   }, [location]);
 
   useEffect(() => {
