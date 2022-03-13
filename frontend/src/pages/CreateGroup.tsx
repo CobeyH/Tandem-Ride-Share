@@ -10,6 +10,7 @@ import {
   Textarea,
   Checkbox,
   Tooltip,
+  Container,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -83,99 +84,101 @@ const CreateGroup = () => {
   return (
     <>
       <Header pages={[{ label: "My Groups", url: "/" }]} />
-      <InputGroup paddingInline={5}>
-        <Stack>
-          <Heading textAlign={"center"}>Create Group</Heading>
-          <HStack>
-            <Text mb={"8px"}>Name</Text>
-            <Input
-              value={name}
-              placeholder={"name"}
-              onInput={(e) =>
-                setName({
-                  field: e.currentTarget.value,
-                  invalid: isInvalidName(e.currentTarget.value),
-                })
-              }
-              isInvalid={invalidName}
-              maxLength={MAX_GROUP_NAME_LENGTH}
+      <Container>
+        <InputGroup paddingInline={5}>
+          <Stack>
+            <Heading textAlign={"center"}>Create Group</Heading>
+            <HStack>
+              <Text mb={"8px"}>Name</Text>
+              <Input
+                value={name}
+                placeholder={"name"}
+                onInput={(e) =>
+                  setName({
+                    field: e.currentTarget.value,
+                    invalid: isInvalidName(e.currentTarget.value),
+                  })
+                }
+                isInvalid={invalidName}
+                maxLength={MAX_GROUP_NAME_LENGTH}
+              />
+            </HStack>
+            <Text
+              color="grey.200"
+              size="sm"
+              align="right"
+            >{`${name.length} / ${MAX_GROUP_NAME_LENGTH}`}</Text>
+            <HStack>
+              <Text mb={"8px"}>Description</Text>
+              <Textarea
+                value={description}
+                placeholder={"Description"}
+                onInput={(e) => setDescription(e.currentTarget.value)}
+                isInvalid={invalidName}
+              />
+            </HStack>
+            <GroupSizeSlider
+              setSize={setSize}
+              isPrivate={isPrivate}
+              maxSize={maxSize}
             />
-          </HStack>
-          <Text
-            color="grey.200"
-            size="sm"
-            align="right"
-          >{`${name.length} / ${MAX_GROUP_NAME_LENGTH}`}</Text>
-          <HStack>
-            <Text mb={"8px"}>Description</Text>
-            <Textarea
-              value={description}
-              placeholder={"Description"}
-              onInput={(e) => setDescription(e.currentTarget.value)}
-              isInvalid={invalidName}
-            />
-          </HStack>
-          <GroupSizeSlider
-            setSize={setSize}
-            isPrivate={isPrivate}
-            maxSize={maxSize}
-          />
-          <HStack>
-            <Tooltip
-              label="Private groups are only joinable through an invite link from a group member"
-              hasArrow
+            <HStack>
+              <Tooltip
+                label="Private groups are only joinable through an invite link from a group member"
+                hasArrow
+              >
+                <Text mb={"8px"}>Private Group:</Text>
+              </Tooltip>
+              <Checkbox
+                isChecked={isPrivate}
+                onChange={(e) => setPrivate(e.target.checked)}
+              />
+            </HStack>
+            <Heading size="md"> Upload Banner</Heading>
+            <FileDropzone parentCallback={handleCallback} />
+            <Heading size="md"> Upload Profile Picture</Heading>
+            <FileDropzone parentCallback={handleProfilePicSubmit} />
+            <Button
+              onClick={() => {
+                if (user?.uid !== undefined) {
+                  createGroup(
+                    {
+                      description,
+                      isPrivate,
+                      name,
+                      rides: {},
+                      members: {},
+                      owner: user?.uid,
+                      maxSize,
+                    },
+                    user.uid
+                  ).then((group) => {
+                    navigate(`/group/${group.id}`);
+                    if (banner !== undefined) {
+                      uploadPhoto(group.id, PhotoType.banners, banner).then(
+                        (url) => {
+                          setGroupBanner(group.id, url?.fullPath);
+                        }
+                      );
+                    }
+                    if (profilePic) {
+                      uploadPhoto(
+                        group.id,
+                        PhotoType.profilePics,
+                        profilePic
+                      ).then((url) => {
+                        setGroupProfilePic(group.id, url?.fullPath);
+                      });
+                    }
+                  });
+                }
+              }}
             >
-              <Text mb={"8px"}>Private Group:</Text>
-            </Tooltip>
-            <Checkbox
-              isChecked={isPrivate}
-              onChange={(e) => setPrivate(e.target.checked)}
-            />
-          </HStack>
-          <Heading size="md"> Upload Banner</Heading>
-          <FileDropzone parentCallback={handleCallback} />
-          <Heading size="md"> Upload Profile Picture</Heading>
-          <FileDropzone parentCallback={handleProfilePicSubmit} />
-          <Button
-            onClick={() => {
-              if (user?.uid !== undefined) {
-                createGroup(
-                  {
-                    description,
-                    isPrivate,
-                    name,
-                    rides: {},
-                    members: {},
-                    owner: user?.uid,
-                    maxSize,
-                  },
-                  user.uid
-                ).then((group) => {
-                  navigate(`/group/${group.id}`);
-                  if (banner !== undefined) {
-                    uploadPhoto(group.id, PhotoType.banners, banner).then(
-                      (url) => {
-                        setGroupBanner(group.id, url?.fullPath);
-                      }
-                    );
-                  }
-                  if (profilePic) {
-                    uploadPhoto(
-                      group.id,
-                      PhotoType.profilePics,
-                      profilePic
-                    ).then((url) => {
-                      setGroupProfilePic(group.id, url?.fullPath);
-                    });
-                  }
-                });
-              }
-            }}
-          >
-            Create
-          </Button>
-        </Stack>
-      </InputGroup>
+              Create
+            </Button>
+          </Stack>
+        </InputGroup>
+      </Container>
     </>
   );
 };
