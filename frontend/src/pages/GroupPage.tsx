@@ -68,7 +68,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Container>
         <VStack spacing="24px" align="c">
           <HStack pt={5}>
-            <ShareLink />
+            <ShareLink user={user} />
             <GroupDrawer
               members={group.members}
               ownerId={group.owner}
