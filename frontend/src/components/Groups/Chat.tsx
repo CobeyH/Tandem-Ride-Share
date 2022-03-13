@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  Flex,
-  Input,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { Box, Flex, Input, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   getUser,
@@ -23,30 +21,12 @@ import {
 import { auth } from "../../firebase/firebase";
 import { lightTheme } from "../../theme/colours";
 
-export const GroupChat = ({
-  groupId,
-  scrollToBottom,
-}: {
-  groupId: string;
-  scrollToBottom: () => void;
-}) => (
-  <Chat
-    dbLocation={{ chatType: "group", id: groupId }}
-    scrollToBottom={scrollToBottom}
-  />
+export const GroupChat = ({ groupId }: { groupId: string }) => (
+  <Chat dbLocation={{ chatType: "group", id: groupId }} />
 );
 
-export const RideChat = ({
-  rideId,
-  scrollToBottom,
-}: {
-  rideId: string;
-  scrollToBottom: () => void;
-}) => (
-  <Chat
-    dbLocation={{ chatType: "ride", id: rideId }}
-    scrollToBottom={scrollToBottom}
-  />
+export const RideChat = ({ rideId }: { rideId: string }) => (
+  <Chat dbLocation={{ chatType: "ride", id: rideId }} />
 );
 
 const ChatTextBox = ({
@@ -54,9 +34,8 @@ const ChatTextBox = ({
 }: {
   addChat: (message: string) => Promise<void>;
 }) => (
-  <Box p="2">
+  <Box w="95%">
     <Input
-      style={{ position: "absolute", right: 0, left: 0, bottom: 60 }}
       onKeyDown={(e) => {
         if (e.key == "Enter" && e.currentTarget.value !== "") {
           addChat(e.currentTarget.value);
@@ -68,42 +47,55 @@ const ChatTextBox = ({
 );
 
 const ChatContents = (props: { contents: Message[]; userId: string }) => {
+  const ref = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    const scrollHeight = ref?.current?.scrollHeight ?? 0;
+    console.log(scrollHeight);
+    if (ref?.current) {
+      ref.current?.scrollTo(0, 100000000);
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
   let prevSender = "";
   return (
-    <VStack spacing={2}>
-      <Flex width="100%" flexDir="column">
-        {props.contents.map((m, i) => {
-          const component = (
-            <MessageComponent
-              userId={props.userId}
-              key={i}
-              message={m}
-              prevSender={prevSender}
-            />
-          );
-          prevSender = m.sender_id;
-          return component;
-        })}
-      </Flex>
-    </VStack>
+    <Flex
+      flexDir="column"
+      width="100%"
+      height="100%"
+      px={3}
+      overflowY="scroll"
+      ref={ref}
+    >
+      {props.contents.map((m, i) => {
+        const component = (
+          <MessageComponent
+            userId={props.userId}
+            key={i}
+            message={m}
+            prevSender={prevSender}
+          />
+        );
+        prevSender = m.sender_id;
+        return component;
+      })}
+    </Flex>
   );
 };
 
 const Chat = ({
   dbLocation,
-  scrollToBottom,
 }: {
   dbLocation: { chatType: "ride" | "group"; id: string };
-  scrollToBottom: () => void;
 }) => {
   const [chat, messagesLoading, messagesError] =
     dbLocation.chatType === "group"
       ? useGroupChat(dbLocation.id)
       : useRideChat(dbLocation.id);
-
-  React.useEffect(() => {
-    scrollToBottom();
-  });
 
   const [user, userLoading, userError] = useAuthState(auth);
 
@@ -114,7 +106,7 @@ const Chat = ({
     return <h1>{JSON.stringify(messagesError)}</h1>;
   } else if (chat && user) {
     return (
-      <Container p={3}>
+      <VStack height="100%">
         {chat.length === 0 ? (
           <Text>Nothing seems to be here, Say something!</Text>
         ) : (
@@ -139,7 +131,7 @@ const Chat = ({
               : addChatToRideChat(dbLocation.id, message);
           }}
         />
-      </Container>
+      </VStack>
     );
   } else if (!chat) {
     if (dbLocation.chatType === "group") {
@@ -171,7 +163,7 @@ const MessageComponent = ({
 
   const amSender = sender_id === userId;
   return sender === "loading" ? null : (
-    <Box pt={1}>
+    <Box pt={1} alignSelf={amSender ? "flex-end" : "flex-start"}>
       {sender_id !== prevSender ? (
         <Text pt={3} textAlign={amSender ? "right" : "left"}>
           {sender?.name ?? sender_id}

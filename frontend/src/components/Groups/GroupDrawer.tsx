@@ -32,21 +32,11 @@ const GroupDrawer = (props: {
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currMode, setCurrMode] = useState<mode>(mode.Chat);
-  const ref = useRef<null | HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    const scrollHeight = ref?.current?.scrollHeight ?? 0;
-    console.log(scrollHeight);
-    if (ref?.current) {
-      ref.current?.scrollTo(0, 100000000);
-    }
-  };
   const renderMode = () => {
     switch (currMode) {
       case mode.Chat:
-        return (
-          <GroupChat groupId={props.groupId} scrollToBottom={scrollToBottom} />
-        );
+        return <GroupChat groupId={props.groupId} />;
       case mode.Members:
         return <GroupMembersList {...props} isOpen={isOpen} />;
       default:
@@ -64,7 +54,12 @@ const GroupDrawer = (props: {
       >
         Chat
       </Button>
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={onClose}
+        blockScrollOnMount={false}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -94,7 +89,9 @@ const GroupDrawer = (props: {
             </HStack>
           </DrawerHeader>
 
-          <DrawerBody ref={ref}>{renderMode()}</DrawerBody>
+          <DrawerBody p={0} overflow="hidden">
+            {renderMode()}
+          </DrawerBody>
 
           <DrawerFooter>
             <Button variant="outline" mr={3} onClick={onClose}>
