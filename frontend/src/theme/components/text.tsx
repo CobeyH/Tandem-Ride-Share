@@ -1,5 +1,4 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
-import { lightTheme } from "../colours";
 
 const Text: ComponentStyleConfig = {
   variants: {
