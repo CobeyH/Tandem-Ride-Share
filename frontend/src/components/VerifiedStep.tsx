@@ -26,7 +26,7 @@ const VerifiedStep = <T,>({
   return (
     <Step {...props}>
       {children}
-      <Flex width="100%" justify="flex-end">
+      <Flex width="100%" justify="flex-end" pt={2}>
         <Button
           isDisabled={isFirstStep}
           mr={4}
@@ -39,9 +39,9 @@ const VerifiedStep = <T,>({
         <Button
           size="sm"
           onClick={() => nextStep(currentInput)}
-          isDisabled={!isVerified(currentInput) || isLastStep}
+          isDisabled={!isVerified(currentInput)}
         >
-          {activeStep === 4 ? "Finish" : "Next"}
+          {isLastStep ? "Submit" : "Next"}
         </Button>
       </Flex>
     </Step>

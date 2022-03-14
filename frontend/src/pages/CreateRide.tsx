@@ -80,16 +80,13 @@ const CreateRide = () => {
     initialStep: 0,
   });
 
-  useEffect(() => {
-    console.log(activeStep);
-  }, [activeStep]);
-
   function onDragStart(position: LatLng) {
     setStartPosition(position);
     map?.invalidateSize();
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
   function onDragEnd(position: LatLng) {
+    console.log(position);
     setEndPosition(position);
     map?.invalidateSize();
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
@@ -108,6 +105,37 @@ const CreateRide = () => {
 
   const isValidRide =
     isValidStartAndEnd(startPosition, endPosition) && isValidTitle(title);
+
+  const submitRide = () => {
+    if (groupId && user) {
+      const userId = user.uid;
+      const ride = {
+        id: "",
+        name: title,
+        start: "start",
+        end: endPosition,
+        maxPassengers: selectedCar?.numSeats || 4,
+        startDate,
+        isComplete: false,
+        pickupPoints: {
+          start: {
+            location: startPosition,
+            members: { [userId]: true },
+            geocode: "",
+          },
+        },
+        ...(isDriver && { driver: user.uid }),
+        ...(selectedCar !== undefined && {
+          carId: selectedCar?.carId,
+        }),
+      };
+      getReverseGeocodeAsString(startPosition)
+        .then((geo) => (ride.pickupPoints.start.geocode = geo))
+        .then(() => createRide(ride, groupId, [userId]))
+        .then(() => navigate(`/group/${groupId}`))
+        .catch((err) => console.error(err));
+    }
+  };
 
   return (
     <>
@@ -198,7 +226,17 @@ const CreateRide = () => {
               onInput={(e) => setStartDate(e.currentTarget.value)}
             />
           </VerifiedStep>
-          <Step label="Create Route">
+          <VerifiedStep
+            label="Create Route"
+            currentInput={{ start: startPosition, end: endPosition }}
+            activeStep={activeStep}
+            prevStep={prevStep}
+            nextStep={submitRide}
+            isLastStep={true}
+            isVerified={(position) => {
+              return isValidStartAndEnd(position.start, position.end);
+            }}
+          >
             <Text>Start Location</Text>
             <LocationSearch setLatLng={setStartPosition} />
             <Text>End Location</Text>
@@ -215,64 +253,9 @@ const CreateRide = () => {
                 icon={endIcon}
               />
             </MapView>
-          </Step>
+          </VerifiedStep>
         </Steps>
         <InputGroup flexDirection="column" />
-        <Tooltip
-          hasArrow
-          label={
-            isValidTitle(title)
-              ? isValidStartAndEnd(startPosition, endPosition)
-                ? "Create a ride"
-                : "Need a valid start and end"
-              : "Need a valid title"
-          }
-          bg="gray.300"
-          color="black"
-          shouldWrapChildren
-          placement={"top"}
-        >
-          <Button
-            variant={"solid"}
-            bg={!isValidRide ? "grey.100" : lightTheme.lightButton}
-            mt={4}
-            mb={4}
-            disabled={!isValidRide}
-            onClick={() => {
-              if (groupId && user) {
-                const userId = user.uid;
-                const ride = {
-                  id: "",
-                  name: title,
-                  start: "start",
-                  end: endPosition,
-                  maxPassengers: selectedCar?.numSeats || 4,
-                  startDate,
-                  isComplete: false,
-                  pickupPoints: {
-                    start: {
-                      location: startPosition,
-                      members: { [userId]: true },
-                      geocode: "",
-                    },
-                  },
-                  ...(isDriver && { driver: user.uid }),
-                  ...(selectedCar !== undefined && {
-                    carId: selectedCar?.carId,
-                  }),
-                };
-                getReverseGeocodeAsString(startPosition)
-                  .then((geo) => (ride.pickupPoints.start.geocode = geo))
-                  .then(() => createRide(ride, groupId, [userId]))
-                  .then(() => navigate(`/group/${groupId}`))
-                  .catch((err) => console.error(err));
-                console.log({ ride });
-              }
-            }}
-          >
-            Confirm
-          </Button>
-        </Tooltip>
       </Container>
     </>
   );
