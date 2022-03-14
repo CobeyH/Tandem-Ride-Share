@@ -36,6 +36,7 @@ import CarStatsSlider from "../components/Profiles/CarStatsSlider";
 import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
 import { lightTheme } from "../theme/colours";
 import LocationSearch from "../components/Rides/LocationSearch";
+import VerifiedStep from "../components/VerifiedStep";
 
 const createRide = async (
   ride: Ride,
@@ -72,7 +73,7 @@ const CreateRide = () => {
   const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
-  const [isDriver, setIsDriver] = useState<boolean>(false);
+  const [isDriver, setIsDriver] = useState<boolean | undefined>();
   const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
     undefined
   );
@@ -117,7 +118,15 @@ const CreateRide = () => {
       <Container>
         <Heading textAlign={"center"}>Create Ride</Heading>
         <Steps activeStep={activeStep} orientation="vertical">
-          <Step label="Name Ride">
+          <VerifiedStep
+            label="Name Ride"
+            activeStep={activeStep}
+            currentInput={title}
+            isVerified={(title: string) => title.length !== 0}
+            isFirstStep={true}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          >
             <Input
               mt={4}
               value={title}
@@ -126,7 +135,7 @@ const CreateRide = () => {
                 setTitle(e.currentTarget.value);
               }}
             />
-          </Step>
+          </VerifiedStep>
           <Step label="Are you the driver?">
             <HStack>
               <Button onClick={() => setIsDriver(false)}>Passenger</Button>
@@ -134,7 +143,14 @@ const CreateRide = () => {
             </HStack>
           </Step>
           {isDriver ? (
-            <Step label="Select Car">
+            <VerifiedStep
+              label="Select Car"
+              activeStep={activeStep}
+              currentInput={selectedCar}
+              isVerified={(car: Vehicle | undefined) => car !== undefined}
+              nextStep={nextStep}
+              prevStep={prevStep}
+            >
               <ChooseCar carUpdate={setSelectedCar} />
               {selectedCar ? (
                 <CarStatsSlider
@@ -143,7 +159,7 @@ const CreateRide = () => {
                   isDisabled={true}
                 />
               ) : null}
-            </Step>
+            </VerifiedStep>
           ) : null}
           <Step label="Start Time">
             <Input
@@ -171,28 +187,6 @@ const CreateRide = () => {
             </MapView>
           </Step>
         </Steps>
-        {activeStep === 5 ? (
-          <Flex p={4}>
-            <Button mx="auto" size="sm" onClick={reset}>
-              Reset
-            </Button>
-          </Flex>
-        ) : (
-          <Flex width="100%" justify="flex-end">
-            <Button
-              isDisabled={activeStep === 0}
-              mr={4}
-              onClick={prevStep}
-              size="sm"
-              variant="ghost"
-            >
-              Prev
-            </Button>
-            <Button size="sm" onClick={nextStep}>
-              {activeStep === 4 ? "Finish" : "Next"}
-            </Button>
-          </Flex>
-        )}
         <InputGroup flexDirection="column"></InputGroup>
         <Tooltip
           hasArrow
