@@ -41,30 +41,9 @@ const ChatTextBox = ({
 );
 
 const ChatContents = (props: { contents: Message[]; userId: string }) => {
-  const ref = useRef<null | HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    const scrollHeight = ref?.current?.scrollHeight ?? 0;
-    console.log(scrollHeight);
-    if (ref?.current) {
-      ref.current?.scrollTo(0, 100000000);
-    }
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
-
   let prevSender = "";
   return (
-    <Flex
-      flexDir="column"
-      width="100%"
-      height="100%"
-      px={3}
-      overflowY="scroll"
-      ref={ref}
-    >
+    <>
       {props.contents.map((m, i) => {
         const component = (
           <MessageComponent
@@ -77,7 +56,7 @@ const ChatContents = (props: { contents: Message[]; userId: string }) => {
         prevSender = m.sender_id;
         return component;
       })}
-    </Flex>
+    </>
   );
 };
 
@@ -93,6 +72,20 @@ const Chat = ({
 
   const [user, userLoading, userError] = useAuthState(auth);
 
+  const ref = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    const scrollHeight = ref?.current?.scrollHeight ?? 0;
+    console.log(scrollHeight);
+    if (ref?.current) {
+      ref.current?.scrollTo(0, 100000000);
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
+
   if (messagesLoading || userLoading) {
     return <Spinner />;
   } else if (messagesError || userError) {
@@ -101,19 +94,30 @@ const Chat = ({
   } else if (chat && user) {
     return (
       <VStack height="100%">
-        {chat.length === 0 ? (
-          <Text>Nothing seems to be here, Say something!</Text>
-        ) : (
-          <ChatContents
-            contents={[
-              ...Array.from(new Set(chat.map((it) => JSON.stringify(it)))).map(
-                // please fix this if you can figure out a better way.
-                (it) => JSON.parse(it)
-              ),
-            ].sort((fst, snd) => fst.timestamp - snd.timestamp)}
-            userId={user?.uid}
-          />
-        )}
+        <Flex
+          flexDir="column"
+          width="100%"
+          height="100%"
+          px={3}
+          overflowY="scroll"
+          ref={ref}
+        >
+          {chat.length === 0 ? (
+            <Text>Nothing seems to be here, Say something!</Text>
+          ) : (
+            <ChatContents
+              contents={[
+                ...Array.from(
+                  new Set(chat.map((it) => JSON.stringify(it)))
+                ).map(
+                  // please fix this if you can figure out a better way.
+                  (it) => JSON.parse(it)
+                ),
+              ].sort((fst, snd) => fst.timestamp - snd.timestamp)}
+              userId={user?.uid}
+            />
+          )}
+        </Flex>
         <ChatTextBox
           addChat={(contents) => {
             const message = {
