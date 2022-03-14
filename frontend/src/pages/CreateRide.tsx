@@ -105,6 +105,13 @@ const CreateRide = () => {
     }
   }, [isDriver]);
 
+  useEffect(() => {
+    if (map) {
+      map.invalidateSize();
+      map.fitBounds(latLngBounds([endPosition, startPosition]).pad(0.1));
+    }
+  }, [map]);
+
   const submitRide = () => {
     if (groupId && user) {
       const userId = user.uid;
