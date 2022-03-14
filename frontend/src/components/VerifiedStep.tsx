@@ -7,7 +7,6 @@ const VerifiedStep = <T,>({
   isVerified = () => true,
   currentInput,
   children,
-  activeStep,
   prevStep,
   nextStep,
   isFirstStep = false,
@@ -17,7 +16,6 @@ const VerifiedStep = <T,>({
   isVerified?: (input: T) => boolean;
   currentInput: T;
   children: (JSX.Element | null)[] | (JSX.Element | null);
-  activeStep: number;
   prevStep: (input: T) => void;
   nextStep: (input: T) => void;
   isFirstStep?: boolean;

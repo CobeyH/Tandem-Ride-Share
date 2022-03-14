@@ -7,11 +7,10 @@ import {
   Input,
   InputGroup,
   Text,
-  Tooltip,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
-import { Step, Steps, useSteps } from "chakra-ui-steps";
+import { Steps, useSteps } from "chakra-ui-steps";
 import {
   Ride,
   setGroupRide,
@@ -32,9 +31,15 @@ import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/Rides/ChooseCar";
 import CarStatsSlider from "../components/Profiles/CarStatsSlider";
 import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
-import { lightTheme } from "../theme/colours";
 import LocationSearch from "../components/Rides/LocationSearch";
 import VerifiedStep from "../components/VerifiedStep";
+import {
+  FaCarSide,
+  FaClipboard,
+  FaClock,
+  FaMapMarkedAlt,
+  GiCarWheel,
+} from "react-icons/all";
 
 const createRide = async (
   ride: Ride,
@@ -100,12 +105,6 @@ const CreateRide = () => {
     }
   }, [isDriver]);
 
-  const isValidTitle = (title: string) => title.length !== 0;
-  const isValidStartAndEnd = (start: LatLng, end: LatLng) => start !== end;
-
-  const isValidRide =
-    isValidStartAndEnd(startPosition, endPosition) && isValidTitle(title);
-
   const submitRide = () => {
     if (groupId && user) {
       const userId = user.uid;
@@ -150,12 +149,12 @@ const CreateRide = () => {
         <Steps activeStep={activeStep} orientation="vertical">
           <VerifiedStep
             label="Name Ride"
-            activeStep={activeStep}
             currentInput={title}
             isVerified={(title) => title.length !== 0}
             isFirstStep={true}
             nextStep={nextStep}
             prevStep={prevStep}
+            icon={FaClipboard}
           >
             <Input
               mt={4}
@@ -169,13 +168,13 @@ const CreateRide = () => {
           <VerifiedStep
             label="Are you the driver?"
             currentInput={isDriver}
-            activeStep={activeStep}
             isVerified={(driver) => driver !== undefined}
             prevStep={prevStep}
             nextStep={(driver) => {
               if (driver) nextStep();
               else setStep(activeStep + 2);
             }}
+            icon={GiCarWheel}
           >
             <HStack>
               <Button onClick={() => setIsDriver(false)}>Passenger</Button>
@@ -185,13 +184,13 @@ const CreateRide = () => {
           {isDriver ? (
             <VerifiedStep
               label="Select Car"
-              activeStep={activeStep}
               currentInput={selectedCar}
               isVerified={(car) => {
                 return car !== undefined;
               }}
               nextStep={nextStep}
               prevStep={prevStep}
+              icon={FaCarSide}
             >
               <ChooseCar
                 carUpdate={(car) => {
@@ -210,7 +209,6 @@ const CreateRide = () => {
           <VerifiedStep
             label="Start Time"
             currentInput={startDate}
-            activeStep={activeStep}
             prevStep={() => {
               if (isDriver) prevStep();
               else setStep(activeStep - 2);
@@ -219,6 +217,7 @@ const CreateRide = () => {
             isVerified={(time) =>
               new RegExp(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/g).test(time)
             }
+            icon={FaClock}
           >
             <Input
               mb="4"
@@ -229,13 +228,13 @@ const CreateRide = () => {
           <VerifiedStep
             label="Create Route"
             currentInput={{ start: startPosition, end: endPosition }}
-            activeStep={activeStep}
             prevStep={prevStep}
             nextStep={submitRide}
             isLastStep={true}
             isVerified={(position) => {
-              return isValidStartAndEnd(position.start, position.end);
+              return position.start !== position.end;
             }}
+            icon={FaMapMarkedAlt}
           >
             <Text>Start Location</Text>
             <LocationSearch setLatLng={setStartPosition} />
