@@ -1,5 +1,6 @@
 import { Menu, Select, Spinner } from "@chakra-ui/react";
 import * as React from "react";
+import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useUserVehicles, Vehicle } from "../../firebase/database";
 import { auth } from "../../firebase/firebase";
@@ -13,6 +14,12 @@ const ChooseCar = (props: {
   const [cars, loadingCars] = useUserVehicles(user?.uid);
   if (!user) return null;
 
+  useEffect(() => {
+    if (cars && cars.length > 0 && !props.carId) {
+      props.carUpdate(cars[0]);
+    }
+  }, [loadingCars]);
+
   return loadingCars ? (
     <Spinner />
   ) : !cars || cars.length == 0 ? (
@@ -21,15 +28,16 @@ const ChooseCar = (props: {
     </Menu>
   ) : (
     <Select
+      value={props.carId}
       onChange={(e) => {
-        if (!e.target.value || !cars) {
+        if (!e.target.value) {
           return;
         }
         props.carUpdate(cars[parseInt(e.target.value)]);
       }}
     >
       {cars?.map((v: Vehicle, i: number) => (
-        <option key={i} value={i} selected={v.carId === props.carId}>
+        <option key={v.carId} value={i}>
           {v.displayName}
         </option>
       ))}

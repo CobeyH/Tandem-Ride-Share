@@ -92,7 +92,6 @@ const CreateRide = () => {
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
   function onDragEnd(position: LatLng) {
-    console.log(position);
     setEndPosition(position);
     map?.invalidateSize();
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
