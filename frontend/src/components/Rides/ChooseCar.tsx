@@ -18,7 +18,7 @@ const ChooseCar = (props: {
     if (cars && cars.length > 0 && !props.carId) {
       props.carUpdate(cars[0]);
     }
-  }, [loadingCars]);
+  }, [loadingCars, cars]);
 
   return loadingCars ? (
     <Spinner />
