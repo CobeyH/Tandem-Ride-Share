@@ -40,26 +40,6 @@ const ChatTextBox = ({
   </Box>
 );
 
-const ChatContents = (props: { contents: Message[]; userId: string }) => {
-  let prevSender = "";
-  return (
-    <>
-      {props.contents.map((m, i) => {
-        const component = (
-          <MessageComponent
-            userId={props.userId}
-            key={i}
-            message={m}
-            prevSender={prevSender}
-          />
-        );
-        prevSender = m.sender_id;
-        return component;
-      })}
-    </>
-  );
-};
-
 const Chat = ({
   dbLocation,
 }: {
@@ -75,17 +55,14 @@ const Chat = ({
   const ref = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    const scrollHeight = ref?.current?.scrollHeight ?? 0;
-    console.log(scrollHeight);
-    if (ref?.current) {
-      ref.current?.scrollTo(0, 100000000);
-    }
+    if (ref?.current) ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [chat]);
+    setTimeout(scrollToBottom, 100);
+  });
 
+  let prevSender = "";
   if (messagesLoading || userLoading) {
     return <Spinner />;
   } else if (messagesError || userError) {
@@ -100,23 +77,24 @@ const Chat = ({
           height="100%"
           px={3}
           overflowY="scroll"
-          ref={ref}
         >
           {chat.length === 0 ? (
             <Text>Nothing seems to be here, Say something!</Text>
           ) : (
-            <ChatContents
-              contents={[
-                ...Array.from(
-                  new Set(chat.map((it) => JSON.stringify(it)))
-                ).map(
-                  // please fix this if you can figure out a better way.
-                  (it) => JSON.parse(it)
-                ),
-              ].sort((fst, snd) => fst.timestamp - snd.timestamp)}
-              userId={user?.uid}
-            />
+            chat.map((m, i) => {
+              const component = (
+                <MessageComponent
+                  userId={user.uid}
+                  key={i}
+                  message={m}
+                  prevSender={prevSender}
+                />
+              );
+              prevSender = m.sender_id;
+              return component;
+            })
           )}
+          <div ref={ref}></div>
         </Flex>
         <ChatTextBox
           addChat={(contents) => {
