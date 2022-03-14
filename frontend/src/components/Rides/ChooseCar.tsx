@@ -7,7 +7,7 @@ import { auth } from "../../firebase/firebase";
 import AddCar from "../Profiles/AddCar";
 
 const ChooseCar = (props: {
-  carUpdate: (car: Vehicle) => void;
+  carUpdate: (car: Vehicle | undefined) => void;
   carId?: string;
 }) => {
   const [user] = useAuthState(auth);
@@ -33,11 +33,11 @@ const ChooseCar = (props: {
         if (!e.target.value) {
           return;
         }
-        props.carUpdate(cars[parseInt(e.target.value)]);
+        props.carUpdate(cars.find((v: Vehicle) => v.carId === e.target.value));
       }}
     >
-      {cars?.map((v: Vehicle, i: number) => (
-        <option key={v.carId} value={i}>
+      {cars?.map((v: Vehicle) => (
+        <option key={v.carId} value={v.carId}>
           {v.displayName}
         </option>
       ))}
