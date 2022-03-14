@@ -3,7 +3,9 @@ import {
   Button,
   Checkbox,
   Container,
+  Flex,
   Heading,
+  HStack,
   Input,
   InputGroup,
   Text,
@@ -11,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
+import { Step, Steps, useSteps } from "chakra-ui-steps";
 import {
   Ride,
   setGroupRide,
@@ -74,6 +77,9 @@ const CreateRide = () => {
     undefined
   );
   const [startDate, setStartDate] = useState("");
+  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+    initialStep: 0,
+  });
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -110,54 +116,84 @@ const CreateRide = () => {
       />
       <Container>
         <Heading textAlign={"center"}>Create Ride</Heading>
-        <InputGroup flexDirection="column">
-          <Input
-            mt={4}
-            value={title}
-            placeholder={"Ride Name"}
-            onInput={(e) => {
-              setTitle(e.currentTarget.value);
-            }}
-          />
-          <Checkbox
-            isChecked={isDriver}
-            onChange={(e) => {
-              setIsDriver(e.target.checked);
-            }}
-          >
-            Are you the driver?
-          </Checkbox>
-          {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
-          {selectedCar && isDriver ? (
-            <CarStatsSlider
-              car={selectedCar}
-              updateCar={setSelectedCar}
-              isDisabled={true}
+        <Steps activeStep={activeStep} orientation="vertical">
+          <Step label="Name Ride">
+            <Input
+              mt={4}
+              value={title}
+              placeholder={"Ride Name"}
+              onInput={(e) => {
+                setTitle(e.currentTarget.value);
+              }}
             />
+          </Step>
+          <Step label="Are you the driver?">
+            <HStack>
+              <Button onClick={() => setIsDriver(false)}>Passenger</Button>
+              <Button onClick={() => setIsDriver(true)}>Driver</Button>
+            </HStack>
+          </Step>
+          {isDriver ? (
+            <Step label="Select Car">
+              <ChooseCar carUpdate={setSelectedCar} />
+              {selectedCar ? (
+                <CarStatsSlider
+                  car={selectedCar}
+                  updateCar={setSelectedCar}
+                  isDisabled={true}
+                />
+              ) : null}
+            </Step>
           ) : null}
-        </InputGroup>
-        <Text>Start Time</Text>
-        <Input
-          mb="4"
-          type="datetime-local"
-          onInput={(e) => setStartDate(e.currentTarget.value)}
-        />
-        <Text>Start Location</Text>
-        <LocationSearch setLatLng={setStartPosition} />
-        <Text>End Location</Text>
-        <LocationSearch setLatLng={setEndPosition} />
-        <MapView style={{ height: "50vh" }} setMap={setMap}>
-          <DraggableMarker
-            position={startPosition}
-            onDragEnd={onDragStart}
-            icon={startIcon}
-          />
-          <DraggableMarker
-            position={endPosition}
-            onDragEnd={onDragEnd}
-            icon={endIcon}
-          />
-        </MapView>
+          <Step label="Start Time">
+            <Input
+              mb="4"
+              type="datetime-local"
+              onInput={(e) => setStartDate(e.currentTarget.value)}
+            />
+          </Step>
+          <Step label="Create Route">
+            <Text>Start Location</Text>
+            <LocationSearch setLatLng={setStartPosition} />
+            <Text>End Location</Text>
+            <LocationSearch setLatLng={setEndPosition} />
+            <MapView style={{ height: "50vh" }} setMap={setMap}>
+              <DraggableMarker
+                position={startPosition}
+                onDragEnd={onDragStart}
+                icon={startIcon}
+              />
+              <DraggableMarker
+                position={endPosition}
+                onDragEnd={onDragEnd}
+                icon={endIcon}
+              />
+            </MapView>
+          </Step>
+        </Steps>
+        {activeStep === 5 ? (
+          <Flex p={4}>
+            <Button mx="auto" size="sm" onClick={reset}>
+              Reset
+            </Button>
+          </Flex>
+        ) : (
+          <Flex width="100%" justify="flex-end">
+            <Button
+              isDisabled={activeStep === 0}
+              mr={4}
+              onClick={prevStep}
+              size="sm"
+              variant="ghost"
+            >
+              Prev
+            </Button>
+            <Button size="sm" onClick={nextStep}>
+              {activeStep === 4 ? "Finish" : "Next"}
+            </Button>
+          </Flex>
+        )}
+        <InputGroup flexDirection="column"></InputGroup>
         <Tooltip
           hasArrow
           label={
