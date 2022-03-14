@@ -181,31 +181,29 @@ const CreateRide = () => {
               <Button onClick={() => setIsDriver(true)}>Driver</Button>
             </HStack>
           </VerifiedStep>
-          {isDriver ? (
-            <VerifiedStep
-              label="Select Car"
-              currentInput={selectedCar}
-              isVerified={(car) => {
-                return car !== undefined;
+          <VerifiedStep
+            label="Select Car"
+            currentInput={selectedCar}
+            isVerified={(car) => {
+              return car !== undefined;
+            }}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            icon={FaCarSide}
+          >
+            <ChooseCar
+              carUpdate={(car) => {
+                setSelectedCar(car);
               }}
-              nextStep={nextStep}
-              prevStep={prevStep}
-              icon={FaCarSide}
-            >
-              <ChooseCar
-                carUpdate={(car) => {
-                  setSelectedCar(car);
-                }}
+            />
+            {selectedCar ? (
+              <CarStatsSlider
+                car={selectedCar}
+                updateCar={setSelectedCar}
+                isDisabled={true}
               />
-              {selectedCar ? (
-                <CarStatsSlider
-                  car={selectedCar}
-                  updateCar={setSelectedCar}
-                  isDisabled={true}
-                />
-              ) : null}
-            </VerifiedStep>
-          ) : null}
+            ) : null}
+          </VerifiedStep>
           <VerifiedStep
             label="Start Time"
             currentInput={startDate}
