@@ -3,14 +3,20 @@ import { Step } from "chakra-ui-steps";
 import { StepProps } from "chakra-ui-steps/dist/components/Step";
 import * as React from "react";
 
-const VerifiedStep = <T, P>({
+const VerifiedStep = <T,>({
+  isVerified = () => true,
+  currentInput,
+  children,
+  activeStep,
+  prevStep,
+  nextStep,
   isFirstStep = false,
   isLastStep = false,
   ...props
 }: {
-  isVerified: (input: T) => boolean;
+  isVerified?: (input: T) => boolean;
   currentInput: T;
-  children: React.ComponentType<P>;
+  children: (JSX.Element | null)[] | (JSX.Element | null);
   activeStep: number;
   prevStep: (input: T) => void;
   nextStep: (input: T) => void;
@@ -19,12 +25,12 @@ const VerifiedStep = <T, P>({
 } & StepProps) => {
   return (
     <Step {...props}>
-      {props.children}
+      {children}
       <Flex width="100%" justify="flex-end">
         <Button
-          isDisabled={props.activeStep === 0}
+          isDisabled={isFirstStep}
           mr={4}
-          onClick={() => props.prevStep(props.currentInput)}
+          onClick={() => prevStep(currentInput)}
           size="sm"
           variant="ghost"
         >
@@ -32,10 +38,10 @@ const VerifiedStep = <T, P>({
         </Button>
         <Button
           size="sm"
-          onClick={() => props.nextStep(props.currentInput)}
-          isDisabled={!props.isVerified(props.currentInput)}
+          onClick={() => nextStep(currentInput)}
+          isDisabled={!isVerified(currentInput) || isLastStep}
         >
-          {props.activeStep === 4 ? "Finish" : "Next"}
+          {activeStep === 4 ? "Finish" : "Next"}
         </Button>
       </Flex>
     </Step>

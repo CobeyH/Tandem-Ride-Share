@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
-  Checkbox,
   Container,
-  Flex,
   Heading,
   HStack,
   Input,
@@ -73,14 +71,18 @@ const CreateRide = () => {
   const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
-  const [isDriver, setIsDriver] = useState<boolean | undefined>();
+  const [isDriver, setIsDriver] = useState<boolean | undefined>(undefined);
   const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
     undefined
   );
   const [startDate, setStartDate] = useState("");
-  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
+
+  useEffect(() => {
+    console.log(activeStep);
+  }, [activeStep]);
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -122,7 +124,7 @@ const CreateRide = () => {
             label="Name Ride"
             activeStep={activeStep}
             currentInput={title}
-            isVerified={(title: string) => title.length !== 0}
+            isVerified={(title) => title.length !== 0}
             isFirstStep={true}
             nextStep={nextStep}
             prevStep={prevStep}
@@ -136,22 +138,38 @@ const CreateRide = () => {
               }}
             />
           </VerifiedStep>
-          <Step label="Are you the driver?">
+          <VerifiedStep
+            label="Are you the driver?"
+            currentInput={isDriver}
+            activeStep={activeStep}
+            isVerified={(driver) => driver !== undefined}
+            prevStep={prevStep}
+            nextStep={(driver) => {
+              if (driver) nextStep();
+              else setStep(activeStep + 2);
+            }}
+          >
             <HStack>
               <Button onClick={() => setIsDriver(false)}>Passenger</Button>
               <Button onClick={() => setIsDriver(true)}>Driver</Button>
             </HStack>
-          </Step>
+          </VerifiedStep>
           {isDriver ? (
             <VerifiedStep
               label="Select Car"
               activeStep={activeStep}
               currentInput={selectedCar}
-              isVerified={(car: Vehicle | undefined) => car !== undefined}
+              isVerified={(car) => {
+                return car !== undefined;
+              }}
               nextStep={nextStep}
               prevStep={prevStep}
             >
-              <ChooseCar carUpdate={setSelectedCar} />
+              <ChooseCar
+                carUpdate={(car) => {
+                  setSelectedCar(car);
+                }}
+              />
               {selectedCar ? (
                 <CarStatsSlider
                   car={selectedCar}
@@ -161,13 +179,25 @@ const CreateRide = () => {
               ) : null}
             </VerifiedStep>
           ) : null}
-          <Step label="Start Time">
+          <VerifiedStep
+            label="Start Time"
+            currentInput={startDate}
+            activeStep={activeStep}
+            prevStep={() => {
+              if (isDriver) prevStep();
+              else setStep(activeStep - 2);
+            }}
+            nextStep={nextStep}
+            isVerified={(time) =>
+              new RegExp(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/g).test(time)
+            }
+          >
             <Input
               mb="4"
               type="datetime-local"
               onInput={(e) => setStartDate(e.currentTarget.value)}
             />
-          </Step>
+          </VerifiedStep>
           <Step label="Create Route">
             <Text>Start Location</Text>
             <LocationSearch setLatLng={setStartPosition} />
@@ -187,7 +217,7 @@ const CreateRide = () => {
             </MapView>
           </Step>
         </Steps>
-        <InputGroup flexDirection="column"></InputGroup>
+        <InputGroup flexDirection="column" />
         <Tooltip
           hasArrow
           label={
