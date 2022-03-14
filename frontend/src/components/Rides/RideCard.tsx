@@ -247,7 +247,7 @@ function DriverBar({
           <Text>Vehicle: </Text>
           <ChooseCar
             carUpdate={(v) => {
-              setRideDriver(driverId, rideId, v.carId);
+              setRideDriver(driverId, rideId, v?.carId);
             }}
             carId={ride?.carId}
           />

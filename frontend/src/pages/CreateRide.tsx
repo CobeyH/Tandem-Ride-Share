@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
-  Checkbox,
   Container,
   Heading,
+  HStack,
   Input,
   InputGroup,
   Text,
-  Tooltip,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
+import { Steps, useSteps } from "chakra-ui-steps";
 import {
   Ride,
   setGroupRide,
@@ -31,8 +31,16 @@ import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/Rides/ChooseCar";
 import CarStatsSlider from "../components/Profiles/CarStatsSlider";
 import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
-import { lightTheme } from "../theme/colours";
 import LocationSearch from "../components/Rides/LocationSearch";
+import VerifiedStep from "../components/VerifiedStep";
+import {
+  FaCarSide,
+  FaClipboard,
+  FaClock,
+  FaMapMarkedAlt,
+  GiCarWheel,
+} from "react-icons/all";
+import { styleColors } from "../theme/colours";
 
 const createRide = async (
   ride: Ride,
@@ -74,6 +82,9 @@ const CreateRide = () => {
     undefined
   );
   const [startDate, setStartDate] = useState("");
+  const { nextStep, prevStep, setStep, activeStep } = useSteps({
+    initialStep: 0,
+  });
 
   function onDragStart(position: LatLng) {
     setStartPosition(position);
@@ -94,11 +105,43 @@ const CreateRide = () => {
     }
   }, [isDriver]);
 
-  const isValidTitle = (title: string) => title.length !== 0;
-  const isValidStartAndEnd = (start: LatLng, end: LatLng) => start !== end;
+  useEffect(() => {
+    if (map) {
+      map.invalidateSize();
+      map.fitBounds(latLngBounds([endPosition, startPosition]).pad(0.1));
+    }
+  }, [map]);
 
-  const isValidRide =
-    isValidStartAndEnd(startPosition, endPosition) && isValidTitle(title);
+  const submitRide = () => {
+    if (groupId && user) {
+      const userId = user.uid;
+      const ride = {
+        id: "",
+        name: title,
+        start: "start",
+        end: endPosition,
+        maxPassengers: selectedCar?.numSeats || 4,
+        startDate,
+        isComplete: false,
+        pickupPoints: {
+          start: {
+            location: startPosition,
+            members: { [userId]: true },
+            geocode: "",
+          },
+        },
+        ...(isDriver && { driver: user.uid }),
+        ...(selectedCar !== undefined && {
+          carId: selectedCar?.carId,
+        }),
+      };
+      getReverseGeocodeAsString(startPosition)
+        .then((geo) => (ride.pickupPoints.start.geocode = geo))
+        .then(() => createRide(ride, groupId, [userId]))
+        .then(() => navigate(`/group/${groupId}`))
+        .catch((err) => console.error(err));
+    }
+  };
 
   return (
     <>
@@ -110,109 +153,127 @@ const CreateRide = () => {
       />
       <Container>
         <Heading textAlign={"center"}>Create Ride</Heading>
-        <InputGroup flexDirection="column">
-          <Input
-            mt={4}
-            value={title}
-            placeholder={"Ride Name"}
-            onInput={(e) => {
-              setTitle(e.currentTarget.value);
-            }}
-          />
-          <Checkbox
-            isChecked={isDriver}
-            onChange={(e) => {
-              setIsDriver(e.target.checked);
-            }}
+        <Steps activeStep={activeStep} orientation="vertical">
+          <VerifiedStep
+            label="Name Ride"
+            currentInput={title}
+            isVerified={(title) => title.length !== 0}
+            isFirstStep={true}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            icon={FaClipboard}
           >
-            Are you the driver?
-          </Checkbox>
-          {isDriver ? <ChooseCar carUpdate={setSelectedCar} /> : null}
-          {selectedCar && isDriver ? (
-            <CarStatsSlider
-              car={selectedCar}
-              updateCar={setSelectedCar}
-              isDisabled={true}
+            <Input
+              mt={4}
+              value={title}
+              placeholder={"Ride Name"}
+              onInput={(e) => {
+                setTitle(e.currentTarget.value);
+              }}
             />
-          ) : null}
-        </InputGroup>
-        <Text>Start Time</Text>
-        <Input
-          mb="4"
-          type="datetime-local"
-          onInput={(e) => setStartDate(e.currentTarget.value)}
-        />
-        <Text>Start Location</Text>
-        <LocationSearch setLatLng={setStartPosition} />
-        <Text>End Location</Text>
-        <LocationSearch setLatLng={setEndPosition} />
-        <MapView style={{ height: "50vh" }} setMap={setMap}>
-          <DraggableMarker
-            position={startPosition}
-            onDragEnd={onDragStart}
-            icon={startIcon}
-          />
-          <DraggableMarker
-            position={endPosition}
-            onDragEnd={onDragEnd}
-            icon={endIcon}
-          />
-        </MapView>
-        <Tooltip
-          hasArrow
-          label={
-            isValidTitle(title)
-              ? isValidStartAndEnd(startPosition, endPosition)
-                ? "Create a ride"
-                : "Need a valid start and end"
-              : "Need a valid title"
-          }
-          bg="gray.300"
-          color="black"
-          shouldWrapChildren
-          placement={"top"}
-        >
-          <Button
-            variant={"solid"}
-            bg={!isValidRide ? "grey.100" : lightTheme.lightButton}
-            mt={4}
-            mb={4}
-            disabled={!isValidRide}
-            onClick={() => {
-              if (groupId && user) {
-                const userId = user.uid;
-                const ride = {
-                  id: "",
-                  name: title,
-                  start: "start",
-                  end: endPosition,
-                  maxPassengers: selectedCar?.numSeats || 4,
-                  startDate,
-                  isComplete: false,
-                  pickupPoints: {
-                    start: {
-                      location: startPosition,
-                      members: { [userId]: true },
-                      geocode: "",
-                    },
-                  },
-                  ...(isDriver && { driver: user.uid }),
-                  ...(selectedCar !== undefined && {
-                    carId: selectedCar?.carId,
-                  }),
-                };
-                getReverseGeocodeAsString(startPosition)
-                  .then((geo) => (ride.pickupPoints.start.geocode = geo))
-                  .then(() => createRide(ride, groupId, [userId]))
-                  .then(() => navigate(`/group/${groupId}`))
-                  .catch((err) => console.error(err));
-                console.log({ ride });
-              }
+          </VerifiedStep>
+          <VerifiedStep
+            label="Are you the driver?"
+            currentInput={isDriver}
+            isVerified={(driver) => driver !== undefined}
+            prevStep={prevStep}
+            nextStep={(driver) => {
+              if (driver) nextStep();
+              else setStep(activeStep + 2);
             }}
+            icon={GiCarWheel}
           >
-            Confirm
-          </Button>
-        </Tooltip>
+            <HStack>
+              <Button
+                bg={!isDriver ? styleColors.green : "white"}
+                onClick={() => setIsDriver(false)}
+                borderRadius={20}
+                borderWidth={2}
+              >
+                Passenger
+              </Button>
+              <Button
+                bg={isDriver ? styleColors.green : "white"}
+                onClick={() => setIsDriver(true)}
+                borderRadius={20}
+                borderWidth={2}
+              >
+                Driver
+              </Button>
+            </HStack>
+          </VerifiedStep>
+          <VerifiedStep
+            label="Select Car"
+            currentInput={selectedCar}
+            isVerified={(car) => {
+              return car !== undefined;
+            }}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            icon={FaCarSide}
+          >
+            <ChooseCar
+              carUpdate={(car) => {
+                setSelectedCar(car);
+              }}
+            />
+            {selectedCar ? (
+              <CarStatsSlider
+                car={selectedCar}
+                updateCar={setSelectedCar}
+                isDisabled={true}
+              />
+            ) : null}
+          </VerifiedStep>
+          <VerifiedStep
+            label="Start Time"
+            currentInput={startDate}
+            prevStep={() => {
+              if (isDriver) prevStep();
+              else setStep(activeStep - 2);
+            }}
+            nextStep={nextStep}
+            isVerified={(time) =>
+              new RegExp(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/g).test(time)
+            }
+            icon={FaClock}
+          >
+            <Input
+              mb="4"
+              type="datetime-local"
+              onInput={(e) => setStartDate(e.currentTarget.value)}
+            />
+          </VerifiedStep>
+          <VerifiedStep
+            label="Create Route"
+            currentInput={{ start: startPosition, end: endPosition }}
+            prevStep={prevStep}
+            nextStep={submitRide}
+            isLastStep={true}
+            isVerified={(position) => {
+              return position.start !== position.end;
+            }}
+            icon={FaMapMarkedAlt}
+          >
+            <Text>Start Location</Text>
+            <LocationSearch setLatLng={setStartPosition} />
+            <Text>End Location</Text>
+            <LocationSearch setLatLng={setEndPosition} />
+            <MapView style={{ height: "50vh" }} setMap={setMap}>
+              <DraggableMarker
+                position={startPosition}
+                onDragEnd={onDragStart}
+                icon={startIcon}
+              />
+              <DraggableMarker
+                position={endPosition}
+                onDragEnd={onDragEnd}
+                icon={endIcon}
+              />
+            </MapView>
+          </VerifiedStep>
+        </Steps>
+        <InputGroup flexDirection="column" />
       </Container>
     </>
   );
