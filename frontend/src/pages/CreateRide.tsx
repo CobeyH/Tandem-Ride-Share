@@ -40,6 +40,7 @@ import {
   FaMapMarkedAlt,
   GiCarWheel,
 } from "react-icons/all";
+import { styleColors } from "../theme/colours";
 
 const createRide = async (
   ride: Ride,
@@ -76,7 +77,7 @@ const CreateRide = () => {
   const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
   const [map, setMap] = useState<L.Map | undefined>(undefined);
-  const [isDriver, setIsDriver] = useState<boolean | undefined>(undefined);
+  const [isDriver, setIsDriver] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
     undefined
   );
@@ -177,8 +178,22 @@ const CreateRide = () => {
             icon={GiCarWheel}
           >
             <HStack>
-              <Button onClick={() => setIsDriver(false)}>Passenger</Button>
-              <Button onClick={() => setIsDriver(true)}>Driver</Button>
+              <Button
+                bg={!isDriver ? styleColors.green : "white"}
+                onClick={() => setIsDriver(false)}
+                borderRadius={20}
+                borderWidth={2}
+              >
+                Passenger
+              </Button>
+              <Button
+                bg={isDriver ? styleColors.green : "white"}
+                onClick={() => setIsDriver(true)}
+                borderRadius={20}
+                borderWidth={2}
+              >
+                Driver
+              </Button>
             </HStack>
           </VerifiedStep>
           <VerifiedStep
