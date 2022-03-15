@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {
-  Button,
   Heading,
   Input,
-  InputGroup,
   Text,
   Stack,
   HStack,
@@ -28,6 +26,14 @@ import Header from "../components/Header";
 import { PhotoType, uploadPhoto } from "../firebase/storage";
 import FileDropzone from "../components/FileDropzone";
 import GroupSizeSlider from "../components/Groups/GroupSizeSlider";
+import { Steps, useSteps } from "chakra-ui-steps";
+import VerifiedStep from "../components/VerifiedStep";
+import {
+  FaClipboard,
+  FaUserFriends,
+  ImQuill,
+  IoMdPhotos,
+} from "react-icons/all";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -65,6 +71,9 @@ const CreateGroup = () => {
   const handleProfilePicSubmit = (childPic: Blob | MediaSource) => {
     setProfilePic(childPic);
   };
+  const { nextStep, prevStep, activeStep } = useSteps({
+    initialStep: 0,
+  });
 
   const [user] = useAuthState(auth);
   const [{ field: name, invalid: invalidName }, setName] = useState<
@@ -81,103 +90,129 @@ const CreateGroup = () => {
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
 
+  const submitGroup = () => {
+    if (user?.uid !== undefined) {
+      createGroup(
+        {
+          description,
+          isPrivate,
+          name,
+          rides: {},
+          members: {},
+          owner: user?.uid,
+          maxSize,
+        },
+        user.uid
+      ).then((group) => {
+        navigate(`/group/${group.id}`);
+        if (banner !== undefined) {
+          uploadPhoto(group.id, PhotoType.banners, banner).then((url) => {
+            setGroupBanner(group.id, url?.fullPath);
+          });
+        }
+        if (profilePic) {
+          uploadPhoto(group.id, PhotoType.profilePics, profilePic).then(
+            (url) => {
+              setGroupProfilePic(group.id, url?.fullPath);
+            }
+          );
+        }
+      });
+    }
+  };
+
   return (
     <>
       <Header pages={[{ label: "My Groups", url: "/" }]} />
       <Container>
-        <InputGroup paddingInline={5}>
-          <Stack>
-            <Heading textAlign={"center"}>Create Group</Heading>
-            <HStack>
-              <Text mb={"8px"}>Name</Text>
-              <Input
-                value={name}
-                placeholder={"name"}
-                onInput={(e) =>
-                  setName({
-                    field: e.currentTarget.value,
-                    invalid: isInvalidName(e.currentTarget.value),
-                  })
-                }
-                isInvalid={invalidName}
-                maxLength={MAX_GROUP_NAME_LENGTH}
-              />
-            </HStack>
+        <Heading textAlign={"center"}>Create Group</Heading>
+        <Steps activeStep={activeStep} orientation="vertical">
+          <VerifiedStep
+            label="Group Name"
+            description={name}
+            currentInput={name}
+            isVerified={(name) => name.length !== 0}
+            isFirstStep={true}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            icon={FaClipboard}
+          >
+            <Input
+              value={name}
+              placeholder={"name"}
+              onInput={(e) =>
+                setName({
+                  field: e.currentTarget.value,
+                  invalid: isInvalidName(e.currentTarget.value),
+                })
+              }
+              isInvalid={invalidName}
+              maxLength={MAX_GROUP_NAME_LENGTH}
+            />
             <Text
               color="grey.200"
               size="sm"
               align="right"
             >{`${name.length} / ${MAX_GROUP_NAME_LENGTH}`}</Text>
-            <HStack>
-              <Text mb={"8px"}>Description</Text>
-              <Textarea
-                value={description}
-                placeholder={"Description"}
-                onInput={(e) => setDescription(e.currentTarget.value)}
-                isInvalid={invalidName}
-              />
-            </HStack>
-            <GroupSizeSlider
-              setSize={setSize}
-              isPrivate={isPrivate}
-              maxSize={maxSize}
+          </VerifiedStep>
+          <VerifiedStep
+            label="Description"
+            currentInput={description}
+            isVerified={() => true}
+            prevStep={prevStep}
+            nextStep={nextStep}
+            icon={ImQuill}
+          >
+            <Textarea
+              value={description}
+              placeholder={"Description"}
+              onInput={(e) => setDescription(e.currentTarget.value)}
+              isInvalid={invalidName}
             />
-            <HStack>
-              <Tooltip
-                label="Private groups are only joinable through an invite link from a group member"
-                hasArrow
-              >
-                <Text mb={"8px"}>Private Group:</Text>
-              </Tooltip>
-              <Checkbox
-                isChecked={isPrivate}
-                onChange={(e) => setPrivate(e.target.checked)}
+          </VerifiedStep>
+          <VerifiedStep
+            label="Choose a Plan"
+            currentInput={maxSize}
+            isVerified={(groupSize) => groupSize !== undefined}
+            prevStep={prevStep}
+            nextStep={nextStep}
+            icon={FaUserFriends}
+          >
+            <Stack>
+              <GroupSizeSlider
+                setSize={setSize}
+                isPrivate={isPrivate}
+                maxSize={maxSize}
               />
-            </HStack>
+              <HStack>
+                <Tooltip
+                  label="Private groups are only joinable through an invite link from a group member"
+                  hasArrow
+                >
+                  <Text mb={"8px"}>Private Group:</Text>
+                </Tooltip>
+                <Checkbox
+                  isChecked={isPrivate}
+                  onChange={(e) => setPrivate(e.target.checked)}
+                />
+              </HStack>
+            </Stack>
+          </VerifiedStep>
+          <VerifiedStep
+            label="Upload Media"
+            currentInput={banner}
+            isVerified={() => true}
+            prevStep={prevStep}
+            nextStep={submitGroup}
+            icon={IoMdPhotos}
+            isLastStep={true}
+          >
             <Heading size="md"> Upload Banner</Heading>
             <FileDropzone parentCallback={handleCallback} />
             <Heading size="md"> Upload Profile Picture</Heading>
             <FileDropzone parentCallback={handleProfilePicSubmit} />
-            <Button
-              onClick={() => {
-                if (user?.uid !== undefined) {
-                  createGroup(
-                    {
-                      description,
-                      isPrivate,
-                      name,
-                      rides: {},
-                      members: {},
-                      owner: user?.uid,
-                      maxSize,
-                    },
-                    user.uid
-                  ).then((group) => {
-                    navigate(`/group/${group.id}`);
-                    if (banner !== undefined) {
-                      uploadPhoto(group.id, PhotoType.banners, banner).then(
-                        (url) => {
-                          setGroupBanner(group.id, url?.fullPath);
-                        }
-                      );
-                    }
-                    if (profilePic) {
-                      uploadPhoto(
-                        group.id,
-                        PhotoType.profilePics,
-                        profilePic
-                      ).then((url) => {
-                        setGroupProfilePic(group.id, url?.fullPath);
-                      });
-                    }
-                  });
-                }
-              }}
-            >
-              Create
-            </Button>
-          </Stack>
-        </InputGroup>
+          </VerifiedStep>
+        </Steps>
       </Container>
     </>
   );
