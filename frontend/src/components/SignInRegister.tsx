@@ -8,9 +8,11 @@ import { signInWithGoogle } from "../firebase/firebase";
 export default function SignInRegister({
   state,
   onClickSignIn,
+  onClickForgotPassword,
 }: {
   state?: LocationGotoState;
   onClickSignIn?: () => void;
+  onClickForgotPassword?: () => void;
 }) {
   const navigate = useNavigate();
 
@@ -30,6 +32,11 @@ export default function SignInRegister({
           >
             Sign In
           </Button>
+          {onClickForgotPassword === undefined ? null : (
+            <Button onClick={onClickForgotPassword} mt={4}>
+              Forgot Password?
+            </Button>
+          )}
           <Button leftIcon={<FaGoogle />} mt={4} onClick={signInWithGoogle}>
             Sign In With Google
           </Button>

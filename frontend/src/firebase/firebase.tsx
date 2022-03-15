@@ -101,7 +101,6 @@ export const registerWithEmailAndPassword = async (
 export async function sendPasswordReset(email: string) {
   try {
     await sendPasswordResetEmail(auth, email);
-    alert("Check your email for reset link");
   } catch (err) {
     console.error(err);
   }
