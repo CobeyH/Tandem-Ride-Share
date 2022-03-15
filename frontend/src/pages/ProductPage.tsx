@@ -8,6 +8,7 @@ import {
   VStack,
   Grid,
   GridItem,
+  Stack,
 } from "@chakra-ui/react";
 import * as React from "react";
 import PriceSelector from "../components/Promotional/PriceSelector";
@@ -30,7 +31,7 @@ const ProductPage = () => {
                 <Text
                   color={styleColors.deepBlue}
                   fontSize={30}
-                  fontWeight={600}
+                  fontWeight={"bold"}
                   align="center"
                 >
                   Carpooling made easy.
@@ -38,7 +39,7 @@ const ProductPage = () => {
                 <Text
                   color={styleColors.deepBlue}
                   fontSize={30}
-                  fontWeight={600}
+                  fontWeight={"bold"}
                   align="center"
                 >
                   Carpooling made social.
@@ -62,9 +63,9 @@ const ProductPage = () => {
           </HStack>
         </Center>
         <Center>
-          <Box w="90vw" pt={10} pb={200}>
+          <Box w="90vw" pt={10} pb={100}>
             <Text
-              bgGradient={`linear(to-r, ${styleColors.darkBlue}, ${styleColors.medBlue}, white)`}
+              bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
               bgClip="text"
               fontWeight="extrabold"
               fontSize={50}
@@ -72,25 +73,7 @@ const ProductPage = () => {
             >
               Testimonials
             </Text>
-            <Grid
-              w="90vw"
-              templateRows="repeat(2, 1fr)"
-              templateColumns="repeat(5, 1fr)"
-              gap={4}
-            >
-              <GridItem rowSpan={2} colSpan={1}>
-                <Testimonial></Testimonial>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Testimonial></Testimonial>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Testimonial></Testimonial>
-              </GridItem>
-              <GridItem colSpan={4}>
-                <Testimonial></Testimonial>
-              </GridItem>
-            </Grid>
+            <Testimonial />
           </Box>
         </Center>
         <VStack pb={25}>
@@ -111,24 +94,28 @@ const ProductPage = () => {
       </Box>
 
       {/* Footer */}
-      <Box w="100%" bgColor="white" textAlign="center">
+      <Box bgColor="white" textAlign="center">
         <HStack p={4}>
-          <Image
-            src={"/logo_darkBlue.svg"}
-            alt="dark blue logo"
-            objectFit="cover"
-            maxW="50px"
-          />
-          <Text color={styleColors.darkBlue} fontSize="100%" p={1}>
-            Tandem
-          </Text>
+          <Stack direction={{ base: "column", md: "row" }}>
+            <Image
+              src={"/logo_darkBlue.svg"}
+              alt="dark blue logo"
+              objectFit="cover"
+              maxW="50px"
+            />
+            <Text color={styleColors.darkBlue} p={1}>
+              Tandem
+            </Text>
+          </Stack>
           <Spacer />
-          <VStack align="center" pr={100}>
-            <b>
-              <Text color={styleColors.deepBlue} fontSize="70%">
-                Company
-              </Text>
-            </b>
+          <VStack align="center">
+            <Text
+              fontWeight={"bold"}
+              color={styleColors.deepBlue}
+              fontSize="70%"
+            >
+              Company
+            </Text>
             <Text color={styleColors.deepBlue} fontSize="65%">
               About Us
             </Text>
@@ -142,12 +129,14 @@ const ProductPage = () => {
               Testimonials
             </Text>
           </VStack>
-          <VStack pr={200}>
-            <b>
-              <Text color={styleColors.deepBlue} fontSize="70%">
-                Support
-              </Text>
-            </b>
+          <VStack>
+            <Text
+              fontWeight={"bold"}
+              color={styleColors.deepBlue}
+              fontSize="70%"
+            >
+              Support
+            </Text>
             <Text color={styleColors.deepBlue} fontSize="65%">
               Help Center
             </Text>
