@@ -32,6 +32,18 @@ function Register() {
     registerWithEmailAndPassword(name, email, password);
   };
   const navigate = useNavigate();
+
+  // checking validity of the input
+  const validName = name ? true : false;
+  const validEmail = email
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  const MIN_PASSWORD_LENGTH = 6;
+  const validPassword = password.length >= MIN_PASSWORD_LENGTH ? true : false;
+  const isFormValid = validName && validEmail && validPassword;
+
   useEffect(() => {
     if (loading) return;
     if (user) {
@@ -68,7 +80,7 @@ function Register() {
           />
         </FormControl>
         <PasswordField setPassword={setPassword} />
-        <Button width="full" mt={4} onClick={register}>
+        <Button width="full" mt={4} onClick={register} disabled={!isFormValid}>
           Register
         </Button>
         <Button
