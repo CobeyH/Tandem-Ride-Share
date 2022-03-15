@@ -76,10 +76,10 @@ const PriceSelector = (props: {
   const [selectedPlan, setSelectedPlan] = useState<PlanTypes>("Friend Group");
 
   return (
-    <Box as="section" bg="" py="14" px={{ base: "4", md: "8" }}>
+    <Box as="section" bg="" py="14" px={{ base: "2", md: "8" }}>
       <SimpleGrid
-        columns={{ base: 1, lg: 4 }}
-        spacing={{ base: "8", lg: "0" }}
+        columns={{ base: 2, lg: 4 }}
+        spacing={{ base: "0", lg: "0" }}
         maxW="7xl"
         mx="auto"
         justifyItems="center"
