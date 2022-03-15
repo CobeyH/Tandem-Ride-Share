@@ -183,7 +183,7 @@ const CreateGroup = () => {
             icon={FaUserFriends}
           >
             <Stack>
-              <PriceSelector showSelectors={true} />
+              <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
               <HStack>
                 <Tooltip
                   label="Private groups are only joinable through an invite link from a group member"

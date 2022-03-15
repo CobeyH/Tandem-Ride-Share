@@ -80,6 +80,7 @@ const PriceSelector = (props: {
       <SimpleGrid
         columns={{ base: 2, lg: 4 }}
         maxW="7xl"
+        minWidth={{ base: 150, md: 1000 }}
         mx="auto"
         justifyItems="center"
         alignItems="center"
@@ -98,8 +99,9 @@ const PriceSelector = (props: {
                 <Button
                   onClick={() => {
                     setSelectedPlan(card.data.name);
-                    if (props.updateGroupPlan)
+                    if (props.updateGroupPlan !== undefined) {
                       props.updateGroupPlan(card.data.name);
+                    }
                   }}
                 >
                   Select

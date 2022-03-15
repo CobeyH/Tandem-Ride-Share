@@ -52,12 +52,12 @@ export const PricingCard = (props: PricingCardProps) => {
           size="3xl"
           fontWeight="inherit"
           lineHeight="0.9em"
-          fontSize={{ base: 30, md: 60 }}
+          fontSize={{ base: 30, md: 50 }}
         >
           {price}
         </Heading>
         {price === "Free" ? null : (
-          <Text fontWeight="inherit" fontSize={{ base: "sm", md: "2xl" }}>
+          <Text fontWeight="inherit" fontSize={{ base: "sm", md: "xl" }}>
             / month
           </Text>
         )}
