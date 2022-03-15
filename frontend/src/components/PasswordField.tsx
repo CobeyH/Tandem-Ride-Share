@@ -8,22 +8,25 @@ import {
 import * as React from "react";
 import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { styleColors } from "../theme/colours";
 
 const PasswordField = (props: { setPassword: (newPass: string) => void }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
-    <FormControl mt={6}>
+    <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"}>
       <InputGroup>
         <Input
           type={showPassword ? "text" : "password"}
           placeholder="Password"
           onChange={(event) => props.setPassword(event.currentTarget.value)}
+          variant="tandem-registration"
         />
-        <InputRightElement>
+        <InputRightElement pt={2}>
           <IconButton
             onClick={() => setShowPassword(!showPassword)}
             icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
             aria-label="password-visability"
+            color={styleColors.darkBlue}
             variant="ghost"
           />
         </InputRightElement>

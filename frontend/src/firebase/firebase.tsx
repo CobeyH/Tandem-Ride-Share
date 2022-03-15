@@ -1,6 +1,7 @@
 import {
   connectAuthEmulator,
   createUserWithEmailAndPassword,
+  FacebookAuthProvider,
   getAuth,
   GoogleAuthProvider,
   sendPasswordResetEmail,
@@ -43,7 +44,7 @@ if (location.hostname === "localhost") {
   connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
 }
 
-const googleProvider = new GoogleAuthProvider();
+const googleProvider = new FacebookAuthProvider();
 export const signInWithGoogle = async () => {
   try {
     const response = await signInWithPopup(auth, googleProvider);

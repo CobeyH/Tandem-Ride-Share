@@ -6,7 +6,6 @@ import {
   registerWithEmailAndPassword,
   signInWithGoogle,
 } from "../firebase/firebase";
-import Header from "../components/Header";
 import {
   FormControl,
   Input,
@@ -15,12 +14,18 @@ import {
   Heading,
   Container,
   VStack,
+  Image,
+  Center,
+  Text,
+  HStack,
+  CloseButton,
 } from "@chakra-ui/react";
-import { FaGoogle } from "react-icons/all";
+import { FaApple, FaFacebookF, FcGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
-import { lightTheme } from "../theme/colours";
+import { styleColors } from "../theme/colours";
 import PasswordField from "../components/PasswordField";
+import HeaderWhite from "../components/HeaderWhite";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -47,42 +52,76 @@ function Register() {
     }
   }, [user, loading]);
   return (
-    <Container bg={lightTheme.main} height="100vh">
-      <Header />
-      <Box textAlign="center">
-        <Heading>Registration</Heading>
-      </Box>
+    <Container bg="white" height="100vh">
+      <HeaderWhite />
+      <VStack align="center" p={6}>
+        <Image
+          src={"/logo_mainBlue.svg"}
+          alt="main blue logo"
+          objectFit="cover"
+          maxW="100px"
+        />
+        <Text color={styleColors.mainBlue}>TANDEM</Text>
+      </VStack>
       <VStack>
-        <FormControl mt={6} isRequired>
+        <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
           <Input
             type="fullName"
             placeholder="Full Name"
             onChange={(event) => setName(event.currentTarget.value)}
+            variant="tandem-registration"
           />
         </FormControl>
-        <FormControl mt={6} isRequired>
+        <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
           <Input
             type="email"
             placeholder="Email Address"
             onChange={(event) => setEmail(event.currentTarget.value)}
+            variant="tandem-registration"
           />
         </FormControl>
         <PasswordField setPassword={setPassword} />
-        <Button width="full" mt={4} onClick={register}>
-          Register
-        </Button>
         <Button
+          width="30%"
           mt={4}
-          leftIcon={<FaGoogle />}
-          width="full"
-          onClick={signInWithGoogle}
+          onClick={register}
+          variant="tandem-registration"
         >
-          Register with Google
+          Create Account
         </Button>
+        <Box p={5} color={styleColors.deepBlue}>
+          Or create and account with
+        </Box>
+        <HStack spacing={2} pb={4}>
+          <Button
+            leftIcon={<FcGoogle />}
+            width="full"
+            onClick={signInWithGoogle}
+            variant="signInWith"
+          >
+            Google
+          </Button>
+          <Button
+            leftIcon={<FaFacebookF color="#1877F2" />}
+            width="full"
+            onClick={signInWithGoogle}
+            variant="signInWith"
+          >
+            Facebook
+          </Button>
+          <Button
+            leftIcon={<FaApple color="#718096" />}
+            width="full"
+            onClick={signInWithGoogle}
+            variant="signInWith"
+          >
+            Apple ID
+          </Button>
+        </HStack>
         <div>
           Already have an account?{" "}
           <Link
-            style={{ color: "blue" }}
+            style={{ color: styleColors.mainBlue, fontWeight: "bold" }}
             to={NavConstants.LOGIN}
             state={location.state}
           >
