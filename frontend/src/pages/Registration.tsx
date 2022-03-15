@@ -28,7 +28,10 @@ function Register() {
   const [name, setName] = useState("");
   const [user, loading] = useAuthState(auth);
   const register = () => {
-    if (!name) alert("Please enter name");
+    if (!name) {
+      alert("Please enter name");
+      return;
+    }
     registerWithEmailAndPassword(name, email, password);
   };
   const navigate = useNavigate();
