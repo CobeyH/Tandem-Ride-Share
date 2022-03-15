@@ -19,14 +19,10 @@ const ProductPage = () => {
   return (
     <Box
       h="-webkit-fit-content"
-      bgGradient={`linear(to-r, ${styleColors.mainBlue}, ${styleColors.lightBlue})`}
+      bgGradient={`linear(to-br, ${styleColors.mainBlue}, ${styleColors.lightBlue})`}
     >
       <ProductHeader />
-      <Box
-        h="-webkit-fit-content"
-        bgGradient={`linear(transparent 30%, white)`}
-        ml={5}
-      >
+      <Box h="-webkit-fit-content" ml={5} mr={5}>
         <Center>
           <HStack pt={{ base: 75, md: 175 }} pb={125}>
             <VStack align="center">
@@ -35,6 +31,7 @@ const ProductPage = () => {
                   color={styleColors.deepBlue}
                   fontSize={30}
                   fontWeight={600}
+                  align="center"
                 >
                   Carpooling made easy.
                 </Text>
@@ -42,6 +39,7 @@ const ProductPage = () => {
                   color={styleColors.deepBlue}
                   fontSize={30}
                   fontWeight={600}
+                  align="center"
                 >
                   Carpooling made social.
                 </Text>
@@ -110,59 +108,61 @@ const ProductPage = () => {
           </Box>
         </VStack>
         <Spacer />
-        <Box w="100vw" bgColor="white" textAlign="center">
-          <HStack p={4}>
-            <Image
-              src={"/logo_darkBlue.svg"}
-              alt="dark blue logo"
-              objectFit="cover"
-              maxW="50px"
-            />
-            <Text color={styleColors.darkBlue} fontSize="100%" p={1}>
-              Tandem
+      </Box>
+
+      {/* Footer */}
+      <Box w="100%" bgColor="white" textAlign="center">
+        <HStack p={4}>
+          <Image
+            src={"/logo_darkBlue.svg"}
+            alt="dark blue logo"
+            objectFit="cover"
+            maxW="50px"
+          />
+          <Text color={styleColors.darkBlue} fontSize="100%" p={1}>
+            Tandem
+          </Text>
+          <Spacer />
+          <VStack align="center" pr={100}>
+            <b>
+              <Text color={styleColors.deepBlue} fontSize="70%">
+                Company
+              </Text>
+            </b>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              About Us
             </Text>
-            <Spacer />
-            <VStack align="center" pr={100}>
-              <b>
-                <Text color={styleColors.deepBlue} fontSize="70%">
-                  Company
-                </Text>
-              </b>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                About Us
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Contact Us
+            </Text>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Pricing
+            </Text>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Testimonials
+            </Text>
+          </VStack>
+          <VStack pr={200}>
+            <b>
+              <Text color={styleColors.deepBlue} fontSize="70%">
+                Support
               </Text>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Contact Us
-              </Text>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Pricing
-              </Text>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Testimonials
-              </Text>
-            </VStack>
-            <VStack pr={200}>
-              <b>
-                <Text color={styleColors.deepBlue} fontSize="70%">
-                  Support
-                </Text>
-              </b>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Help Center
-              </Text>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Privacy Policy
-              </Text>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Legal
-              </Text>
-              <Text color={styleColors.deepBlue} fontSize="65%">
-                Terms of Service
-              </Text>
-            </VStack>
-            <Spacer />
-          </HStack>
-        </Box>
+            </b>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Help Center
+            </Text>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Privacy Policy
+            </Text>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Legal
+            </Text>
+            <Text color={styleColors.deepBlue} fontSize="65%">
+              Terms of Service
+            </Text>
+          </VStack>
+          <Spacer />
+        </HStack>
       </Box>
     </Box>
   );
