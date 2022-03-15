@@ -79,7 +79,6 @@ const PriceSelector = (props: {
     <Box as="section" bg="" py="14" px={{ base: "2", md: "8" }}>
       <SimpleGrid
         columns={{ base: 2, lg: 4 }}
-        spacing={{ base: "0", lg: "0" }}
         maxW="7xl"
         mx="auto"
         justifyItems="center"
@@ -87,6 +86,7 @@ const PriceSelector = (props: {
       >
         {planData.map((card: PlanInfo) => (
           <PricingCard
+            minHeight={550}
             key={card.data.name}
             data={card.data}
             icon={card.icon}

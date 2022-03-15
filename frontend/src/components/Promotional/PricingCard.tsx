@@ -48,11 +48,16 @@ export const PricingCard = (props: PricingCardProps) => {
         color={accentColor}
         my="8"
       >
-        <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
+        <Heading
+          size="3xl"
+          fontWeight="inherit"
+          lineHeight="0.9em"
+          fontSize={{ base: 30, md: 60 }}
+        >
           {price}
         </Heading>
         {price === "Free" ? null : (
-          <Text fontWeight="inherit" fontSize="2xl">
+          <Text fontWeight="inherit" fontSize={{ base: "sm", md: "2xl" }}>
             / month
           </Text>
         )}
