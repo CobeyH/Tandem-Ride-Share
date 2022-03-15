@@ -24,7 +24,7 @@ import {
   loginWithEmailAndPassword,
   sendPasswordReset,
 } from "../firebase/firebase";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { LocationGotoState } from "./JoinGroup";
@@ -76,6 +76,12 @@ export default function Login() {
           />
         </FormControl>
         <PasswordField setPassword={setPassword} />
+        <Text textAlign={"right"}>
+          Forgot Password?{" "}
+          <Link style={{ color: "blue" }} onClick={onOpen} to={"#"}>
+            Reset
+          </Link>
+        </Text>
         <ResetPasswordModal
           isOpen={isOpen}
           onClose={onClose}
@@ -84,7 +90,6 @@ export default function Login() {
         />
         <SignInRegister
           onClickSignIn={handleEmailLogin}
-          onClickForgotPassword={onOpen}
           state={location.state as LocationGotoState}
         />
       </Box>
@@ -112,6 +117,7 @@ const ResetPasswordModal = ({
         <ModalHeader>Reset Password</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          <Text>Email</Text>
           <InputGroup>
             <Input
               type={"email"}
