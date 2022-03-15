@@ -76,7 +76,7 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
-  const [plan, setPlan] = useState<PlanTypes>("Free");
+  const [plan, setPlan] = useState<PlanTypes>();
   const MAX_GROUP_NAME_LENGTH = 25;
 
   const isInvalidName = (name: string) => name.length === 0;
@@ -136,7 +136,7 @@ const CreateGroup = () => {
           <FileDropzone parentCallback={handleProfilePicSubmit} />
           <Button
             onClick={() => {
-              if (user?.uid !== undefined) {
+              if (user?.uid !== undefined && plan) {
                 createGroup(
                   {
                     description,
@@ -145,7 +145,7 @@ const CreateGroup = () => {
                     rides: {},
                     members: {},
                     owner: user?.uid,
-                    maxSize,
+                    plan,
                   },
                   user.uid
                 ).then((group) => {

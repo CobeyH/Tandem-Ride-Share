@@ -4,7 +4,7 @@ import { IconType } from "react-icons";
 import { FaUserAlt, FaUserFriends, FaUsers } from "react-icons/all";
 import { PricingCard } from "./PricingCard";
 
-type CardInfo = {
+export type PlanInfo = {
   data: {
     price: string;
     numericPrice: number;
@@ -21,52 +21,60 @@ export type PlanTypes =
   | "Large Organization"
   | "Enterprise";
 
+export const planData: PlanInfo[] = [
+  {
+    data: {
+      price: "Free",
+      numericPrice: 0,
+      limit: 10,
+      name: "Friend Group",
+      features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
+    },
+    icon: FaUserAlt,
+  },
+  {
+    data: {
+      price: "$5",
+      limit: 25,
+      numericPrice: 5,
+      name: "Small Organization",
+      features: ["Limit 25 people", "Gas calculator", "Optimized Pickups"],
+    },
+    icon: FaUserFriends,
+  },
+  {
+    data: {
+      price: "$10",
+      numericPrice: 10,
+      limit: 50,
+      name: "Large Organization",
+      features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
+    },
+    icon: FaUserFriends,
+  },
+  {
+    data: {
+      price: "$29",
+      numericPrice: 29,
+      name: "Enterprise",
+      features: ["No group limits", "Gas calculator", "Optimized Pickups"],
+    },
+    icon: FaUsers,
+  },
+];
+
+export function groupMaxSize(groupPlan: PlanTypes) {
+  return (
+    planData.find((p: PlanInfo) => p.data.name === groupPlan)?.data.limit || 0
+  );
+}
+
 const PriceSelector = (props: {
   showSelectors: boolean;
   updateGroupPlan?: (newPlan: PlanTypes) => void;
 }) => {
-  const [selectedCard, setSelectedCard] = useState("Free");
-  const cardData: CardInfo[] = [
-    {
-      data: {
-        price: "Free",
-        numericPrice: 0,
-        limit: 10,
-        name: "Friend Group",
-        features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
-      },
-      icon: FaUserAlt,
-    },
-    {
-      data: {
-        price: "$5",
-        limit: 25,
-        numericPrice: 5,
-        name: "Small Organization",
-        features: ["Limit 25 people", "Gas calculator", "Optimized Pickups"],
-      },
-      icon: FaUserFriends,
-    },
-    {
-      data: {
-        price: "$10",
-        numericPrice: 10,
-        limit: 50,
-        name: "Large Organization",
-        features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
-      },
-      icon: FaUserFriends,
-    },
-    {
-      data: {
-        price: "$29",
-        numericPrice: 29,
-        name: "Enterprise",
-        features: ["No group limits", "Gas calculator", "Optimized Pickups"],
-      },
-      icon: FaUsers,
-    },
-  ];
+  const [selectedPlan, setSelectedPlan] = useState<PlanTypes>("Friend Group");
+
   return (
     <Box as="section" bg="" py="14" px={{ base: "4", md: "8" }}>
       <SimpleGrid
@@ -77,19 +85,19 @@ const PriceSelector = (props: {
         justifyItems="center"
         alignItems="center"
       >
-        {cardData.map((card: CardInfo) => (
+        {planData.map((card: PlanInfo) => (
           <PricingCard
             key={card.data.name}
             data={card.data}
             icon={card.icon}
-            highlight={card.data.name == selectedCard}
+            highlight={card.data.name == selectedPlan}
             button={
-              card.data.name == selectedCard ? (
+              card.data.name == selectedPlan ? (
                 <></>
               ) : (
                 <Button
                   onClick={() => {
-                    setSelectedCard(card.data.name);
+                    setSelectedPlan(card.data.name);
                     if (props.updateGroupPlan)
                       props.updateGroupPlan(card.data.name);
                   }}

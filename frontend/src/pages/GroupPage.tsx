@@ -24,6 +24,7 @@ import GroupSettings from "../components/GroupSettings";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 import GroupDrawer from "../components/GroupDrawer";
+import { groupMaxSize } from "../components/Promotional/PriceSelector";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <GroupDrawer
               members={group.members}
               ownerId={group.owner}
-              plan={group.plan}
+              maxSize={groupMaxSize(group.plan)}
               groupId={group.id}
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}
