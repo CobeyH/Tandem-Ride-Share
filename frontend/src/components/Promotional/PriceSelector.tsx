@@ -92,7 +92,7 @@ const PriceSelector = (props: {
             icon={card.icon}
             highlight={card.data.name == selectedPlan}
             button={
-              card.data.name == selectedPlan ? (
+              card.data.name == selectedPlan || !props.showSelectors ? (
                 <></>
               ) : (
                 <Button
