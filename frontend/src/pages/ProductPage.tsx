@@ -1,7 +1,5 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Text,
   HStack,
   Image,
@@ -10,127 +8,27 @@ import {
   VStack,
   Grid,
   GridItem,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Stack,
-  useDisclosure,
 } from "@chakra-ui/react";
 import * as React from "react";
-import { HiMenu } from "react-icons/all";
-import { useNavigate } from "react-router-dom";
 import PriceSelector from "../components/Promotional/PriceSelector";
+import ProductHeader from "../components/Promotional/ProductHeader";
 import { Testimonal as Testimonial } from "../components/Promotional/Testimonial";
-import { NavConstants } from "../NavigationConstants";
 import { styleColors } from "../theme/colours";
 
 const ProductPage = () => {
-  const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleToggle = () => (isOpen ? onClose() : onOpen());
-
   return (
     <Box
-      w="100vw"
       h="-webkit-fit-content"
       bgGradient={`linear(to-r, ${styleColors.mainBlue}, ${styleColors.lightBlue})`}
     >
+      <ProductHeader />
       <Box
-        w="100vw"
         h="-webkit-fit-content"
         bgGradient={`linear(transparent 30%, white)`}
+        ml={5}
       >
-        <Box
-          as="nav"
-          bg={styleColors.mainBlue}
-          w="100vw"
-          p={4}
-          textAlign="center"
-        >
-          <Stack direction={{ base: "column", md: "row" }}>
-            <HStack>
-              <Image src={"/logo_white.svg"} objectFit="cover" maxW="70px" />
-              <Text color="white" fontSize={30} p={1}>
-                Tandem
-              </Text>
-              <Spacer />
-              <Box
-                display={{ base: "block", md: "none" }}
-                onClick={handleToggle}
-              >
-                <HiMenu />
-              </Box>
-            </HStack>
-            <Spacer />
-            <HStack
-              spacing={4}
-              display={{ base: isOpen ? "flex" : "none", md: "flex" }}
-            >
-              <Menu>
-                <MenuButton color="white">
-                  Features and Benefits
-                  <ChevronDownIcon />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>Friend Group</MenuItem>
-                  <MenuItem>Small Organization</MenuItem>
-                  <MenuItem>Large Organization</MenuItem>
-                  <MenuItem>Enterprise</MenuItem>
-                </MenuList>
-              </Menu>
-
-              <Menu>
-                <MenuButton color="white">
-                  Company
-                  <ChevronDownIcon />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>Testimonials</MenuItem>
-                  <MenuItem>Pricing</MenuItem>
-                  <MenuItem>About Us</MenuItem>
-                  <MenuItem>Contact Us</MenuItem>
-                </MenuList>
-              </Menu>
-
-              <Menu>
-                <MenuButton color="white">
-                  Help
-                  <ChevronDownIcon />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>FAQ</MenuItem>
-                  <MenuItem>Privacy Policy</MenuItem>
-                  <MenuItem>Legal</MenuItem>
-                  <MenuItem>Terms of Service</MenuItem>
-                </MenuList>
-              </Menu>
-            </HStack>
-
-            <HStack
-              spacing={4}
-              pl={4}
-              display={{ base: isOpen ? "block" : "none", md: "flex" }}
-            >
-              <Button
-                variant="tandem-product"
-                p={4}
-                onClick={() => navigate(NavConstants.REGISTER)}
-              >
-                Register Now
-              </Button>
-              <Button
-                variant="tandem-product"
-                p={4}
-                onClick={() => navigate(NavConstants.LOGIN)}
-              >
-                Login
-              </Button>
-            </HStack>
-          </Stack>
-        </Box>
         <Center>
-          <HStack pt={175} pb={125}>
+          <HStack pt={{ base: 75, md: 175 }} pb={125}>
             <VStack align="center">
               <VStack align="left">
                 <Text
