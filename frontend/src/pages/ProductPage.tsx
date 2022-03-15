@@ -16,7 +16,6 @@ import {
   MenuList,
   Stack,
   useDisclosure,
-  Flex,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiMenu } from "react-icons/all";
@@ -42,7 +41,7 @@ const ProductPage = () => {
         h="-webkit-fit-content"
         bgGradient={`linear(transparent 30%, white)`}
       >
-        <Flex
+        <Box
           as="nav"
           bg={styleColors.mainBlue}
           w="100vw"
@@ -66,7 +65,7 @@ const ProductPage = () => {
             <Spacer />
             <HStack
               spacing={4}
-              display={{ base: isOpen ? "block" : "none", md: "flex" }}
+              display={{ base: isOpen ? "flex" : "none", md: "flex" }}
             >
               <Menu>
                 <MenuButton color="white">
@@ -93,10 +92,6 @@ const ProductPage = () => {
                   <MenuItem>Contact Us</MenuItem>
                 </MenuList>
               </Menu>
-
-              <Text color="white" fontWeight={400}>
-                Pricing
-              </Text>
 
               <Menu>
                 <MenuButton color="white">
@@ -133,7 +128,7 @@ const ProductPage = () => {
               </Button>
             </HStack>
           </Stack>
-        </Flex>
+        </Box>
         <Center>
           <HStack pt={175} pb={125}>
             <VStack align="center">
