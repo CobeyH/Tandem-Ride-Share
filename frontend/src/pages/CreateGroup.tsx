@@ -28,7 +28,6 @@ import FileDropzone from "../components/FileDropzone";
 import PriceSelector, {
   PlanTypes,
 } from "../components/Promotional/PriceSelector";
-import GroupSizeSlider from "../components/Groups/GroupSizeSlider";
 import { Steps, useSteps } from "chakra-ui-steps";
 import VerifiedStep from "../components/VerifiedStep";
 import {
@@ -37,7 +36,6 @@ import {
   ImQuill,
   IoMdPhotos,
 } from "react-icons/all";
-import { group } from "console";
 
 type ValidatableFiled<T> = {
   field: T;
