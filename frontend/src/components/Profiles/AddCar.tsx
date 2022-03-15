@@ -5,7 +5,8 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { Heading, Spacer, Stack } from "@chakra-ui/layout";
+import { Flex, Heading, Spacer, Stack } from "@chakra-ui/layout";
+import { Step, Steps, useSteps } from "chakra-ui-steps";
 import {
   Button,
   Input,
@@ -19,12 +20,14 @@ import {
   RadioGroup,
   useDisclosure,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import * as React from "react";
 import { useState } from "react";
-import { setUserVehicle, Vehicle } from "../firebase/database";
+import { setUserVehicle, Vehicle } from "../../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
+import { FaCarSide, FaClipboard, FaWrench } from "react-icons/all";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -80,41 +83,78 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
   const [displayName, setDisplayName] = useState("");
   const [car, setCar] = useState<Vehicle>(cars[0]);
   const toast = useToast();
+  const { nextStep, prevStep, reset, activeStep } = useSteps({
+    initialStep: 0,
+  });
+
+  const submitCar = () => {
+    registerCar(props.user, {
+      ...car,
+      displayName,
+    }).then(() => {
+      toast({
+        title: "Car created",
+        description: `We've created a car with ${car.numSeats} seats.`,
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+      if (props.onDone) {
+        props.onDone();
+      }
+    });
+  };
 
   return (
     <ModalBody>
-      <Heading as="h2" size="l">
-        Display Name
-      </Heading>
-      <Input
-        isRequired={true}
-        value={displayName}
-        onChange={(e) => setDisplayName(e.target.value)}
-      />
-      <CarAccordion carUpdate={setCar} />
-      <CarStatsSlider car={car} updateCar={setCar} />
+      <Steps activeStep={activeStep} orientation="vertical">
+        <Step label="Name Your Car" icon={FaClipboard}>
+          <Input
+            isRequired={true}
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
+          <Text textAlign={"left"} variant="help-text">
+            The name will be used to identify your car when you join a ride.
+          </Text>
+        </Step>
+        <Step label="Choose Car Type" icon={FaCarSide}>
+          <CarAccordion carUpdate={setCar} />
+        </Step>
+        <Step label="Configure" icon={FaWrench}>
+          <CarStatsSlider car={car} updateCar={setCar} />
+        </Step>
+      </Steps>
+      {activeStep === 3 ? (
+        <Flex p={4}>
+          <Button mx="auto" size="sm" onClick={reset}>
+            Reset
+          </Button>
+          <Button mx="auto" size="sm" onClick={submitCar}>
+            Submit
+          </Button>
+        </Flex>
+      ) : (
+        <Flex width="100%" justify="flex-end">
+          <Button
+            isDisabled={activeStep === 0}
+            mr={4}
+            onClick={prevStep}
+            size="sm"
+            variant="ghost"
+          >
+            Prev
+          </Button>
+          <Button
+            size="sm"
+            onClick={nextStep}
+            isDisabled={activeStep === 0 && !displayName}
+          >
+            {activeStep === 2 ? "Finish" : "Next"}
+          </Button>
+        </Flex>
+      )}
       <Spacer pt={5} />
-      <Button
-        onClick={() => {
-          registerCar(props.user, {
-            ...car,
-            displayName,
-          }).then(() => {
-            toast({
-              title: "Car created",
-              description: `We've created a car with ${car.numSeats} seats.`,
-              status: "success",
-              duration: 4000,
-              isClosable: true,
-            });
-            if (props.onDone) {
-              props.onDone();
-            }
-          });
-        }}
-      >
-        Add
-      </Button>
     </ModalBody>
   );
 };

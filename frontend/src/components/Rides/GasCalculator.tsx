@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Heading, VStack } from "@chakra-ui/react";
-import { useRidePassengers } from "../firebase/database";
+import { useRidePassengers } from "../../firebase/database";
 
 const GasCalculator = (props: {
   fuelUsage: number | undefined;

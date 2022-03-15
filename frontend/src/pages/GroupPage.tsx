@@ -14,17 +14,17 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { Group, useGroup } from "../firebase/database";
 import { Val } from "react-firebase-hooks/database/dist/database/types";
-import RideCard from "../components/RideCard";
+import RideCard from "../components/Rides/RideCard";
 import Header from "../components/Header";
 import { storage } from "../firebase/storage";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref as storageRef } from "firebase/storage";
-import ShareLink from "../components/ShareLink";
-import GroupSettings from "../components/GroupSettings";
+import ShareLink from "../components/Groups/ShareLink";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
-import GroupDrawer from "../components/GroupDrawer";
 import { groupMaxSize } from "../components/Promotional/PriceSelector";
+import GroupSettings from "../components/Groups/GroupSettings";
+import GroupDrawer from "../components/Groups/GroupDrawer";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -64,18 +64,12 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
     <>
       <Header pages={[{ label: "My Groups", url: "/" }]} />
       {!bannerLoading && banner !== undefined ? (
-        <Image
-          src={banner}
-          width="100%"
-          maxHeight="200px"
-          objectFit="cover"
-          pb={5}
-        />
+        <Image src={banner} width="100%" maxHeight="200px" objectFit="cover" />
       ) : null}
       <Container>
         <VStack spacing="24px" align="c">
-          <HStack>
-            <ShareLink />
+          <HStack pt={5}>
+            <ShareLink user={user} />
             <GroupDrawer
               members={group.members}
               ownerId={group.owner}

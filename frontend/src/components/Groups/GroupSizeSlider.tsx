@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { FaUserAlt, FaUserPlus, FaUsers } from "react-icons/all";
-import { lightTheme } from "../theme/colours";
+import { lightTheme } from "../../theme/colours";
 
 const GroupSizeSlider = (props: {
   maxSize: number;

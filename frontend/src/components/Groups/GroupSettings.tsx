@@ -12,12 +12,8 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
-import GroupSizeSlider from "./GroupSizeSlider";
-import { Group, setGroup } from "../firebase/database";
-import PriceSelector, {
-  groupMaxSize,
-  PlanTypes,
-} from "./Promotional/PriceSelector";
+import { Group, setGroup } from "../../firebase/database";
+import PriceSelector, { PlanTypes } from "../Promotional/PriceSelector";
 
 const GroupSettings = (props: { group: Group }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

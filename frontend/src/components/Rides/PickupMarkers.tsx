@@ -9,10 +9,12 @@ import {
   setUserInPickup,
   usePickupPoint,
   User,
-} from "../firebase/database";
+} from "../../firebase/database";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
+import { Geocode, getReverseGeocode } from "../../Directions";
+import { LatLng } from "leaflet";
 
 const PickupMarkers = (props: {
   rideId: string;
@@ -25,22 +27,41 @@ const PickupMarkers = (props: {
         if (!point.location) {
           return;
         }
-        return <PickupMarker key={key} pickupId={key} rideId={props.rideId} />;
+        return (
+          <PickupMarker
+            key={key}
+            pickupId={key}
+            rideId={props.rideId}
+            location={point.location}
+          />
+        );
       })}
     </>
   );
 };
 
 const PickupMarker = ({
+  location,
   pickupId,
   rideId,
 }: {
+  location: { lat: number; lng: number };
   pickupId: string;
   rideId: string;
 }) => {
+  const [address, setAddress] = useState<Geocode | undefined>(undefined);
   const [pickup] = usePickupPoint(rideId, pickupId);
   const [members, setMembers] = useState<User[]>();
   const [user] = useAuthState(auth);
+
+  const getLocation = React.useCallback(
+    (location) => getReverseGeocode(new LatLng(location.lat, location.lng)),
+    [location]
+  );
+
+  React.useEffect(() => {
+    getLocation(location).then(setAddress);
+  }, [location]);
 
   useEffect(() => {
     if (!pickup?.members) setMembers(undefined);
@@ -58,8 +79,13 @@ const PickupMarker = ({
   return (
     <Marker position={pickup.location}>
       <Popup>
+        <Heading size={"sm"}>
+          {address
+            ? `${address.street}, ${address.adminArea5}`
+            : `${location.lat}, ${location.lng}`}
+        </Heading>
         {members?.map((member: User, i: number) => (
-          <Heading size={"sm"} key={i}>
+          <Heading size={"xs"} key={i} pt={2} pb={2}>
             {member.name}
           </Heading>
         ))}

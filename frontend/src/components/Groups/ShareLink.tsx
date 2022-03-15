@@ -15,11 +15,13 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { User } from "firebase/auth";
 
-const ShareLink = () => {
+const ShareLink = (props: { user: User | null | undefined }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [value, setValue] = useState("Hello world");
-  const { hasCopied, onCopy } = useClipboard(value);
+  const [value, setValue] = useState("");
+  const context = `${props.user?.displayName} invited you to join their Tandem group! Follow the link to join the group: \n`;
+  const { hasCopied, onCopy } = useClipboard(context + value);
   const url = window.location.href;
   return (
     <>
