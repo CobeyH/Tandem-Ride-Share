@@ -2,6 +2,7 @@ import { Button, Flex } from "@chakra-ui/react";
 import { Step } from "chakra-ui-steps";
 import { StepProps } from "chakra-ui-steps/dist/components/Step";
 import * as React from "react";
+import { useMemo } from "react";
 
 const VerifiedStep = <T,>({
   isVerified = () => true,
@@ -21,8 +22,20 @@ const VerifiedStep = <T,>({
   isFirstStep?: boolean;
   isLastStep?: boolean;
 } & StepProps) => {
+  const verified = useMemo(
+    () => isVerified(currentInput),
+    [isVerified, currentInput]
+  );
+
   return (
-    <Step {...props}>
+    <Step
+      {...props}
+      onKeyDown={(ev) => {
+        if (ev.key == "Enter" && verified) {
+          nextStep(currentInput);
+        }
+      }}
+    >
       {children}
       <Flex width="100%" justify="flex-end" pt={2}>
         <Button
@@ -37,7 +50,7 @@ const VerifiedStep = <T,>({
         <Button
           size="sm"
           onClick={() => nextStep(currentInput)}
-          isDisabled={!isVerified(currentInput)}
+          isDisabled={!verified}
         >
           {isLastStep ? "Submit" : "Next"}
         </Button>
