@@ -34,6 +34,7 @@ import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
 import LocationSearch from "../components/Rides/LocationSearch";
 import VerifiedStep from "../components/VerifiedStep";
 import {
+  FaCalendar,
   FaCarSide,
   FaClipboard,
   FaClock,
@@ -82,6 +83,7 @@ const CreateRide = () => {
     undefined
   );
   const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
   const { nextStep, prevStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -91,6 +93,7 @@ const CreateRide = () => {
     map?.invalidateSize();
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
+
   function onDragEnd(position: LatLng) {
     setEndPosition(position);
     map?.invalidateSize();
@@ -121,7 +124,7 @@ const CreateRide = () => {
         start: "start",
         end: endPosition,
         maxPassengers: selectedCar?.numSeats || 4,
-        startDate,
+        startDate: `${startDate}T${startTime}`,
         isComplete: false,
         pickupPoints: {
           start: {
@@ -226,22 +229,34 @@ const CreateRide = () => {
             ) : null}
           </VerifiedStep>
           <VerifiedStep
-            label="Start Time"
+            label="Start Date"
             currentInput={startDate}
             prevStep={() => {
               if (isDriver) prevStep();
               else setStep(activeStep - 2);
             }}
             nextStep={nextStep}
-            isVerified={(time) =>
-              new RegExp(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/g).test(time)
-            }
+            isVerified={(time) => new RegExp(/\d{4}-\d{2}-\d{2}/g).test(time)}
+            icon={FaCalendar}
+          >
+            <Input
+              mb="4"
+              type="date"
+              onInput={(e) => setStartDate(e.currentTarget.value)}
+            />
+          </VerifiedStep>
+          <VerifiedStep
+            label="Start Time"
+            currentInput={startTime}
+            prevStep={prevStep}
+            nextStep={nextStep}
+            isVerified={(time) => new RegExp(/\d{2}:\d{2}/g).test(time)}
             icon={FaClock}
           >
             <Input
               mb="4"
-              type="datetime-local"
-              onInput={(e) => setStartDate(e.currentTarget.value)}
+              type="time"
+              onInput={(e) => setStartTime(e.currentTarget.value)}
             />
           </VerifiedStep>
           <VerifiedStep
