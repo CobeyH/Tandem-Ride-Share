@@ -6,6 +6,7 @@ import {
   HStack,
   Input,
   InputGroup,
+  InputLeftElement,
   Text,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -229,35 +230,39 @@ const CreateRide = () => {
             ) : null}
           </VerifiedStep>
           <VerifiedStep
-            label="Start Date"
-            currentInput={startDate}
+            label="Start Time"
+            currentInput={[startDate, startTime]}
             prevStep={() => {
               if (isDriver) prevStep();
               else setStep(activeStep - 2);
             }}
             nextStep={nextStep}
-            isVerified={(time) => new RegExp(/\d{4}-\d{2}-\d{2}/g).test(time)}
+            isVerified={([date, time]) =>
+              new RegExp(/\d{2}:\d{2}/g).test(time) &&
+              new RegExp(/\d{4}-\d{2}-\d{2}/g).test(date)
+            }
             icon={FaCalendar}
           >
-            <Input
-              mb="4"
-              type="date"
-              onInput={(e) => setStartDate(e.currentTarget.value)}
-            />
-          </VerifiedStep>
-          <VerifiedStep
-            label="Start Time"
-            currentInput={startTime}
-            prevStep={prevStep}
-            nextStep={nextStep}
-            isVerified={(time) => new RegExp(/\d{2}:\d{2}/g).test(time)}
-            icon={FaClock}
-          >
-            <Input
-              mb="4"
-              type="time"
-              onInput={(e) => setStartTime(e.currentTarget.value)}
-            />
+            <InputGroup>
+              <Input
+                mb="4"
+                type="date"
+                onInput={(e) => setStartDate(e.currentTarget.value)}
+              />
+              <InputLeftElement>
+                <FaCalendar />
+              </InputLeftElement>
+            </InputGroup>
+            <InputGroup>
+              <Input
+                mb="4"
+                type="time"
+                onInput={(e) => setStartTime(e.currentTarget.value)}
+              />
+              <InputLeftElement>
+                <FaClock />
+              </InputLeftElement>
+            </InputGroup>
           </VerifiedStep>
           <VerifiedStep
             label="Create Route"
