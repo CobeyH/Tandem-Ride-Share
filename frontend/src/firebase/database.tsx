@@ -1,6 +1,7 @@
 import {
   equalTo,
   get,
+  orderByChild,
   orderByValue,
   push,
   query,
@@ -139,15 +140,15 @@ export const useGroups = () => {
 };
 
 export const useGroupChat = (groupId: string) => {
-  return useListVals<Message>(ref(db, `${GROUP_CHATS}/${groupId}`), {
-    keyField: "id",
-  });
+  const r = ref(db, `${GROUP_CHATS}/${groupId}`);
+  const q = query(r, orderByChild("timestamp"));
+  return useListVals<Message>(q, { keyField: "id" });
 };
 
-export const useRideChat = (groupId: string) => {
-  return useListVals<Message>(ref(db, `${RIDE_CHATS}/${groupId}`), {
-    keyField: "id",
-  });
+export const useRideChat = (rideId: string) => {
+  const r = ref(db, `${RIDE_CHATS}/${rideId}`);
+  const q = query(r, orderByChild("timestamp"));
+  return useListVals<Message>(q, { keyField: "id" });
 };
 
 export const makeEmptyGroupChat = (groupId: string) => {

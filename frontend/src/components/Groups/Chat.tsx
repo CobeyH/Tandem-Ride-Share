@@ -1,13 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  Flex,
-  Input,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
+import { Box, Flex, Input, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   getUser,
@@ -31,49 +23,22 @@ export const RideChat = ({ rideId }: { rideId: string }) => (
   <Chat dbLocation={{ chatType: "ride", id: rideId }} />
 );
 
-function ChatTextBox({
+const ChatTextBox = ({
   addChat,
 }: {
   addChat: (message: string) => Promise<void>;
-}) {
-  return (
-    <>
-      <Box p="2">
-        <Input
-          style={{ position: "absolute", right: 0, left: 0, bottom: 60 }}
-          onKeyDown={(e) => {
-            if (e.key == "Enter") {
-              addChat(e.currentTarget.value);
-              e.currentTarget.value = "";
-            }
-          }}
-        />
-      </Box>
-    </>
-  );
-}
-
-const ChatContents = (props: { contents: Message[]; userId: string }) => {
-  let prevSender = "";
-  return (
-    <VStack spacing={2}>
-      <Flex width="100%" flexDir="column">
-        {props.contents.map((m, i) => {
-          const component = (
-            <MessageComponent
-              userId={props.userId}
-              key={i}
-              message={m}
-              prevSender={prevSender}
-            />
-          );
-          prevSender = m.sender_id;
-          return component;
-        })}
-      </Flex>
-    </VStack>
-  );
-};
+}) => (
+  <Box w="95%">
+    <Input
+      onKeyDown={(e) => {
+        if (e.key == "Enter" && e.currentTarget.value !== "") {
+          addChat(e.currentTarget.value);
+          e.currentTarget.value = "";
+        }
+      }}
+    />
+  </Box>
+);
 
 const Chat = ({
   dbLocation,
@@ -87,6 +52,17 @@ const Chat = ({
 
   const [user, userLoading, userError] = useAuthState(auth);
 
+  const ref = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (ref?.current) ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    setTimeout(scrollToBottom, 100);
+  });
+
+  let prevSender = "";
   if (messagesLoading || userLoading) {
     return <Spinner />;
   } else if (messagesError || userError) {
@@ -94,17 +70,32 @@ const Chat = ({
     return <h1>{JSON.stringify(messagesError)}</h1>;
   } else if (chat && user) {
     return (
-      <Container p={3}>
-        {chat.length === 0 ? (
-          <Text>Nothing seems to be here, Say something!</Text>
-        ) : (
-          <ChatContents
-            contents={[...Array.from(new Set(chat))].sort(
-              (fst, snd) => fst.timestamp - snd.timestamp
-            )}
-            userId={user?.uid}
-          />
-        )}
+      <VStack height="100%">
+        <Flex
+          flexDir="column"
+          width="100%"
+          height="100%"
+          px={3}
+          overflowY="scroll"
+        >
+          {chat.length === 0 ? (
+            <Text>Nothing seems to be here, Say something!</Text>
+          ) : (
+            chat.map((m, i) => {
+              const component = (
+                <MessageComponent
+                  userId={user.uid}
+                  key={i}
+                  message={m}
+                  prevSender={prevSender}
+                />
+              );
+              prevSender = m.sender_id;
+              return component;
+            })
+          )}
+          <div ref={ref}></div>
+        </Flex>
         <ChatTextBox
           addChat={(contents) => {
             const message = {
@@ -116,7 +107,7 @@ const Chat = ({
               : addChatToRideChat(dbLocation.id, message);
           }}
         />
-      </Container>
+      </VStack>
     );
   } else if (!chat) {
     if (dbLocation.chatType === "group") {
@@ -148,7 +139,7 @@ const MessageComponent = ({
 
   const amSender = sender_id === userId;
   return sender === "loading" ? null : (
-    <Box pt={1}>
+    <Box pt={1} alignSelf={amSender ? "flex-end" : "flex-start"}>
       {sender_id !== prevSender ? (
         <Text pt={3} textAlign={amSender ? "right" : "left"}>
           {sender?.name ?? sender_id}
