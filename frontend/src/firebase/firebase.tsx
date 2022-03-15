@@ -1,4 +1,5 @@
 import {
+  AuthProvider,
   connectAuthEmulator,
   createUserWithEmailAndPassword,
   FacebookAuthProvider,
@@ -44,10 +45,14 @@ if (location.hostname === "localhost") {
   connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
 }
 
-const googleProvider = new FacebookAuthProvider();
-export const signInWithGoogle = async () => {
+export type ProviderType = "google" | "facebook";
+
+export const signInWithProvider = async (
+  provider: AuthProvider,
+  authProvider: ProviderType
+) => {
   try {
-    const response = await signInWithPopup(auth, googleProvider);
+    const response = await signInWithPopup(auth, provider);
     const user = response.user;
     // If the user doesn't exist then add them.
     getUser(user.uid).catch((err) => {
@@ -55,7 +60,7 @@ export const signInWithGoogle = async () => {
         setUser({
           uid: user.uid,
           name: user.displayName ? user.displayName : "User",
-          authProvider: "google",
+          authProvider,
           email: user.email ? user.email : "",
         });
       } else {

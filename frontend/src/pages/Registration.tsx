@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   auth,
   registerWithEmailAndPassword,
-  signInWithGoogle,
+  signInWithProvider,
 } from "../firebase/firebase";
 import {
   FormControl,
@@ -26,6 +26,12 @@ import { NavConstants } from "../NavigationConstants";
 import { styleColors } from "../theme/colours";
 import PasswordField from "../components/PasswordField";
 import HeaderWhite from "../components/HeaderWhite";
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  OAuthProvider,
+} from "firebase/auth";
+import SignInRegister from "../components/SignInRegister";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -92,32 +98,7 @@ function Register() {
         <Box p={5} color={styleColors.deepBlue}>
           Or create and account with
         </Box>
-        <HStack spacing={2} pb={4}>
-          <Button
-            leftIcon={<FcGoogle />}
-            width="full"
-            onClick={signInWithGoogle}
-            variant="signInWith"
-          >
-            Google
-          </Button>
-          <Button
-            leftIcon={<FaFacebookF color="#1877F2" />}
-            width="full"
-            onClick={signInWithGoogle}
-            variant="signInWith"
-          >
-            Facebook
-          </Button>
-          <Button
-            leftIcon={<FaApple color="#718096" />}
-            width="full"
-            onClick={signInWithGoogle}
-            variant="signInWith"
-          >
-            Apple ID
-          </Button>
-        </HStack>
+        <SignInRegister />
         <div>
           Already have an account?{" "}
           <Link

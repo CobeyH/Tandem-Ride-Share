@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, Center, Flex, Text, VStack } from "@chakra-ui/react";
+import { Button, Center, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { LocationGotoState } from "../pages/JoinGroup";
-import { FaGoogle } from "react-icons/all";
-import { signInWithGoogle } from "../firebase/firebase";
+import { FaFacebookF, FaGoogle, FcGoogle } from "react-icons/all";
+import { signInWithProvider } from "../firebase/firebase";
+import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 
 export default function SignInRegister({
   state,
@@ -30,9 +31,28 @@ export default function SignInRegister({
           >
             Sign In
           </Button>
-          <Button leftIcon={<FaGoogle />} mt={4} onClick={signInWithGoogle}>
-            Sign In With Google
-          </Button>
+          <HStack spacing={2} pb={4}>
+            <Button
+              leftIcon={<FcGoogle />}
+              width="full"
+              onClick={() =>
+                signInWithProvider(new GoogleAuthProvider(), "google")
+              }
+              variant="signInWith"
+            >
+              Google
+            </Button>
+            <Button
+              leftIcon={<FaFacebookF color="#1877F2" />}
+              width="full"
+              onClick={() =>
+                signInWithProvider(new FacebookAuthProvider(), "facebook")
+              }
+              variant="signInWith"
+            >
+              Facebook
+            </Button>
+          </HStack>
           <Text>
             New to Tandem?{" "}
             <Link style={{ color: "blue" }} to="/register" state={state}>
