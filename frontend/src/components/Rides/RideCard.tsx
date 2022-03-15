@@ -384,6 +384,8 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}
+                  noOfLines={[1]}
+                  isTruncated
                 >
                   {addingPickup ? "Cancel" : "Add New Pickup"}
                 </Button>
