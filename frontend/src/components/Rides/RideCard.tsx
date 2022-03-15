@@ -6,9 +6,11 @@ import {
   Collapse,
   Flex,
   Heading,
+  HStack,
   Icon,
   Spacer,
   Spinner,
+  Stack,
   Switch,
   Text,
   useDisclosure,
@@ -365,31 +367,40 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           <Heading>{rideError}</Heading>
         ) : (
           <>
-            <Icon as={BsGeoAlt} w={6} h={6} />
             {user ? (
-              <>
-                {addingPickup ? (
-                  <LocationSearch
-                    setLatLng={(latLng) =>
-                      newPickupPoint(user?.uid, rideId, latLng)
-                    }
-                  />
-                ) : (
-                  <>
-                    <Text isTruncated>{text}</Text>
-                    <Spacer />
-                  </>
-                )}
+              <Stack
+                direction={{ base: "column", md: "row" }}
+                flexGrow={1}
+                alignItems={{ base: "stretch", md: "baseline" }}
+              >
+                <HStack
+                  flexGrow={1}
+                  minH={"3.5rem"}
+                  alignItems={"stretch"}
+                  alignContent={"center"}
+                >
+                  <Icon as={BsGeoAlt} w={6} h={6} />
+                  {addingPickup ? (
+                    <LocationSearch
+                      setLatLng={(latLng) =>
+                        newPickupPoint(user?.uid, rideId, latLng)
+                      }
+                    />
+                  ) : (
+                    <>
+                      <Text isTruncated>{text}</Text>
+                      <Spacer />
+                    </>
+                  )}
+                </HStack>
                 <Button
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}
-                  noOfLines={[1]}
-                  isTruncated
                 >
                   {addingPickup ? "Cancel" : "Add New Pickup"}
                 </Button>
-              </>
+              </Stack>
             ) : null}
           </>
         )}
