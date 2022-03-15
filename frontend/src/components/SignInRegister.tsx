@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Center, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { LocationGotoState } from "../pages/JoinGroup";
-import { FaFacebookF, FaGoogle, FcGoogle } from "react-icons/all";
+import { FaFacebookF, FcGoogle } from "react-icons/all";
 import { signInWithProvider } from "../firebase/firebase";
 import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 

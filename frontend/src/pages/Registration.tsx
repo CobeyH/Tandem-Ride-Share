@@ -1,36 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  auth,
-  registerWithEmailAndPassword,
-  signInWithProvider,
-} from "../firebase/firebase";
+import { auth, registerWithEmailAndPassword } from "../firebase/firebase";
 import {
   FormControl,
   Input,
   Button,
   Box,
-  Heading,
   Container,
   VStack,
   Image,
-  Center,
   Text,
-  HStack,
-  CloseButton,
 } from "@chakra-ui/react";
-import { FaApple, FaFacebookF, FcGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
 import { styleColors } from "../theme/colours";
 import PasswordField from "../components/PasswordField";
 import HeaderWhite from "../components/HeaderWhite";
-import {
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  OAuthProvider,
-} from "firebase/auth";
 import SignInRegister from "../components/SignInRegister";
 function Register() {
   const location = useLocation();

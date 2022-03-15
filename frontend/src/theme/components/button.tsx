@@ -1,4 +1,3 @@
-import { border } from "@chakra-ui/react";
 import { ComponentStyleConfig } from "@chakra-ui/theme";
 import { styleColors } from "../colours";
 
