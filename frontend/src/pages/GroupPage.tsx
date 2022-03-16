@@ -32,8 +32,9 @@ export default function GroupPage() {
   if (groupId === undefined) {
     console.log("figure something better to do here");
     navigate("/");
+    return null;
   }
-  const [group, loading, error] = useGroup(groupId as string);
+  const [group, loading, error] = useGroup(groupId);
 
   return (
     <>
@@ -55,9 +56,7 @@ export default function GroupPage() {
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
   const bannerRef = storageRef(storage, `${group.banner}`);
-  const [banner, bannerLoading] = group.banner
-    ? useDownloadURL(bannerRef)
-    : [undefined, false];
+  const [banner, bannerLoading] = useDownloadURL(bannerRef);
   const [user] = useAuthState(auth);
 
   return (

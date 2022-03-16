@@ -20,8 +20,7 @@ import { styleColors } from "../../theme/colours";
 import { useNavigate } from "react-router-dom";
 
 const ProductHeader = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleToggle = () => (isOpen ? onClose() : onOpen());
+  const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
 
   return (
@@ -33,7 +32,7 @@ const ProductHeader = () => {
             Tandem
           </Text>
           <Spacer />
-          <Box display={{ base: "block", md: "none" }} onClick={handleToggle}>
+          <Box display={{ base: "block", md: "none" }} onClick={onToggle}>
             <HiMenu />
           </Box>
         </HStack>
