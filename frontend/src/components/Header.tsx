@@ -25,6 +25,7 @@ import { MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
 import { lightTheme } from "../theme/colours";
+import ManageCars from "./Profiles/ManageCars";
 
 export interface PageList {
   pages?: { label: string; url: string }[];
@@ -50,6 +51,7 @@ const Header = ({ pages }: PageList) => {
           <MenuList zIndex={3}>
             <Settings user={user} />
             <AddCar user={user} />
+            <ManageCars user={user} />
             <MenuDivider />
             <MenuItem onClick={logout}>Logout</MenuItem>
           </MenuList>
