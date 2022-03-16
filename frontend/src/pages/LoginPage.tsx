@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Box, Heading, FormControl, Input, Container } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  FormControl,
+  Input,
+  Container,
+  Text,
+} from "@chakra-ui/react";
 import { auth, loginWithEmailAndPassword } from "../firebase/firebase";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Header from "../components/Header";
 import { LocationGotoState } from "./JoinGroup";
 import { lightTheme } from "../theme/colours";
 import SignInRegister from "../components/SignInRegister";
 import PasswordField from "../components/PasswordField";
-export default function Login() {
+
+export default function Login({ state }: { state?: LocationGotoState }) {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -55,6 +63,12 @@ export default function Login() {
           state={location.state as LocationGotoState}
         />
       </Box>
+      <Text>
+        New to Tandem?{" "}
+        <Link style={{ color: "blue" }} to="/register" state={state}>
+          Register
+        </Link>
+      </Text>
     </Container>
   );
 }

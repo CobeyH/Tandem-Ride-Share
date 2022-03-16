@@ -16,8 +16,7 @@ import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
 import { styleColors } from "../theme/colours";
 import PasswordField from "../components/PasswordField";
-import HeaderWhite from "../components/HeaderWhite";
-import SignInRegister from "../components/SignInRegister";
+import ProviderAuth from "../components/ProviderAuth";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -45,8 +44,7 @@ function Register() {
   }, [user, loading]);
   return (
     <Container bg="white" height="100vh">
-      <HeaderWhite />
-      <VStack align="center" p={6}>
+      <VStack align="center" p={6} mb={30}>
         <Image
           src={"/logo_mainBlue.svg"}
           alt="main blue logo"
@@ -56,6 +54,14 @@ function Register() {
         <Text color={styleColors.mainBlue}>TANDEM</Text>
       </VStack>
       <VStack>
+        <Box
+          color={styleColors.mainBlue}
+          fontWeight="medium"
+          fontSize="175%"
+          mb={4}
+        >
+          Register
+        </Box>
         <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
           <Input
             type="fullName"
@@ -75,17 +81,18 @@ function Register() {
         <PasswordField setPassword={setPassword} />
         <Button
           width="30%"
+          fontSize="80%"
           mt={4}
           onClick={register}
           variant="tandem-registration"
         >
           Create Account
         </Button>
-        <Box p={5} color={styleColors.deepBlue}>
-          Or create and account with
+        <Box pt={10} pb={2} color={styleColors.deepBlue}>
+          Or create an account with
         </Box>
-        <SignInRegister />
-        <div>
+        <ProviderAuth />
+        <Box>
           Already have an account?{" "}
           <Link
             style={{ color: styleColors.mainBlue, fontWeight: "bold" }}
@@ -95,7 +102,7 @@ function Register() {
             Login
           </Link>{" "}
           now.
-        </div>
+        </Box>
       </VStack>
     </Container>
   );
