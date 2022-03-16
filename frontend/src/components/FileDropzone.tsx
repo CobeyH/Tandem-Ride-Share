@@ -9,6 +9,7 @@ const FileDropzone = (props: {
   const [fileAccepted, setFileAccepted] = useState<boolean>(false);
   const toast = useToast();
 
+  // Only runs when a file is successfully selected.
   const onDropAccepted = useCallback((acceptedFiles) => {
     const file = acceptedFiles?.[0];
     if (!file) {
