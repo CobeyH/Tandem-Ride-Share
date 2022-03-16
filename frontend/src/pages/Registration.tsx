@@ -15,6 +15,7 @@ import {
   Heading,
   Container,
   VStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
@@ -35,6 +36,30 @@ function Register() {
     registerWithEmailAndPassword(name, email, password);
   };
   const navigate = useNavigate();
+
+  // checking validity of the input
+  const validName = !!name;
+  const validEmail = email
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  const MIN_PASSWORD_LENGTH = 6;
+  const validPassword = password.length >= MIN_PASSWORD_LENGTH;
+  const isFormValid = validName && validEmail && validPassword;
+  const checkMark = "✔";
+  const crossMark = "❌";
+  const tooltipContents = (
+    <div>
+      {validName ? checkMark : crossMark} Name is required
+      <br />
+      {validEmail ? checkMark : crossMark} Valid email address is required
+      <br />
+      {validPassword ? checkMark : crossMark} Password needs to be at least 6
+      characters
+    </div>
+  );
+
   useEffect(() => {
     if (loading) return;
     if (user) {
@@ -71,9 +96,16 @@ function Register() {
           />
         </FormControl>
         <PasswordField setPassword={setPassword} />
-        <Button width="full" mt={4} onClick={register}>
-          Register
-        </Button>
+        <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
+          <Button
+            width="full"
+            mt={4}
+            onClick={register}
+            disabled={!isFormValid}
+          >
+            Register
+          </Button>
+        </Tooltip>
         <Button
           mt={4}
           leftIcon={<FaGoogle />}
