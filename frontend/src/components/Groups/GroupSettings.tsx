@@ -38,13 +38,10 @@ const GroupSettings = ({ group }: { group: Group }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW={"90%"} p={15}>
           <ModalHeader>Settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Heading size={"s"} mb={4}>
-              Group Size
-            </Heading>
             <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
             <Heading size={"s"} mt={4} mb={4}>
               Publicity

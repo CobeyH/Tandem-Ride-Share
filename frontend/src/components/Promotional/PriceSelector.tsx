@@ -80,7 +80,7 @@ const PriceSelector = (props: {
       <SimpleGrid
         columns={{ base: 2, lg: 4 }}
         maxW="7xl"
-        minWidth={{ base: 150, md: 1000 }}
+        minWidth={{ base: 150 }}
         mx="auto"
         justifyItems="center"
         alignItems="center"
