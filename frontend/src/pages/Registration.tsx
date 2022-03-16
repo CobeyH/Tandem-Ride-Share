@@ -11,6 +11,7 @@ import {
   VStack,
   Image,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
@@ -24,10 +25,37 @@ function Register() {
   const [name, setName] = useState("");
   const [user, loading] = useAuthState(auth);
   const register = () => {
-    if (!name) alert("Please enter name");
+    if (!name) {
+      alert("Please enter name");
+      return;
+    }
     registerWithEmailAndPassword(name, email, password);
   };
   const navigate = useNavigate();
+
+  // checking validity of the input
+  const validName = !!name;
+  const validEmail = email
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  const MIN_PASSWORD_LENGTH = 6;
+  const validPassword = password.length >= MIN_PASSWORD_LENGTH;
+  const isFormValid = validName && validEmail && validPassword;
+  const checkMark = "✔";
+  const crossMark = "❌";
+  const tooltipContents = (
+    <div>
+      {validName ? checkMark : crossMark} Name is required
+      <br />
+      {validEmail ? checkMark : crossMark} Valid email address is required
+      <br />
+      {validPassword ? checkMark : crossMark} Password needs to be at least 6
+      characters
+    </div>
+  );
+
   useEffect(() => {
     if (loading) return;
     if (user) {
@@ -82,9 +110,15 @@ function Register() {
           setPassword={setPassword}
           passVariant="tandem-registration"
         />
-        <Button onClick={register} variant="tandem-registration">
-          Create Account
-        </Button>
+        <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
+          <Button
+            onClick={register}
+            variant="tandem-registration"
+            disabled={!isFormValid}
+          >
+            Create Account
+          </Button>
+        </Tooltip>
         <Box pt={10} pb={2} color={styleColors.deepBlue}>
           Or create an account with
         </Box>

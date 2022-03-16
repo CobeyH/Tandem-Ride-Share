@@ -22,8 +22,9 @@ import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/Groups/ShareLink";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
-import GroupDrawer from "../components/Groups/GroupDrawer";
+import { groupMaxSize } from "../components/Promotional/PriceSelector";
 import GroupSettings from "../components/Groups/GroupSettings";
+import GroupDrawer from "../components/Groups/GroupDrawer";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -31,8 +32,9 @@ export default function GroupPage() {
   if (groupId === undefined) {
     console.log("figure something better to do here");
     navigate("/");
+    return null;
   }
-  const [group, loading, error] = useGroup(groupId as string);
+  const [group, loading, error] = useGroup(groupId);
 
   return (
     <>
@@ -54,9 +56,7 @@ export default function GroupPage() {
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
   const bannerRef = storageRef(storage, `${group.banner}`);
-  const [banner, bannerLoading] = group.banner
-    ? useDownloadURL(bannerRef)
-    : [undefined, false];
+  const [banner, bannerLoading] = useDownloadURL(bannerRef);
   const [user] = useAuthState(auth);
 
   return (
@@ -72,7 +72,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <GroupDrawer
               members={group.members}
               ownerId={group.owner}
-              maxSize={group.maxSize}
+              maxSize={groupMaxSize(group.plan)}
               groupId={group.id}
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}

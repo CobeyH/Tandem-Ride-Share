@@ -1,21 +1,39 @@
 import React, { useState, useEffect } from "react";
 import {
+  Text,
   Box,
   FormControl,
   Input,
   Container,
-  Text,
-  VStack,
-  Image,
   Center,
+  VStack,
+  Button,
+  Image,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  InputGroup,
+  InputLeftElement,
+  ModalCloseButton,
+  ModalFooter,
+  ModalBody,
+  useToast,
 } from "@chakra-ui/react";
-import { auth, loginWithEmailAndPassword } from "../firebase/firebase";
+import {
+  auth,
+  loginWithEmailAndPassword,
+  sendPasswordReset,
+} from "../firebase/firebase";
+
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { LocationGotoState } from "./JoinGroup";
 import { styleColors } from "../theme/colours";
 import SignInRegister from "../components/SignInRegister";
 import PasswordField from "../components/PasswordField";
+import { MdMail } from "react-icons/all";
 import ProviderAuth from "../components/ProviderAuth";
 
 export default function Login({ state }: { state?: LocationGotoState }) {
@@ -41,6 +59,8 @@ export default function Login({ state }: { state?: LocationGotoState }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const handleEmailLogin = () => {
     loginWithEmailAndPassword(email, password);
   };
@@ -79,6 +99,18 @@ export default function Login({ state }: { state?: LocationGotoState }) {
               setPassword={setPassword}
               passVariant="tandem-login"
             />
+            <Text textAlign={"right"}>
+              Forgot Password?{" "}
+              <Link style={{ color: "blue" }} onClick={onOpen} to={"#"}>
+                Reset
+              </Link>
+            </Text>
+            <ResetPasswordModal
+              isOpen={isOpen}
+              onClose={onClose}
+              email={email}
+              setEmail={setEmail}
+            />
             <SignInRegister
               onClickSignIn={handleEmailLogin}
               state={location.state as LocationGotoState}
@@ -103,3 +135,65 @@ export default function Login({ state }: { state?: LocationGotoState }) {
     </Box>
   );
 }
+
+const ResetPasswordModal = ({
+  isOpen,
+  onClose,
+  setEmail,
+  email,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  email: string;
+}) => {
+  const toast = useToast();
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Reset Password</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Text>Email</Text>
+          <InputGroup>
+            <Input
+              type={"email"}
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
+            <InputLeftElement>
+              <MdMail />
+            </InputLeftElement>
+          </InputGroup>
+          <Text p={4}>
+            We will send a password reset to your email, give it a couple
+            minutes to show up.
+          </Text>
+          <Button
+            p={4}
+            onClick={() =>
+              sendPasswordReset(email).then(() => {
+                toast({
+                  title: "Password Reset Email Sent!",
+                  status: "success",
+                  description: "It may take a second to show up.",
+                });
+                onClose();
+              })
+            }
+          >
+            Reset Password
+          </Button>
+        </ModalBody>
+      </ModalContent>
+      <ModalFooter>
+        <Button colorScheme="blue" mr={3} onClick={onClose}>
+          Close
+        </Button>
+        <Button variant="ghost">Secondary Action</Button>
+      </ModalFooter>
+    </Modal>
+  );
+};
