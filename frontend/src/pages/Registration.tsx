@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  auth,
-  registerWithEmailAndPassword,
-  signInWithGoogle,
-} from "../firebase/firebase";
-import Header from "../components/Header";
+import { auth, registerWithEmailAndPassword } from "../firebase/firebase";
 import {
   FormControl,
   Input,
   Button,
   Box,
-  Heading,
   Container,
   VStack,
+  Image,
+  Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { FaGoogle } from "react-icons/all";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
-import { lightTheme } from "../theme/colours";
+import { styleColors } from "../theme/colours";
 import PasswordField from "../components/PasswordField";
+import ProviderAuth from "../components/ProviderAuth";
 function Register() {
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -75,56 +71,70 @@ function Register() {
     }
   }, [user, loading]);
   return (
-    <Container bg={lightTheme.main} height="100vh">
-      <Header />
-      <Box textAlign="center">
-        <Heading>Registration</Heading>
-      </Box>
+    <Container bg="white" height="100vh">
+      <VStack align="center" p={6} mb={30}>
+        <Image
+          src={"/logo_mainBlue.svg"}
+          alt="main blue logo"
+          objectFit="cover"
+          maxW="100px"
+        />
+        <Text color={styleColors.mainBlue}>TANDEM</Text>
+      </VStack>
       <VStack>
-        <FormControl mt={6} isRequired>
+        <Box
+          color={styleColors.mainBlue}
+          fontWeight="medium"
+          fontSize="175%"
+          mb={4}
+        >
+          Register
+        </Box>
+        <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
           <Input
             type="fullName"
             placeholder="Full Name"
             onChange={(event) => setName(event.currentTarget.value)}
+            variant="tandem-registration"
           />
         </FormControl>
-        <FormControl mt={6} isRequired>
+        <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
           <Input
             type="email"
             placeholder="Email Address"
             onChange={(event) => setEmail(event.currentTarget.value)}
+            variant="tandem-registration"
           />
         </FormControl>
-        <PasswordField setPassword={setPassword} />
+        <PasswordField
+          setPassword={setPassword}
+          passVariant="tandem-registration"
+        />
         <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
           <Button
-            width="full"
-            mt={4}
             onClick={register}
+            variant="tandem-registration"
             disabled={!isFormValid}
+            mt={5}
           >
-            Register
+            Create Account
           </Button>
         </Tooltip>
-        <Button
-          mt={4}
-          leftIcon={<FaGoogle />}
-          width="full"
-          onClick={signInWithGoogle}
-        >
-          Register with Google
-        </Button>
-        <div>
+        <Box pt={10} pb={2} color={styleColors.deepBlue}>
+          Or create an account with
+        </Box>
+        <ProviderAuth buttonVar="signInWith" />
+        <Box>
           Already have an account?{" "}
           <Link
-            style={{ color: "blue" }}
+            style={{ color: styleColors.mainBlue, fontWeight: "bold" }}
             to={NavConstants.LOGIN}
             state={location.state}
           >
             Login
           </Link>{" "}
           now.
-        </div>
+        </Box>
       </VStack>
     </Container>
   );

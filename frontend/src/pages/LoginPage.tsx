@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   Text,
   Box,
-  Heading,
   FormControl,
   Input,
   Container,
+  VStack,
   Button,
+  Image,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -24,15 +25,17 @@ import {
   loginWithEmailAndPassword,
   sendPasswordReset,
 } from "../firebase/firebase";
+
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Header from "../components/Header";
 import { LocationGotoState } from "./JoinGroup";
-import { lightTheme } from "../theme/colours";
+import { styleColors } from "../theme/colours";
 import SignInRegister from "../components/SignInRegister";
 import PasswordField from "../components/PasswordField";
 import { MdMail } from "react-icons/all";
-export default function Login() {
+import ProviderAuth from "../components/ProviderAuth";
+
+export default function Login({ state }: { state?: LocationGotoState }) {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -62,38 +65,74 @@ export default function Login() {
   };
 
   return (
-    <Container bg={lightTheme.main} height="100vh">
-      <Header />
-      <Box textAlign="center">
-        <Heading>Login</Heading>
-      </Box>
-      <Box>
-        <FormControl mt={6} isRequired>
-          <Input
-            type="email"
-            placeholder="Email"
-            onChange={(event) => setEmail(event.currentTarget.value)}
+    <Box bg={styleColors.mainBlue}>
+      <Container height="100vh">
+        <VStack align="center" p={6} mb={30}>
+          <Image
+            src={"/logo_white.svg"}
+            alt="main blue logo"
+            objectFit="cover"
+            maxW="100px"
           />
-        </FormControl>
-        <PasswordField setPassword={setPassword} />
-        <Text textAlign={"right"}>
-          Forgot Password?{" "}
-          <Link style={{ color: "blue" }} onClick={onOpen} to={"#"}>
-            Reset
-          </Link>
-        </Text>
-        <ResetPasswordModal
-          isOpen={isOpen}
-          onClose={onClose}
-          email={email}
-          setEmail={setEmail}
-        />
-        <SignInRegister
-          onClickSignIn={handleEmailLogin}
-          state={location.state as LocationGotoState}
-        />
-      </Box>
-    </Container>
+          <Text color="white">TANDEM</Text>
+        </VStack>
+        <Box
+          textAlign="center"
+          fontSize="200%"
+          color="white"
+          fontWeight="medium"
+        >
+          Sign in
+        </Box>
+
+        <VStack spacing={3} mb={5} width="100%">
+          <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
+            <Input
+              type="email"
+              placeholder="Email"
+              onChange={(event) => setEmail(event.currentTarget.value)}
+              variant="tandem-login"
+            />
+          </FormControl>
+          <PasswordField setPassword={setPassword} passVariant="tandem-login" />
+
+          <Text align="right" textColor="white" width="85%" pb={5}>
+            Forgot Password?{" "}
+            <Link
+              style={{ color: "white", fontWeight: "bold" }}
+              onClick={onOpen}
+              to={"#"}
+            >
+              Reset
+            </Link>
+          </Text>
+          <ResetPasswordModal
+            isOpen={isOpen}
+            onClose={onClose}
+            email={email}
+            setEmail={setEmail}
+          />
+          <SignInRegister
+            onClickSignIn={handleEmailLogin}
+            state={location.state as LocationGotoState}
+          />
+          <Box pt={10} pb={2} color="white" textAlign="center">
+            Or sign in with
+          </Box>
+          <ProviderAuth buttonVar="tandem-loginProv" />
+          <Text textAlign="center" color="white">
+            New to Tandem?{" "}
+            <Link
+              style={{ color: "white", fontWeight: "bold" }}
+              to="/register"
+              state={state}
+            >
+              Register
+            </Link>
+          </Text>
+        </VStack>
+      </Container>
+    </Box>
   );
 }
 
