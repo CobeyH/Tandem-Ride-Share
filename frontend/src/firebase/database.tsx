@@ -13,6 +13,7 @@ import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 import slugify from "slugify";
 import { getOptimizedRoute } from "../Directions";
+import { PlanTypes } from "../components/Promotional/PriceSelector";
 
 const GROUPS = "groups";
 const USERS = "users";
@@ -47,7 +48,7 @@ export type Group = {
   rides: { [key: string]: boolean };
   members: { [key: string]: boolean };
   owner: string;
-  maxSize: number;
+  plan: PlanTypes;
   banner?: string;
   profilePic?: string;
 };

@@ -22,8 +22,9 @@ import { ref as storageRef } from "firebase/storage";
 import ShareLink from "../components/Groups/ShareLink";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
-import GroupDrawer from "../components/Groups/GroupDrawer";
+import { groupMaxSize } from "../components/Promotional/PriceSelector";
 import GroupSettings from "../components/Groups/GroupSettings";
+import GroupDrawer from "../components/Groups/GroupDrawer";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             <GroupDrawer
               members={group.members}
               ownerId={group.owner}
-              maxSize={group.maxSize}
+              maxSize={groupMaxSize(group.plan)}
               groupId={group.id}
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}

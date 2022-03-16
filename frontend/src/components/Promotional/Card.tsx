@@ -1,8 +1,13 @@
 import { Box, BoxProps, useColorModeValue } from "@chakra-ui/react";
 import * as React from "react";
+import { styleColors } from "../../theme/colours";
 
-export const Card = (props: BoxProps) => {
-  const { children, ...rest } = props;
+interface CardProps extends BoxProps {
+  highlight: boolean;
+}
+
+export const Card = (props: CardProps) => {
+  const { children, highlight, ...rest } = props;
   return (
     <Box
       bg={useColorModeValue("white", "gray.700")}
@@ -14,6 +19,8 @@ export const Card = (props: BoxProps) => {
       shadow="lg"
       maxW="md"
       width="100%"
+      borderColor={highlight ? styleColors.green : undefined}
+      borderWidth={3}
       {...rest}
     >
       {children}

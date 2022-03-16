@@ -85,7 +85,7 @@ const ProductPage = () => {
             Pricing
           </Text>
           <Box pb={50}>
-            <PriceSelector />
+            <PriceSelector showSelectors={false} />
           </Box>
         </VStack>
         <Spacer />

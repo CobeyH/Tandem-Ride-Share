@@ -16,12 +16,11 @@ import {
 import * as React from "react";
 import { useState } from "react";
 import { Group, setGroup } from "../../firebase/database";
-import GroupSizeSlider from "./GroupSizeSlider";
+import PriceSelector, { PlanTypes } from "../Promotional/PriceSelector";
 
 const GroupSettings = ({ group }: { group: Group }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [maxSize, setSize] = useState<number>(group.maxSize);
-
+  const [plan, setPlan] = useState<PlanTypes>(group.plan);
   const toast = useToast();
 
   return (
@@ -34,24 +33,16 @@ const GroupSettings = ({ group }: { group: Group }) => {
         }}
         aria-label="Share group"
       >
-        {" "}
-        Settings{" "}
+        Settings
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW={"90%"} p={15}>
           <ModalHeader>Settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Heading size={"s"} mb={4}>
-              Group Size
-            </Heading>
-            <GroupSizeSlider
-              maxSize={maxSize}
-              isPrivate={group.isPrivate}
-              setSize={setSize}
-            />
+            <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
             <Heading size={"s"} mt={4} mb={4}>
               Publicity
             </Heading>
@@ -98,7 +89,7 @@ const GroupSettings = ({ group }: { group: Group }) => {
               mr={3}
               onClick={() => {
                 onClose();
-                setGroup({ ...group, maxSize });
+                setGroup({ ...group, plan });
               }}
             >
               Save

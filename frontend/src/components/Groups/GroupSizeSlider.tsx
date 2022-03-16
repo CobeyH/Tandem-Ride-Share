@@ -30,7 +30,6 @@ const GroupSizeSlider = (props: {
         defaultValue={10}
         value={props.maxSize}
         min={10}
-        step={10}
         onChange={(value) => props.setSize(value)}
       >
         <SliderTrack bg={lightTheme.lightButton}>

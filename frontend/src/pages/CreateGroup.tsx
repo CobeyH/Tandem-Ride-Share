@@ -25,7 +25,9 @@ import slugify from "slugify";
 import Header from "../components/Header";
 import { PhotoType, uploadPhoto } from "../firebase/storage";
 import FileDropzone from "../components/FileDropzone";
-import GroupSizeSlider from "../components/Groups/GroupSizeSlider";
+import PriceSelector, {
+  PlanTypes,
+} from "../components/Promotional/PriceSelector";
 import { Steps, useSteps } from "chakra-ui-steps";
 import VerifiedStep from "../components/VerifiedStep";
 import {
@@ -84,14 +86,14 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
-  const [maxSize, setSize] = useState<number>(10);
+  const [plan, setPlan] = useState<PlanTypes>();
   const MAX_GROUP_NAME_LENGTH = 25;
 
   const isInvalidName = (name: string) => name.length === 0;
   const navigate = useNavigate();
 
   const submitGroup = () => {
-    if (user?.uid !== undefined) {
+    if (user?.uid !== undefined && plan) {
       createGroup(
         {
           description,
@@ -100,7 +102,7 @@ const CreateGroup = () => {
           rides: {},
           members: {},
           owner: user?.uid,
-          maxSize,
+          plan,
         },
         user.uid
       ).then((group) => {
@@ -172,18 +174,14 @@ const CreateGroup = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Choose a Plan"
-            currentInput={maxSize}
-            isVerified={(groupSize) => groupSize !== undefined}
+            currentInput={plan}
+            isVerified={(plan) => plan !== undefined}
             prevStep={prevStep}
             nextStep={nextStep}
             icon={FaUserFriends}
           >
             <Stack>
-              <GroupSizeSlider
-                setSize={setSize}
-                isPrivate={isPrivate}
-                maxSize={maxSize}
-              />
+              <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
               <HStack>
                 <Tooltip
                   label="Private groups are only joinable through an invite link from a group member"

@@ -25,15 +25,16 @@ interface PricingCardProps extends BoxProps {
   data: PricingCardData;
   icon: React.ElementType;
   button: React.ReactElement;
+  highlight: boolean;
 }
 
 export const PricingCard = (props: PricingCardProps) => {
-  const { data, icon, button, ...rest } = props;
+  const { data, icon, button, highlight, ...rest } = props;
   const { features, price, name } = data;
   const accentColor = useColorModeValue(styleColors.green, styleColors.green);
 
   return (
-    <Card rounded={{ sm: "xl" }} {...rest}>
+    <Card highlight={highlight} rounded={{ sm: "xl" }} {...rest}>
       <VStack spacing={6}>
         <Icon aria-hidden as={icon} fontSize="4xl" color={accentColor} />
         <Heading size="md" fontWeight="extrabold" color={styleColors.deepBlue}>
@@ -47,11 +48,16 @@ export const PricingCard = (props: PricingCardProps) => {
         color={accentColor}
         my="8"
       >
-        <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
+        <Heading
+          size="3xl"
+          fontWeight="inherit"
+          lineHeight="0.9em"
+          fontSize={{ base: 30, md: 50 }}
+        >
           {price}
         </Heading>
         {price === "Free" ? null : (
-          <Text fontWeight="inherit" fontSize="2xl">
+          <Text fontWeight="inherit" fontSize={{ base: "sm", md: "xl" }}>
             / month
           </Text>
         )}
