@@ -20,6 +20,15 @@ export const Input: ComponentStyleConfig = {
         _placeholder: { color: styleColors.darkBlue, fontWeight: "medium" },
       },
     },
+    "tandem-login": {
+      field: {
+        bg: "white",
+        color: styleColors.darkBlue,
+        fontWeight: "medium",
+        p: 6,
+        _placeholder: { color: styleColors.darkBlue, fontWeight: "medium" },
+      },
+    },
   },
   defaultProps: {
     variant: "tandem-base",

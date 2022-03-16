@@ -10,7 +10,10 @@ import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { styleColors } from "../theme/colours";
 
-const PasswordField = (props: { setPassword: (newPass: string) => void }) => {
+const PasswordField = (props: {
+  setPassword: (newPass: string) => void;
+  passVariant: string;
+}) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
     <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"}>
@@ -19,9 +22,9 @@ const PasswordField = (props: { setPassword: (newPass: string) => void }) => {
           type={showPassword ? "text" : "password"}
           placeholder="Password"
           onChange={(event) => props.setPassword(event.currentTarget.value)}
-          variant="tandem-registration"
+          variant={props.passVariant}
         />
-        <InputRightElement pt={2}>
+        <InputRightElement>
           <IconButton
             onClick={() => setShowPassword(!showPassword)}
             icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}

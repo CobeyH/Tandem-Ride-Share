@@ -78,20 +78,17 @@ function Register() {
             variant="tandem-registration"
           />
         </FormControl>
-        <PasswordField setPassword={setPassword} />
-        <Button
-          width="30%"
-          fontSize="80%"
-          mt={4}
-          onClick={register}
-          variant="tandem-registration"
-        >
+        <PasswordField
+          setPassword={setPassword}
+          passVariant="tandem-registration"
+        />
+        <Button onClick={register} variant="tandem-registration">
           Create Account
         </Button>
         <Box pt={10} pb={2} color={styleColors.deepBlue}>
           Or create an account with
         </Box>
-        <ProviderAuth />
+        <ProviderAuth buttonVar="signInWith" />
         <Box>
           Already have an account?{" "}
           <Link
