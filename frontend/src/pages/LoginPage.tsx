@@ -5,7 +5,6 @@ import {
   FormControl,
   Input,
   Container,
-  Center,
   VStack,
   Button,
   Image,
@@ -85,52 +84,53 @@ export default function Login({ state }: { state?: LocationGotoState }) {
         >
           Sign in
         </Box>
-        <Center>
-          <VStack spacing={3} mb={5}>
-            <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
-              <Input
-                type="email"
-                placeholder="Email"
-                onChange={(event) => setEmail(event.currentTarget.value)}
-                variant="tandem-login"
-              />
-            </FormControl>
-            <PasswordField
-              setPassword={setPassword}
-              passVariant="tandem-login"
+
+        <VStack spacing={3} mb={5} width="100%">
+          <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
+            <Input
+              type="email"
+              placeholder="Email"
+              onChange={(event) => setEmail(event.currentTarget.value)}
+              variant="tandem-login"
             />
-            <Text textAlign={"right"}>
-              Forgot Password?{" "}
-              <Link style={{ color: "blue" }} onClick={onOpen} to={"#"}>
-                Reset
-              </Link>
-            </Text>
-            <ResetPasswordModal
-              isOpen={isOpen}
-              onClose={onClose}
-              email={email}
-              setEmail={setEmail}
-            />
-            <SignInRegister
-              onClickSignIn={handleEmailLogin}
-              state={location.state as LocationGotoState}
-            />
-            <Box pt={10} pb={2} color="white" textAlign="center">
-              Or sign in with
-            </Box>
-            <ProviderAuth buttonVar="tandem-loginProv" />
-            <Text textAlign="center" color="white">
-              New to Tandem?{" "}
-              <Link
-                style={{ color: "white", fontWeight: "bold" }}
-                to="/register"
-                state={state}
-              >
-                Register
-              </Link>
-            </Text>
-          </VStack>
-        </Center>
+          </FormControl>
+          <PasswordField setPassword={setPassword} passVariant="tandem-login" />
+
+          <Text align="right" textColor="white" width="85%" pb={5}>
+            Forgot Password?{" "}
+            <Link
+              style={{ color: "white", fontWeight: "bold" }}
+              onClick={onOpen}
+              to={"#"}
+            >
+              Reset
+            </Link>
+          </Text>
+          <ResetPasswordModal
+            isOpen={isOpen}
+            onClose={onClose}
+            email={email}
+            setEmail={setEmail}
+          />
+          <SignInRegister
+            onClickSignIn={handleEmailLogin}
+            state={location.state as LocationGotoState}
+          />
+          <Box pt={10} pb={2} color="white" textAlign="center">
+            Or sign in with
+          </Box>
+          <ProviderAuth buttonVar="tandem-loginProv" />
+          <Text textAlign="center" color="white">
+            New to Tandem?{" "}
+            <Link
+              style={{ color: "white", fontWeight: "bold" }}
+              to="/register"
+              state={state}
+            >
+              Register
+            </Link>
+          </Text>
+        </VStack>
       </Container>
     </Box>
   );

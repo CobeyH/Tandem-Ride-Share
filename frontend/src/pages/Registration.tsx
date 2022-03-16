@@ -115,6 +115,7 @@ function Register() {
             onClick={register}
             variant="tandem-registration"
             disabled={!isFormValid}
+            mt={5}
           >
             Create Account
           </Button>

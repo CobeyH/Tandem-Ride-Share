@@ -21,6 +21,9 @@ const Button: ComponentStyleConfig = {
       color: "white",
       p: 4,
       _hover: { bg: styleColors.paleBlue },
+      _disabled: {
+        _hover: { textColor: styleColors.deepBlue },
+      },
     },
     "tandem-login": {
       bg: styleColors.darkBlue,
