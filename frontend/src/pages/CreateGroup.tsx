@@ -95,7 +95,7 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
-  const [plan, setPlan] = useState<PlanTypes>();
+  const [plan, setPlan] = useState<PlanTypes>("Friend Group");
   const MAX_GROUP_NAME_LENGTH = 25;
 
   const isInvalidName = (name: string) => name.length === 0;
@@ -216,7 +216,7 @@ const CreateGroup = () => {
             icon={IoMdPhotos}
             isLastStep={true}
           >
-            <VStack align="center" height="100%" width="100%">
+            <VStack align="center" height="100%" width="100%" p={4} spacing={4}>
               <Heading size="md"> Upload Banner</Heading>
               <FileDropzone parentCallback={handleCallback} />
               <Heading size="md"> Upload Profile Picture</Heading>
@@ -229,7 +229,7 @@ const CreateGroup = () => {
                   <TabPanels>
                     <TabPanel>
                       <FileDropzone parentCallback={handleProfilePicSubmit} />
-                      <Box py={120}></Box>
+                      <Box py={149}></Box>
                     </TabPanel>
                     <TabPanel>
                       <IconBrowser
