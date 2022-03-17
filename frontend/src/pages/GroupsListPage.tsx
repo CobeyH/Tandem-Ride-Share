@@ -22,6 +22,8 @@ import { Group, useGroups } from "../firebase/database";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref } from "firebase/storage";
 import { storage } from "../firebase/storage";
+import * as icons from "react-icons/gi";
+import { IconType } from "react-icons";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -76,7 +78,8 @@ export default function GroupsListPage() {
 
 const GroupListElement = (props: { group: Group; index: number }) => {
   const navigate = useNavigate();
-  const profileRef = ref(storage, `${props.group.profilePic}`);
+  const photoName = props.group.profilePic;
+  const profileRef = ref(storage, `${photoName}`);
   const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
 
   return (
@@ -86,15 +89,22 @@ const GroupListElement = (props: { group: Group; index: number }) => {
         textAlign="left"
         onClick={() => navigate(NavConstants.groupWithIdJoin(props.group.id))}
       >
-        {profilePicLoading ? null : (
+        {profilePicLoading ? null : profilePic ? (
           <Avatar
             bg={groupLogos[props.index % groupLogos.length]}
             src={profilePic}
             size="xs"
-            name={props.group.name}
+            name={photoName ? undefined : props.group.name}
             mr={4}
           />
-        )}
+        ) : photoName ? (
+          <Avatar
+            bg={groupLogos[props.index % groupLogos.length]}
+            as={(icons as { [k: string]: IconType })[photoName]}
+            size="xs"
+            mr={4}
+          />
+        ) : null}
         {props.group.name}
       </Button>
     </>

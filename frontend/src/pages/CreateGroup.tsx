@@ -9,6 +9,13 @@ import {
   Checkbox,
   Tooltip,
   Container,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Tab,
+  VStack,
+  Box,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -36,6 +43,7 @@ import {
   ImQuill,
   IoMdPhotos,
 } from "react-icons/all";
+import IconBrowser from "../components/Groups/IconBrowser";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -65,6 +73,7 @@ const CreateGroup = () => {
   // TODO: Fix type
   const [banner, setBanner] = useState<Blob | MediaSource>();
   const [profilePic, setProfilePic] = useState<Blob | MediaSource>();
+  const [chosenIcon, setChosenIcon] = useState("");
 
   const handleCallback = (childBanner: Blob | MediaSource) => {
     setBanner(childBanner);
@@ -86,7 +95,7 @@ const CreateGroup = () => {
   });
   const [description, setDescription] = useState("");
   const [isPrivate, setPrivate] = useState<boolean>(true);
-  const [plan, setPlan] = useState<PlanTypes>();
+  const [plan, setPlan] = useState<PlanTypes>("Friend Group");
   const MAX_GROUP_NAME_LENGTH = 25;
 
   const isInvalidName = (name: string) => name.length === 0;
@@ -118,6 +127,8 @@ const CreateGroup = () => {
               setGroupProfilePic(group.id, url?.fullPath);
             }
           );
+        } else if (chosenIcon && chosenIcon.length > 0) {
+          setGroupProfilePic(group.id, chosenIcon);
         }
       });
     }
@@ -205,10 +216,31 @@ const CreateGroup = () => {
             icon={IoMdPhotos}
             isLastStep={true}
           >
-            <Heading size="md"> Upload Banner</Heading>
-            <FileDropzone parentCallback={handleCallback} />
-            <Heading size="md"> Upload Profile Picture</Heading>
-            <FileDropzone parentCallback={handleProfilePicSubmit} />
+            <VStack align="center" height="100%" width="100%" p={4} spacing={4}>
+              <Heading size="md"> Upload Banner</Heading>
+              <FileDropzone parentCallback={handleCallback} />
+              <Heading size="md"> Upload Profile Picture</Heading>
+              <HStack alignItems="center">
+                <Tabs isFitted>
+                  <TabList>
+                    <Tab>Upload a profile picture</Tab>
+                    <Tab>Choose an Icon</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <FileDropzone parentCallback={handleProfilePicSubmit} />
+                      <Box py={149}></Box>
+                    </TabPanel>
+                    <TabPanel>
+                      <IconBrowser
+                        icon={chosenIcon}
+                        updateIcon={setChosenIcon}
+                      />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </HStack>
+            </VStack>
           </VerifiedStep>
         </Steps>
       </Container>

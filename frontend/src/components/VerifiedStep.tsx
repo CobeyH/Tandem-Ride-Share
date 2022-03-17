@@ -51,6 +51,7 @@ const VerifiedStep = <T,>({
           size="sm"
           onClick={() => nextStep(currentInput)}
           isDisabled={!verified}
+          mb={4}
         >
           {isLastStep ? "Submit" : "Next"}
         </Button>
