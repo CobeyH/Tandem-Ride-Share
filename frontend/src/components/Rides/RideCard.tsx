@@ -95,14 +95,26 @@ export default function RideCard({
           <Collapse
             in={isOpen}
             onAnimationComplete={() => {
-              if (map && isOpen) {
+              if (map && ride && route && isOpen) {
                 map.invalidateSize();
-                map.fitBounds(
-                  latLngBounds([
-                    latLng(ride.end.lat, ride.end.lng),
-                    startLocation,
-                  ]).pad(0.1)
-                );
+                const box = route?.boundingBox
+                  ? [
+                      latLng(
+                        route.boundingBox.ul.lat,
+                        route.boundingBox.ul.lng
+                      ),
+                      latLng(
+                        route.boundingBox.lr.lat,
+                        route.boundingBox.lr.lng
+                      ),
+                    ]
+                  : [
+                      latLng(ride.end.lat, ride.end.lng),
+                      ...Object.values(ride.pickupPoints).map((p) => {
+                        return latLng(p.location.lat, p.location.lng);
+                      }),
+                    ];
+                map.fitBounds(latLngBounds(box).pad(0.1));
               }
             }}
           >
