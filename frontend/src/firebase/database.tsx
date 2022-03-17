@@ -83,7 +83,10 @@ export type Ride = {
 
 export type Route = {
   distance: number;
-  fuelUsed: number;
+  boundingBox: {
+    ul: { lat: number; lng: number };
+    lr: { lat: number; lng: number };
+  };
   shape: LatLng[];
 };
 
