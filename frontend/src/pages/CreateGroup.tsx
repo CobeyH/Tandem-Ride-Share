@@ -9,6 +9,13 @@ import {
   Checkbox,
   Tooltip,
   Container,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Tab,
+  VStack,
+  Box,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -36,6 +43,7 @@ import {
   ImQuill,
   IoMdPhotos,
 } from "react-icons/all";
+import IconBrowser from "../components/Groups/IconBrowser";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -205,10 +213,28 @@ const CreateGroup = () => {
             icon={IoMdPhotos}
             isLastStep={true}
           >
-            <Heading size="md"> Upload Banner</Heading>
-            <FileDropzone parentCallback={handleCallback} />
-            <Heading size="md"> Upload Profile Picture</Heading>
-            <FileDropzone parentCallback={handleProfilePicSubmit} />
+            <VStack align="center" height="100%" width="100%">
+              <Heading size="md"> Upload Banner</Heading>
+              <FileDropzone parentCallback={handleCallback} />
+              <Heading size="md"> Upload Profile Picture</Heading>
+              <HStack alignItems="center">
+                <Tabs isFitted>
+                  <TabList>
+                    <Tab>Upload a profile picture</Tab>
+                    <Tab>Choose an Icon</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <FileDropzone parentCallback={handleProfilePicSubmit} />
+                      <Box py={120}></Box>
+                    </TabPanel>
+                    <TabPanel>
+                      <IconBrowser />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </HStack>
+            </VStack>
           </VerifiedStep>
         </Steps>
       </Container>
