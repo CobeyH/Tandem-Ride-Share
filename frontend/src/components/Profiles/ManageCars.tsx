@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalFooter,
   useToast,
+  Input,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { MdEmail } from "react-icons/all";
@@ -40,14 +41,18 @@ const ManageCars = (props: { user: User }) => {
   const toast = useToast();
   const [displayName, setDisplayName] = useState("");
 
+  const userVehicles = useUserVehicles(user.uid)[0];
+
+  // const guessCar = () => {};
+
   const submitCar = () => {
     modifyCar(props.user, {
       ...car,
       displayName,
     }).then(() => {
       toast({
-        title: "Car created",
-        description: `We've created a car with ${car.numSeats} seats.`,
+        title: "Car Information modified",
+        description: `We've changed a car with ${car.numSeats} seats.`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -55,16 +60,12 @@ const ManageCars = (props: { user: User }) => {
     });
   };
 
-  const modifyCar = async (user: User, car: Vehicle) => {
-    if (!user || !car.displayName) {
+  const modifyCar = async (user: User, car: Vehicle | undefined) => {
+    if (!user || !car?.displayName) {
       return;
     }
-    car.carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
-    //TODO: User feedback on error states
     await setUserVehicle(user.uid, car);
   };
-
-  console.log(useUserVehicles(user.uid)[0]?.[2]);
 
   return (
     <MenuItem onClick={() => setUserModalOpen(true)}>
@@ -92,7 +93,7 @@ const ManageCars = (props: { user: User }) => {
             ) : null}
           </ModalBody>
           <ModalFooter>
-            <Button>Save</Button>
+            <Button onClick={() => modifyCar(user, selectedCar)}>Save</Button>
             <Button>Delete</Button>
           </ModalFooter>
         </ModalContent>

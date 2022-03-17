@@ -69,7 +69,8 @@ const registerCar = async (user: User, car: Vehicle) => {
   if (!user || !car.displayName) {
     return;
   }
-  car.carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
+  //car.carId = car.displayName?.replace(/\s+/g, "-").toLowerCase();
+  car.carId = Date.now().valueOf().toString();
   //TODO: User feedback on error states
   await setUserVehicle(user.uid, car);
 };
