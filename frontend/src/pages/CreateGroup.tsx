@@ -73,6 +73,7 @@ const CreateGroup = () => {
   // TODO: Fix type
   const [banner, setBanner] = useState<Blob | MediaSource>();
   const [profilePic, setProfilePic] = useState<Blob | MediaSource>();
+  const [chosenIcon, setChosenIcon] = useState("");
 
   const handleCallback = (childBanner: Blob | MediaSource) => {
     setBanner(childBanner);
@@ -126,6 +127,8 @@ const CreateGroup = () => {
               setGroupProfilePic(group.id, url?.fullPath);
             }
           );
+        } else if (chosenIcon && chosenIcon.length > 0) {
+          setGroupProfilePic(group.id, chosenIcon);
         }
       });
     }
@@ -229,7 +232,10 @@ const CreateGroup = () => {
                       <Box py={120}></Box>
                     </TabPanel>
                     <TabPanel>
-                      <IconBrowser />
+                      <IconBrowser
+                        icon={chosenIcon}
+                        updateIcon={setChosenIcon}
+                      />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
