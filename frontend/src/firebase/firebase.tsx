@@ -11,8 +11,9 @@ import {
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { FirebaseError, initializeApp } from "firebase/app";
 import { getUser, setUser } from "./database";
+import { createStandaloneToast, UseToastOptions } from "@chakra-ui/react";
 
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -77,8 +78,11 @@ export async function loginWithEmailAndPassword(
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    console.error(err);
-    alert(err);
+    if (err instanceof FirebaseError) {
+      handleAuthError(err);
+    } else {
+      console.log(err);
+    }
   }
 }
 
@@ -97,9 +101,47 @@ export const registerWithEmailAndPassword = async (
       email: email,
     });
   } catch (err) {
-    console.error(err);
-    alert(err);
+    if (err instanceof FirebaseError) {
+      handleAuthError(err);
+    } else {
+      console.log(err);
+    }
   }
+};
+
+const handleAuthError = (error: FirebaseError) => {
+  const toast = createStandaloneToast();
+  const report: UseToastOptions = {
+    title: "",
+    status: "error",
+    description: "",
+  };
+  switch (error.code) {
+    case "auth/email-already-in-use":
+      report.title = "User Already Exists";
+      report.description =
+        "The provided email is already in use by an existing user. Each user must have a unique email. ";
+      break;
+    case "auth/invalid-email":
+      report.title = "Invalid Email Address";
+      report.description =
+        "The provided value for the email user property is invalid. It must be a string email address. ";
+      break;
+    case "auth/user-not-found":
+      report.title = "User Not Found";
+      report.description =
+        "There is no existing user record corresponding to the provided information.";
+      break;
+    case "auth/missing-email":
+      report.title = "Missing Email";
+      report.description = "Please provide a valid email address.";
+      break;
+    default:
+      report.title = error.code;
+      report.description = error.message;
+      break;
+  }
+  toast(report);
 };
 
 export async function sendPasswordReset(email: string) {
