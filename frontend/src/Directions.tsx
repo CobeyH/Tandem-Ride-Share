@@ -26,7 +26,7 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
         (result) => {
           const route: Route = {
             distance: result.route.distance,
-            fuelUsed: result.route.fuelUsed,
+            boundingBox: result.route.boundingBox,
             shape: arrayToLatLngs(result.route.shape.shapePoints),
           };
           resolve(route);
@@ -46,7 +46,7 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
   };
 
   return new Promise<Route>((resolve, reject) => {
-    let distance: number, fuelUsed: number;
+    let distance: number;
     /**
      * Here we are making the API call to the Directions API Optimized
      * Route endpoint, then we compose the reponse to JSON.
@@ -66,7 +66,6 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
       .then((res) => res.json())
       .then((res) => {
         distance = res.route.distance;
-        fuelUsed = res.route.fuelUsed;
         return res;
       })
       .then((res) =>
@@ -82,7 +81,7 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
         (res) => {
           const route: Route = {
             distance: distance,
-            fuelUsed: fuelUsed,
+            boundingBox: res.route.boundingBox,
             shape: arrayToLatLngs(res.route.shape.shapePoints),
           };
           resolve(route);

@@ -14,9 +14,39 @@ const Button: ComponentStyleConfig = {
       color: "white",
       _hover: { bg: styleColors.paleBlue },
     },
-    "tandem-warning": {
-      bg: "red",
+    "tandem-registration": {
+      bg: styleColors.medBlue,
       textColor: "white",
+      fontWeight: "semiBold",
+      color: "white",
+      p: 4,
+      _hover: { bg: styleColors.paleBlue },
+      _disabled: {
+        _hover: { textColor: styleColors.deepBlue },
+      },
+    },
+    "tandem-login": {
+      bg: styleColors.darkBlue,
+      textColor: "white",
+      fontWeight: "semiBold",
+      color: "white",
+      _hover: { bg: styleColors.lightBlue },
+    },
+    "tandem-loginProv": {
+      bg: "white",
+      textColor: styleColors.darkBlue,
+      fontWeight: "semiBold",
+      _hover: { bg: styleColors.lightBlue },
+    },
+    signInWith: {
+      bg: styleColors.paleBlue,
+      textColor: "white",
+      fontWeight: "semiBold",
+      color: styleColors.medBlue,
+      _hover: {
+        bg: styleColors.lightBlue,
+        color: styleColors.darkBlue,
+      },
     },
   },
   defaultProps: {
