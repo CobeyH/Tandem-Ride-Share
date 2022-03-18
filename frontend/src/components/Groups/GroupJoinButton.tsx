@@ -5,7 +5,6 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
-  CloseButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 import { Group, setGroupMember } from "../../firebase/database";
