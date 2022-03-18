@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Button,
-  Flex,
   MenuItem,
   Modal,
   ModalBody,
@@ -11,8 +10,6 @@ import {
   ModalFooter,
   useToast,
   Input,
-  DrawerFooter,
-  Box,
   HStack,
   useDisclosure,
   Spacer,
@@ -23,42 +20,26 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Heading,
-  Select,
 } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import ChooseCar from "../Rides/ChooseCar";
 import CarStatsSlider from "./CarStatsSlider";
-import VerifiedStep from "../VerifiedStep";
 import {
   setUserVehicle,
   Vehicle,
   useUserVehicles,
   deleteUserVehicle,
-  useUserVehicle,
 } from "../../firebase/database";
-
-const cars: Vehicle[] = [
-  { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
-  { type: "Subcompact", fuelUsage: 8, numSeats: 5 },
-  { type: "Compact", fuelUsage: 8.2, numSeats: 5 },
-  { type: "Mid-size", fuelUsage: 8.5, numSeats: 5 },
-  { type: "Station-Wagon", fuelUsage: 10, numSeats: 5 },
-  { type: "Electric", fuelUsage: 5, numSeats: 5 },
-];
 
 const ManageCars = (props: { user: User }) => {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState<Vehicle>();
-  const [car, setCar] = useState<Vehicle>(cars[0]);
   const user = props.user;
   const toast = useToast();
-  const [displayName, setDisplayName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [newName, setNewName] = useState<string | undefined>();
-
   const userVehicles = useUserVehicles(user.uid)[0];
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const modifyCar = async (user: User, car: Vehicle | undefined) => {
     if (!user || !car?.displayName) {
@@ -67,8 +48,8 @@ const ManageCars = (props: { user: User }) => {
     const newCar = { ...car, displayName: newName };
     await setUserVehicle(user.uid, newCar).then(() => {
       toast({
-        title: "Car Information modified",
-        description: `We've changed information of ${car.displayName}`,
+        title: "Car Updated",
+        description: `We've changed information of ${newName}`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -80,7 +61,6 @@ const ManageCars = (props: { user: User }) => {
     if (!user || !car?.displayName) {
       return;
     }
-    alert(`Delete ${car?.displayName}?`);
     await deleteUserVehicle(user.uid, car).then(() => {
       toast({
         title: "Car Deleted",
@@ -109,19 +89,6 @@ const ManageCars = (props: { user: User }) => {
                 Choose a Car
               </Heading>
             ) : null}
-            {/*<Select*/}
-            {/*  placeholder="Select option"*/}
-            {/*  onChange={(e) => {*/}
-            {/*    console.log(e.target.value);*/}
-            {/*    setSelectedCar(useUserVehicle(user.uid, e.target.value));*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  {userVehicles?.map((v: Vehicle) => (*/}
-            {/*    <option key={v.carId} value={v.carId}>*/}
-            {/*      {v.displayName}*/}
-            {/*    </option>*/}
-            {/*  ))}*/}
-            {/*</Select>*/}
             <ChooseCar
               carUpdate={(car) => {
                 setSelectedCar(car);
@@ -146,13 +113,15 @@ const ManageCars = (props: { user: User }) => {
                 />
                 <HStack spacing={2} mt={2}>
                   <Spacer />
-                  <Button onClick={() => modifyCar(user, selectedCar)}>
+                  <Button
+                    onClick={() => {
+                      setUserModalOpen(false);
+                      modifyCar(user, selectedCar);
+                    }}
+                  >
                     Save
                   </Button>
-                  <Button
-                    variant={"tandem-warning"}
-                    onClick={() => deleteCar(user, selectedCar)}
-                  >
+                  <Button variant={"tandem-warning"} onClick={onOpen}>
                     Delete
                   </Button>
                 </HStack>
@@ -163,6 +132,39 @@ const ManageCars = (props: { user: User }) => {
             <Button variant="outline" onClick={() => setUserModalOpen(false)}>
               Cancel
             </Button>
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+              isCentered
+            >
+              <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Delete car
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>Are you sure?</AlertDialogBody>
+
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant={"tandem-warning"}
+                      onClick={() => {
+                        onClose();
+                        deleteCar(user, selectedCar);
+                        setUserModalOpen(false);
+                      }}
+                      ml={3}
+                    >
+                      Confirm
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
           </ModalFooter>
         </ModalContent>
       </Modal>
