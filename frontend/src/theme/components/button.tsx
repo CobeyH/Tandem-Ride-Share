@@ -14,6 +14,10 @@ const Button: ComponentStyleConfig = {
       color: "white",
       _hover: { bg: styleColors.paleBlue },
     },
+    "tandem-warning": {
+      bg: "red",
+      textColor: "white",
+    },
     "tandem-registration": {
       bg: styleColors.medBlue,
       textColor: "white",
