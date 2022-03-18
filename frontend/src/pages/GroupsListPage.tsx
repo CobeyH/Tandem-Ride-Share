@@ -41,7 +41,9 @@ export default function GroupsListPage() {
       <Header />
       <Container>
         <Center>
-          <Heading size={"md"}>My Groups</Heading>
+          <Heading size={"md"} mt={5}>
+            My Groups
+          </Heading>
         </Center>
         <GroupSearch groups={groups ?? []} />
         <Center>

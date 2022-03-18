@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  Button,
   Heading,
   HStack,
   IconButton,
@@ -23,11 +24,13 @@ import { auth } from "../../firebase/firebase";
 import { useState } from "react";
 import { Group } from "../../firebase/database";
 import GroupCapacity from "./GroupCapacity";
+import { useNavigate } from "react-router-dom";
 
 const GroupSearch = (props: { groups: Group[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
   const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -75,6 +78,13 @@ const GroupSearch = (props: { groups: Group[] }) => {
                       <Heading size="sm">{publicGroup.name}</Heading>
                       <Spacer />
                       <GroupCapacity group={publicGroup} />
+                      <Button
+                        onClick={() =>
+                          navigate(`/group/${publicGroup.id}/join`)
+                        }
+                      >
+                        Preview
+                      </Button>
                       <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );

@@ -51,7 +51,7 @@ const FoundGroup = (props: GroupUserProps) => {
 
   return (
     <>
-      <Header />
+      <Header pages={[{ label: "My Groups", url: "/" }]} />
       <Box>
         <Center>
           <VStack>

@@ -65,7 +65,8 @@ export const planData: PlanInfo[] = [
 
 export function groupMaxSize(groupPlan: PlanTypes) {
   return (
-    planData.find((p: PlanInfo) => p.data.name === groupPlan)?.data.limit || 0
+    planData.find((p: PlanInfo) => p.data.name === groupPlan)?.data.limit ||
+    100000
   );
 }
 
