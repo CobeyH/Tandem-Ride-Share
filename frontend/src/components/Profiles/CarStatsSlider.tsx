@@ -22,7 +22,7 @@ const CarStatsSlider = (props: {
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
   return (
     <>
-      <Heading as="h2" size="l">
+      <Heading as="h2" size="l" mt={2}>
         Number of Seats
       </Heading>
       <HStack>

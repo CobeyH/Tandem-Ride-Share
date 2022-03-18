@@ -7,6 +7,7 @@ import {
   query,
   ref,
   set,
+  remove,
 } from "firebase/database";
 import { latLng, LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
@@ -304,6 +305,11 @@ export const useUserVehicles = (userId?: string) => {
 export const setUserVehicle = async (userId: string, vehicle: Vehicle) => {
   const { carId, ...car } = vehicle;
   return set(ref(db, `${USERS}/${userId}/vehicles/${carId}`), car);
+};
+
+export const deleteUserVehicle = async (userId: string, vehicle: Vehicle) => {
+  const { carId } = vehicle;
+  return remove(ref(db, `${USERS}/${userId}/vehicles/${carId}`));
 };
 
 export const setGroupMember = async (
