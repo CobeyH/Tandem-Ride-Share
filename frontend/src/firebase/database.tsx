@@ -8,6 +8,9 @@ import {
   ref,
   set,
   remove,
+  orderByKey,
+  startAt,
+  endBefore,
 } from "firebase/database";
 import { latLng, LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
@@ -144,6 +147,33 @@ export const useGroups = () => {
   return useListVals<Group>(ref(db, GROUPS), { keyField: "id" });
 };
 
+export const setGroup = async (group: Group) => {
+  const { id, ...groupData } = group;
+  if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);
+  return group;
+};
+
+export const pushGroup = async (groupData: Omit<Group, "id">) => {
+  let id = slugify(groupData.name, KEY_SLUG_OPTS);
+  const groupsQuery = query(
+    ref(db, GROUPS),
+    orderByKey(),
+    startAt(id),
+    endBefore(
+      id.slice(0, id.length - 1) +
+        String.fromCharCode(id.charCodeAt(id.length - 1) + 1)
+    )
+  );
+  const groups = await get(groupsQuery);
+  if (groups.hasChild(id)) {
+    let i = 1;
+    while (groups.hasChild(id + i.toString())) i++;
+    id = id + i.toString();
+  }
+  await set(ref(db, `${GROUPS}/${id}`), groupData);
+  return { id, ...groupData };
+};
+
 export const useGroupChat = (groupId: string) => {
   const r = ref(db, `${GROUP_CHATS}/${groupId}`);
   const q = query(r, orderByChild("timestamp"));
@@ -232,12 +262,6 @@ export const usePickupPoint = (rideId: string, pickupId: string) => {
       keyField: "id",
     }
   );
-};
-
-export const setGroup = async (group: Group) => {
-  const { id, ...groupData } = group;
-  if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);
-  return group;
 };
 
 export const setGroupBanner = async (groupId: string, banner?: string) => {
