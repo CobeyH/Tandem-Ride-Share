@@ -20,15 +20,11 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 import {
-  DBConstants,
-  getGroup,
-  Group,
-  setGroup,
+  pushGroup,
   setGroupBanner,
   setGroupProfilePic,
 } from "../firebase/database";
 import { useNavigate } from "react-router-dom";
-import slugify from "slugify";
 import Header from "../components/Header";
 import { PhotoType, uploadPhoto } from "../firebase/storage";
 import FileDropzone from "../components/FileDropzone";
@@ -48,25 +44,6 @@ import IconBrowser from "../components/Groups/IconBrowser";
 type ValidatableFiled<T> = {
   field: T;
   invalid: boolean;
-};
-
-const createGroup = async (groupData: Omit<Group, "id">, userId: string) => {
-  const group = {
-    ...groupData,
-    id: slugify(groupData.name, DBConstants.KEY_SLUG_OPTS),
-  };
-  await getGroup(group.id)
-    .then(() => {
-      /* TODO: increment id */
-      throw new Error("Group ID already exists");
-    })
-    .catch((err) => {
-      if (err === undefined) {
-        group.members[userId] = true;
-        setGroup(group);
-      }
-    });
-  return group;
 };
 
 const CreateGroup = () => {
@@ -102,19 +79,16 @@ const CreateGroup = () => {
   const navigate = useNavigate();
 
   const submitGroup = () => {
-    if (user?.uid !== undefined && plan) {
-      createGroup(
-        {
-          description,
-          isPrivate,
-          name,
-          rides: {},
-          members: {},
-          owner: user?.uid,
-          plan,
-        },
-        user.uid
-      ).then((group) => {
+    if (user && user.uid !== undefined && plan) {
+      pushGroup({
+        description,
+        isPrivate,
+        name,
+        rides: {},
+        members: { [user.uid]: true },
+        owner: user.uid,
+        plan,
+      }).then((group) => {
         navigate(`/group/${group.id}`);
         if (banner !== undefined) {
           uploadPhoto(group.id, PhotoType.banners, banner).then((url) => {
