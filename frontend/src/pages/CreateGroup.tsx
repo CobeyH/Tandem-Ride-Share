@@ -137,7 +137,7 @@ const CreateGroup = () => {
   return (
     <>
       <Header pages={[{ label: "My Groups", url: "/" }]} />
-      <Container>
+      <Container maxWidth="90%">
         <Heading textAlign={"center"}>Create Group</Heading>
         <Steps activeStep={activeStep} orientation="vertical">
           <VerifiedStep
