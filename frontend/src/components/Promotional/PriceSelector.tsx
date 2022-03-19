@@ -94,7 +94,7 @@ const PriceSelector = (props: {
             icon={card.icon}
             highlight={card.data.name == selectedPlan}
             button={
-              card.data.name == selectedPlan || !props.showSelectors ? (
+              !props.showSelectors ? (
                 <></>
               ) : (
                 <Button
@@ -104,6 +104,7 @@ const PriceSelector = (props: {
                       props.updateGroupPlan(card.data.name);
                     }
                   }}
+                  isDisabled={card.data.name == selectedPlan}
                 >
                   Select
                 </Button>
