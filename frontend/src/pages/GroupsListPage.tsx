@@ -24,6 +24,7 @@ import { ref } from "firebase/storage";
 import { storage } from "../firebase/storage";
 import * as icons from "react-icons/gi";
 import { IconType } from "react-icons";
+import Joyride from "react-joyride";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -35,18 +36,34 @@ export default function GroupsListPage() {
     if (loading) return;
     if (!user) return navigate("/login");
   }, [user, loading]);
+  const steps = [
+    {
+      target: "#target1",
+      content:
+        "Welcome to Tandem! An app designed to foster community by bringing people together.",
+    },
+    {
+      target: "#target2",
+      content: "You can search for an existing group to get started.",
+    },
+    {
+      target: "#target3",
+      content: "Or you can create a group for your own needs.",
+    },
+  ];
 
   return (
     <>
       <Header />
+      <Joyride steps={steps} showProgress showSkipButton continuous />
       <Container>
         <Center>
           <Heading size={"md"} mt={5}>
             My Groups
           </Heading>
         </Center>
-        <GroupSearch groups={groups ?? []} />
-        <Center>
+        <GroupSearch id="target2" groups={groups ?? []} />
+        <Center id="target1">
           <Flex direction="column">
             <VStack align="stretch">
               {groups
@@ -71,7 +88,9 @@ export default function GroupsListPage() {
         {loadingGroups ? <Spinner /> : null}
         {error ? <Text>{JSON.stringify(error)}</Text> : null}
         <Center pt={4}>
-          <Button onClick={() => navigate("group/new")}>Create a Group</Button>
+          <Button id="target3" onClick={() => navigate("group/new")}>
+            Create a Group
+          </Button>
         </Center>
       </Container>
     </>

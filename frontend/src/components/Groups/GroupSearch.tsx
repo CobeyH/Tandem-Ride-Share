@@ -26,7 +26,7 @@ import { Group } from "../../firebase/database";
 import GroupCapacity from "./GroupCapacity";
 import { useNavigate } from "react-router-dom";
 
-const GroupSearch = (props: { groups: Group[] }) => {
+const GroupSearch = (props: { groups: Group[]; id?: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
   const [user] = useAuthState(auth);
@@ -34,7 +34,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
 
   return (
     <>
-      <InputGroup mt={4} size={"sm"}>
+      <InputGroup mt={4} size={"sm"} id={props.id}>
         <Input
           textAlign={"center"}
           color="black"
