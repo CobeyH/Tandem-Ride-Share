@@ -34,7 +34,7 @@ import Joyride, { CallBackProps, STATUS } from "react-joyride";
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
   const [groups, loadingGroups, error] = useGroups();
-  const [userData] = useUser(user?.uid);
+  const [userData, userDataLoading] = useUser(user?.uid);
 
   const navigate = useNavigate();
 
@@ -70,7 +70,7 @@ export default function GroupsListPage() {
   return (
     <>
       <Header />
-      {!userData?.tutorials?.groups ? (
+      {!userData?.tutorials?.groups && !userDataLoading ? (
         <Joyride
           steps={steps}
           callback={handleTutorialFinished}
