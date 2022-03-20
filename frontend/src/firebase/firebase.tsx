@@ -61,6 +61,10 @@ export const signInWithProvider = async (
           name: user.displayName ? user.displayName : "User",
           authProvider,
           email: user.email ? user.email : "",
+          tutorials: {
+            groups: false,
+            rides: false,
+          },
         });
       } else {
         console.log(err);
@@ -99,6 +103,10 @@ export const registerWithEmailAndPassword = async (
       name: name,
       authProvider: "local",
       email: email,
+      tutorials: {
+        groups: false,
+        rides: false,
+      },
     });
   } catch (err) {
     if (err instanceof FirebaseError) {

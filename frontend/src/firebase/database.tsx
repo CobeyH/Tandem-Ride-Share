@@ -65,12 +65,15 @@ export type Vehicle = {
   displayName?: string;
 };
 
+export type TutorialType = "groups" | "rides";
+
 export type User = {
   uid: string;
   name: string;
   authProvider: string;
   email: string;
   vehicles?: Vehicle[];
+  tutorials: { [key in TutorialType]: boolean };
 };
 
 export type Ride = {
@@ -287,6 +290,7 @@ export const getUser = async (userId: string) => {
             authProvider: user.authProvider,
             email: user.email,
             vehicles: user.vehicles,
+            tutorials: user.tutorials,
           });
         } else {
           console.log("failed to resolve user");
@@ -310,6 +314,10 @@ export const useUser = (userId?: string) => {
   return useObjectVal<User>(ref(db, `${USERS}/${userId}`), {
     keyField: "uid",
   });
+};
+
+export const finishTutorial = async (uid: string, completion: TutorialType) => {
+  if (uid) await set(ref(db, `${USERS}/${uid}/tutorials/${completion}`), true);
 };
 
 export const useUserVehicle = (userId?: string, vehicleId?: string) => {

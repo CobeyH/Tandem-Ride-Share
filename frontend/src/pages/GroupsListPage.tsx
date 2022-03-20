@@ -18,17 +18,23 @@ import Header from "../components/Header";
 import { groupLogos } from "../theme/colours";
 import { NavConstants } from "../NavigationConstants";
 import GroupSearch from "../components/Groups/GroupSearch";
-import { Group, useGroups } from "../firebase/database";
+import {
+  finishTutorial,
+  Group,
+  useGroups,
+  useUser,
+} from "../firebase/database";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { ref } from "firebase/storage";
 import { storage } from "../firebase/storage";
 import * as icons from "react-icons/gi";
 import { IconType } from "react-icons";
-import Joyride from "react-joyride";
+import Joyride, { CallBackProps, STATUS } from "react-joyride";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
   const [groups, loadingGroups, error] = useGroups();
+  const [userData] = useUser(user?.uid);
 
   const navigate = useNavigate();
 
@@ -36,6 +42,7 @@ export default function GroupsListPage() {
     if (loading) return;
     if (!user) return navigate("/login");
   }, [user, loading]);
+
   const steps = [
     {
       target: "#target1",
@@ -52,10 +59,26 @@ export default function GroupsListPage() {
     },
   ];
 
+  const handleTutorialFinished = (data: CallBackProps) => {
+    const { status } = data;
+    if (!user) return;
+    if (status == STATUS.FINISHED || status == STATUS.SKIPPED) {
+      finishTutorial(user.uid, "groups");
+    }
+  };
+
   return (
     <>
       <Header />
-      <Joyride steps={steps} showProgress showSkipButton continuous />
+      {!userData?.tutorials?.groups ? (
+        <Joyride
+          steps={steps}
+          callback={handleTutorialFinished}
+          showProgress
+          showSkipButton
+          continuous
+        />
+      ) : null}
       <Container>
         <Center>
           <Heading size={"md"} mt={5}>
