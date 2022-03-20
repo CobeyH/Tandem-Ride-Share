@@ -101,6 +101,19 @@ const CreateRide = () => {
     map?.fitBounds(latLngBounds([startPosition, endPosition]));
   }
 
+  function getCurrentTime() {
+    const date = new Date();
+    const timeComponents = [date.getHours(), date.getMinutes()];
+    return timeComponents
+      .map((component) => {
+        const pad = component < 10 ? "0" : "";
+        return pad + component;
+      })
+      .join(":");
+  }
+
+  const currentTime = getCurrentTime();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -258,6 +271,7 @@ const CreateRide = () => {
                 mb="4"
                 type="time"
                 onInput={(e) => setStartTime(e.currentTarget.value)}
+                defaultValue={currentTime}
               />
               <InputLeftElement>
                 <FaClock />
