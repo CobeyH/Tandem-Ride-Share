@@ -6,7 +6,6 @@ import { styleColors } from "../../theme/colours";
 interface Props extends BoxProps {
   name: string;
   jobTitle: string;
-  imageSrc: string;
 }
 
 export const Quotee = (props: Props) => {
