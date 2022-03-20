@@ -81,7 +81,7 @@ export default function GroupsListPage() {
 const GroupListElement = (props: { group: Group; index: number }) => {
   const navigate = useNavigate();
   const photoName = props.group.profilePic;
-  const profileRef = ref(storage, `${photoName}`);
+  const profileRef = photoName ? ref(storage, `${photoName}`) : undefined;
   const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
 
   return (
