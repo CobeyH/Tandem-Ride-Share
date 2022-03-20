@@ -89,7 +89,7 @@ const GroupListElement = (props: { group: Group; index: number }) => {
       <Button
         mt={4}
         textAlign="left"
-        onClick={() => navigate(NavConstants.groupWithIdJoin(props.group.id))}
+        onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
       >
         {profilePicLoading ? null : profilePic ? (
           <Avatar
