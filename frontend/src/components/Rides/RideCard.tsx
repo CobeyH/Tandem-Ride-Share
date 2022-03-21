@@ -25,7 +25,6 @@ import { auth } from "../../firebase/firebase";
 import {
   addPickupToRide,
   clearUserFromPickups,
-  completeRide,
   getRide,
   PickupPoint,
   setRideDriver,
@@ -45,6 +44,7 @@ import GasCalculator from "./GasCalculator";
 import PickupMarkers from "./PickupMarkers";
 import { getOptimizedRoute, getReverseGeocodeAsString } from "../../Directions";
 import LocationSearch from "./LocationSearch";
+import CompleteRideButton from "./CompleteRideButton";
 
 export default function RideCard({
   rideId,
@@ -476,20 +476,5 @@ function StatusButtonBar({
       </Button>
       {amDriver ? <CompleteRideButton rideId={rideId} /> : null}
     </RideCardBar>
-  );
-}
-
-function CompleteRideButton({ rideId }: { rideId: string }) {
-  return (
-    <Button
-      width="full"
-      onClick={() => {
-        confirm("Do you want to mark this ride as complete?")
-          ? completeRide(rideId)
-          : null;
-      }}
-    >
-      Complete Ride
-    </Button>
   );
 }
