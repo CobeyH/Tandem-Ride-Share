@@ -12,7 +12,6 @@ import {
   DrawerHeader,
   Divider,
   HStack,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsFillChatFill } from "react-icons/all";
