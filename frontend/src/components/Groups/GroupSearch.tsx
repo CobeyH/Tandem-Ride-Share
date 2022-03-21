@@ -37,10 +37,8 @@ const GroupSearch = (props: { groups: Group[] }) => {
       <InputGroup mt={4} size={"sm"}>
         <Input
           textAlign={"center"}
-          color="black"
           onInput={(e) => setSearch(e.currentTarget.value)}
           value={search}
-          _placeholder={{ color: "black" }}
           placeholder="Find Public Groups"
           borderRadius={5}
         />

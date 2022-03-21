@@ -12,6 +12,7 @@ import {
   DrawerHeader,
   Divider,
   HStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsFillChatFill } from "react-icons/all";
@@ -70,6 +71,7 @@ const GroupDrawer = (props: {
                 borderRadius={5}
                 as="button"
                 bg={currMode === mode.Chat ? lightTheme.lightButton : "white"}
+                textColor={"black"}
                 onClick={() => setCurrMode(mode.Chat)}
               >
                 Group Chat
@@ -81,6 +83,7 @@ const GroupDrawer = (props: {
                 bg={
                   currMode === mode.Members ? lightTheme.lightButton : "white"
                 }
+                textColor={"black"}
                 as="button"
                 onClick={() => setCurrMode(mode.Members)}
               >
