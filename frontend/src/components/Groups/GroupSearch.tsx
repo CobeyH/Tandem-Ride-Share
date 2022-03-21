@@ -16,6 +16,9 @@ import {
   Spacer,
   useDisclosure,
   VStack,
+  Text,
+  Box,
+  Center,
 } from "@chakra-ui/react";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import GroupJoinButton from "./GroupJoinButton";
@@ -31,6 +34,17 @@ const GroupSearch = (props: { groups: Group[] }) => {
   const [search, setSearch] = useState("");
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
+  const publicGroups: Group[] = props.groups.filter((group: Group) => {
+    // Groups should only be listed if they are public
+    // and the user isn't already in that group
+    // and the group name contains the search request
+    return (
+      !group.isPrivate &&
+      user?.uid &&
+      !group.members[user.uid] &&
+      group.name.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   return (
     <>
@@ -56,23 +70,27 @@ const GroupSearch = (props: { groups: Group[] }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Found Public Groups</ModalHeader>
+          <ModalHeader textAlign={"center"}>
+            {publicGroups.length > 0
+              ? "Found Public Groups"
+              : "No Public Groups Found"}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack>
-              {props.groups
-                .filter((group: Group) => {
-                  // Groups should only be listed if they are public
-                  // and the user isn't already in that group
-                  // and the group name contains the search request
-                  return (
-                    !group.isPrivate &&
-                    user?.uid &&
-                    !group.members[user.uid] &&
-                    group.name.toLowerCase().includes(search.toLowerCase())
-                  );
-                })
-                .map((publicGroup: Group, i: number) => {
+              {publicGroups.length === 0 ? (
+                <Box>
+                  <Text>
+                    Please refine your search request or create your own group.
+                  </Text>
+                  <Center>
+                    <Button my={6} onClick={() => navigate("group/new")}>
+                      Create a Group
+                    </Button>
+                  </Center>
+                </Box>
+              ) : (
+                publicGroups.map((publicGroup: Group, i: number) => {
                   return (
                     <HStack key={i} w="full">
                       <Heading size="sm">{publicGroup.name}</Heading>
@@ -88,7 +106,8 @@ const GroupSearch = (props: { groups: Group[] }) => {
                       <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );
-                })}
+                })
+              )}
             </VStack>
           </ModalBody>
         </ModalContent>
