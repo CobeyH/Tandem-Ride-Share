@@ -81,7 +81,10 @@ export default function GroupsListPage() {
 const GroupListElement = (props: { group: Group; index: number }) => {
   const navigate = useNavigate();
   const photoName = props.group.profilePic;
-  const profileRef = ref(storage, `${photoName}`);
+  const profileRef =
+    photoName && photoName.startsWith("profilePics/")
+      ? ref(storage, `${photoName}`)
+      : undefined;
   const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
 
   return (
@@ -89,7 +92,7 @@ const GroupListElement = (props: { group: Group; index: number }) => {
       <Button
         mt={4}
         textAlign="left"
-        onClick={() => navigate(NavConstants.groupWithIdJoin(props.group.id))}
+        onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
       >
         {profilePicLoading ? null : profilePic ? (
           <Avatar

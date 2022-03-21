@@ -55,16 +55,20 @@ export default function GroupPage() {
 
 const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const navigate = useNavigate();
-  const bannerRef = storageRef(storage, `${group.banner}`);
-  const [banner, bannerLoading] = useDownloadURL(bannerRef);
+  const bannerRef = group.banner
+    ? storageRef(storage, group.banner)
+    : undefined;
+  const [banner, bannerLoading, error] = useDownloadURL(bannerRef);
   const [user] = useAuthState(auth);
 
   return (
     <>
       <Header pages={[{ label: "My Groups", url: "/" }]} />
-      {!bannerLoading && banner !== undefined ? (
+      {bannerLoading || error ? (
+        <Box bg="blue" h="10%" w="100%" maxHeight="200px" minHeight="100" />
+      ) : (
         <Image src={banner} width="100%" maxHeight="200px" objectFit="cover" />
-      ) : null}
+      )}
       <Container>
         <VStack spacing="24px" align="c">
           <HStack pt={5}>
