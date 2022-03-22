@@ -83,9 +83,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           </HStack>
 
           <Heading textAlign={"center"}>{group.name}</Heading>
-          <Box px={5} py={5} borderRadius={5} borderWidth={3}>
-            {group.description}
-          </Box>
+          {group.description && group.description.length > 0 ? (
+            <Box px={5} py={5} borderRadius={5} borderWidth={3}>
+              {group.description}
+            </Box>
+          ) : null}
           <Text>Active Rides</Text>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
