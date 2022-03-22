@@ -37,7 +37,7 @@ const VerifiedStep = <T,>({
       }}
     >
       {children}
-      <Flex width="100%" justify="flex-end" pt={2}>
+      <Flex width="100%" justifyContent="center" pt={2}>
         <Button
           isDisabled={isFirstStep}
           mr={4}
@@ -52,6 +52,7 @@ const VerifiedStep = <T,>({
           onClick={() => nextStep(currentInput)}
           isDisabled={!verified}
           mb={4}
+          variant="tandem-submit"
         >
           {isLastStep ? "Submit" : "Next"}
         </Button>
