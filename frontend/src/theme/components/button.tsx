@@ -42,6 +42,19 @@ const Button: ComponentStyleConfig = {
       fontWeight: "semiBold",
       _hover: { bg: styleColors.lightBlue },
     },
+    "tandem-nextPrev": {
+      variant: "ghost",
+      textColor: styleColors.darkBlue,
+      fontWeight: "semiBold",
+      _hover: { bg: styleColors.lightMint },
+      _isDisabled: { textColor: styleColors.deepBlue },
+    },
+    "tandem-submit": {
+      textColor: "white",
+      fontWeight: "Bold",
+      bgColor: styleColors.medGreen,
+      _hover: { bg: styleColors.green },
+    },
     signInWith: {
       bg: styleColors.paleBlue,
       textColor: "white",

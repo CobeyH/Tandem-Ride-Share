@@ -1,6 +1,7 @@
 import {
   Button,
   HStack,
+  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -11,6 +12,7 @@ import {
 import React, { useState } from "react";
 import { IconType } from "react-icons";
 import * as icons from "react-icons/gi";
+import { GrNext, GrPrevious } from "react-icons/gr";
 import { ImSearch } from "react-icons/im";
 import { styleColors } from "../../theme/colours";
 
@@ -25,7 +27,7 @@ const IconBrowser = (props: {
     key.toLowerCase().includes(searchInput.toLowerCase().replace(/\s+/g, ""))
   );
   return (
-    <VStack py={5} alignItems="center" spacing={3} w="100%">
+    <VStack alignItems="center" spacing={2} w="100%">
       <InputGroup>
         <Input
           onChange={(e) => {
@@ -38,14 +40,34 @@ const IconBrowser = (props: {
         </InputLeftElement>
       </InputGroup>
 
+      <HStack alignItems="center" pt={2} pb={2}>
+        <IconButton
+          variant="tandem-nextPrev"
+          icon={<GrPrevious />}
+          isRound
+          color={styleColors.deepBlue}
+          isDisabled={startIndx < numPerPage}
+          onClick={() => setStartIndx(startIndx - numPerPage)}
+          aria-label={""}
+        ></IconButton>
+        <IconButton
+          variant="tandem-nextPrev"
+          icon={<GrNext />}
+          isRound
+          color={styleColors.deepBlue}
+          isDisabled={startIndx + numPerPage + 1 > filteredIcons.length}
+          onClick={() => setStartIndx(startIndx + numPerPage)}
+          aria-label={""}
+        ></IconButton>
+      </HStack>
+
       <SimpleGrid columns={5} spacing={5} w="100%">
         {filteredIcons.slice(startIndx, startIndx + 25).map((key: string) => {
           return (
             <IconButton
               key={key}
               aria-label={key}
-              w="100%"
-              h="100%"
+              size="lg"
               bg={key == props.icon ? styleColors.mint : styleColors.lightBlue}
               as={(icons as { [k: string]: IconType })[key]}
               isRound
@@ -57,20 +79,6 @@ const IconBrowser = (props: {
           );
         })}
       </SimpleGrid>
-      <HStack alignItems="center" pt={5}>
-        <Button
-          isDisabled={startIndx < numPerPage}
-          onClick={() => setStartIndx(startIndx - numPerPage)}
-        >
-          Prev
-        </Button>
-        <Button
-          isDisabled={startIndx + numPerPage + 1 > filteredIcons.length}
-          onClick={() => setStartIndx(startIndx + numPerPage)}
-        >
-          Next
-        </Button>
-      </HStack>
     </VStack>
   );
 };
