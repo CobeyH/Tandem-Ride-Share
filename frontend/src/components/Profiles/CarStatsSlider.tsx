@@ -27,7 +27,7 @@ const CarStatsSlider = (props: {
         Number of Seats
       </Heading>
       <Text textAlign="left" variant="help-text">
-        Includes driver
+        Total number of seats including driver.
       </Text>
       <HStack>
         <Slider
