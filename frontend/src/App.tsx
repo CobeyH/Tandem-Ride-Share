@@ -5,7 +5,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { ChakraProvider, Container, Spinner } from "@chakra-ui/react";
+import { Center, ChakraProvider, Container, Spinner } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import { NavConstants } from "./NavigationConstants";
@@ -21,16 +21,16 @@ const LazyProductPage = React.lazy(() => import("./pages/ProductPage"));
 const LazyRegistration = React.lazy(() => import("./pages/Registration"));
 const LazyJoinGroup = React.lazy(() => import("./pages/JoinGroup"));
 
+export const LoadingPage = () => (
+  <Container>
+    <Center mt={"50%"}>
+      <Spinner size={"lg"} />
+    </Center>
+  </Container>
+);
+
 const LazyLoad = ({ children }: { children?: ReactNode | undefined }) => (
-  <React.Suspense
-    fallback={
-      <Container>
-        <Spinner size={"lg"} />
-      </Container>
-    }
-  >
-    {children}
-  </React.Suspense>
+  <React.Suspense fallback={LoadingPage()}>{children}</React.Suspense>
 );
 
 const LazyLoginPage = React.lazy(() => import("./pages/LoginPage"));

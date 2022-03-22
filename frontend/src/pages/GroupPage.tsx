@@ -2,13 +2,11 @@ import * as React from "react";
 import {
   Button,
   Heading,
-  Spinner,
   Text,
   VStack,
   Image,
   Box,
   Container,
-  Center,
   HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,6 +23,7 @@ import { auth } from "../firebase/firebase";
 import { groupMaxSize } from "../components/Promotional/PriceSelector";
 import GroupSettings from "../components/Groups/GroupSettings";
 import GroupDrawer from "../components/Groups/GroupDrawer";
+import { LoadingPage } from "../App";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -39,9 +38,7 @@ export default function GroupPage() {
   return (
     <>
       {loading ? (
-        <Center p={"35%"}>
-          <Spinner speed={"1.0s"} p={"10%"} />
-        </Center>
+        <LoadingPage />
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : group ? (
