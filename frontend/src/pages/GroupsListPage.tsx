@@ -7,6 +7,7 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
   Spinner,
   Text,
   VStack,
@@ -24,6 +25,7 @@ import { ref } from "firebase/storage";
 import { storage } from "../firebase/storage";
 import * as icons from "react-icons/gi";
 import { IconType } from "react-icons";
+import GroupList from "../components/Groups/GroupsList";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
@@ -39,41 +41,46 @@ export default function GroupsListPage() {
   return (
     <>
       <Header />
-      <Container>
-        <Center>
-          <Heading size={"md"} mt={5}>
-            My Groups
-          </Heading>
-        </Center>
-        <GroupSearch groups={groups ?? []} />
-        <Center>
-          <Flex direction="column">
-            <VStack align="stretch">
-              {groups
-                ?.filter(({ members }) => {
-                  if (
-                    user !== null &&
-                    user !== undefined &&
-                    typeof (user ?? null) === "object" // we love javascript.
-                  ) {
-                    return members[user.uid] ?? false;
-                  } else {
-                    console.log("null users should be kicked back to login.");
-                    return false;
-                  }
-                })
-                ?.map((group, i) => (
-                  <GroupListElement key={i} group={group} index={i} />
-                ))}
-            </VStack>
-          </Flex>
-        </Center>
-        {loadingGroups ? <Spinner /> : null}
-        {error ? <Text>{JSON.stringify(error)}</Text> : null}
-        <Center pt={4}>
-          <Button onClick={() => navigate("group/new")}>Create a Group</Button>
-        </Center>
-      </Container>
+      <HStack>
+        <GroupList />
+        <Container>
+          <Center>
+            <Heading size={"md"} mt={5}>
+              My Groups
+            </Heading>
+          </Center>
+          <GroupSearch groups={groups ?? []} />
+          <Center>
+            <Flex direction="column">
+              <VStack align="stretch">
+                {groups
+                  ?.filter(({ members }) => {
+                    if (
+                      user !== null &&
+                      user !== undefined &&
+                      typeof (user ?? null) === "object" // we love javascript.
+                    ) {
+                      return members[user.uid] ?? false;
+                    } else {
+                      console.log("null users should be kicked back to login.");
+                      return false;
+                    }
+                  })
+                  ?.map((group, i) => (
+                    <GroupListElement key={i} group={group} index={i} />
+                  ))}
+              </VStack>
+            </Flex>
+          </Center>
+          {loadingGroups ? <Spinner /> : null}
+          {error ? <Text>{JSON.stringify(error)}</Text> : null}
+          <Center pt={4}>
+            <Button onClick={() => navigate("group/new")}>
+              Create a Group
+            </Button>
+          </Center>
+        </Container>
+      </HStack>
     </>
   );
 }
