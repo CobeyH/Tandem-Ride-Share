@@ -59,7 +59,7 @@ const IconBrowser = (props: {
         ></IconButton>
       </HStack>
 
-      <SimpleGrid columns={5} spacing={5} w="100%">
+      <SimpleGrid columns={5} spacing={5} w="100%" h="100%">
         {filteredIcons.slice(startIndx, startIndx + 25).map((key: string) => {
           return (
             <IconButton
