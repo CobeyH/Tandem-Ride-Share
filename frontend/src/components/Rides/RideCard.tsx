@@ -68,9 +68,14 @@ export default function RideCard({
     center = findMidpoint(startLocation, ride.end as LatLng);
     endMarker = <Marker position={ride.end} icon={endIcon} />;
   }
-  const bgColor = isActive ? "white" : "#D3D3D3";
+
   return !ride?.isComplete == isActive ? (
-    <Box borderWidth="1px" borderRadius="lg" p="3" bg={bgColor}>
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      p="3"
+      bg={isActive ? "white" : "gray.100"}
+    >
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
@@ -85,7 +90,10 @@ export default function RideCard({
               <ChevronUpIcon w={6} h={6} />
             ) : (
               <Flex flexDirection="row" gap={2} justify="flex-end">
-                <DriverIcon isDriver={ride.driver !== undefined} />
+                <DriverIcon
+                  isDriver={ride.driver !== undefined}
+                  isActive={isActive}
+                />
                 <PassengerCounter rideId={rideId} />
                 <ChevronDownIcon w={6} h={6} />
               </Flex>
@@ -166,15 +174,24 @@ export default function RideCard({
 
 /** Microcomponents */
 
-function DriverIcon({ isDriver }: { isDriver: boolean }) {
-  return (
-    <Icon
-      as={AiFillCar}
-      w={6}
-      h={6}
-      color={isDriver ? "green.100" : "red.200"}
-    />
-  );
+function DriverIcon({
+  isDriver,
+  isActive,
+}: {
+  isDriver: boolean;
+  isActive: boolean;
+}) {
+  let color;
+  if (!isActive) {
+    color = "gray";
+  } else {
+    if (isDriver) {
+      color = "green.100";
+    } else {
+      color = "red.200";
+    }
+  }
+  return <Icon as={AiFillCar} w={6} h={6} color={color} />;
 }
 
 function PassengerCounter({ rideId }: { rideId: string }) {
@@ -248,7 +265,7 @@ function DriverBar({
   return (
     <>
       <RideCardBar>
-        <DriverIcon isDriver={driverId !== undefined} />
+        <DriverIcon isDriver={driverId !== undefined} isActive={isActive} />
         <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
         <Spacer />
         {amPassenger &&
