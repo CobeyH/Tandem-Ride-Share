@@ -59,13 +59,16 @@ const IconBrowser = (props: {
         ></IconButton>
       </HStack>
 
-      <SimpleGrid columns={5} spacing={5} w="100%" h="100%">
+      <SimpleGrid
+        columns={{ base: 4, md: 5 }}
+        spacing={{ base: 2, sm: 4, md: 6 }}
+      >
         {filteredIcons.slice(startIndx, startIndx + 25).map((key: string) => {
           return (
             <IconButton
               key={key}
               aria-label={key}
-              boxSize="100%"
+              boxSize={{ base: "30px", sm: "40px", md: "50px", lg: "60px" }}
               bg={key == props.icon ? styleColors.mint : styleColors.lightBlue}
               as={(icons as { [k: string]: IconType })[key]}
               isRound
