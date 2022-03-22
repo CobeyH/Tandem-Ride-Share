@@ -6,6 +6,7 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
+import { Box, HStack } from "@chakra-ui/react";
 
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
@@ -27,7 +28,10 @@ export default function WelcomePage() {
   return (
     <>
       <Header />
-      <GroupList updateGroups={setGroups} />
+      <HStack>
+        <GroupList updateGroups={setGroups} />
+        <Box>Welcome to Tandem!</Box>
+      </HStack>
     </>
   );
 }
