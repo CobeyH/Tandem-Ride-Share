@@ -1,15 +1,15 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
-import { useGroups } from "../firebase/database";
+import { Group } from "../firebase/database";
 
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
-  const [groups, loadingGroups] = useGroups();
+  const [groups, setGroups] = useState<Group[]>();
 
   const navigate = useNavigate();
 
@@ -22,12 +22,12 @@ export default function WelcomePage() {
     if (groups && groups.length > 0) {
       navigate(`/group/${groups[0].id}`);
     }
-  }, [groups, loadingGroups]);
+  }, [groups]);
 
   return (
     <>
       <Header />
-      <GroupList />
+      <GroupList updateGroups={setGroups} />
     </>
   );
 }

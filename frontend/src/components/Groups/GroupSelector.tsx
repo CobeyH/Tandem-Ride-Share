@@ -7,7 +7,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ref } from "@firebase/storage";
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDownloadURL } from "react-firebase-hooks/storage";
 import { IconType } from "react-icons";
@@ -21,36 +21,44 @@ import * as icons from "react-icons/gi";
 import { FaPlus } from "react-icons/fa";
 import GroupSearch from "./GroupSearch";
 
-const GroupList = () => {
+const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
   const [user, loading] = useAuthState(auth);
   const [groups] = useGroups();
+  const [userGroups, setUserGroups] = useState<Group[]>();
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (loading) return;
     if (!user) return navigate("/login");
   }, [user, loading]);
 
+  useEffect(() => {
+    setUserGroups(
+      groups?.filter(({ members }) => {
+        if (
+          user !== null &&
+          user !== undefined &&
+          typeof (user ?? null) === "object" // we love Typescript.
+        ) {
+          return members[user.uid] ?? false;
+        } else {
+          console.log("null users should be kicked back to login.");
+          return false;
+        }
+      })
+    );
+    if (props.updateGroups) {
+      props.updateGroups(userGroups ?? []);
+    }
+  }, [groups]);
+
   return (
     <Box h="100vh" bg={styleColors.lightPeri}>
       <VStack>
-        {groups
-          ?.filter(({ members }) => {
-            if (
-              user !== null &&
-              user !== undefined &&
-              typeof (user ?? null) === "object" // we love javascript.
-            ) {
-              return members[user.uid] ?? false;
-            } else {
-              console.log("null users should be kicked back to login.");
-              return false;
-            }
-          })
-          ?.map((group, i) => (
-            <GroupListElement key={i} group={group} index={i} />
-          ))}
+        {userGroups?.map((group, i) => (
+          <GroupListElement key={i} group={group} index={i} />
+        ))}
         <NewGroupButton />
         <GroupSearch groups={groups ?? []} />
       </VStack>
