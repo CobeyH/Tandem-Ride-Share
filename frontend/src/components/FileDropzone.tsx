@@ -1,4 +1,4 @@
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import { Flex, Text, useColorModeValue, useToast } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { styleColors } from "../theme/colours";
@@ -35,7 +35,11 @@ const FileDropzone = (props: {
       textAlign="center"
       m={2}
       p={5}
-      borderColor={fileAccepted ? styleColors.green : "black"}
+      borderColor={
+        fileAccepted
+          ? styleColors.green
+          : useColorModeValue("black", "white.200")
+      }
       borderWidth={2}
       borderRadius={5}
       {...getRootProps()}

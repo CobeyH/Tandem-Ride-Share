@@ -1,25 +1,26 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
-import { lightTheme, styleColors } from "../colours";
+import { darkTheme, lightTheme, styleColors } from "../colours";
+import { mode } from "@chakra-ui/theme-tools";
 
 export const Input: ComponentStyleConfig = {
   // 3. We can add a new visual variant
   variants: {
-    "tandem-base": {
+    "tandem-base": (props) => ({
       field: {
-        bg: lightTheme.form,
-        color: "black",
-        _placeholder: { color: "black" },
+        bg: mode(lightTheme.form, darkTheme.form)(props),
+        color: mode("black", "white")(props),
+        _placeholder: { color: mode("black", "white")(props) },
       },
-    },
-    "tandem-registration": {
+    }),
+    "tandem-registration": (props) => ({
       field: {
-        bg: lightTheme.form,
+        bg: mode(lightTheme.form, darkTheme.form)(props),
         color: styleColors.darkBlue,
         fontWeight: "medium",
         p: 6,
         _placeholder: { color: styleColors.darkBlue, fontWeight: "medium" },
       },
-    },
+    }),
     "tandem-login": {
       field: {
         bg: "white",

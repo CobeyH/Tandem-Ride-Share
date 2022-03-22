@@ -7,6 +7,11 @@ export const lightTheme = {
   settings: "#808080",
 };
 
+export const darkTheme = {
+  form: "#404047",
+  formText: "white",
+};
+
 export const styleColors = {
   lightBlue: "#E3EDF5",
   paleBlue: "#C0DAF0",

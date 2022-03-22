@@ -37,7 +37,11 @@ export const PricingCard = (props: PricingCardProps) => {
     <Card highlight={highlight} rounded={{ sm: "xl" }} {...rest}>
       <VStack spacing={6}>
         <Icon aria-hidden as={icon} fontSize="4xl" color={accentColor} />
-        <Heading size="md" fontWeight="extrabold" color={styleColors.deepBlue}>
+        <Heading
+          size="md"
+          fontWeight="extrabold"
+          color={useColorModeValue(styleColors.deepBlue, "white")}
+        >
           {name}
         </Heading>
       </VStack>
@@ -67,7 +71,7 @@ export const PricingCard = (props: PricingCardProps) => {
         mb="8"
         maxW="28ch"
         mx="auto"
-        color={styleColors.deepBlue}
+        color={useColorModeValue(styleColors.deepBlue, styleColors.lightBlue)}
       >
         {features.map((feature, index) => (
           <ListItem fontWeight="medium" key={index}>

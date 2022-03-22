@@ -83,9 +83,8 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           </HStack>
 
           <Heading textAlign={"center"}>{group.name}</Heading>
-          <Box bg="white" px={5} py={5} borderRadius={"4px"}>
-            <Text> Description: </Text>
-            <Text> {group.description}</Text>
+          <Box px={5} py={5} borderRadius={5} borderWidth={3}>
+            {group.description}
           </Box>
           <Text>Active Rides</Text>
           {group.rides
