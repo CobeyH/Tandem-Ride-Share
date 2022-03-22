@@ -29,7 +29,7 @@ import GroupList from "../components/Groups/GroupSelector";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);
-  const [groups, loadingGroups, error] = useGroups();
+  const [groups, loadingGroups] = useGroups();
 
   const navigate = useNavigate();
 
@@ -37,6 +37,12 @@ export default function GroupsListPage() {
     if (loading) return;
     if (!user) return navigate("/login");
   }, [user, loading]);
+
+  useEffect(() => {
+    if (groups && groups.length > 0) {
+      navigate(`/group/${groups[0].id}`);
+    }
+  }, [groups, loadingGroups]);
 
   return (
     <>
