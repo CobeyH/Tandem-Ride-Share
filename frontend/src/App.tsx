@@ -6,7 +6,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import LoginForm from "./pages/LoginPage";
-import GroupsListPage from "./pages/GroupsListPage";
+import WelcomePage from "./pages/WelcomePage";
 import { ChakraProvider } from "@chakra-ui/react";
 import Register from "./pages/Registration";
 import CreateGroup from "./pages/CreateGroup";
@@ -31,7 +31,7 @@ export const App = () => {
         {user ? (
           <Routes>
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/" element={<GroupsListPage />} />
+            <Route path="/" element={<WelcomePage />} />
             <Route path="/group/new" element={<CreateGroup />} />
             <Route path="/group/:groupId" element={<GroupPage />} />
             <Route path="/group/:groupId/join" element={<JoinGroup />} />
