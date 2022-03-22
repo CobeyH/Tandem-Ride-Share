@@ -1,7 +1,5 @@
 import {
-  Button,
   HStack,
-  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -67,7 +65,7 @@ const IconBrowser = (props: {
             <IconButton
               key={key}
               aria-label={key}
-              size="lg"
+              boxSize="100%"
               bg={key == props.icon ? styleColors.mint : styleColors.lightBlue}
               as={(icons as { [k: string]: IconType })[key]}
               isRound
