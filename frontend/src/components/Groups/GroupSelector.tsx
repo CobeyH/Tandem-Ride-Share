@@ -69,7 +69,7 @@ const NewGroupButton = () => {
     >
       <IconButton
         aria-label="New-Group"
-        onClick={() => navigate("group/new")}
+        onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
         isRound
       />

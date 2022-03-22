@@ -41,46 +41,7 @@ export default function GroupsListPage() {
   return (
     <>
       <Header />
-      <HStack>
-        <GroupList />
-        <Container>
-          <Center>
-            <Heading size={"md"} mt={5}>
-              My Groups
-            </Heading>
-          </Center>
-          <GroupSearch groups={groups ?? []} />
-          <Center>
-            <Flex direction="column">
-              <VStack align="stretch">
-                {groups
-                  ?.filter(({ members }) => {
-                    if (
-                      user !== null &&
-                      user !== undefined &&
-                      typeof (user ?? null) === "object" // we love javascript.
-                    ) {
-                      return members[user.uid] ?? false;
-                    } else {
-                      console.log("null users should be kicked back to login.");
-                      return false;
-                    }
-                  })
-                  ?.map((group, i) => (
-                    <GroupListElement key={i} group={group} index={i} />
-                  ))}
-              </VStack>
-            </Flex>
-          </Center>
-          {loadingGroups ? <Spinner /> : null}
-          {error ? <Text>{JSON.stringify(error)}</Text> : null}
-          <Center pt={4}>
-            <Button onClick={() => navigate("group/new")}>
-              Create a Group
-            </Button>
-          </Center>
-        </Container>
-      </HStack>
+      <GroupList />
     </>
   );
 }
