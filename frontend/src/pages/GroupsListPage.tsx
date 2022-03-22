@@ -25,7 +25,7 @@ import { ref } from "firebase/storage";
 import { storage } from "../firebase/storage";
 import * as icons from "react-icons/gi";
 import { IconType } from "react-icons";
-import GroupList from "../components/Groups/GroupsList";
+import GroupList from "../components/Groups/GroupSelector";
 
 export default function GroupsListPage() {
   const [user, loading] = useAuthState(auth);

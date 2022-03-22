@@ -19,11 +19,11 @@ import { NavConstants } from "../../NavigationConstants";
 import { groupLogos, styleColors } from "../../theme/colours";
 import * as icons from "react-icons/gi";
 import { FaPlus } from "react-icons/fa";
-import { ImSearch } from "react-icons/im";
+import GroupSearch from "./GroupSearch";
 
 const GroupList = () => {
   const [user, loading] = useAuthState(auth);
-  const [groups, loadingGroups, error] = useGroups();
+  const [groups] = useGroups();
 
   const navigate = useNavigate();
 
@@ -52,24 +52,9 @@ const GroupList = () => {
             <GroupListElement key={i} group={group} index={i} />
           ))}
         <NewGroupButton />
-        <SearchGroupButton />
+        <GroupSearch groups={groups ?? []} />
       </VStack>
     </Box>
-  );
-};
-
-const SearchGroupButton = () => {
-  return (
-    <Tooltip
-      label="Find A Public Group"
-      aria-label="find public group"
-      hasArrow
-      placement="right"
-    >
-      <IconButton aria-label="public-group-search" icon={<ImSearch />} isRound>
-        Create a Group
-      </IconButton>
-    </Tooltip>
   );
 };
 
@@ -87,9 +72,7 @@ const NewGroupButton = () => {
         onClick={() => navigate("group/new")}
         icon={<FaPlus />}
         isRound
-      >
-        Create a Group
-      </IconButton>
+      />
     </Tooltip>
   );
 };
