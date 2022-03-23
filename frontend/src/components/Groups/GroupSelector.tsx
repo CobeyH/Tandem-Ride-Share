@@ -4,6 +4,7 @@ import {
   Button,
   IconButton,
   Tooltip,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import { ref } from "@firebase/storage";
@@ -25,6 +26,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
   const [user, loading] = useAuthState(auth);
   const [groups] = useGroups();
   const [userGroups, setUserGroups] = useState<Group[]>();
+  const avatarStyle = useBreakpointValue({ base: true, md: false });
 
   const navigate = useNavigate();
 
@@ -62,7 +64,12 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
     <Box h="100vh" bg={styleColors.lightPeri}>
       <VStack mt={3}>
         {userGroups?.map((group, i) => (
-          <GroupListElement key={i} group={group} index={i} />
+          <GroupListElement
+            key={group.id}
+            group={group}
+            index={i}
+            type={avatarStyle}
+          />
         ))}
         <NewGroupButton />
         <GroupSearch groups={groups ?? []} />
@@ -91,7 +98,29 @@ const NewGroupButton = () => {
   );
 };
 
-const GroupListElement = (props: { group: Group; index: number }) => {
+const GroupListElement = (props: {
+  group: Group;
+  index: number;
+  type: boolean | undefined;
+}) => {
+  console.log(props.type);
+  return props.type ? (
+    <></>
+  ) : (
+    <>
+      <Tooltip
+        label={props.group.name}
+        aria-label={props.group.name}
+        hasArrow
+        placement="right"
+      >
+        <GroupAvatar group={props.group} index={props.index} />
+      </Tooltip>
+    </>
+  );
+};
+
+const GroupAvatar = (props: { group: Group; index: number }) => {
   const navigate = useNavigate();
   const photoName = props.group.profilePic;
   const profileRef =
@@ -101,40 +130,31 @@ const GroupListElement = (props: { group: Group; index: number }) => {
   const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
 
   return (
-    <>
-      <Tooltip
-        label={props.group.name}
-        aria-label={props.group.name}
-        hasArrow
-        placement="right"
-      >
-        <Button
-          mt={4}
-          onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
-          variant="ghost"
-        >
-          {profilePicLoading ? null : profilePic ? (
-            <Avatar
-              bg={groupLogos[props.index % groupLogos.length]}
-              src={profilePic}
-              size="sm"
-            />
-          ) : photoName ? (
-            <Avatar
-              bg={groupLogos[props.index % groupLogos.length]}
-              as={(icons as { [k: string]: IconType })[photoName]}
-              size="sm"
-            />
-          ) : (
-            <Avatar
-              bg={groupLogos[props.index % groupLogos.length]}
-              name={photoName ? undefined : props.group.name}
-              size="sm"
-            />
-          )}
-        </Button>
-      </Tooltip>
-    </>
+    <Button
+      mt={4}
+      onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
+      variant="ghost"
+    >
+      {profilePicLoading ? null : profilePic ? (
+        <Avatar
+          bg={groupLogos[props.index % groupLogos.length]}
+          src={profilePic}
+          size="sm"
+        />
+      ) : photoName ? (
+        <Avatar
+          bg={groupLogos[props.index % groupLogos.length]}
+          as={(icons as { [k: string]: IconType })[photoName]}
+          size="sm"
+        />
+      ) : (
+        <Avatar
+          bg={groupLogos[props.index % groupLogos.length]}
+          name={photoName ? undefined : props.group.name}
+          size="sm"
+        />
+      )}
+    </Button>
   );
 };
 
