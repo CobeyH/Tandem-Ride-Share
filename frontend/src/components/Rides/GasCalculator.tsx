@@ -90,7 +90,7 @@ const GasCalculator = (props: {
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={onClose}>
+            <Button mr={3} onClick={onClose} variant="ghost">
               Close
             </Button>
           </ModalFooter>
