@@ -19,7 +19,17 @@ import { NavConstants } from "../../NavigationConstants";
 import { styleColors } from "../../theme/colours";
 import { useNavigate } from "react-router-dom";
 
-const ProductHeader = () => {
+const ProductHeader = ({
+  scrollToProducts,
+  scrollToTestimonials,
+  scrollToAboutUs,
+  scrollToContactUs,
+}: {
+  scrollToProducts: () => void;
+  scrollToTestimonials: () => void;
+  scrollToAboutUs: () => void;
+  scrollToContactUs: () => void;
+}) => {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
 
@@ -47,10 +57,10 @@ const ProductHeader = () => {
               <ChevronDownIcon />
             </MenuButton>
             <MenuList>
-              <MenuItem>Friend Group</MenuItem>
-              <MenuItem>Small Organization</MenuItem>
-              <MenuItem>Large Organization</MenuItem>
-              <MenuItem>Enterprise</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Small Organization</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Large Organization</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
             </MenuList>
           </Menu>
 
@@ -60,23 +70,10 @@ const ProductHeader = () => {
               <ChevronDownIcon />
             </MenuButton>
             <MenuList>
-              <MenuItem>Testimonials</MenuItem>
-              <MenuItem>Pricing</MenuItem>
-              <MenuItem>About Us</MenuItem>
-              <MenuItem>Contact Us</MenuItem>
-            </MenuList>
-          </Menu>
-
-          <Menu>
-            <MenuButton color="white">
-              Help
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>FAQ</MenuItem>
-              <MenuItem>Privacy Policy</MenuItem>
-              <MenuItem>Legal</MenuItem>
-              <MenuItem>Terms of Service</MenuItem>
+              <MenuItem onClick={scrollToTestimonials}>Testimonials</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
+              <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
+              <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
             </MenuList>
           </Menu>
         </HStack>

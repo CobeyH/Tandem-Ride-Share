@@ -25,15 +25,10 @@ export const Testimonal = () => (
           )}
         />
         <Text fontSize={{ base: "l", md: "xl" }} fontWeight="medium" mt="6">
-          &ldquo;Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-          expedita voluptas culpa sapiente alias molestiae. Numquam corrupti in
-          laborum sed rerum et corporis.&rdquo;
+          &ldquo;This app reminded me how much money everyone from high school
+          to now owes me. 10/10&rdquo;
         </Text>
-        <Quotee
-          name="Marrie Jones"
-          jobTitle="Marketing Ads Strategist"
-          mt="8"
-        />
+        <Quotee name="Oscar" jobTitle="Satisfied User" />
       </Flex>
     </Box>
   </Box>
