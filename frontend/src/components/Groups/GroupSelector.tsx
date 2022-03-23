@@ -2,10 +2,15 @@ import {
   Avatar,
   Box,
   Button,
+  HStack,
   IconButton,
   Tooltip,
   useBreakpointValue,
   VStack,
+  Text,
+  Drawer,
+  DrawerContent,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { ref } from "@firebase/storage";
 import React, { useState, useEffect } from "react";
@@ -26,7 +31,8 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
   const [user, loading] = useAuthState(auth);
   const [groups] = useGroups();
   const [userGroups, setUserGroups] = useState<Group[]>();
-  const avatarStyle = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const navigate = useNavigate();
 
@@ -62,19 +68,57 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
 
   return (
     <Box h="100vh" bg={styleColors.lightPeri}>
-      <VStack mt={3}>
-        {userGroups?.map((group, i) => (
-          <GroupListElement
-            key={group.id}
-            group={group}
-            index={i}
-            type={avatarStyle}
-          />
-        ))}
-        <NewGroupButton />
-        <GroupSearch groups={groups ?? []} />
-      </VStack>
+      {isMobile ? (
+        <Drawer
+          autoFocus={false}
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          returnFocusOnClose={false}
+          onOverlayClick={onClose}
+          size="full"
+        >
+          <DrawerContent>
+            <ListContents
+              userGroups={userGroups ?? []}
+              isMobile={isMobile}
+              groups={groups ?? []}
+            />
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <ListContents
+          userGroups={userGroups ?? []}
+          isMobile={isMobile}
+          groups={groups ?? []}
+        />
+      )}
     </Box>
+  );
+};
+
+const ListContents = ({
+  userGroups,
+  isMobile,
+  groups,
+}: {
+  userGroups: Group[];
+  groups: Group[];
+  isMobile: boolean | undefined;
+}) => {
+  return (
+    <VStack mt={3}>
+      {userGroups?.map((group, i) => (
+        <GroupListElement
+          key={group.id}
+          group={group}
+          index={i}
+          isMobile={isMobile}
+        />
+      ))}
+      <NewGroupButton />
+      <GroupSearch groups={groups} />
+    </VStack>
   );
 };
 
@@ -101,22 +145,24 @@ const NewGroupButton = () => {
 const GroupListElement = (props: {
   group: Group;
   index: number;
-  type: boolean | undefined;
+  isMobile: boolean | undefined;
 }) => {
-  console.log(props.type);
-  return props.type ? (
-    <></>
-  ) : (
+  return props.isMobile ? (
     <>
-      <Tooltip
-        label={props.group.name}
-        aria-label={props.group.name}
-        hasArrow
-        placement="right"
-      >
+      <HStack>
         <GroupAvatar group={props.group} index={props.index} />
-      </Tooltip>
+        <Text>{props.group.name}</Text>
+      </HStack>
     </>
+  ) : (
+    <Tooltip
+      label={props.group.name}
+      aria-label={props.group.name}
+      hasArrow
+      placement="right"
+    >
+      <GroupAvatar group={props.group} index={props.index} />
+    </Tooltip>
   );
 };
 

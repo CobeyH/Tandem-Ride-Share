@@ -10,8 +10,6 @@ import {
   Box,
   Button,
   Center,
-  Drawer,
-  DrawerContent,
   Flex,
   FlexProps,
   Heading,
@@ -27,7 +25,6 @@ import { FiMenu } from "react-icons/fi";
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
   const [groups, setGroups] = useState<Group[]>();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const navigate = useNavigate();
 
@@ -45,23 +42,8 @@ export default function WelcomePage() {
   return (
     <>
       <Header />
-
-      {/* <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} /> */}
       <HStack alignItems="flex-start">
-        <GroupList />
-        {/*  <Drawer
-          autoFocus={false}
-          isOpen={isOpen}
-          placement="left"
-          onClose={onClose}
-          returnFocusOnClose={false}
-          onOverlayClick={onClose}
-          size={"xs"}
-        >
-          <DrawerContent>
-            <GroupList updateGroups={setGroups} />
-          </DrawerContent>
-        </Drawer> */}
+        <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
           <Center>
             <VStack spacing="5%">
