@@ -33,25 +33,30 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
     if (!user) return navigate("/login");
   }, [user, loading]);
 
+  useEffect(
+    () =>
+      setUserGroups(
+        groups?.filter(({ members }) => {
+          if (
+            user !== null &&
+            user !== undefined &&
+            typeof (user ?? null) === "object" // we love Typescript.
+          ) {
+            return members[user.uid] ?? false;
+          } else {
+            console.log("null users should be kicked back to login.");
+            return false;
+          }
+        })
+      ),
+    [groups]
+  );
+
   useEffect(() => {
-    setUserGroups(
-      groups?.filter(({ members }) => {
-        if (
-          user !== null &&
-          user !== undefined &&
-          typeof (user ?? null) === "object" // we love Typescript.
-        ) {
-          return members[user.uid] ?? false;
-        } else {
-          console.log("null users should be kicked back to login.");
-          return false;
-        }
-      })
-    );
     if (props.updateGroups) {
       props.updateGroups(userGroups ?? []);
     }
-  }, [groups]);
+  }, [userGroups, props.updateGroups]);
 
   return (
     <Box h="100vh" bg={styleColors.lightPeri}>
