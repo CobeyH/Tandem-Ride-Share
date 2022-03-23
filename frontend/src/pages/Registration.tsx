@@ -105,6 +105,7 @@ function Register() {
         <PasswordField
           setPassword={setPassword}
           passVariant="tandem-registration"
+          submitHandler={register}
         />
         <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
           <Button
