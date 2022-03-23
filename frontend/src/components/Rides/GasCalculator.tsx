@@ -50,10 +50,10 @@ const GasCalculator = (props: {
         color="black"
       >
         <IconButton
-          bg="white"
           aria-label="Gas Calculation"
           icon={<QuestionOutlineIcon />}
           onClick={onOpen}
+          variant="ghost"
         />
       </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -90,7 +90,7 @@ const GasCalculator = (props: {
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={onClose} variant="ghost">
+            <Button mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>
