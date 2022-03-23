@@ -112,7 +112,7 @@ function AboutUs() {
             >
               github
             </Link>{" "}
-            or by sending emails to{" "}
+            or by sending an email to{" "}
             <Link
               onClick={() => {
                 navigator.clipboard
