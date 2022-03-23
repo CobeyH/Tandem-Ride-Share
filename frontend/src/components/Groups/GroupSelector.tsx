@@ -60,7 +60,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
 
   return (
     <Box h="100vh" bg={styleColors.lightPeri}>
-      <VStack>
+      <VStack mt={3}>
         {userGroups?.map((group, i) => (
           <GroupListElement key={i} group={group} index={i} />
         ))}
@@ -85,6 +85,7 @@ const NewGroupButton = () => {
         onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
         isRound
+        mx={3}
       />
     </Tooltip>
   );
