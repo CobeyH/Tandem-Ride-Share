@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  HStack,
   IconButton,
   Tooltip,
   useBreakpointValue,
@@ -11,6 +10,7 @@ import {
   Drawer,
   DrawerContent,
   useDisclosure,
+  Spacer,
 } from "@chakra-ui/react";
 import { ref } from "@firebase/storage";
 import React, { useState, useEffect } from "react";
@@ -67,11 +67,17 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
 
   return isMobile ? (
     <>
-      <IconButton
-        aria-label="toggle-group-list"
-        icon={isOpen ? <FaChevronLeft /> : <FaChevronRight />}
-        onClick={() => (isOpen ? onClose() : onOpen())}
-      ></IconButton>
+      {!isOpen ? (
+        <IconButton
+          position="fixed"
+          bottom={0}
+          aria-label="toggle-group-list"
+          m={3}
+          mt={5}
+          icon={<FaChevronRight />}
+          onClick={() => (isOpen ? onClose() : onOpen())}
+        />
+      ) : null}
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
@@ -79,19 +85,27 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size="full"
+        size="xs"
       >
-        <DrawerContent>
+        <DrawerContent bg={styleColors.periwinkle}>
           <ListContents
             userGroups={userGroups ?? []}
             isMobile={isMobile}
             groups={groups ?? []}
           />
+          <Spacer />
+          {isOpen ? (
+            <IconButton
+              aria-label="toggle-group-list"
+              icon={<FaChevronLeft />}
+              onClick={() => (isOpen ? onClose() : onOpen())}
+            />
+          ) : null}
         </DrawerContent>
       </Drawer>
     </>
   ) : (
-    <Box h="100vh" bg={styleColors.lightPeri}>
+    <Box h="100vh" bg={styleColors.periwinkle}>
       <ListContents
         userGroups={userGroups ?? []}
         isMobile={isMobile}
@@ -111,7 +125,7 @@ const ListContents = ({
   isMobile: boolean | undefined;
 }) => {
   return (
-    <VStack mt={3}>
+    <VStack mt={5} mx={5} alignItems={"stretch"}>
       {userGroups?.map((group, i) => (
         <GroupListElement
           key={group.id}
@@ -140,7 +154,6 @@ const NewGroupButton = () => {
         onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
         isRound
-        mx={3}
       />
     </Tooltip>
   );
@@ -151,12 +164,15 @@ const GroupListElement = (props: {
   index: number;
   isMobile: boolean | undefined;
 }) => {
+  const navigate = useNavigate();
   return props.isMobile ? (
     <>
-      <HStack>
+      <Button
+        onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
+      >
         <GroupAvatar group={props.group} index={props.index} />
-        <Text>{props.group.name}</Text>
-      </HStack>
+        <Text ml={3}>{props.group.name}</Text>
+      </Button>
     </>
   ) : (
     <Tooltip
@@ -165,13 +181,18 @@ const GroupListElement = (props: {
       hasArrow
       placement="right"
     >
-      <GroupAvatar group={props.group} index={props.index} />
+      <Button
+        mt={4}
+        onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
+        variant="ghost"
+      >
+        <GroupAvatar group={props.group} index={props.index} />
+      </Button>
     </Tooltip>
   );
 };
 
 const GroupAvatar = (props: { group: Group; index: number }) => {
-  const navigate = useNavigate();
   const photoName = props.group.profilePic;
   const profileRef =
     photoName && photoName.startsWith("profilePics/")
@@ -179,32 +200,24 @@ const GroupAvatar = (props: { group: Group; index: number }) => {
       : undefined;
   const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
 
-  return (
-    <Button
-      mt={4}
-      onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
-      variant="ghost"
-    >
-      {profilePicLoading ? null : profilePic ? (
-        <Avatar
-          bg={groupLogos[props.index % groupLogos.length]}
-          src={profilePic}
-          size="sm"
-        />
-      ) : photoName ? (
-        <Avatar
-          bg={groupLogos[props.index % groupLogos.length]}
-          as={(icons as { [k: string]: IconType })[photoName]}
-          size="sm"
-        />
-      ) : (
-        <Avatar
-          bg={groupLogos[props.index % groupLogos.length]}
-          name={photoName ? undefined : props.group.name}
-          size="sm"
-        />
-      )}
-    </Button>
+  return profilePicLoading ? null : profilePic ? (
+    <Avatar
+      bg={groupLogos[props.index % groupLogos.length]}
+      src={profilePic}
+      size="sm"
+    />
+  ) : photoName ? (
+    <Avatar
+      bg={groupLogos[props.index % groupLogos.length]}
+      as={(icons as { [k: string]: IconType })[photoName]}
+      size="sm"
+    />
+  ) : (
+    <Avatar
+      bg={groupLogos[props.index % groupLogos.length]}
+      name={photoName ? undefined : props.group.name}
+      size="sm"
+    />
   );
 };
 
