@@ -6,7 +6,21 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import { Box, Button, Center, Heading, HStack, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  VStack,
+} from "@chakra-ui/react";
 
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
@@ -36,7 +50,20 @@ export default function WelcomePage() {
               <Heading mt={"50%"} fontSize={{ base: "2xl", md: "4xl" }}>
                 Welcome to Tandem!
               </Heading>
-              <Button>Get Started</Button>
+              <Popover>
+                <PopoverTrigger>
+                  <Button>Get Started</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>Welcome!</PopoverHeader>
+                  <PopoverBody>
+                    The tutorial is still under development. For now please
+                    create a group or find a group in the bar on the left.
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
             </VStack>
           </Center>
         </Box>
