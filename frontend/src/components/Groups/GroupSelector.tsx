@@ -24,7 +24,7 @@ import { storage } from "../../firebase/storage";
 import { NavConstants } from "../../NavigationConstants";
 import { groupLogos, styleColors } from "../../theme/colours";
 import * as icons from "react-icons/gi";
-import { FaPlus } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import GroupSearch from "./GroupSearch";
 
 const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
@@ -33,7 +33,6 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
   const [userGroups, setUserGroups] = useState<Group[]>();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,33 +65,38 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
     }
   }, [userGroups, props.updateGroups]);
 
-  return (
+  return isMobile ? (
+    <>
+      <IconButton
+        aria-label="toggle-group-list"
+        icon={isOpen ? <FaChevronLeft /> : <FaChevronRight />}
+        onClick={() => (isOpen ? onClose() : onOpen())}
+      ></IconButton>
+      <Drawer
+        autoFocus={false}
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        returnFocusOnClose={false}
+        onOverlayClick={onClose}
+        size="full"
+      >
+        <DrawerContent>
+          <ListContents
+            userGroups={userGroups ?? []}
+            isMobile={isMobile}
+            groups={groups ?? []}
+          />
+        </DrawerContent>
+      </Drawer>
+    </>
+  ) : (
     <Box h="100vh" bg={styleColors.lightPeri}>
-      {isMobile ? (
-        <Drawer
-          autoFocus={false}
-          isOpen={isOpen}
-          placement="left"
-          onClose={onClose}
-          returnFocusOnClose={false}
-          onOverlayClick={onClose}
-          size="full"
-        >
-          <DrawerContent>
-            <ListContents
-              userGroups={userGroups ?? []}
-              isMobile={isMobile}
-              groups={groups ?? []}
-            />
-          </DrawerContent>
-        </Drawer>
-      ) : (
-        <ListContents
-          userGroups={userGroups ?? []}
-          isMobile={isMobile}
-          groups={groups ?? []}
-        />
-      )}
+      <ListContents
+        userGroups={userGroups ?? []}
+        isMobile={isMobile}
+        groups={groups ?? []}
+      />
     </Box>
   );
 };
