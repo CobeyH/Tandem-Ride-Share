@@ -62,7 +62,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <Box flexGrow={1}>
-      <Header pages={[{ label: "My Groups", url: "/" }]} />
+      <Header />
       {bannerLoading || error ? (
         <Box bg="blue" h="10%" w="100%" maxHeight="200px" minHeight="100" />
       ) : (
