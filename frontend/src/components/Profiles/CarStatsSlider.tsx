@@ -7,6 +7,7 @@ import {
   Tooltip,
   Box,
   HStack,
+  Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsQuestionCircleFill } from "react-icons/all";
@@ -22,9 +23,12 @@ const CarStatsSlider = (props: {
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
   return (
     <>
-      <Heading as="h2" size="l" mt={2}>
+      <Heading as="h2" size="l" mt={2} textAlign="left">
         Number of Seats
       </Heading>
+      <Text textAlign="left" variant="help-text">
+        Total number of seats including driver.
+      </Text>
       <HStack>
         <Slider
           id="slider"

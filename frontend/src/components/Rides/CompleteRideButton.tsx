@@ -19,7 +19,7 @@ const CompleteRideButton = ({ rideId }: { rideId: string }) => {
   return (
     <>
       <Button width="full" onClick={onOpen}>
-        Complete Ride
+        Ride Completed
       </Button>
       <AlertDialog
         isOpen={isOpen}
@@ -33,7 +33,8 @@ const CompleteRideButton = ({ rideId }: { rideId: string }) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to complete this ride?
+              Are you sure you want to complete this ride? <br /> You cannot
+              undo this action.
             </AlertDialogBody>
 
             <AlertDialogFooter>

@@ -70,7 +70,12 @@ export default function RideCard({
   }
 
   return !ride?.isComplete == isActive ? (
-    <Box borderWidth="1px" borderRadius="lg" p="3">
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      p="3"
+      bg={isActive ? "white" : "gray.100"}
+    >
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
@@ -85,7 +90,10 @@ export default function RideCard({
               <ChevronUpIcon w={6} h={6} />
             ) : (
               <Flex flexDirection="row" gap={2} justify="flex-end">
-                <DriverIcon isDriver={ride.driver !== undefined} />
+                <DriverIcon
+                  isDriver={ride.driver !== undefined}
+                  isActive={isActive}
+                />
                 <PassengerCounter rideId={rideId} />
                 <ChevronDownIcon w={6} h={6} />
               </Flex>
@@ -122,6 +130,7 @@ export default function RideCard({
               rideId={rideId}
               driverId={ride.driver}
               amPassenger={Boolean(userPassenger)}
+              isActive={isActive}
             />
             <PassengerBar rideId={rideId} />
             {ride.startDate ? (
@@ -129,7 +138,7 @@ export default function RideCard({
             ) : null}
             {
               /** Pickup Bar */
-              userPassenger && map ? (
+              userPassenger && map && isActive ? (
                 <PickupBar rideId={rideId} map={map} />
               ) : null
             }
@@ -148,7 +157,7 @@ export default function RideCard({
             />
             {
               /** Join / Complete Bar */
-              user ? (
+              user && isActive ? (
                 <StatusButtonBar
                   rideId={rideId}
                   userId={user.uid}
@@ -165,15 +174,24 @@ export default function RideCard({
 
 /** Microcomponents */
 
-function DriverIcon({ isDriver }: { isDriver: boolean }) {
-  return (
-    <Icon
-      as={AiFillCar}
-      w={6}
-      h={6}
-      color={isDriver ? "green.100" : "red.200"}
-    />
-  );
+function DriverIcon({
+  isDriver,
+  isActive,
+}: {
+  isDriver: boolean;
+  isActive: boolean;
+}) {
+  let color;
+  if (!isActive) {
+    color = "gray";
+  } else {
+    if (isDriver) {
+      color = "green.100";
+    } else {
+      color = "red.200";
+    }
+  }
+  return <Icon as={AiFillCar} w={6} h={6} color={color} />;
 }
 
 function PassengerCounter({ rideId }: { rideId: string }) {
@@ -209,10 +227,12 @@ function DriverBar({
   rideId,
   driverId,
   amPassenger,
+  isActive,
 }: {
   rideId: string;
   driverId?: string;
   amPassenger: boolean;
+  isActive: boolean;
 }) {
   const [authUser] = useAuthState(auth);
   const [user] = useUser(authUser?.uid);
@@ -245,10 +265,12 @@ function DriverBar({
   return (
     <>
       <RideCardBar>
-        <DriverIcon isDriver={driverId !== undefined} />
+        <DriverIcon isDriver={driverId !== undefined} isActive={isActive} />
         <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
         <Spacer />
-        {amPassenger && (driverUser?.uid === user?.uid || !driverUser) ? (
+        {amPassenger &&
+        (driverUser?.uid === user?.uid || !driverUser) &&
+        isActive ? (
           <Switch
             id="am-driver"
             isChecked={driverChecked}
@@ -256,7 +278,7 @@ function DriverBar({
           />
         ) : null}
       </RideCardBar>
-      {authUser?.uid === driverId ? (
+      {authUser?.uid === driverId && isActive ? (
         <RideCardBar>
           <Text>Vehicle: </Text>
           <ChooseCar

@@ -2,13 +2,11 @@ import * as React from "react";
 import {
   Button,
   Heading,
-  Spinner,
   Text,
   VStack,
   Image,
   Box,
   Container,
-  Center,
   HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,6 +24,7 @@ import { groupMaxSize } from "../components/Promotional/PriceSelector";
 import GroupSettings from "../components/Groups/GroupSettings";
 import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
+import { LoadingPage } from "../App";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -41,9 +40,7 @@ export default function GroupPage() {
     <HStack alignItems="flex-start" spacing={0}>
       <GroupSelector />
       {loading ? (
-        <Center p={"35%"}>
-          <Spinner speed={"1.0s"} p={"10%"} />
-        </Center>
+        <LoadingPage />
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : group ? (
@@ -85,9 +82,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           </HStack>
 
           <Heading textAlign={"center"}>{group.name}</Heading>
-          <Box px={5} py={5} borderRadius={5} borderWidth={3}>
-            {group.description}
-          </Box>
+          {group.description && group.description.length > 0 ? (
+            <Box px={5} py={5} borderRadius={5} borderWidth={3}>
+              {group.description}
+            </Box>
+          ) : null}
           <Text>Active Rides</Text>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
