@@ -89,18 +89,6 @@ const CreateRide = () => {
     initialStep: 0,
   });
 
-  function onDragStart(position: LatLng) {
-    setStartPosition(position);
-    map?.invalidateSize();
-    map?.fitBounds(latLngBounds([startPosition, endPosition]));
-  }
-
-  function onDragEnd(position: LatLng) {
-    setEndPosition(position);
-    map?.invalidateSize();
-    map?.fitBounds(latLngBounds([startPosition, endPosition]));
-  }
-
   function getCurrentTime() {
     const date = new Date();
     const timeComponents = [date.getHours(), date.getMinutes()];
@@ -127,7 +115,7 @@ const CreateRide = () => {
       map.invalidateSize();
       map.fitBounds(latLngBounds([endPosition, startPosition]).pad(0.1));
     }
-  }, [map]);
+  }, [map, startPosition, endPosition]);
 
   const submitRide = () => {
     if (groupId && user) {
@@ -296,12 +284,16 @@ const CreateRide = () => {
             <MapView style={{ height: "50vh" }} setMap={setMap}>
               <DraggableMarker
                 position={startPosition}
-                onDragEnd={onDragStart}
+                onDragEnd={(p: LatLng) => {
+                  setEndPosition(p);
+                }}
                 icon={startIcon}
               />
               <DraggableMarker
                 position={endPosition}
-                onDragEnd={onDragEnd}
+                onDragEnd={(p: LatLng) => {
+                  setStartPosition(p);
+                }}
                 icon={endIcon}
               />
             </MapView>
