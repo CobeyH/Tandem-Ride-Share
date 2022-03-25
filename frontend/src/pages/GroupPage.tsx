@@ -8,7 +8,6 @@ import {
   Box,
   Container,
   HStack,
-  IconButton,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Group, useGroup } from "../firebase/database";
@@ -27,7 +26,6 @@ import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
 import { styleColors } from "../theme/colours";
-import { GiBallerinaShoes } from "react-icons/gi";
 import GroupAvatar from "../components/Groups/GroupAvatar";
 
 export default function GroupPage() {
