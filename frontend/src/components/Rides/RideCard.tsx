@@ -453,7 +453,7 @@ function RideTimesBar({
   startTime: string;
   duration?: number;
 }) {
-  // make time strings pretty
+  // convert datetime string to Date object
   const startDate = new Date(startTime);
 
   // calculate arrival time
