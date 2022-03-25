@@ -5,8 +5,6 @@ import {
   HStack,
   IconButton,
   Input,
-  InputGroup,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,8 +17,8 @@ import {
   Text,
   Box,
   Center,
+  Tooltip,
 } from "@chakra-ui/react";
-import { GiMagnifyingGlass } from "react-icons/gi";
 import GroupJoinButton from "./GroupJoinButton";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
@@ -28,6 +26,7 @@ import { useState } from "react";
 import { Group } from "../../firebase/database";
 import GroupCapacity from "./GroupCapacity";
 import { useNavigate } from "react-router-dom";
+import { ImSearch } from "react-icons/im";
 
 const GroupSearch = (props: { groups: Group[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,23 +47,20 @@ const GroupSearch = (props: { groups: Group[] }) => {
 
   return (
     <>
-      <InputGroup mt={4} size={"sm"}>
-        <Input
-          textAlign={"center"}
-          onInput={(e) => setSearch(e.currentTarget.value)}
-          value={search}
-          placeholder="Find Public Groups"
-          borderRadius={5}
+      <Tooltip
+        label="Find A Public Group"
+        aria-label="find public group"
+        hasArrow
+        placement="right"
+      >
+        <IconButton
+          aria-label="public-group-search"
+          icon={<ImSearch />}
+          isRound
+          onClick={onOpen}
         />
-        <InputRightElement color={"black"}>
-          <IconButton
-            size="sm"
-            aria-label="Search Groups"
-            icon={<GiMagnifyingGlass />}
-            onClick={onOpen}
-          />
-        </InputRightElement>
-      </InputGroup>
+      </Tooltip>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -75,6 +71,13 @@ const GroupSearch = (props: { groups: Group[] }) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <Input
+              textAlign={"center"}
+              onInput={(e) => setSearch(e.currentTarget.value)}
+              value={search}
+              placeholder="Find Public Groups"
+              borderRadius={5}
+            />
             <VStack>
               {publicGroups.length === 0 ? (
                 <Box>

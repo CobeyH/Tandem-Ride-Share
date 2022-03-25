@@ -67,7 +67,11 @@ export const signInWithProvider = async (
       }
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof FirebaseError) {
+      handleAuthError(err);
+    } else {
+      console.log(err);
+    }
   }
 };
 
@@ -135,6 +139,11 @@ const handleAuthError = (error: FirebaseError) => {
     case "auth/missing-email":
       report.title = "Missing Email";
       report.description = "Please provide a valid email address.";
+      break;
+    case "auth/account-exists-with-different-credential":
+      report.title = "Account Already Exists";
+      report.description =
+        "It's possible you already created an account with a different login service.";
       break;
     default:
       report.title = error.code;

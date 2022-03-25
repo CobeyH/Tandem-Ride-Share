@@ -13,7 +13,7 @@ import { ReactNode, useEffect } from "react";
 import extendedTheme from "./theme/style";
 import Fonts from "./theme/components/font";
 
-const LazyGroupsListPage = React.lazy(() => import("./pages/GroupsListPage"));
+const LazyGroupsListPage = React.lazy(() => import("./pages/WelcomePage"));
 const LazyCreateGroup = React.lazy(() => import("./pages/CreateGroup"));
 const LazyGroupPage = React.lazy(() => import("./pages/GroupPage"));
 const LazyCreateRide = React.lazy(() => import("./pages/CreateRide"));
