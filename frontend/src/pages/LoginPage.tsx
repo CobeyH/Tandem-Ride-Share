@@ -94,7 +94,11 @@ export default function Login({ state }: { state?: LocationGotoState }) {
               variant="tandem-login"
             />
           </FormControl>
-          <PasswordField setPassword={setPassword} passVariant="tandem-login" />
+          <PasswordField
+            setPassword={setPassword}
+            passVariant="tandem-login"
+            submitHandler={handleEmailLogin}
+          />
 
           <Text align="right" textColor="white" width="85%" pb={5}>
             Forgot Password?{" "}

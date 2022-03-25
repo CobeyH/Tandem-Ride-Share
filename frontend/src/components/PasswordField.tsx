@@ -13,6 +13,7 @@ import { styleColors } from "../theme/colours";
 const PasswordField = (props: {
   setPassword: (newPass: string) => void;
   passVariant: string;
+  submitHandler: () => void;
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
@@ -23,6 +24,11 @@ const PasswordField = (props: {
           placeholder="Password"
           onChange={(event) => props.setPassword(event.currentTarget.value)}
           variant={props.passVariant}
+          onKeyDown={(ev) => {
+            if (ev.key == "Enter") {
+              props.submitHandler();
+            }
+          }}
         />
         <InputRightElement h="100%">
           <IconButton

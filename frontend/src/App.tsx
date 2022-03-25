@@ -1,25 +1,39 @@
-import * as React from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   useNavigate,
 } from "react-router-dom";
-import LoginForm from "./pages/LoginPage";
-import GroupsListPage from "./pages/GroupsListPage";
-import { ChakraProvider } from "@chakra-ui/react";
-import Register from "./pages/Registration";
-import CreateGroup from "./pages/CreateGroup";
-import GroupPage from "./pages/GroupPage";
-import CreateRide from "./pages/CreateRide";
-import JoinGroup from "./pages/JoinGroup";
+import { Center, ChakraProvider, Container, Spinner } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import { NavConstants } from "./NavigationConstants";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import extendedTheme from "./theme/style";
 import Fonts from "./theme/components/font";
-import ProductPage from "./pages/ProductPage";
+
+const LazyGroupsListPage = React.lazy(() => import("./pages/WelcomePage"));
+const LazyCreateGroup = React.lazy(() => import("./pages/CreateGroup"));
+const LazyGroupPage = React.lazy(() => import("./pages/GroupPage"));
+const LazyCreateRide = React.lazy(() => import("./pages/CreateRide"));
+const LazyProductPage = React.lazy(() => import("./pages/ProductPage"));
+const LazyRegistration = React.lazy(() => import("./pages/Registration"));
+const LazyJoinGroup = React.lazy(() => import("./pages/JoinGroup"));
+
+export const LoadingPage = () => (
+  <Container>
+    <Center mt={"50%"}>
+      <Spinner size={"lg"} />
+    </Center>
+  </Container>
+);
+
+const LazyLoad = ({ children }: { children?: ReactNode | undefined }) => (
+  <React.Suspense fallback={LoadingPage()}>{children}</React.Suspense>
+);
+
+const LazyLoginPage = React.lazy(() => import("./pages/LoginPage"));
 
 export const App = () => {
   const [user] = useAuthState(auth);
@@ -30,20 +44,97 @@ export const App = () => {
       <Router>
         {user ? (
           <Routes>
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/" element={<GroupsListPage />} />
-            <Route path="/group/new" element={<CreateGroup />} />
-            <Route path="/group/:groupId" element={<GroupPage />} />
-            <Route path="/group/:groupId/join" element={<JoinGroup />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/group/:groupId/ride/new" element={<CreateRide />} />
+            <Route
+              path="/login"
+              element={
+                <LazyLoad>
+                  <LazyLoginPage />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <LazyLoad>
+                  <LazyGroupsListPage />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/group/new"
+              element={
+                <LazyLoad>
+                  <LazyCreateGroup />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/group/:groupId"
+              element={
+                <LazyLoad>
+                  <LazyGroupPage />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/group/:groupId/join"
+              element={
+                <LazyLoad>
+                  <LazyJoinGroup />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <LazyLoad>
+                  <LazyRegistration />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/group/:groupId/ride/new"
+              element={
+                <LazyLoad>
+                  <LazyCreateRide />
+                </LazyLoad>
+              }
+            />
           </Routes>
         ) : (
           <Routes>
-            <Route path="/" element={<ProductPage />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/group/:groupId/join" element={<JoinGroup />} />
+            <Route
+              path="/"
+              element={
+                <LazyLoad>
+                  <LazyProductPage />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <LazyLoad>
+                  <LazyLoginPage />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <LazyLoad>
+                  <LazyRegistration />
+                </LazyLoad>
+              }
+            />
+            <Route
+              path="/group/:groupId/join"
+              element={
+                <LazyLoad>
+                  <LazyJoinGroup />
+                </LazyLoad>
+              }
+            />
             <Route
               path="*"
               element={<Redirect to={NavConstants.PRODUCT_PAGE} />}

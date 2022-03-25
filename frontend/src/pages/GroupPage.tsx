@@ -2,13 +2,11 @@ import * as React from "react";
 import {
   Button,
   Heading,
-  Spinner,
   Text,
   VStack,
   Image,
   Box,
   Container,
-  Center,
   HStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,6 +23,8 @@ import { auth } from "../firebase/firebase";
 import { groupMaxSize } from "../components/Promotional/PriceSelector";
 import GroupSettings from "../components/Groups/GroupSettings";
 import GroupDrawer from "../components/Groups/GroupDrawer";
+import GroupSelector from "../components/Groups/GroupSelector";
+import { LoadingPage } from "../App";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -37,11 +37,10 @@ export default function GroupPage() {
   const [group, loading, error] = useGroup(groupId);
 
   return (
-    <>
+    <HStack alignItems="flex-start" spacing={0}>
+      <GroupSelector />
       {loading ? (
-        <Center p={"35%"}>
-          <Spinner speed={"1.0s"} p={"10%"} />
-        </Center>
+        <LoadingPage />
       ) : error ? (
         <Text>{JSON.stringify(error)}</Text>
       ) : group ? (
@@ -49,7 +48,7 @@ export default function GroupPage() {
       ) : (
         <Text>No such group exists</Text>
       )}
-    </>
+    </HStack>
   );
 }
 
@@ -62,8 +61,8 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const [user] = useAuthState(auth);
 
   return (
-    <>
-      <Header pages={[{ label: "My Groups", url: "/" }]} />
+    <Box flexGrow={1}>
+      <Header />
       {bannerLoading || error ? (
         <Box bg="blue" h="10%" w="100%" maxHeight="200px" minHeight="100" />
       ) : (
@@ -109,6 +108,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           </Button>
         </VStack>
       </Container>
-    </>
+    </Box>
   );
 };
