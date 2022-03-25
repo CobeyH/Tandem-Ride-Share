@@ -134,7 +134,10 @@ export default function RideCard({
             />
             <PassengerBar rideId={rideId} />
             {ride.startDate ? (
-              <RideTimesBar startTime={ride.startDate} />
+              <RideTimesBar
+                startTime={ride.startDate}
+                duration={route?.duration}
+              />
             ) : null}
             {
               /** Pickup Bar */
@@ -443,15 +446,39 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
   );
 }
 
-function RideTimesBar({ startTime }: { startTime: string }) {
+function RideTimesBar({
+  startTime,
+  duration,
+}: {
+  startTime: string;
+  duration?: number;
+}) {
   // make time strings pretty
-  const start_date = startTime?.split("T")[0];
-  let start_time = startTime?.split("T")[1];
-  const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
+  const startDate = new Date(startTime);
 
-  start_time = isPm_start
-    ? `${parseInt(start_time.split(":")[0]) - 12}:${start_time.split(":")[1]}`
-    : `${parseInt(start_time.split(":")[0])}:${start_time.split(":")[1]}`;
+  // calculate arrival time
+  const arrivalDate = new Date(startTime);
+  if (duration) arrivalDate.setSeconds(arrivalDate.getSeconds() + duration);
+
+  // date formatting options
+  const dateOpts: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const timeOpts: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  const datesAreOnSameDay = (first: Date, second: Date) => {
+    return (
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate()
+    );
+  };
 
   return (
     <>
@@ -459,9 +486,23 @@ function RideTimesBar({ startTime }: { startTime: string }) {
         <Text>Start Date</Text>
         <Spacer />
         <Text>
-          {start_date} {start_time} {isPm_start ? "PM" : "AM"}
+          {startDate.toLocaleString("en-CA", { ...dateOpts, ...timeOpts })}
         </Text>
       </RideCardBar>
+      {duration ? (
+        <RideCardBar>
+          <Text>Estimated Arrival</Text>
+          <Spacer />
+          <Text>
+            {arrivalDate.toLocaleString(
+              "en-CA",
+              datesAreOnSameDay(startDate, arrivalDate)
+                ? { ...timeOpts }
+                : { ...timeOpts, ...dateOpts }
+            )}
+          </Text>
+        </RideCardBar>
+      ) : null}
     </>
   );
 }
