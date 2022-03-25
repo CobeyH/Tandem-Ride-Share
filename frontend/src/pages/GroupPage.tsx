@@ -9,7 +9,6 @@ import {
   Container,
   HStack,
   IconButton,
-  Flex,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Group, useGroup } from "../firebase/database";
