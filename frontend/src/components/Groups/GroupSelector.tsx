@@ -150,6 +150,7 @@ const NewGroupButton = () => {
       placement="right"
     >
       <IconButton
+        id="new-group"
         aria-label="New-Group"
         onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
