@@ -166,6 +166,9 @@ const CreateRide = () => {
         pages={[
           { label: "My Groups", url: "/" },
           { label: "Group", url: `/group/${groupId}` },
+          { label: "Group 2", url: `/group/${groupId}` },
+          { label: "Group 3", url: `/group/${groupId}` },
+          { label: "Group 4", url: `/group/${groupId}` },
         ]}
       />
       <Container>

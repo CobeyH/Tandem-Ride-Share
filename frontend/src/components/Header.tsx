@@ -15,6 +15,8 @@ import {
   MenuItem,
   MenuList,
   ModalCloseButton,
+  Box,
+  HStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -24,7 +26,7 @@ import { logout, auth } from "../firebase/firebase";
 import { MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
-import { lightTheme } from "../theme/colours";
+import { lightTheme, styleColors } from "../theme/colours";
 import ManageCars from "./Profiles/ManageCars";
 
 export interface PageList {
@@ -44,6 +46,53 @@ const Header = ({ pages }: PageList) => {
       bg={lightTheme.main}
     >
       <Breadcrumbs pages={pages} />
+      <HStack>
+        {pages?.map((page: { label: string; url: string }) => {
+          return (
+            <Box
+              color="white"
+              display="block"
+              background={styleColors.periwinkle}
+              textDecor="none"
+              position="relative"
+              height="40px"
+              line-height="40px"
+              pr="10px"
+              pl="5px"
+              text-align="center"
+              mr="23px"
+              key={page.label}
+              _even={{
+                background: styleColors.darkBlue,
+                _before: {
+                  borderColor: styleColors.darkBlue,
+                  borderLeftColor: "transparent",
+                },
+                _after: {
+                  borderLeftColor: styleColors.darkBlue,
+                },
+              }}
+              _before={{
+                left: "-20px",
+                borderLeftColor: "transparent",
+              }}
+              _after={{
+                content: '""',
+                position: "absolute",
+                top: 0,
+                borderWidth: "20px",
+                width: 0,
+                height: 0,
+                left: "100%",
+                borderColor: "transparent",
+                borderColorLeft: styleColors.darkBlue,
+              }}
+            >
+              {page.label}
+            </Box>
+          );
+        })}
+      </HStack>
       <Spacer />
       {user ? (
         <Menu>
