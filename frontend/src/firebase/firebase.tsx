@@ -67,7 +67,11 @@ export const signInWithProvider = async (
       }
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof FirebaseError) {
+      handleAuthError(err);
+    } else {
+      console.log(err);
+    }
   }
 };
 
