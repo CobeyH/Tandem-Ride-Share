@@ -22,7 +22,7 @@ function Footer() {
   return (
     <Box bgColor="white" textAlign="center">
       <HStack p={4}>
-        <Stack direction={{ base: "column", md: "row" }}>
+        <Stack direction={{ base: "column", md: "row" }} align="center">
           <Image
             src={"/logo_darkBlue.svg"}
             alt="dark blue logo"
@@ -209,6 +209,7 @@ const ProductPage = () => {
               fontWeight="extrabold"
               fontSize={50}
               align="center"
+              mb={10}
             >
               Testimonials
             </Text>
