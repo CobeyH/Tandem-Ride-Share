@@ -12,10 +12,12 @@ import {
   useClipboard,
   Input,
   Flex,
+  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 import { User } from "firebase/auth";
+import { AiOutlineShareAlt } from "react-icons/ai";
 
 const ShareLink = (props: { user: User | null | undefined }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,17 +27,18 @@ const ShareLink = (props: { user: User | null | undefined }) => {
   const url = window.location.href;
   return (
     <>
-      <Button
+      <IconButton
         size="sm"
-        rightIcon={<ExternalLinkIcon />}
+        icon={<AiOutlineShareAlt />}
+        bg="transparent"
+        fontSize="30px"
+        isRound
         onClick={() => {
           setValue(url + "/join");
           onOpen();
         }}
         aria-label="Share group"
-      >
-        Share
-      </Button>
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

@@ -1,4 +1,4 @@
-import { IoMdSettings } from "react-icons/all";
+import { RiSettings4Line } from "react-icons/all";
 import {
   useDisclosure,
   Modal,
@@ -12,6 +12,7 @@ import {
   useToast,
   Text,
   Heading,
+  IconButton,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
@@ -25,16 +26,16 @@ const GroupSettings = ({ group }: { group: Group }) => {
 
   return (
     <>
-      <Button
-        size="sm"
-        rightIcon={<IoMdSettings />}
+      <IconButton
+        fontSize="30px"
+        icon={<RiSettings4Line />}
+        bg="transparent"
+        isRound
         onClick={() => {
           onOpen();
         }}
         aria-label="Share group"
-      >
-        Settings
-      </Button>
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

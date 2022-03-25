@@ -87,7 +87,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
         onOverlayClick={onClose}
         size="xs"
       >
-        <DrawerContent bg={styleColors.periwinkle}>
+        <DrawerContent bg={styleColors.mainBlue}>
           <ListContents
             userGroups={userGroups ?? []}
             isMobile={isMobile}
@@ -105,7 +105,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
       </Drawer>
     </>
   ) : (
-    <Box h="100vh" bg={styleColors.periwinkle} position="fixed">
+    <Box h="100vh" bg={styleColors.mainBlue} position="fixed">
       <ListContents
         userGroups={userGroups ?? []}
         isMobile={isMobile}
