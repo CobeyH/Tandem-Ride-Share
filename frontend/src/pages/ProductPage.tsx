@@ -68,6 +68,7 @@ const ProductPage = () => {
               fontWeight="extrabold"
               fontSize={50}
               align="center"
+              mb={10}
             >
               Testimonials
             </Text>
@@ -94,7 +95,7 @@ const ProductPage = () => {
       {/* Footer */}
       <Box bgColor="white" textAlign="center">
         <HStack p={4}>
-          <Stack direction={{ base: "column", md: "row" }}>
+          <Stack direction={{ base: "column", md: "row" }} align="center">
             <Image
               src={"/logo_darkBlue.svg"}
               alt="dark blue logo"
@@ -106,7 +107,7 @@ const ProductPage = () => {
             </Text>
           </Stack>
           <Spacer />
-          <VStack align="center">
+          <VStack align="center" marginRight={4} p={2}>
             <Text
               fontWeight={"bold"}
               color={styleColors.deepBlue}
@@ -127,7 +128,7 @@ const ProductPage = () => {
               Testimonials
             </Text>
           </VStack>
-          <VStack>
+          <VStack align="center" marginLeft={2} marginRight={25} p={2}>
             <Text
               fontWeight={"bold"}
               color={styleColors.deepBlue}
