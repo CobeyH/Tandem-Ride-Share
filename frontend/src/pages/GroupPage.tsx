@@ -28,6 +28,7 @@ import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
 import { styleColors } from "../theme/colours";
 import { GiBallerinaShoes } from "react-icons/gi";
+import GroupAvatar from "../components/Groups/GroupAvatar";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -81,15 +82,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
       <Container>
         <VStack spacing="24px" align="center">
           {/*This should be changed to the group icon or group image*/}
-          <IconButton
-            mt={5}
-            icon={<GiBallerinaShoes />}
-            isRound
-            boxSize={{ base: "80px", md: "100px" }}
-            fontSize={{ base: "60px", md: "80px" }}
-            color={styleColors.deepBlue}
-            aria-label={""}
-          />
+          <GroupAvatar group={group} index={0} mt={10} size="xl" />
           <Heading textAlign={"center"} mt={5}>
             {group.name}
           </Heading>
