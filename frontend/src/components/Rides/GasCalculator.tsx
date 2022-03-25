@@ -80,8 +80,8 @@ const GasCalculator = (props: {
             </Text>
             <Text>Total Cost = (Distance x Fuel Usage) / 100 x Gas Price</Text>
             <Text>
-              ${tripCost.toFixed(2)} = ({props.distance}Km x {props.fuelUsage}
-              L/Km) / 100 x ${gasPrice}
+              ${tripCost.toFixed(2)} = ({props.distance.toFixed(2)} Km x{" "}
+              {props.fuelUsage} L/Km) / 100 x ${gasPrice}
             </Text>
             <Text>
               Please be aware that the actual cost of gas can be different due
