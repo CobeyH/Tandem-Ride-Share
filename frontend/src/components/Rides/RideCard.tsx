@@ -13,7 +13,6 @@ import {
   Stack,
   Switch,
   Text,
-  useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
