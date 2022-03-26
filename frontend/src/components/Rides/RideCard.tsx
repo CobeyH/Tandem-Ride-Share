@@ -13,6 +13,8 @@ import {
   Stack,
   Switch,
   Text,
+  useColorMode,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -74,7 +76,11 @@ export default function RideCard({
       borderWidth="1px"
       borderRadius="lg"
       p="3"
-      bg={isActive ? "white" : "gray.100"}
+      bg={
+        isActive
+          ? useColorModeValue("white", "gray.700")
+          : useColorModeValue("gray.100", "gray.600")
+      }
     >
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
@@ -186,7 +192,7 @@ function DriverIcon({
 }) {
   let color;
   if (!isActive) {
-    color = "gray";
+    color = useColorModeValue("gray", "gray.100");
   } else {
     if (isDriver) {
       color = "green.100";
