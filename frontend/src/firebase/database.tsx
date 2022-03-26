@@ -1,16 +1,16 @@
 import {
+  endBefore,
   equalTo,
   get,
   orderByChild,
+  orderByKey,
   orderByValue,
   push,
   query,
   ref,
-  set,
   remove,
-  orderByKey,
+  set,
   startAt,
-  endBefore,
 } from "firebase/database";
 import { latLng, LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
@@ -33,15 +33,6 @@ const KEY_SLUG_OPTS = {
   strict: true,
   locale: "en",
   trim: true,
-};
-
-export const DBConstants = {
-  GROUPS,
-  USERS,
-  RIDES,
-  PASSENGERS,
-  ROUTES,
-  KEY_SLUG_OPTS,
 };
 
 export type Group = {
@@ -149,7 +140,7 @@ export const useGroups = () => {
 
 export const setGroup = async (group: Group) => {
   const { id, ...groupData } = group;
-  if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);
+  await set(ref(db, `${GROUPS}/${id}`), groupData);
   return group;
 };
 
@@ -289,8 +280,7 @@ export const getUser = async (userId: string) => {
             vehicles: user.vehicles,
           });
         } else {
-          console.log("failed to resolve user");
-          reject(undefined);
+          reject(`failed to resolve user "${userId}" in getUser`);
         }
       },
       (error) => {
@@ -341,12 +331,11 @@ export const setGroupMember = async (
   userId: string,
   isMember = true
 ) => {
-  set(
+  await set(
     ref(db, `${GROUPS}/${groupId}/members/${userId}`),
     isMember ? true : null
   );
 };
-
 export const setGroupRide = async (
   groupId: string,
   rideId: string,
@@ -358,12 +347,18 @@ export const setGroupRide = async (
   );
 };
 
-export const setRide = (ride: Ride) => {
+export const persistRide = async (ride: Ride): Promise<Ride> => {
   const { id, ...rideData } = ride;
-  if (id) console.log("Unexpected ID in Ride: " + id);
+  if (id) {
+    console.log("Unexpected ID in Ride: " + id);
+    throw new Error("Leave creating ID's to createRide");
+  }
   const rideRef = push(ref(db, RIDES));
-  if (!rideRef.key) throw new Error("Unable to get ride id.");
-  else set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
+  if (!rideRef.key) {
+    throw new Error("Unable to get ride id.");
+  } else {
+    await set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
+  }
   return { id: rideRef.key, ...rideData } as Ride;
 };
 
@@ -476,4 +471,68 @@ export const setRoute = (rideId: string, route: Route) => {
 
 export const useRoute = (rideId: string) => {
   return useObjectVal<Route>(ref(db, `${ROUTES}/${rideId}`));
+};
+
+export const removeUserFromPickupPoints = async (
+  userId: string,
+  rideId: string
+): Promise<void> => {
+  const ride = await getRide(rideId);
+  for (const pickupPoint of Object.values(ride.pickupPoints)) {
+    if (pickupPoint.members[userId]) {
+      await setRide({
+        ...ride,
+        pickupPoints: Object.fromEntries(
+          Object.keys(ride.pickupPoints)
+            .filter((key) => key !== userId)
+            .reduce((acc, key) => {
+              acc.set(key, ride.pickupPoints[key]);
+              return acc;
+            }, new Map<string, PickupPoint>())
+        ),
+      });
+    }
+  }
+};
+
+const setRide = (ride: Ride) => set(ref(db, `${RIDES}/${ride.id}`), ride);
+
+export const removeUserFromDriver = async (
+  userId: string,
+  rideId: string
+): Promise<void> => {
+  const currDriver = await get(ref(db, `${RIDES}/${rideId}/driver`));
+
+  if (currDriver.val() === userId) {
+    await set(ref(db, `${RIDES}/${rideId}/driver`), null);
+  }
+};
+
+export const removeUserFromRide = async (
+  userId: string,
+  rideId: string
+): Promise<void> => {
+  await removeUserFromDriver(userId, rideId);
+  await removeUserFromPickupPoints(userId, rideId);
+};
+
+export const removeUserFromGroup = async (
+  userId: string,
+  groupId: string
+): Promise<void> => {
+  const group = await getGroup(groupId);
+  await Promise.all(
+    Object.keys(group.rides).map((rideId) => removeUserFromRide(userId, rideId))
+  );
+  await setGroup({
+    ...group,
+    members: Object.fromEntries(
+      Object.keys(group.members)
+        .filter((mem) => mem !== userId)
+        .reduce((acc, member) => {
+          acc.set(member, true);
+          return acc;
+        }, new Map<string, boolean>())
+    ),
+  });
 };

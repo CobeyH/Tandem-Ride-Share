@@ -15,7 +15,7 @@ import { Steps, useSteps } from "chakra-ui-steps";
 import {
   Ride,
   setGroupRide,
-  setRide,
+  persistRide,
   setRidePassenger,
   setRoute,
   Vehicle,
@@ -49,7 +49,7 @@ const createRide = async (
   groupId: string,
   passList: string[] = []
 ) => {
-  const rideId = (await setRide(ride)).id;
+  const rideId = (await persistRide(ride)).id;
   if (rideId) {
     await setGroupRide(groupId, rideId);
     createRoute(rideId, ride);
