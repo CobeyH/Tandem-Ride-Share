@@ -46,22 +46,35 @@ const trucks: Vehicle[] = [
   { type: "Extra Large", fuelUsage: 15, numSeats: 7 },
 ];
 
+interface AddCarProps {
+  modalProps: { isOpen: boolean; onClose(): void };
+  user: User;
+}
+
+export const AddCarModal = (props: AddCarProps) => {
+  return (
+    <Modal
+      isOpen={props.modalProps.isOpen}
+      onClose={props.modalProps.onClose}
+      isCentered={true}
+    >
+      <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+        <ModalCloseButton />
+        <ModalHeader>Add A Car</ModalHeader>
+        <CarSelector user={props.user} onDone={props.modalProps.onClose} />
+      </ModalContent>
+    </Modal>
+  );
+};
+
 const AddCar = (props: { user: User }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <MenuItem onClick={onOpen}>
-      Add A Car
-      {
-        <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
-          <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-            <ModalCloseButton />
-            <ModalHeader>Add A Car</ModalHeader>
-            <CarSelector user={props.user} onDone={onClose} />
-          </ModalContent>
-        </Modal>
-      }
-    </MenuItem>
+    <>
+      <MenuItem onClick={onOpen}>Add A Car</MenuItem>
+      <AddCarModal user={props.user} modalProps={{ isOpen, onClose }} />
+    </>
   );
 };
 
