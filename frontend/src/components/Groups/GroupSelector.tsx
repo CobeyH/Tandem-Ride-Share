@@ -24,12 +24,7 @@ import { storage } from "../../firebase/storage";
 import { NavConstants } from "../../NavigationConstants";
 import { groupLogos, styleColors } from "../../theme/colours";
 import * as icons from "react-icons/gi";
-import {
-  FaAlignJustify,
-  FaChevronLeft,
-  FaChevronRight,
-  FaPlus,
-} from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import GroupSearch from "./GroupSearch";
 
 const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
