@@ -259,7 +259,7 @@ function DriverBar({
         driverChecked
       );
     }
-  }, [driverChecked]);
+  }, [driverChecked, user?.vehicles]);
 
   useEffect(() => {
     setDriverChecked(authUser?.uid === driverId);
@@ -281,7 +281,7 @@ function DriverBar({
           />
         ) : null}
       </RideCardBar>
-      {authUser?.uid === driverId && isActive ? (
+      {driverChecked && isActive ? (
         <RideCardBar>
           <Text>Vehicle: </Text>
           <ChooseCar
