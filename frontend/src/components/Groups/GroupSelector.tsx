@@ -70,12 +70,12 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
       {!isOpen ? (
         <IconButton
           position="fixed"
-          bottom={0}
           aria-label="toggle-group-list"
-          m={3}
-          mt={5}
+          ml={-2}
+          mt={"50vh"}
           icon={<FaChevronRight />}
           onClick={() => (isOpen ? onClose() : onOpen())}
+          variant="ghost"
         />
       ) : null}
       <Drawer
