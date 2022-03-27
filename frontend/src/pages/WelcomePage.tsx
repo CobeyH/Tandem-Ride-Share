@@ -6,14 +6,27 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import Joyride from "react-joyride";
-import { Box, Button, Center, Heading, HStack, VStack } from "@chakra-ui/react";
+import Joyride, { BeaconRenderProps } from "react-joyride";
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  HStack,
+  IconButton,
+  VStack,
+} from "@chakra-ui/react";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const steps = [
   {
     target: "#target1",
     content:
       "Welcome to Tandem! An app designed to foster community by bringing people together.",
+  },
+  {
+    target: "#target1",
+    content: "If you ever need help, click on the question mark icon.",
   },
   {
     target: "#new-group",
@@ -24,6 +37,10 @@ const steps = [
     content: "Or you can search for an established group.",
   },
 ];
+
+export const TutorialTrigger = () => {
+  return <IconButton icon={<FaQuestionCircle />} aria-label={"tutorial"} />;
+};
 
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
@@ -45,7 +62,7 @@ export default function WelcomePage() {
   return (
     <>
       <Header />
-      <Joyride steps={steps} showProgress showSkipButton continuous />
+
       <HStack alignItems="flex-start">
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
