@@ -119,6 +119,7 @@ const handleAuthError = (error: FirebaseError) => {
     title: "",
     status: "error",
     description: "",
+    isClosable: true,
   };
   switch (error.code) {
     case "auth/email-already-in-use":

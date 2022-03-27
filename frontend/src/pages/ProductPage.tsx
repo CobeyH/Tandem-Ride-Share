@@ -121,6 +121,7 @@ function AboutUs() {
                     toast({
                       title: "Copied Email to Clipboard",
                       status: "success",
+                      isClosable: true,
                     });
                   });
               }}

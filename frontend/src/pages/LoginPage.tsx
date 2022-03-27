@@ -183,6 +183,7 @@ const ResetPasswordModal = ({
                   title: "Password Reset Email Sent!",
                   status: "success",
                   description: "It may take a second to show up.",
+                  isClosable: true,
                 });
                 onClose();
               })
