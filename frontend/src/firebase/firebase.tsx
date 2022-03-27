@@ -14,6 +14,7 @@ import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { FirebaseError, initializeApp } from "firebase/app";
 import { getUser, setUser } from "./database";
 import { createStandaloneToast, UseToastOptions } from "@chakra-ui/react";
+import extendedTheme from "../theme/style";
 
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -114,11 +115,12 @@ export const registerWithEmailAndPassword = async (
 };
 
 const handleAuthError = (error: FirebaseError) => {
-  const toast = createStandaloneToast();
+  const toast = createStandaloneToast({ theme: extendedTheme });
   const report: UseToastOptions = {
     title: "",
     status: "error",
     description: "",
+    isClosable: true,
   };
   switch (error.code) {
     case "auth/email-already-in-use":
