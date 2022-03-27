@@ -86,7 +86,8 @@ export type Ride = {
 };
 
 export type Route = {
-  distance: number;
+  distance: number; // kilometres
+  duration: number; // seconds
   boundingBox: {
     ul: { lat: number; lng: number };
     lr: { lat: number; lng: number };
