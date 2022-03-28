@@ -483,12 +483,22 @@ export const removeUserFromPickupPoints = async (
       await setRide({
         ...ride,
         pickupPoints: Object.fromEntries(
-          Object.keys(ride.pickupPoints)
-            .filter((key) => key !== userId)
-            .reduce((acc, key) => {
-              acc.set(key, ride.pickupPoints[key]);
-              return acc;
-            }, new Map<string, PickupPoint>())
+          Object.keys(ride.pickupPoints).reduce((acc, pickupPointKey) => {
+            const pickupPointByKey = ride.pickupPoints[pickupPointKey];
+            const newPickupPoint = {
+              ...pickupPointByKey,
+              members: Object.fromEntries(
+                Object.keys(pickupPointByKey.members)
+                  .filter((k) => k !== userId)
+                  .reduce((acc, memberKey) => {
+                    acc.set(memberKey, true);
+                    return acc;
+                  }, new Map<string, boolean>())
+              ),
+            };
+            acc.set(pickupPointKey, newPickupPoint);
+            return acc;
+          }, new Map<string, PickupPoint>())
         ),
       });
     }
