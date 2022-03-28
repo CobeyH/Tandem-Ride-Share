@@ -1,5 +1,5 @@
 import { latLng, LatLng } from "leaflet";
-import { Route } from "./firebase/database";
+import { PickupPoint, Route } from "./firebase/database";
 
 const milesToKm = (m: number) => {
   return m * 1.609344;
@@ -29,10 +29,14 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
       .then(
         (result) => {
           const route: Route = {
-            distance: milesToKm(result.route.distance),
-            duration: result.route.time,
             boundingBox: result.route.boundingBox,
             shape: arrayToLatLngs(result.route.shape.shapePoints),
+            points: {
+              end: {
+                distance: milesToKm(result.route.distance),
+                duration: result.route.time,
+              },
+            },
           };
           resolve(route);
         },
@@ -43,15 +47,22 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
   });
 };
 
-export const getOptimizedRoute = async (points: LatLng[]) => {
+/**
+ * Get an optimized Route object from the given points.
+ * @param points List of PickupPoint locations, start at 0 and end at N-1.
+ * @returns Route object for database storage.
+ */
+export const getOptimizedRoute = async (
+  points: Omit<PickupPoint, "members" | "geocode">[]
+) => {
   const data = {
     locations: points.map((point) => {
-      return `${point.lat},${point.lng}`;
+      return `${point.location.lat},${point.location.lng}`;
     }),
   };
 
   return new Promise<Route>((resolve, reject) => {
-    let distance: number, duration: number;
+    let routePoints: { [key: string]: { distance: number; duration: number } };
     /**
      * Here we are making the API call to the Directions API Optimized
      * Route endpoint, then we compose the reponse to JSON.
@@ -70,8 +81,22 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
     )
       .then((res) => res.json())
       .then((res) => {
-        distance = milesToKm(res.route.distance);
-        duration = res.route.time;
+        routePoints = {
+          end: {
+            distance: milesToKm(res.route.distance),
+            duration: res.route.time,
+          },
+        };
+        // locationSequence is requested location indices sorted in the
+        // optimized route order. Index 0 and N-1 are unchanged as the start
+        // and end locations are static. 1 to N-2 are the pickup points.
+        const sequence: number[] = res.route.locationSequence;
+        sequence.slice(1, sequence.length - 1).map((loc, i) => {
+          routePoints[points[loc].id ?? loc] = {
+            distance: milesToKm(res.route.legs[i].distance),
+            duration: res.route.legs[i].time,
+          };
+        });
         return res;
       })
       .then((res) =>
@@ -86,10 +111,9 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
       .then(
         (res) => {
           const route: Route = {
-            distance: distance,
-            duration: duration,
             boundingBox: res.route.boundingBox,
             shape: arrayToLatLngs(res.route.shape.shapePoints),
+            points: routePoints,
           };
           resolve(route);
         },

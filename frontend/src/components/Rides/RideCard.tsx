@@ -136,7 +136,7 @@ export default function RideCard({
             {ride.startDate ? (
               <RideTimesBar
                 startTime={ride.startDate}
-                duration={route?.duration}
+                duration={route?.points?.end?.duration}
               />
             ) : null}
             {
@@ -155,7 +155,7 @@ export default function RideCard({
             </AspectRatio>
             <GasCalculator
               fuelUsage={car?.fuelUsage}
-              distance={route?.distance}
+              distance={route?.points?.end?.distance}
               rideId={rideId}
             />
             {
@@ -381,12 +381,14 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
       .then(() => getRide(rideId))
       .then((ride) => {
         // Fetch optimized route for new points
-        const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+        const routePoints = [
+          { id: ride.start, location: ride.pickupPoints[ride.start].location },
+        ];
         Object.keys(ride.pickupPoints).map((k) => {
           if (k === ride.start) return;
-          routePoints.push(latLng(ride.pickupPoints[k].location));
+          routePoints.push({ id: k, location: ride.pickupPoints[k].location });
         });
-        routePoints.push(latLng(ride.end));
+        routePoints.push({ id: "end", location: ride.end });
         return getOptimizedRoute(routePoints);
       })
       .then((route) => {
