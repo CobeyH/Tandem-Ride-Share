@@ -1,5 +1,5 @@
-import { Button, Heading } from "@chakra-ui/react";
-import { Marker, Popup } from "react-leaflet";
+import { Button, Heading, Text } from "@chakra-ui/react";
+import { Marker, Popup, Tooltip } from "react-leaflet";
 import * as React from "react";
 import {
   clearUserFromPickups,
@@ -91,14 +91,20 @@ const PickupMarker = ({
   if (!pickup) return <></>;
   return (
     <Marker position={pickup.location}>
+      {pickupTime ? (
+        <Tooltip direction="top" offset={[-15, 0]} permanent>
+          <Text>
+            {pickupTime.toLocaleTimeString("en", { timeStyle: "short" })}
+          </Text>
+        </Tooltip>
+      ) : (
+        <></>
+      )}
       <Popup>
         <Heading size={"sm"}>
           {address
             ? `${address.street}, ${address.adminArea5}`
             : `${location.lat}, ${location.lng}`}
-        </Heading>
-        <Heading size={"sm"}>
-          {pickupTime ? pickupTime.toLocaleTimeString() : null}
         </Heading>
         {members?.map((member: User, i: number) => (
           <Heading size={"xs"} key={i} pt={2} pb={2}>
