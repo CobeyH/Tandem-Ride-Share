@@ -1,6 +1,10 @@
 import { latLng, LatLng } from "leaflet";
 import { Route } from "./firebase/database";
 
+const milesToKm = (m: number) => {
+  return m * 1.609344;
+};
+
 /**
  * MapQuest Open Directions API functions and components.
  */
@@ -19,13 +23,14 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
     fetch(
       `${MQ_DIR_URI + MQ_ROUTE_ENDPOINT}?key=${process.env.REACT_APP_MQ_KEY}` +
         `&from=${start.lat},${start.lng}&to=${end.lat},${end.lng}` +
-        `&unit=k&fullShape=true`
+        `&fullShape=true`
     )
       .then((res) => res.json())
       .then(
         (result) => {
           const route: Route = {
-            distance: result.route.distance,
+            distance: milesToKm(result.route.distance),
+            duration: result.route.time,
             boundingBox: result.route.boundingBox,
             shape: arrayToLatLngs(result.route.shape.shapePoints),
           };
@@ -46,7 +51,7 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
   };
 
   return new Promise<Route>((resolve, reject) => {
-    let distance: number;
+    let distance: number, duration: number;
     /**
      * Here we are making the API call to the Directions API Optimized
      * Route endpoint, then we compose the reponse to JSON.
@@ -65,7 +70,8 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
     )
       .then((res) => res.json())
       .then((res) => {
-        distance = res.route.distance;
+        distance = milesToKm(res.route.distance);
+        duration = res.route.time;
         return res;
       })
       .then((res) =>
@@ -81,6 +87,7 @@ export const getOptimizedRoute = async (points: LatLng[]) => {
         (res) => {
           const route: Route = {
             distance: distance,
+            duration: duration,
             boundingBox: res.route.boundingBox,
             shape: arrayToLatLngs(res.route.shape.shapePoints),
           };

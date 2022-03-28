@@ -19,6 +19,7 @@ import {
   ModalFooter,
   ModalBody,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   auth,
@@ -65,7 +66,7 @@ export default function Login({ state }: { state?: LocationGotoState }) {
   };
 
   return (
-    <Box bg={styleColors.mainBlue}>
+    <Box bg={useColorModeValue(styleColors.mainBlue, styleColors.deepBlue)}>
       <Container height="100vh">
         <VStack align="center" p={6} mb={30}>
           <Image
@@ -183,6 +184,7 @@ const ResetPasswordModal = ({
                   title: "Password Reset Email Sent!",
                   status: "success",
                   description: "It may take a second to show up.",
+                  isClosable: true,
                 });
                 onClose();
               })

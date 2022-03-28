@@ -150,12 +150,7 @@ const CreateRide = () => {
 
   return (
     <>
-      <Header
-        pages={[
-          { label: "My Groups", url: "/" },
-          { label: "Group", url: `/group/${groupId}` },
-        ]}
-      />
+      <Header isNested />
       <Container>
         <Heading textAlign={"center"}>Create Ride</Heading>
         <Steps activeStep={activeStep} orientation="vertical">

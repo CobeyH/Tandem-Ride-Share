@@ -1,9 +1,6 @@
 import {
   Flex,
   Button,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Spacer,
   Modal,
   ModalContent,
@@ -15,24 +12,22 @@ import {
   MenuItem,
   MenuList,
   ModalCloseButton,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Link } from "react-router-dom";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { logout, auth } from "../firebase/firebase";
-import { MdEmail } from "react-icons/all";
+import { FaHome, MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
 import { styleColors } from "../theme/colours";
 import ManageCars from "./Profiles/ManageCars";
+import { useNavigate } from "react-router-dom";
 
-export interface PageList {
-  pages?: { label: string; url: string }[];
-}
-
-const Header = ({ pages }: PageList) => {
+const Header = ({ isNested }: { isNested?: boolean }) => {
   const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   return (
     <Flex
@@ -43,7 +38,13 @@ const Header = ({ pages }: PageList) => {
       padding={6}
       bg={styleColors.mainBlue}
     >
-      <Breadcrumbs pages={pages} />
+      {isNested ? (
+        <IconButton
+          onClick={() => navigate("/")}
+          aria-label="home"
+          icon={<FaHome />}
+        />
+      ) : null}
       <Spacer />
       {user ? (
         <Menu>
@@ -90,24 +91,6 @@ const Settings = (props: { user: User }) => {
         </ModalContent>
       </Modal>
     </MenuItem>
-  );
-};
-
-const Breadcrumbs = ({ pages }: PageList) => {
-  if (pages === undefined || pages.length === 0) {
-    return null;
-  }
-
-  return (
-    <Breadcrumb>
-      {pages.map((p, i) => (
-        <BreadcrumbItem key={i}>
-          <BreadcrumbLink as={Link} to={p.url}>
-            {p.label}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      ))}
-    </Breadcrumb>
   );
 };
 
