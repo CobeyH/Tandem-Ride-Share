@@ -55,12 +55,12 @@ const AddPickupPoint = (props: { userId: string; rideId: string }) => {
       .then(() => getRide(props.rideId))
       .then((ride) => {
         // Fetch optimized route for new points
-        const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+        const routePoints = [ride.pickupPoints[ride.start]];
         Object.keys(ride.pickupPoints).map((k) => {
           if (k === ride.start) return;
-          routePoints.push(latLng(ride.pickupPoints[k].location));
+          routePoints.push(ride.pickupPoints[k]);
         });
-        routePoints.push(latLng(ride.end));
+        routePoints.push({ location: ride.end, members: {} });
         return getOptimizedRoute(routePoints);
       })
       .then((route) => {
