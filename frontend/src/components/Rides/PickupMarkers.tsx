@@ -82,8 +82,8 @@ const PickupMarker = ({
 
   useEffect(() => {
     if (startDate && pickupRoute) {
-      const pDate = new Date();
-      pDate.setSeconds(new Date(startDate).getSeconds() + pickupRoute.duration);
+      const pDate = new Date(startDate);
+      pDate.setTime(pDate.getTime() + pickupRoute.duration * 1000);
       setPickupTime(pDate);
     }
   }, [startDate, pickupRoute]);
