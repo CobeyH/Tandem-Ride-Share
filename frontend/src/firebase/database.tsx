@@ -12,7 +12,7 @@ import {
   startAt,
   endBefore,
 } from "firebase/database";
-import { latLng, LatLng } from "leaflet";
+import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 import slugify from "slugify";
@@ -86,13 +86,17 @@ export type Ride = {
 };
 
 export type Route = {
-  distance: number; // kilometres
-  duration: number; // seconds
   boundingBox: {
     ul: { lat: number; lng: number };
     lr: { lat: number; lng: number };
   };
   shape: LatLng[];
+  points: { [key: string]: RoutePoint };
+};
+
+export type RoutePoint = {
+  distance: number; // kilometres
+  duration: number; // seconds
 };
 
 export type PickupPoint = {
@@ -263,6 +267,16 @@ export const usePickupPoint = (rideId: string, pickupId: string) => {
       keyField: "id",
     }
   );
+};
+
+export const usePickupPointRoute = (rideId: string, pickupId: string) => {
+  return useObjectVal<{ distance: number; duration: number }>(
+    ref(db, `${ROUTES}/${rideId}/points/${pickupId}`)
+  );
+};
+
+export const useRideStartDate = (rideId: string) => {
+  return useObjectVal<string>(ref(db, `${RIDES}/${rideId}/startDate`));
 };
 
 export const setGroupBanner = async (groupId: string, banner?: string) => {
@@ -442,12 +456,12 @@ export const setRideStart = (rideId: string, pickupId: string) => {
     .then(() => getRide(rideId))
     .then((ride) => {
       // Fetch optimized route for new points
-      const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+      const routePoints = [ride.pickupPoints[ride.start]];
       Object.keys(ride.pickupPoints).map((k) => {
         if (k === ride.start) return;
-        routePoints.push(latLng(ride.pickupPoints[k].location));
+        routePoints.push(ride.pickupPoints[k]);
       });
-      routePoints.push(latLng(ride.end));
+      routePoints.push({ location: ride.end, members: {} });
       return getOptimizedRoute(routePoints);
     })
     .then((route) => {
