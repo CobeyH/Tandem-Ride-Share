@@ -518,12 +518,16 @@ export const removeUserFromDriver = async (
   }
 };
 
+const removeUserFromPassengers = async (userId: string, rideId: string) =>
+  remove(ref(db, `${PASSENGERS}/${rideId}/${userId}`));
+
 export const removeUserFromRide = async (
   userId: string,
   rideId: string
 ): Promise<void> => {
   await removeUserFromDriver(userId, rideId);
   await removeUserFromPickupPoints(userId, rideId);
+  await removeUserFromPassengers(userId, rideId);
 };
 
 export const removeUserFromGroup = async (
