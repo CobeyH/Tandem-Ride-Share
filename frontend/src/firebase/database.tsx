@@ -269,6 +269,16 @@ export const usePickupPoint = (rideId: string, pickupId: string) => {
   );
 };
 
+export const usePickupPointRoute = (rideId: string, pickupId: string) => {
+  return useObjectVal<{ distance: number; duration: number }>(
+    ref(db, `${ROUTES}/${rideId}/points/${pickupId}`)
+  );
+};
+
+export const useRideStartDate = (rideId: string) => {
+  return useObjectVal<string>(ref(db, `${RIDES}/${rideId}/startDate`));
+};
+
 export const setGroupBanner = async (groupId: string, banner?: string) => {
   return set(ref(db, `${GROUPS}/${groupId}/banner`), banner);
 };
