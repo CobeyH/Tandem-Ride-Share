@@ -6,27 +6,35 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import Joyride, { BeaconRenderProps } from "react-joyride";
 import {
   Box,
   Button,
   Center,
   Heading,
   HStack,
-  IconButton,
   VStack,
+  Text,
 } from "@chakra-ui/react";
+import Tutorial from "../components/Tutorial";
 import { FaQuestionCircle } from "react-icons/fa";
 
-const steps = [
+const tutorialSteps = [
   {
     target: "#target1",
     content:
       "Welcome to Tandem! An app designed to foster community by bringing people together.",
+    disableBeacon: true,
   },
   {
     target: "#target1",
-    content: "If you ever need help, click on the question mark icon.",
+    content: (
+      <>
+        <Text>If you ever need help, click on the question mark icon.</Text>
+        <Center>
+          <FaQuestionCircle />
+        </Center>
+      </>
+    ),
   },
   {
     target: "#new-group",
@@ -37,10 +45,6 @@ const steps = [
     content: "Or you can search for an established group.",
   },
 ];
-
-export const TutorialTrigger = () => {
-  return <IconButton icon={<FaQuestionCircle />} aria-label={"tutorial"} />;
-};
 
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
@@ -58,11 +62,10 @@ export default function WelcomePage() {
       navigate(`/group/${groups[0].id}`);
     }
   }, [groups]);
-
   return (
     <>
       <Header />
-
+      <Tutorial steps={tutorialSteps} />
       <HStack alignItems="flex-start">
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
