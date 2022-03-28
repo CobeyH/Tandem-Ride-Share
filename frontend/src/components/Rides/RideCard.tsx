@@ -465,7 +465,7 @@ function RideTimesBar({
 
   // calculate arrival time
   const arrivalDate = new Date(startTime);
-  if (duration) arrivalDate.setSeconds(arrivalDate.getSeconds() + duration);
+  if (duration) arrivalDate.setTime(arrivalDate.getTime() + duration * 1000);
 
   // date formatting options
   const dateOpts: Intl.DateTimeFormatOptions = {
