@@ -17,8 +17,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useRidePassengers } from "../../firebase/database";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { FaGasPump, FaRoad, FaDollarSign } from "react-icons/fa";
+import { FaGasPump, FaRoad, FaDollarSign, FaInfoCircle } from "react-icons/fa";
 const GasCalculator = (props: {
   fuelUsage: number | undefined;
   distance: number | undefined;
@@ -33,7 +32,7 @@ const GasCalculator = (props: {
   const tripCost = ((props.distance * props.fuelUsage) / 100) * gasPrice;
 
   return (
-    <HStack mt={2} border="1px" borderColor="gray.200" p={2}>
+    <HStack mt={2} border="1px" borderColor="gray.200" borderRadius={10} p={3}>
       <Heading size="sm">Fuel Cost: {"$" + tripCost.toFixed(2)}</Heading>
       <Spacer />
       <Heading size="sm">
@@ -51,7 +50,7 @@ const GasCalculator = (props: {
       >
         <IconButton
           aria-label="Gas Calculation"
-          icon={<QuestionOutlineIcon />}
+          icon={<FaInfoCircle />}
           onClick={onOpen}
           variant="ghost"
         />

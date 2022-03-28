@@ -12,6 +12,7 @@ import {
   Image,
   Text,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { LocationGotoState } from "./JoinGroup";
 import { NavConstants } from "../NavigationConstants";
@@ -67,73 +68,70 @@ function Register() {
     }
   }, [user, loading]);
   return (
-    <Container bg="white" height="100vh">
-      <VStack align="center" p={6} mb={30}>
-        <Image
-          src={"/logo_mainBlue.svg"}
-          alt="main blue logo"
-          objectFit="cover"
-          maxW="100px"
-        />
-        <Text color={styleColors.mainBlue}>TANDEM</Text>
-      </VStack>
-      <VStack>
-        <Box
-          color={styleColors.mainBlue}
-          fontWeight="medium"
-          fontSize="175%"
-          mb={4}
-        >
-          Register
-        </Box>
-        <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
-          <Input
-            type="fullName"
-            placeholder="Full Name"
-            onChange={(event) => setName(event.currentTarget.value)}
-            variant="tandem-registration"
+    <Box bg={useColorModeValue("white", styleColors.deepBlue)}>
+      <Container height="100vh">
+        <VStack align="center" p={6} mb={30}>
+          <Image
+            src={"/logo_mainBlue.svg"}
+            alt="main blue logo"
+            objectFit="cover"
+            maxW="100px"
           />
-        </FormControl>
-        <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
-          <Input
-            type="email"
-            placeholder="Email Address"
-            onChange={(event) => setEmail(event.currentTarget.value)}
-            variant="tandem-registration"
+          <Text color={styleColors.mainBlue}>TANDEM</Text>
+        </VStack>
+        <VStack>
+          <Box
+            color={styleColors.mainBlue}
+            fontWeight="medium"
+            fontSize="200%"
+            mb={4}
+          >
+            Register
+          </Box>
+          <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
+            <Input
+              type="fullName"
+              placeholder="Full Name"
+              onChange={(event) => setName(event.currentTarget.value)}
+              variant="tandem-registration"
+            />
+          </FormControl>
+          <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
+            <Input
+              type="email"
+              placeholder="Email Address"
+              onChange={(event) => setEmail(event.currentTarget.value)}
+              variant="tandem-registration"
+            />
+          </FormControl>
+          <PasswordField
+            setPassword={setPassword}
+            passVariant="tandem-registration"
+            submitHandler={register}
           />
-        </FormControl>
-        <PasswordField
-          setPassword={setPassword}
-          passVariant="tandem-registration"
-          submitHandler={register}
-        />
-        <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
-          <Button
-            onClick={register}
-            variant="tandem-registration"
-            disabled={!isFormValid}
-            mt={5}
-          >
-            Create Account
-          </Button>
-        </Tooltip>
-        <Box pt={10} pb={2} color={styleColors.deepBlue}>
-          Or create an account with
-        </Box>
-        <ProviderAuth buttonVar="signInWith" />
-        <Box>
-          Already have an account?{" "}
-          <Link
-            style={{ color: styleColors.mainBlue, fontWeight: "bold" }}
-            to={NavConstants.LOGIN}
-            state={location.state}
-          >
-            Login
-          </Link>{" "}
-          now.
-        </Box>
-      </VStack>
-    </Container>
+          <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
+            <Button onClick={register} disabled={!isFormValid} mt={5}>
+              Create Account
+            </Button>
+          </Tooltip>
+          <Box pt={10} pb={2} color={styleColors.deepBlue}>
+            Or create an account with
+          </Box>
+          <ProviderAuth buttonVar="signInWith" />
+          <Box>
+            Already have an account?{" "}
+            <Link
+              style={{ color: styleColors.mainBlue, fontWeight: "bold" }}
+              to={NavConstants.LOGIN}
+              state={location.state}
+            >
+              Login
+            </Link>{" "}
+            now.
+          </Box>
+        </VStack>
+      </Container>
+    </Box>
   );
 }
 export default Register;
