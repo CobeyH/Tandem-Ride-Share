@@ -12,7 +12,7 @@ import {
   startAt,
   endBefore,
 } from "firebase/database";
-import { latLng, LatLng } from "leaflet";
+import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
 import { db } from "./firebase";
 import slugify from "slugify";

@@ -92,9 +92,17 @@ export const getOptimizedRoute = async (
         // and end locations are static. 1 to N-2 are the pickup points.
         const sequence: number[] = res.route.locationSequence;
         sequence.slice(1, sequence.length - 1).map((loc, i) => {
+          let distSum = 0,
+            duraSum = 0;
+          res.route.legs
+            .slice(0, i + 1)
+            .forEach((leg: { distance: number; time: number }) => {
+              distSum = distSum + leg.distance;
+              duraSum = duraSum + leg.time;
+            });
           routePoints[points[loc].id ?? loc] = {
-            distance: milesToKm(res.route.legs[i].distance),
-            duration: res.route.legs[i].time,
+            distance: milesToKm(distSum),
+            duration: duraSum,
           };
         });
         return res;
