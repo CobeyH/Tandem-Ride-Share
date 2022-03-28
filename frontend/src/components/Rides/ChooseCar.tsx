@@ -1,10 +1,10 @@
-import { Menu, Select, Spinner } from "@chakra-ui/react";
+import { Button, Flex, Select, Spinner, useDisclosure } from "@chakra-ui/react";
 import * as React from "react";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useUserVehicles, Vehicle } from "../../firebase/database";
 import { auth } from "../../firebase/firebase";
-import AddCar from "../Profiles/AddCar";
+import { AddCarModal } from "../Profiles/AddCar";
 
 const ChooseCar = (props: {
   carUpdate: (car: Vehicle | undefined) => void;
@@ -12,6 +12,7 @@ const ChooseCar = (props: {
 }) => {
   const [user] = useAuthState(auth);
   const [cars, loadingCars] = useUserVehicles(user?.uid);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   if (!user) return null;
 
   useEffect(() => {
@@ -23,9 +24,10 @@ const ChooseCar = (props: {
   return loadingCars ? (
     <Spinner />
   ) : !cars || cars.length == 0 ? (
-    <Menu>
-      <AddCar user={user} />
-    </Menu>
+    <Flex alignContent={"flex-start"}>
+      <Button onClick={onOpen}>Add a Car</Button>
+      <AddCarModal user={user} modalProps={{ isOpen, onClose }} />
+    </Flex>
   ) : (
     <Select
       value={props.carId}

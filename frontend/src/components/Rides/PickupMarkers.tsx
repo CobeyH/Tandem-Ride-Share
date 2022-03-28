@@ -8,7 +8,9 @@ import {
   setRidePassenger,
   setUserInPickup,
   usePickupPoint,
+  usePickupPointRoute,
   User,
+  useRideStartDate,
 } from "../../firebase/database";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -53,6 +55,9 @@ const PickupMarker = ({
   const [pickup] = usePickupPoint(rideId, pickupId);
   const [members, setMembers] = useState<User[]>();
   const [user] = useAuthState(auth);
+  const [startDate] = useRideStartDate(rideId);
+  const [pickupTime, setPickupTime] = useState<Date>();
+  const [pickupRoute] = usePickupPointRoute(rideId, pickupId);
 
   const getLocation = React.useCallback(
     (location) => getReverseGeocode(new LatLng(location.lat, location.lng)),
@@ -75,6 +80,14 @@ const PickupMarker = ({
   const inPickup =
     user?.uid && pickup?.members ? pickup.members[user.uid] : false;
 
+  useEffect(() => {
+    if (startDate && pickupRoute) {
+      const pDate = new Date(startDate);
+      pDate.setTime(pDate.getTime() + pickupRoute.duration * 1000);
+      setPickupTime(pDate);
+    }
+  }, [startDate, pickupRoute]);
+
   if (!pickup) return <></>;
   return (
     <Marker position={pickup.location}>
@@ -83,6 +96,9 @@ const PickupMarker = ({
           {address
             ? `${address.street}, ${address.adminArea5}`
             : `${location.lat}, ${location.lng}`}
+        </Heading>
+        <Heading size={"sm"}>
+          {pickupTime ? pickupTime.toLocaleTimeString() : null}
         </Heading>
         {members?.map((member: User, i: number) => (
           <Heading size={"xs"} key={i} pt={2} pb={2}>
