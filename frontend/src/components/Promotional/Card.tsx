@@ -10,7 +10,7 @@ export const Card = (props: CardProps) => {
   const { children, highlight, ...rest } = props;
   return (
     <Box
-      bg={useColorModeValue("white", "gray.700")}
+      bg={useColorModeValue("white", styleColors.charcoal)}
       position="relative"
       px="6"
       pb="6"

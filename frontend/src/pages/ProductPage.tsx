@@ -9,6 +9,7 @@ import {
   Stack,
   Link,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import * as React from "react";
 import PriceSelector from "../components/Promotional/PriceSelector";
@@ -19,52 +20,59 @@ import { useRef } from "react";
 import { EmailIcon } from "@chakra-ui/icons";
 
 function Footer() {
+  const fontColor = useColorModeValue(
+    styleColors.deepBlue,
+    styleColors.lightBlue
+  );
   return (
-    <Box bgColor="white" textAlign="center">
+    <Box
+      bgColor={useColorModeValue("white", styleColors.charcoal)}
+      textAlign="center"
+    >
       <HStack p={4}>
         <Stack direction={{ base: "column", md: "row" }} align="center">
           <Image
-            src={"/logo_darkBlue.svg"}
+            src={`/logo_${useColorModeValue("darkBlue", "white")}.svg`}
             alt="dark blue logo"
             objectFit="cover"
             maxW="50px"
           />
-          <Text color={styleColors.darkBlue} p={1}>
+          <Text color={fontColor} p={1}>
             Tandem
           </Text>
         </Stack>
         <Spacer />
         <VStack align="center">
-          <Text fontWeight={"bold"} color={styleColors.deepBlue} fontSize="70%">
+          <Text fontWeight={"bold"} color={fontColor} fontSize="70%">
             Company
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             About Us
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Contact Us
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Pricing
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Testimonials
           </Text>
         </VStack>
         <VStack>
-          <Text fontWeight={"bold"} color={styleColors.deepBlue} fontSize="70%">
+          <Text fontWeight={"bold"} color={fontColor} fontSize="70%">
             Support
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Help Center
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Privacy Policy
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Legal
           </Text>
-          <Text color={styleColors.deepBlue} fontSize="65%">
+          <Text color={fontColor} fontSize="65%">
             Terms of Service
           </Text>
         </VStack>
@@ -87,7 +95,7 @@ function AboutUs() {
         borderColor={styleColors.deepBlue}
         borderWidth={0}
         borderRadius={15}
-        bgColor="rgba(256,256,256,0.5)"
+        bgColor={useColorModeValue("rgba(256,256,256,0.5)", "rgba(0,0,0,0.5)")}
       >
         <VStack align="center" textAlign="center">
           <Text>
@@ -147,7 +155,10 @@ const ProductPage = () => {
   return (
     <Box
       h="-webkit-fit-content"
-      bgGradient={`linear(to-br, ${styleColors.mainBlue}, ${styleColors.lightBlue})`}
+      bgGradient={useColorModeValue(
+        `linear(to-br, ${styleColors.mainBlue}, ${styleColors.lightBlue})`,
+        `linear(to-br, ${styleColors.deepBlue}, ${styleColors.mainBlue})`
+      )}
     >
       <ProductHeader
         scrollToProducts={() =>
@@ -169,7 +180,10 @@ const ProductPage = () => {
             <VStack align="center">
               <VStack align="left">
                 <Text
-                  color={styleColors.deepBlue}
+                  color={useColorModeValue(
+                    styleColors.deepBlue,
+                    styleColors.lightBlue
+                  )}
                   fontSize={30}
                   fontWeight={"bold"}
                   align="center"
@@ -177,7 +191,10 @@ const ProductPage = () => {
                   Carpooling made easy.
                 </Text>
                 <Text
-                  color={styleColors.deepBlue}
+                  color={useColorModeValue(
+                    styleColors.deepBlue,
+                    styleColors.lightBlue
+                  )}
                   fontSize={30}
                   fontWeight={"bold"}
                   align="center"
@@ -185,7 +202,14 @@ const ProductPage = () => {
                   Carpooling made social.
                 </Text>
               </VStack>
-              <Text color={styleColors.deepBlue} fontSize={18} align="center">
+              <Text
+                color={useColorModeValue(
+                  styleColors.deepBlue,
+                  styleColors.lightBlue
+                )}
+                fontSize={18}
+                align="center"
+              >
                 Connect your circles and get where you need to go together.
               </Text>
               <Box p={35}>
