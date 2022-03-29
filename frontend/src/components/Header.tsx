@@ -33,6 +33,7 @@ import ManageCars from "./Profiles/ManageCars";
 import { useNavigate } from "react-router-dom";
 import { Step } from "react-joyride";
 import Tutorial from "./Tutorial";
+import LogoName from "./Promotional/LogoName";
 
 const Header = ({
   isNested,
@@ -53,11 +54,13 @@ const Header = ({
       padding={6}
       bg={styleColors.mainBlue}
     >
+      <LogoName />
       {isNested ? (
         <IconButton
           onClick={() => navigate("/")}
           aria-label="home"
           icon={<FaHome />}
+          mx={3}
         />
       ) : null}
       <Spacer />
@@ -65,7 +68,9 @@ const Header = ({
       {user ? (
         <Menu>
           <ReportBug />
-          <MenuButton as={Button}>Profile</MenuButton>
+          <MenuButton as={Button} fontSize={{ base: 14, md: 16 }}>
+            Profile
+          </MenuButton>
           <MenuList zIndex={3}>
             <Settings user={user} />
             <AddCar user={user} />
