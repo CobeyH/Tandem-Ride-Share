@@ -25,6 +25,8 @@ import GroupSettings from "../components/Groups/GroupSettings";
 import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
+import { styleColors } from "../theme/colours";
+import GroupAvatar from "../components/Groups/GroupAvatar";
 
 export default function GroupPage() {
   const navigate = useNavigate();
@@ -64,13 +66,30 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
     <Box flexGrow={1}>
       <Header />
       {bannerLoading || error ? (
-        <Box bg="blue" h="10%" w="100%" maxHeight="200px" minHeight="100" />
+        <Box
+          bg={styleColors.mainBlue}
+          h="10%"
+          w="100%"
+          maxHeight="200px"
+          minHeight="100"
+        />
       ) : (
-        <Image src={banner} width="100%" maxHeight="200px" objectFit="cover" />
+        <Image
+          src={banner}
+          h="10%"
+          w="100%"
+          maxHeight="200px"
+          objectFit="cover"
+        />
       )}
+
       <Container>
-        <VStack spacing="24px" align="c">
-          <HStack pt={5}>
+        <VStack spacing="24px" justifyContent={"center"}>
+          <GroupAvatar group={group} index={0} mt={10} size="xl" />
+          <Heading textAlign={"center"} mt={5}>
+            {group.name}
+          </Heading>
+          <HStack mt={5} align="center" spacing={5}>
             <ShareLink user={user} />
             <GroupDrawer
               members={group.members}
@@ -80,32 +99,55 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             />
             {group.owner === user?.uid ? <GroupSettings group={group} /> : null}
           </HStack>
-
-          <Heading textAlign={"center"}>{group.name}</Heading>
           {group.description && group.description.length > 0 ? (
-            <Box px={5} py={5} borderRadius={5} borderWidth={3}>
+            <Box px={5} py={5} textAlign="left" w="100%">
               {group.description}
             </Box>
           ) : null}
-          <Text>Active Rides</Text>
-          {group.rides
-            ? Object.keys(group.rides).map((key) => (
-                <RideCard key={key} rideId={key} isActive={true} />
-              ))
-            : null}
-          <Text>Previous Rides</Text>
+          <Box
+            textAlign="left"
+            fontWeight="bold"
+            fontSize="22"
+            w="100%"
+            px={5}
+            pt={5}
+            pb={2}
+          >
+            Active Rides
+          </Box>
+          {group.rides ? (
+            Object.keys(group.rides).map((key) => (
+              <RideCard key={key} rideId={key} isActive={true} />
+            ))
+          ) : (
+            <>
+              <Text>There are no currently active rides...</Text>
+              <Button
+                fontWeight="normal"
+                onClick={() => {
+                  navigate(`/group/${group.id}/ride/new`);
+                }}
+              >
+                Create a new ride
+              </Button>
+            </>
+          )}
+          <Box
+            textAlign="left"
+            fontWeight="bold"
+            fontSize="22"
+            w="100%"
+            px={5}
+            pt={5}
+            pb={2}
+          >
+            Previous Rides
+          </Box>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
                 <RideCard key={key} rideId={key} isActive={false} />
               ))
             : null}
-          <Button
-            onClick={() => {
-              navigate(`/group/${group.id}/ride/new`);
-            }}
-          >
-            New Ride
-          </Button>
         </VStack>
       </Container>
     </Box>

@@ -43,7 +43,7 @@ const Header = ({ isNested }: { isNested?: boolean }) => {
       justify="space-between"
       wrap="wrap"
       padding={6}
-      bg={lightTheme.main}
+      bg={styleColors.mainBlue}
     >
       {isNested ? (
         <IconButton
