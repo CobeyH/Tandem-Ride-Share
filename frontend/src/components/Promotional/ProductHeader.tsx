@@ -9,8 +9,6 @@ import {
   MenuList,
   MenuItem,
   Button,
-  Text,
-  Image,
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiMenu } from "react-icons/all";
@@ -18,6 +16,7 @@ import * as React from "react";
 import { NavConstants } from "../../NavigationConstants";
 import { styleColors } from "../../theme/colours";
 import { useNavigate } from "react-router-dom";
+import LogoName from "./LogoName";
 
 const ProductHeader = ({
   scrollToProducts,
@@ -37,10 +36,7 @@ const ProductHeader = ({
     <Box as="nav" bg={styleColors.mainBlue} p={4} textAlign="center">
       <Stack direction={{ base: "column", md: "row" }}>
         <HStack>
-          <Image src={"/logo_white.svg"} objectFit="cover" maxW="70px" />
-          <Text color="white" fontSize={30} p={1}>
-            Tandem
-          </Text>
+          <LogoName />
           <Spacer />
           <Box display={{ base: "block", md: "none" }} onClick={onToggle}>
             <HiMenu />
