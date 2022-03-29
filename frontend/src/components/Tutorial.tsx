@@ -1,17 +1,35 @@
-import { IconButton } from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import Joyride, { Props } from "react-joyride";
 
-const Tutorial = (props: Props) => {
+interface TutorialProps extends Props {
+  buttonText?: string;
+}
+
+const Tutorial = (props: TutorialProps) => {
   const [started, setStarted] = useState<boolean>(false);
   return (
     <>
-      <IconButton
-        aria-label="Tutorial-Trigger"
-        icon={<FaQuestionCircle />}
-        onClick={() => setStarted(true)}
-      />
+      {props.buttonText ? (
+        <Button
+          aria-label="Tutorial-Trigger"
+          id="tutorial"
+          rightIcon={<FaQuestionCircle />}
+          onClick={() => setStarted(true)}
+          mr={3}
+        >
+          {props.buttonText}
+        </Button>
+      ) : (
+        <IconButton
+          aria-label="Tutorial-Trigger"
+          id="tutorial"
+          icon={<FaQuestionCircle />}
+          onClick={() => setStarted(true)}
+          mr={3}
+        />
+      )}
       <Joyride
         steps={props.steps}
         continuous

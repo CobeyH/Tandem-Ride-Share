@@ -6,27 +6,19 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  VStack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, Heading, HStack, VStack, Text } from "@chakra-ui/react";
 import Tutorial from "../components/Tutorial";
 import { FaQuestionCircle } from "react-icons/fa";
 
 const tutorialSteps = [
   {
-    target: "#target1",
+    target: "#tutorial",
     content:
       "Welcome to Tandem! An app designed to foster community by bringing people together.",
     disableBeacon: true,
   },
   {
-    target: "#target1",
+    target: "#tutorial",
     content: (
       <>
         <Text>If you ever need help, click on the question mark icon.</Text>
@@ -65,7 +57,6 @@ export default function WelcomePage() {
   return (
     <>
       <Header />
-      <Tutorial steps={tutorialSteps} />
       <HStack alignItems="flex-start">
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
@@ -74,7 +65,7 @@ export default function WelcomePage() {
               <Heading mt={"50%"} fontSize={{ base: "2xl", md: "4xl" }}>
                 Welcome to Tandem!
               </Heading>
-              <Button id="target1">Get Started</Button>
+              <Tutorial steps={tutorialSteps} buttonText="Get Started" />
             </VStack>
           </Center>
         </Box>
