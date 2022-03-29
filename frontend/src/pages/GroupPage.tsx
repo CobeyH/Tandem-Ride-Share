@@ -39,7 +39,7 @@ export default function GroupPage() {
   const [group, loading, error] = useGroup(groupId);
 
   return (
-    <HStack alignItems="flex-start" spacing={0} h="100vh">
+    <HStack alignItems="flex-start" spacing={0}>
       <GroupSelector />
       {loading ? (
         <LoadingPage />
@@ -74,12 +74,17 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           minHeight="100"
         />
       ) : (
-        <Image src={banner} width="100%" maxHeight="200px" objectFit="cover" />
+        <Image
+          src={banner}
+          h="10%"
+          w="100%"
+          maxHeight="200px"
+          objectFit="cover"
+        />
       )}
 
       <Container>
-        <VStack spacing="24px" align="center">
-          {/*This should be changed to the group icon or group image*/}
+        <VStack spacing="24px" justifyContent={"center"}>
           <GroupAvatar group={group} index={0} mt={10} size="xl" />
           <Heading textAlign={"center"} mt={5}>
             {group.name}
