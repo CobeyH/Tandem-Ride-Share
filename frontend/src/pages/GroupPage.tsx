@@ -66,18 +66,21 @@ export default function GroupPage() {
   const [group, loading, error] = useGroup(groupId);
 
   return (
-    <HStack alignItems="flex-start" spacing={0}>
-      <GroupSelector />
-      {loading ? (
-        <LoadingPage />
-      ) : error ? (
-        <Text>{JSON.stringify(error)}</Text>
-      ) : group ? (
-        <SingleGroup group={group} />
-      ) : (
-        <Text>No such group exists</Text>
-      )}
-    </HStack>
+    <>
+      <Header tutorialSteps={tutorialSteps} />
+      <HStack alignItems="flex-start" spacing={0}>
+        <GroupSelector />
+        {loading ? (
+          <LoadingPage />
+        ) : error ? (
+          <Text>{JSON.stringify(error)}</Text>
+        ) : group ? (
+          <SingleGroup group={group} />
+        ) : (
+          <Text>No such group exists</Text>
+        )}
+      </HStack>
+    </>
   );
 }
 
@@ -91,7 +94,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <Box flexGrow={1}>
-      <Header tutorialSteps={tutorialSteps} />
       {bannerLoading || error ? (
         <Box
           bg={styleColors.mainBlue}
