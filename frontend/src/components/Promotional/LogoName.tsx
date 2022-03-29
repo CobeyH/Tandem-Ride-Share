@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, Image, Badge, useColorModeValue } from "@chakra-ui/react";
+import { Text, Image, Badge } from "@chakra-ui/react";
 import { styleColors } from "../../theme/colours";
 
 const LogoName = () => {
