@@ -1,5 +1,5 @@
-import { Button, Heading, Icon, Text } from "@chakra-ui/react";
-import { Marker, Popup, Tooltip } from "react-leaflet";
+import { Button, Heading } from "@chakra-ui/react";
+import { Marker, Popup } from "react-leaflet";
 import * as React from "react";
 import ReactDOMServer from "react-dom/server";
 import {
@@ -18,9 +18,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import { Geocode, getReverseGeocode } from "../../Directions";
 import { divIcon, LatLng } from "leaflet";
-import { BsFillPersonPlusFill } from "react-icons/bs";
 import { lightTheme } from "../../theme/colours";
-import { timeStamp } from "console";
 
 const PickupMarkers = (props: {
   rideId: string;
