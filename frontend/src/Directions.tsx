@@ -1,5 +1,5 @@
 import { latLng, LatLng } from "leaflet";
-import { PickupPoint, Route } from "./firebase/database";
+import { PickupPoint, Route, RoutePoint } from "./firebase/database";
 
 const milesToKm = (m: number) => {
   return m * 1.609344;
@@ -35,6 +35,7 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
               end: {
                 distance: milesToKm(result.route.distance),
                 duration: result.route.time,
+                geocode: geocodeToString(result.route.locations[-1]),
               },
             },
           };
@@ -62,7 +63,7 @@ export const getOptimizedRoute = async (
   };
 
   return new Promise<Route>((resolve, reject) => {
-    let routePoints: { [key: string]: { distance: number; duration: number } };
+    let routePoints: { [key: string]: RoutePoint };
     /**
      * Here we are making the API call to the Directions API Optimized
      * Route endpoint, then we compose the reponse to JSON.
@@ -85,6 +86,7 @@ export const getOptimizedRoute = async (
           end: {
             distance: milesToKm(res.route.distance),
             duration: res.route.time,
+            geocode: geocodeToString(res.route.locations[-1]),
           },
         };
         // locationSequence is requested location indices sorted in the
@@ -103,6 +105,7 @@ export const getOptimizedRoute = async (
           routePoints[points[loc].id ?? loc] = {
             distance: milesToKm(distSum),
             duration: duraSum,
+            geocode: geocodeToString(res.route.locations[i]),
           };
         });
         return res;

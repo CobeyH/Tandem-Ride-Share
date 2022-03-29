@@ -42,7 +42,7 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
-import PickupMarkers from "./PickupMarkers";
+import RideMarkers from "./PickupMarkers";
 import { getOptimizedRoute, getReverseGeocodeAsString } from "../../Directions";
 import LocationSearch from "./LocationSearch";
 import CompleteRideButton from "./CompleteRideButton";
@@ -154,7 +154,7 @@ export default function RideCard({
             <AspectRatio ratio={16 / 10} mt="2">
               <MapView center={center} zoom={undefined} setMap={setMap}>
                 {endMarker}
-                <PickupMarkers pickups={ride?.pickupPoints} rideId={rideId} />
+                <RideMarkers pickups={ride?.pickupPoints} rideId={rideId} />
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
@@ -312,19 +312,21 @@ function PassengerBar({ rideId }: { rideId: string }) {
 function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useRide(rideId);
+  const [route] = useRoute(rideId);
   const [text, setText] = useState<string | undefined>(undefined);
   const ref = useRef<HTMLDivElement>(null);
   const [addingPickup, setAddingPickup] = useState(false);
 
   useEffect(() => {
-    if (ride && user) {
-      const p = Object.values(ride.pickupPoints).find((p) => {
-        if (!p.members) return false;
-        return Object.keys(p.members).includes(user.uid);
+    if (ride && route && user) {
+      const p = Object.keys(ride.pickupPoints).find((p) => {
+        const pickup = ride.pickupPoints[p];
+        if (!pickup.members) return false;
+        return Object.keys(pickup.members).includes(user.uid);
       });
-      setText(p?.geocode);
+      if (p) setText(route.points[p].geocode);
     }
-  }, [user, ride]);
+  }, [user, ride, route]);
 
   useEffect(() => {
     if (!addingPickup) return;
@@ -369,11 +371,6 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
       },
     };
     newPoint.members[userId] = true;
-    await getReverseGeocodeAsString(latLng(position.lat, position.lng)).then(
-      (geocode) => {
-        newPoint.geocode = geocode;
-      }
-    );
     addPickupToRide(rideId, newPoint)
       .then((ref) => {
         if (ref.key) {

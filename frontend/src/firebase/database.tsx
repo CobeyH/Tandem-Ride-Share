@@ -97,13 +97,13 @@ export type Route = {
 export type RoutePoint = {
   distance: number; // kilometres
   duration: number; // seconds
+  geocode: string;
 };
 
 export type PickupPoint = {
   id?: string;
   location: { lat: number; lng: number };
   members: { [key: string]: boolean };
-  geocode?: string;
 };
 
 export type Message = {
