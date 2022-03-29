@@ -100,7 +100,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
       </Drawer>
     </>
   ) : (
-    <Box h="100vh" bg={styleColors.mainBlue} position="fixed">
+    <Box h="100vh" bg={styleColors.mainBlue} position="sticky" top={0}>
       <ListContents
         userGroups={userGroups ?? []}
         isMobile={isMobile}
