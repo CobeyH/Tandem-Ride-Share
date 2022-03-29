@@ -28,7 +28,7 @@ import { logout, auth } from "../firebase/firebase";
 import { FaHome, MdEmail, FaBug } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
-import { lightTheme, styleColors } from "../theme/colours";
+import { styleColors } from "../theme/colours";
 import ManageCars from "./Profiles/ManageCars";
 import { useNavigate } from "react-router-dom";
 
