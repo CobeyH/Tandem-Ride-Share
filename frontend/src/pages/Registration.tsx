@@ -62,7 +62,7 @@ function Register() {
       if (state?.goto) {
         link = state?.goto;
       } else {
-        link = "/";
+        link = "/welcome";
       }
       return navigate(link);
     }

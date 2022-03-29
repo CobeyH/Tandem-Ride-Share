@@ -4,6 +4,7 @@ const GROUP_NEW = `/group/new`;
 const groupWithId = (id: string) => `/group/${id}`;
 const groupWithIdJoin = (id: string) => `${groupWithId(id)}/join`;
 const REGISTER = "/register";
+const WELCOME = "/welcome";
 
 export const NavConstants = {
   LOGIN,
@@ -12,4 +13,5 @@ export const NavConstants = {
   groupWithId,
   groupWithIdJoin,
   REGISTER,
+  WELCOME,
 };
