@@ -43,6 +43,9 @@ const Tutorial = (props: TutorialProps) => {
         run={started}
         showProgress
         styles={{ options: { zIndex: theme.zIndices.modal + 1 } }}
+        floaterProps={{
+          disableAnimation: true,
+        }}
       />
     </>
   );
