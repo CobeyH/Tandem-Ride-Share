@@ -1,4 +1,5 @@
 import { Button, IconButton, theme } from "@chakra-ui/react";
+import { EPERM } from "constants";
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import Joyride, { Props } from "react-joyride";
@@ -16,7 +17,9 @@ const Tutorial = (props: TutorialProps) => {
           aria-label="Tutorial-Trigger"
           id="tutorial"
           rightIcon={<FaQuestionCircle />}
-          onClick={() => setStarted(true)}
+          onClick={() => {
+            setStarted(true);
+          }}
           mr={3}
         >
           {props.buttonText}
@@ -27,7 +30,10 @@ const Tutorial = (props: TutorialProps) => {
           aria-label="Tutorial-Trigger"
           id="tutorial"
           icon={<FaQuestionCircle />}
-          onClick={() => setStarted(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setStarted(true);
+          }}
           mr={3}
         />
       )}

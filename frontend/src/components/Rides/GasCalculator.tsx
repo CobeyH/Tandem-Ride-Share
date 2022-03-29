@@ -32,7 +32,14 @@ const GasCalculator = (props: {
   const tripCost = ((props.distance * props.fuelUsage) / 100) * gasPrice;
 
   return (
-    <HStack mt={2} border="1px" borderColor="gray.200" borderRadius={10} p={3}>
+    <HStack
+      mt={2}
+      border="1px"
+      borderColor="gray.200"
+      borderRadius={10}
+      p={3}
+      id={`${props.rideId}-gas`}
+    >
       <Heading size="sm">Fuel Cost: {"$" + tripCost.toFixed(2)}</Heading>
       <Spacer />
       <Heading size="sm">
