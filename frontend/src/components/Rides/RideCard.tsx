@@ -75,7 +75,7 @@ export default function RideCard({
     isActive ? "gray.700" : "gray.600"
   );
   return !ride?.isComplete == isActive ? (
-    <Box borderWidth="1px" borderRadius="lg" p="3" bg={cardColour}>
+    <Box borderWidth="1px" w="100%" borderRadius="lg" p="3" bg={cardColour}>
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (

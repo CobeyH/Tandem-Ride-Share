@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   IconButton,
@@ -12,20 +11,16 @@ import {
   useDisclosure,
   Spacer,
 } from "@chakra-ui/react";
-import { ref } from "@firebase/storage";
 import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useDownloadURL } from "react-firebase-hooks/storage";
-import { IconType } from "react-icons";
 import { useNavigate } from "react-router";
 import { Group, useGroups } from "../../firebase/database";
 import { auth } from "../../firebase/firebase";
-import { storage } from "../../firebase/storage";
 import { NavConstants } from "../../NavigationConstants";
-import { groupLogos, styleColors } from "../../theme/colours";
-import * as icons from "react-icons/gi";
+import { styleColors } from "../../theme/colours";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import GroupSearch from "./GroupSearch";
+import GroupAvatar from "./GroupAvatar";
 
 const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
   const [user, loading] = useAuthState(auth);
@@ -87,7 +82,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
         onOverlayClick={onClose}
         size="xs"
       >
-        <DrawerContent bg={styleColors.periwinkle}>
+        <DrawerContent bg={styleColors.mainBlue}>
           <ListContents
             userGroups={userGroups ?? []}
             isMobile={isMobile}
@@ -105,7 +100,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
       </Drawer>
     </>
   ) : (
-    <Box h="100vh" bg={styleColors.periwinkle} position="fixed">
+    <Box h="100vh" bg={styleColors.mainBlue} position="fixed">
       <ListContents
         userGroups={userGroups ?? []}
         isMobile={isMobile}
@@ -171,7 +166,7 @@ const GroupListElement = (props: {
       <Button
         onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
       >
-        <GroupAvatar group={props.group} index={props.index} />
+        <GroupAvatar group={props.group} index={props.index} size="xs" />
         <Text ml={3}>{props.group.name}</Text>
       </Button>
     </>
@@ -190,35 +185,6 @@ const GroupListElement = (props: {
         <GroupAvatar group={props.group} index={props.index} />
       </Button>
     </Tooltip>
-  );
-};
-
-const GroupAvatar = (props: { group: Group; index: number }) => {
-  const photoName = props.group.profilePic;
-  const profileRef =
-    photoName && photoName.startsWith("profilePics/")
-      ? ref(storage, `${photoName}`)
-      : undefined;
-  const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
-
-  return profilePicLoading ? null : profilePic ? (
-    <Avatar
-      bg={groupLogos[props.index % groupLogos.length]}
-      src={profilePic}
-      size="sm"
-    />
-  ) : photoName ? (
-    <Avatar
-      bg={groupLogos[props.index % groupLogos.length]}
-      as={(icons as { [k: string]: IconType })[photoName]}
-      size="sm"
-    />
-  ) : (
-    <Avatar
-      bg={groupLogos[props.index % groupLogos.length]}
-      name={photoName ? undefined : props.group.name}
-      size="sm"
-    />
   );
 };
 

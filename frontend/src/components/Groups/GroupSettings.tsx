@@ -1,4 +1,4 @@
-import { IoMdSettings } from "react-icons/all";
+import { FaCog } from "react-icons/fa";
 import {
   useDisclosure,
   Modal,
@@ -27,7 +27,7 @@ const GroupSettings = ({ group }: { group: Group }) => {
     <>
       <Button
         size="sm"
-        rightIcon={<IoMdSettings />}
+        rightIcon={<FaCog />}
         onClick={() => {
           onOpen();
         }}
