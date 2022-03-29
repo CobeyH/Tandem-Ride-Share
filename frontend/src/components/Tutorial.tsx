@@ -1,5 +1,4 @@
 import { Button, IconButton, theme } from "@chakra-ui/react";
-import { EPERM } from "constants";
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import Joyride, { Props } from "react-joyride";
