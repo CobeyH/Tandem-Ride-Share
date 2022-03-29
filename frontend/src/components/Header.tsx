@@ -108,7 +108,7 @@ const ReportBug = () => {
 
   return (
     <>
-      <Tooltip hasArrow label="Found a bug?" bg="gray.300" color="black">
+      <Tooltip hasArrow label="Report a Bug" bg="gray.300" color="black">
         <IconButton
           mr="2"
           variant="ghost"
