@@ -6,21 +6,37 @@ import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Center, Heading, HStack, VStack, Text } from "@chakra-ui/react";
+import Tutorial from "../components/Tutorial";
+import { FaQuestionCircle } from "react-icons/fa";
+
+const tutorialSteps = [
+  {
+    target: "#tutorial",
+    content:
+      "Welcome to Tandem! An app designed to foster community by bringing people together.",
+    disableBeacon: true,
+  },
+  {
+    target: "#tutorial",
+    content: (
+      <>
+        <Text>If you ever need help, click on the question mark icon.</Text>
+        <Center>
+          <FaQuestionCircle />
+        </Center>
+      </>
+    ),
+  },
+  {
+    target: "#new-group",
+    content: "You can get started by creating a group of your own.",
+  },
+  {
+    target: "#search-group",
+    content: "Or you can search for an established group.",
+  },
+];
 
 export default function WelcomePage() {
   const [user, loading] = useAuthState(auth);
@@ -38,7 +54,6 @@ export default function WelcomePage() {
       navigate(`/group/${groups[0].id}`);
     }
   }, [groups]);
-
   return (
     <>
       <Header />
@@ -50,20 +65,7 @@ export default function WelcomePage() {
               <Heading mt={"50%"} fontSize={{ base: "2xl", md: "4xl" }}>
                 Welcome to Tandem!
               </Heading>
-              <Popover>
-                <PopoverTrigger>
-                  <Button>Get Started</Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader>Welcome!</PopoverHeader>
-                  <PopoverBody>
-                    The tutorial is still under development. For now please
-                    create a group or find a group in the bar on the left.
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
+              <Tutorial steps={tutorialSteps} buttonText="Get Started" />
             </VStack>
           </Center>
         </Box>

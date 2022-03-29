@@ -31,8 +31,16 @@ import AddCar from "./Profiles/AddCar";
 import { styleColors } from "../theme/colours";
 import ManageCars from "./Profiles/ManageCars";
 import { useNavigate } from "react-router-dom";
+import { Step } from "react-joyride";
+import Tutorial from "./Tutorial";
 
-const Header = ({ isNested }: { isNested?: boolean }) => {
+const Header = ({
+  isNested,
+  tutorialSteps,
+}: {
+  isNested?: boolean;
+  tutorialSteps?: Array<Step>;
+}) => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
@@ -53,6 +61,7 @@ const Header = ({ isNested }: { isNested?: boolean }) => {
         />
       ) : null}
       <Spacer />
+      {tutorialSteps ? <Tutorial steps={tutorialSteps} /> : null}
       {user ? (
         <Menu>
           <ReportBug />

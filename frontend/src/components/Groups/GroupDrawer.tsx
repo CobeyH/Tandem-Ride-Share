@@ -50,6 +50,7 @@ const GroupDrawer = (props: {
         rightIcon={<FaComment />}
         size="sm"
         onClick={onOpen}
+        id="chat"
       >
         Chat
       </Button>

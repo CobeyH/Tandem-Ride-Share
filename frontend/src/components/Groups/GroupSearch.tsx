@@ -54,6 +54,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
         placement="right"
       >
         <IconButton
+          id="search-group"
           aria-label="public-group-search"
           icon={<ImSearch />}
           isRound

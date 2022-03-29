@@ -28,6 +28,33 @@ import { LoadingPage } from "../App";
 import { styleColors } from "../theme/colours";
 import GroupAvatar from "../components/Groups/GroupAvatar";
 
+const tutorialSteps = [
+  {
+    target: "#share-link",
+    content:
+      "The share link button can be used to invite other people to your group.",
+    disableBeacon: true,
+  },
+  {
+    target: "#chat",
+    content:
+      "You can chat with other group members or see who is in your group.",
+  },
+  {
+    target: "#active-rides",
+    content: "You can also view the rides that are taking place in the future.",
+  },
+  {
+    target: "#prev-rides",
+    content:
+      "The previous rides section is an archive of the rides that have already occured.",
+  },
+  {
+    target: "#new-ride",
+    content: "You can also setup your own ride that others can join.",
+  },
+];
+
 export default function GroupPage() {
   const navigate = useNavigate();
   const groupId = useParams()["groupId"];
@@ -64,7 +91,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <Box flexGrow={1}>
-      <Header />
+      <Header tutorialSteps={tutorialSteps} />
       {bannerLoading || error ? (
         <Box
           bg={styleColors.mainBlue}
@@ -112,6 +139,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             px={5}
             pt={5}
             pb={2}
+            id="active-rides"
           >
             Active Rides
           </Box>
@@ -124,6 +152,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               <Text>There are no currently active rides...</Text>
               <Button
                 fontWeight="normal"
+                id="new-ride"
                 onClick={() => {
                   navigate(`/group/${group.id}/ride/new`);
                 }}
@@ -140,6 +169,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             px={5}
             pt={5}
             pb={2}
+            id="prev-rides"
           >
             Previous Rides
           </Box>
