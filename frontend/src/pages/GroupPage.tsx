@@ -26,6 +26,33 @@ import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
 
+const tutorialSteps = [
+  {
+    target: "#share-link",
+    content:
+      "The share link button can be used to invite other people to your group.",
+    disableBeacon: true,
+  },
+  {
+    target: "#chat",
+    content:
+      "You can chat with other group members or see who is in your group.",
+  },
+  {
+    target: "#active-rides",
+    content: "You can also view the rides that are taking place in the future.",
+  },
+  {
+    target: "#prev-rides",
+    content:
+      "The previous rides section is an archive of the rides that have already occured.",
+  },
+  {
+    target: "#new-ride",
+    content: "You can also setup your own ride that others can join.",
+  },
+];
+
 export default function GroupPage() {
   const navigate = useNavigate();
   const groupId = useParams()["groupId"];
@@ -62,7 +89,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
 
   return (
     <Box flexGrow={1}>
-      <Header />
+      <Header tutorialSteps={tutorialSteps} />
       {bannerLoading || error ? (
         <Box bg="blue" h="10%" w="100%" maxHeight="200px" minHeight="100" />
       ) : (
@@ -87,13 +114,13 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               {group.description}
             </Box>
           ) : null}
-          <Text>Active Rides</Text>
+          <Text id="active-rides">Active Rides</Text>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
                 <RideCard key={key} rideId={key} isActive={true} />
               ))
             : null}
-          <Text>Previous Rides</Text>
+          <Text id="prev-rides">Previous Rides</Text>
           {group.rides
             ? Object.keys(group.rides).map((key) => (
                 <RideCard key={key} rideId={key} isActive={false} />
@@ -103,6 +130,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             onClick={() => {
               navigate(`/group/${group.id}/ride/new`);
             }}
+            id="new-ride"
           >
             New Ride
           </Button>

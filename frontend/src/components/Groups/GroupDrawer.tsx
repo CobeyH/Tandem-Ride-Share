@@ -51,6 +51,7 @@ const GroupDrawer = (props: {
         rightIcon={<Icon as={BsFillChatFill} />}
         size="sm"
         onClick={onOpen}
+        id="chat"
       >
         Chat
       </Button>

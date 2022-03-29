@@ -13,7 +13,6 @@ const Tutorial = (props: TutorialProps) => {
     <>
       {props.buttonText ? (
         <Button
-          variant={"ghost"}
           aria-label="Tutorial-Trigger"
           id="tutorial"
           rightIcon={<FaQuestionCircle />}

@@ -33,6 +33,7 @@ const ShareLink = (props: { user: User | null | undefined }) => {
           onOpen();
         }}
         aria-label="Share group"
+        id="share-link"
       >
         Share
       </Button>
