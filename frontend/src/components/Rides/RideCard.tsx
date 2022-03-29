@@ -75,6 +75,7 @@ export default function RideCard({
       borderWidth="1px"
       borderRadius="lg"
       p="3"
+      w="100%"
       bg={
         isActive
           ? useColorModeValue("white", "gray.700")

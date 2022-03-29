@@ -21,7 +21,7 @@ import { logout, auth } from "../firebase/firebase";
 import { FaHome, MdEmail } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
-import { lightTheme } from "../theme/colours";
+import { styleColors } from "../theme/colours";
 import ManageCars from "./Profiles/ManageCars";
 import { useNavigate } from "react-router-dom";
 
@@ -36,7 +36,7 @@ const Header = ({ isNested }: { isNested?: boolean }) => {
       justify="space-between"
       wrap="wrap"
       padding={6}
-      bg={lightTheme.main}
+      bg={styleColors.mainBlue}
     >
       {isNested ? (
         <IconButton
