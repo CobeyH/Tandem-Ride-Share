@@ -14,8 +14,9 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { CheckIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 import { User } from "firebase/auth";
+import { FaShareSquare } from "react-icons/fa";
 
 const ShareLink = (props: { user: User | null | undefined }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,7 +28,7 @@ const ShareLink = (props: { user: User | null | undefined }) => {
     <>
       <Button
         size="sm"
-        rightIcon={<ExternalLinkIcon />}
+        rightIcon={<FaShareSquare />}
         onClick={() => {
           setValue(url + "/join");
           onOpen();
