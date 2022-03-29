@@ -54,6 +54,20 @@ const tutorialSteps = [
       "You are about to add a car to your profile. When you create or join a ride you can select from the cars on your profile.",
     disableBeacon: true,
   },
+  {
+    target: "#name-car",
+    content: "The car name will be used to identify it from your list of cars",
+  },
+  {
+    target: "#car-type",
+    content:
+      "The type of car is used to estimate the number of seats and fuel usage of your car for you. You can fine tune it in the next step.",
+  },
+  {
+    target: "#configure",
+    content:
+      "In the final step you can change your number of seats and specify your fuel usage in L/100Km. This will be used when you join a ride to determine fuel cost and number of passengers.",
+  },
 ];
 
 interface AddCarProps {
