@@ -120,7 +120,7 @@ const ListContents = ({
   isMobile: boolean | undefined;
 }) => {
   return (
-    <VStack mt={5} mx={5} alignItems={"stretch"}>
+    <VStack mt={5} mx={2} spacing={3}>
       {userGroups?.map((group, i) => (
         <GroupListElement
           key={group.id}
