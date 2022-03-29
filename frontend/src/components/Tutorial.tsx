@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@chakra-ui/react";
+import { Button, IconButton, theme } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import Joyride, { Props } from "react-joyride";
@@ -13,6 +13,7 @@ const Tutorial = (props: TutorialProps) => {
     <>
       {props.buttonText ? (
         <Button
+          variant={"ghost"}
           aria-label="Tutorial-Trigger"
           id="tutorial"
           rightIcon={<FaQuestionCircle />}
@@ -23,6 +24,7 @@ const Tutorial = (props: TutorialProps) => {
         </Button>
       ) : (
         <IconButton
+          variant={"ghost"}
           aria-label="Tutorial-Trigger"
           id="tutorial"
           icon={<FaQuestionCircle />}
@@ -36,6 +38,7 @@ const Tutorial = (props: TutorialProps) => {
         showSkipButton
         run={started}
         showProgress
+        styles={{ options: { zIndex: theme.zIndices.modal + 1 } }}
       />
     </>
   );
