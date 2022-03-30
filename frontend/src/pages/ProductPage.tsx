@@ -236,7 +236,10 @@ const ProductPage = () => {
         <Center>
           <Box w="90vw" pt={10} pb={100} ref={testimonialsRef}>
             <Text
-              bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
+              bgGradient={useColorModeValue(
+                `linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`,
+                `linear(to-r, ${styleColors.mainBlue}, ${styleColors.medBlue})`
+              )}
               bgClip="text"
               fontWeight="extrabold"
               fontSize={50}
@@ -250,7 +253,10 @@ const ProductPage = () => {
         </Center>
         <VStack pb={25}>
           <Text
-            bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
+            bgGradient={useColorModeValue(
+              `linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`,
+              `linear(to-r, ${styleColors.deepBlue}, ${styleColors.deepBlue})`
+            )}
             bgClip="text"
             fontWeight="extrabold"
             fontSize={50}
@@ -267,7 +273,10 @@ const ProductPage = () => {
       <Center>
         <Box w="90vw" pt={10} pb={100} ref={aboutUsRef}>
           <Text
-            bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
+            bgGradient={useColorModeValue(
+              `linear(to-r, ${styleColors.mainBlue}, ${styleColors.medBlue})`,
+              `linear(to-r, ${styleColors.deepBlue}, ${styleColors.medBlue})`
+            )}
             bgClip="text"
             fontWeight="extrabold"
             fontSize={50}
