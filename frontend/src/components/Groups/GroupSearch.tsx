@@ -58,6 +58,7 @@ const GroupSearch = (props: { groups: Group[] }) => {
           icon={<ImSearch />}
           isRound
           onClick={onOpen}
+          size="md"
         />
       </Tooltip>
 

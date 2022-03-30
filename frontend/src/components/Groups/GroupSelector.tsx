@@ -144,6 +144,8 @@ const NewGroupButton = () => {
         onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
         isRound
+        size="md"
+        mx={5}
       />
     </Tooltip>
   );
