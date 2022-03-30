@@ -110,11 +110,20 @@ function Register() {
             submitHandler={register}
           />
           <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
-            <Button onClick={register} disabled={!isFormValid} mt={5}>
+            <Button
+              onClick={register}
+              disabled={!isFormValid}
+              mt={5}
+              variant="tandem-registration"
+            >
               Create Account
             </Button>
           </Tooltip>
-          <Box pt={10} pb={2} color={styleColors.deepBlue}>
+          <Box
+            pt={10}
+            pb={2}
+            color={useColorModeValue(styleColors.deepBlue, "white")}
+          >
             Or create an account with
           </Box>
           <ProviderAuth buttonVar="signInWith" />
