@@ -12,7 +12,7 @@ import { FaQuestionCircle } from "react-icons/fa";
 
 const tutorialSteps = [
   {
-    target: "#tutorial",
+    target: "#get-started",
     content:
       "Welcome to Tandem! An app designed to foster community by bringing people together.",
     disableBeacon: true,
@@ -21,7 +21,9 @@ const tutorialSteps = [
     target: "#tutorial",
     content: (
       <>
-        <Text>If you ever need help, click on the question mark icon.</Text>
+        <Text mb={3}>
+          If you ever need help, click on the question mark icon.
+        </Text>
         <Center>
           <FaQuestionCircle />
         </Center>
@@ -56,13 +58,17 @@ export default function WelcomePage() {
   }, [groups]);
   return (
     <>
-      <Header />
+      <Header tutorialSteps={tutorialSteps} />
       <HStack alignItems="flex-start">
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
           <Center>
             <VStack spacing="5%">
-              <Heading mt={"50%"} fontSize={{ base: "2xl", md: "4xl" }}>
+              <Heading
+                mt={"50%"}
+                id="get-started"
+                fontSize={{ base: "2xl", md: "4xl" }}
+              >
                 Welcome to Tandem!
               </Heading>
               <Tutorial steps={tutorialSteps} buttonText="Get Started" />
