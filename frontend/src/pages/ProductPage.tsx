@@ -40,7 +40,11 @@ function ProductFooter({
       textAlign="center"
     >
       <HStack p={4}>
-        <Stack direction={{ base: "column", md: "row" }} align="center">
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          align="center"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
           <Image
             src={`/logo_${useColorModeValue("darkBlue", "white")}.svg`}
             alt="dark blue logo"
@@ -55,12 +59,6 @@ function ProductFooter({
         <VStack align="center">
           <Text fontWeight={"bold"} color={fontColor} fontSize="70%">
             Company
-          </Text>
-          <Text color={fontColor} fontSize="65%" onClick={scrollToAboutUs}>
-            About Us
-          </Text>
-          <Text color={fontColor} fontSize="65%" onClick={scrollToContactUs}>
-            Contact Us
           </Text>
           <Text color={fontColor} fontSize="65%" onClick={scrollToProducts}>
             Pricing
@@ -78,17 +76,11 @@ function ProductFooter({
           >
             Support
           </Text>
+          <Text color={fontColor} fontSize="65%" onClick={scrollToAboutUs}>
+            About Us
+          </Text>
           <Text color={fontColor} fontSize="65%" onClick={scrollToContactUs}>
-            Help Center
-          </Text>
-          <Text color={fontColor} fontSize="65%">
-            Privacy Policy
-          </Text>
-          <Text color={fontColor} fontSize="65%">
-            Legal
-          </Text>
-          <Text color={fontColor} fontSize="65%">
-            Terms of Service
+            Contact Us
           </Text>
         </VStack>
         <Spacer />
