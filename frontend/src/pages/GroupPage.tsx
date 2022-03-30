@@ -143,19 +143,17 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               <RideCard key={key} rideId={key} isActive={true} />
             ))
           ) : (
-            <>
-              <Text>There are no currently active rides...</Text>
-              <Button
-                fontWeight="normal"
-                id="new-ride"
-                onClick={() => {
-                  navigate(`/group/${group.id}/ride/new`);
-                }}
-              >
-                Create a new ride
-              </Button>
-            </>
+            <Text>There are no currently active rides...</Text>
           )}
+          <Button
+            fontWeight="normal"
+            id="new-ride"
+            onClick={() => {
+              navigate(`/group/${group.id}/ride/new`);
+            }}
+          >
+            Create a new ride
+          </Button>
           <Box
             textAlign="left"
             fontWeight="bold"
