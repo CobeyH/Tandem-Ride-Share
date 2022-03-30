@@ -132,7 +132,6 @@ const CreateRide = () => {
           start: {
             location: startPosition,
             members: { [userId]: true },
-            geocode: "",
           },
         },
         ...(isDriver && { driver: user.uid }),
@@ -140,9 +139,7 @@ const CreateRide = () => {
           carId: selectedCar?.carId,
         }),
       };
-      getReverseGeocodeAsString(startPosition)
-        .then((geo) => (ride.pickupPoints.start.geocode = geo))
-        .then(() => createRide(ride, groupId, [userId]))
+      createRide(ride, groupId, [userId])
         .then(() => navigate(`/group/${groupId}`))
         .catch((err) => console.error(err));
     }
