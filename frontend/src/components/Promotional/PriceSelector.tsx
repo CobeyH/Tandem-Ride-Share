@@ -8,7 +8,8 @@ export type PlanInfo = {
   data: {
     price: string;
     numericPrice: number;
-    name: PlanTypes;
+    name: string;
+    key: PlanTypes;
     features: string[];
     limit?: number;
   };
@@ -27,8 +28,9 @@ export const planData: PlanInfo[] = [
       price: "Free",
       numericPrice: 0,
       limit: 10,
+      key: "Friend Group",
       name: "Friend Group",
-      features: ["Limit 10 people", "Gas calculator", "Optimized Pickups"],
+      features: ["Up to 10 people", "Gas calculator", "Optimized Pickups"],
     },
     icon: FaUserAlt,
   },
@@ -37,8 +39,14 @@ export const planData: PlanInfo[] = [
       price: "$5",
       limit: 25,
       numericPrice: 5,
-      name: "Small Organization",
-      features: ["Limit 25 people", "Gas calculator", "Optimized Pickups"],
+      key: "Small Organization",
+      name: "Friend Group Pro",
+      features: [
+        "Up to 25 people",
+        "Multi-car trips",
+        "Turn by turn navigation",
+        "Ride packing lists",
+      ],
     },
     icon: FaUserFriends,
   },
@@ -47,8 +55,14 @@ export const planData: PlanInfo[] = [
       price: "$10",
       numericPrice: 10,
       limit: 50,
-      name: "Large Organization",
-      features: ["Limit 50 people", "Gas calculator", "Optimized Pickups"],
+      key: "Large Organization",
+      name: "Community",
+      features: [
+        "Up to 50 people",
+        "Multi-car trips",
+        "Turn by turn navigation",
+        "Ride packing lists",
+      ],
     },
     icon: FaUserFriends,
   },
@@ -56,8 +70,14 @@ export const planData: PlanInfo[] = [
     data: {
       price: "$29",
       numericPrice: 29,
-      name: "Enterprise",
-      features: ["No group limits", "Gas calculator", "Optimized Pickups"],
+      key: "Enterprise",
+      name: "Business",
+      features: [
+        "Unlimited users",
+        "Multi-car trips",
+        "Turn by turn navigation",
+        "Ride packing lists",
+      ],
     },
     icon: FaUsers,
   },
@@ -102,9 +122,9 @@ const PriceSelector = ({
               ) : (
                 <Button
                   onClick={() => {
-                    setSelectedPlan(card.data.name);
+                    setSelectedPlan(card.data.key);
                     if (updateGroupPlan !== undefined) {
-                      updateGroupPlan(card.data.name);
+                      updateGroupPlan(card.data.key);
                     }
                   }}
                   isDisabled={card.data.name == selectedPlan}
