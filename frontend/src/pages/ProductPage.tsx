@@ -114,7 +114,10 @@ function AboutUs() {
             The Project is all open source - you can check it out{" "}
             <Link
               href={"https://github.com/CobeyH/SENG-480A"}
-              color={"blue.300"}
+              color={useColorModeValue(
+                styleColors.medBlue,
+                styleColors.mainBlue
+              )}
             >
               here
             </Link>
@@ -123,7 +126,10 @@ function AboutUs() {
             You can reach out using the{" "}
             <Link
               href={"https://github.com/CobeyH/SENG-480A"}
-              color={"blue.300"}
+              color={useColorModeValue(
+                styleColors.medBlue,
+                styleColors.mainBlue
+              )}
             >
               github
             </Link>{" "}
@@ -140,7 +146,10 @@ function AboutUs() {
                     });
                   });
               }}
-              color={"blue.300"}
+              color={useColorModeValue(
+                styleColors.medBlue,
+                styleColors.mainBlue
+              )}
             >
               support team <EmailIcon />
             </Link>
