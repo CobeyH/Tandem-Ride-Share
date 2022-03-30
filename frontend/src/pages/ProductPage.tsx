@@ -127,7 +127,7 @@ function AboutUs() {
             >
               github
             </Link>{" "}
-            or by sending an email to{" "}
+            or by sending an email to our{" "}
             <Link
               onClick={() => {
                 navigator.clipboard
@@ -140,11 +140,9 @@ function AboutUs() {
                     });
                   });
               }}
+              color={"blue.300"}
             >
-              our support team
-            </Link>{" "}
-            <Link href={"mailto:CobeyHollier@gmail.com"}>
-              <EmailIcon />
+              support team <EmailIcon />
             </Link>
             .
           </Text>
