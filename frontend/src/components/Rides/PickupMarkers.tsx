@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import { divIcon, latLng, LatLng } from "leaflet";
-import { lightTheme } from "../../theme/colours";
+import { styleColors } from "../../theme/colours";
 
 const timeFmt: Intl.DateTimeFormatOptions = { timeStyle: "short" };
 const addSecToDate = (dateString: string, seconds: number) => {
@@ -129,7 +129,7 @@ const RideMarker = ({
 
   return (
     <Marker position={location} icon={icon}>
-      <Popup>
+      <Popup offset={[9, -10]}>
         <Heading size={"sm"}>
           {geocode ? geocode : `${location.lat}, ${location.lng}`}
         </Heading>
@@ -246,11 +246,11 @@ const SVGMarkerIcon = ({
       width={62}
       height={18}
       rx={3}
-      fill={lightTheme.form}
+      fill={styleColors.paleBlue}
       stroke="black"
       strokeWidth={2}
     />
-    <circle cx={32} cy={20} r={18} fill={lightTheme.form} />
+    <circle cx={32} cy={20} r={18} fill={styleColors.paleBlue} />
     {
       /*
       Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. 
