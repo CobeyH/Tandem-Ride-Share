@@ -454,16 +454,7 @@ export const setRideDriver = (
 export const setRideStart = (rideId: string, pickupId: string) => {
   set(ref(db, `${RIDES}/${rideId}/start`), pickupId)
     .then(() => getRide(rideId))
-    .then((ride) => {
-      // Fetch optimized route for new points
-      const routePoints = [ride.pickupPoints[ride.start]];
-      Object.keys(ride.pickupPoints).map((k) => {
-        if (k === ride.start) return;
-        routePoints.push(ride.pickupPoints[k]);
-      });
-      routePoints.push({ location: ride.end, members: {} });
-      return getOptimizedRoute(routePoints);
-    })
+    .then(getOptimizedRoute)
     .then((route) => {
       setRoute(rideId, route);
     });

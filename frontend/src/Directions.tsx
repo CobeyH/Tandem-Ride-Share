@@ -1,5 +1,5 @@
 import { latLng, LatLng } from "leaflet";
-import { PickupPoint, Route, RoutePoint } from "./firebase/database";
+import { PickupPoint, Ride, Route, RoutePoint } from "./firebase/database";
 
 const milesToKm = (m: number) => {
   return m * 1.609344;
@@ -32,10 +32,17 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
             boundingBox: result.route.boundingBox,
             shape: arrayToLatLngs(result.route.shape.shapePoints),
             points: {
+              start: {
+                distance: 0,
+                duration: 0,
+                geocode: geocodeToString(result.route.locations[0]),
+              },
               end: {
                 distance: milesToKm(result.route.distance),
                 duration: result.route.time,
-                geocode: geocodeToString(result.route.locations[-1]),
+                geocode: geocodeToString(
+                  result.route.locations[result.route.locations.length - 1]
+                ),
               },
             },
           };
@@ -53,11 +60,27 @@ export const getRideRoute = async (start: LatLng, end: LatLng) => {
  * @param points List of PickupPoint locations, start at 0 and end at N-1.
  * @returns Route object for database storage.
  */
-export const getOptimizedRoute = async (
-  points: Omit<PickupPoint, "members" | "geocode">[]
-) => {
+export const getOptimizedRoute = async (ride: Ride) => {
+  // Organize pickup points for API request
+  const points: PickupPoint[] = [
+    {
+      ...ride.pickupPoints[ride.start],
+      id: ride.start,
+    },
+  ];
+  // Add rest of Pickup Points to end of points array
+  Object.entries(ride.pickupPoints ?? {}).forEach(([key, point]) => {
+    if (key !== ride.start) points.push({ ...point, id: key });
+  });
+  // Add End Destination to end of points array
+  points.push({
+    id: "end",
+    location: ride.end,
+    members: {},
+  });
+
   const data = {
-    locations: points.map((point) => {
+    locations: Object.values(points).map((point) => {
       return `${point.location.lat},${point.location.lng}`;
     }),
   };
@@ -86,18 +109,20 @@ export const getOptimizedRoute = async (
           end: {
             distance: milesToKm(res.route.distance),
             duration: res.route.time,
-            geocode: geocodeToString(res.route.locations[-1]),
+            geocode: geocodeToString(
+              res.route.locations[res.route.locations.length - 1]
+            ),
           },
         };
         // locationSequence is requested location indices sorted in the
         // optimized route order. Index 0 and N-1 are unchanged as the start
         // and end locations are static. 1 to N-2 are the pickup points.
         const sequence: number[] = res.route.locationSequence;
-        sequence.slice(1, sequence.length - 1).map((loc, i) => {
+        sequence.map((loc, i) => {
           let distSum = 0,
             duraSum = 0;
           res.route.legs
-            .slice(0, i + 1)
+            .slice(0, i)
             .forEach((leg: { distance: number; time: number }) => {
               distSum = distSum + leg.distance;
               duraSum = duraSum + leg.time;
@@ -123,10 +148,15 @@ export const getOptimizedRoute = async (
         (res) => {
           const route: Route = {
             boundingBox: res.route.boundingBox,
-            shape: arrayToLatLngs(res.route.shape.shapePoints),
+            shape: arrayToLatLngs(res.route.shape.shapePoints ?? []),
             points: routePoints,
           };
-          resolve(route);
+          if (!route.shape) {
+            console.log(res.info);
+            reject(res.info);
+          } else {
+            resolve(route);
+          }
         },
         (err) => reject(err)
       );

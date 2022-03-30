@@ -19,8 +19,8 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill, BsGeoAlt } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import MapView, { endIcon, findMidpoint } from "./MapView";
-import { Marker, Polyline } from "react-leaflet";
+import MapView from "./MapView";
+import { Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds, LeafletMouseEvent, Map } from "leaflet";
 import { auth } from "../../firebase/firebase";
 import {
@@ -43,7 +43,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
 import RideMarkers from "./PickupMarkers";
-import { getOptimizedRoute, getReverseGeocodeAsString } from "../../Directions";
+import { getOptimizedRoute } from "../../Directions";
 import LocationSearch from "./LocationSearch";
 import CompleteRideButton from "./CompleteRideButton";
 
@@ -62,13 +62,6 @@ export default function RideCard({
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<Map | undefined>(undefined);
   const [car] = useUserVehicle(ride?.driver, ride?.carId);
-
-  let center, endMarker, startLocation: LatLng;
-  if (ride !== undefined) {
-    startLocation = ride.pickupPoints[ride.start].location as LatLng;
-    center = findMidpoint(startLocation, ride.end as LatLng);
-    endMarker = <Marker position={ride.end} icon={endIcon} />;
-  }
 
   return !ride?.isComplete == isActive ? (
     <Box
@@ -152,9 +145,8 @@ export default function RideCard({
             }
             {/** Map */}
             <AspectRatio ratio={16 / 10} mt="2">
-              <MapView center={center} zoom={undefined} setMap={setMap}>
-                {endMarker}
-                <RideMarkers pickups={ride?.pickupPoints} rideId={rideId} />
+              <MapView setMap={setMap}>
+                <RideMarkers rideId={rideId} />
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
@@ -246,7 +238,7 @@ function DriverBar({
   const [user] = useUser(authUser?.uid);
   const [ride] = useRide(rideId);
   const [driverChecked, setDriverChecked] = useState<boolean | undefined>(
-    authUser?.uid === driverId
+    undefined
   );
   const [driverUser, driverLoading, driverError] = useUser(driverId);
   const driver = driverLoading
@@ -257,12 +249,15 @@ function DriverBar({
 
   useEffect(() => {
     if (driverChecked !== undefined && user?.vehicles) {
-      setRideDriver(
-        user.uid,
-        rideId,
-        Object.keys(user.vehicles).pop(),
-        driverChecked
-      );
+      const amDriver = authUser?.uid === driverId;
+      if ((driverChecked && !amDriver) || (!driverChecked && amDriver)) {
+        setRideDriver(
+          user.uid,
+          rideId,
+          Object.keys(user.vehicles).pop(),
+          driverChecked
+        );
+      }
     }
   }, [driverChecked, user?.vehicles]);
 
@@ -324,7 +319,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         if (!pickup.members) return false;
         return Object.keys(pickup.members).includes(user.uid);
       });
-      if (p) setText(route.points[p].geocode);
+      if (p) setText(route.points[p]?.geocode ?? "");
     }
   }, [user, ride, route]);
 
@@ -381,18 +376,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         }
       })
       .then(() => getRide(rideId))
-      .then((ride) => {
-        // Fetch optimized route for new points
-        const routePoints = [
-          { id: ride.start, location: ride.pickupPoints[ride.start].location },
-        ];
-        Object.keys(ride.pickupPoints).map((k) => {
-          if (k === ride.start) return;
-          routePoints.push({ id: k, location: ride.pickupPoints[k].location });
-        });
-        routePoints.push({ id: "end", location: ride.end });
-        return getOptimizedRoute(routePoints);
-      })
+      .then(getOptimizedRoute)
       .then((route) => {
         setRoute(rideId, route);
       })
