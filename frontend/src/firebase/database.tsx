@@ -232,10 +232,10 @@ export const setUserInPickup = (
 export const clearUserFromPickups = async (rideId: string, userId: string) => {
   if (!rideId || !userId) return;
   return getRide(rideId).then((ride) => {
-    Object.keys(ride.pickupPoints).map((k) => {
+    Object.keys(ride.pickupPoints ?? {}).map((k) => {
       if (
         ride.pickupPoints[k].members &&
-        Object.keys(ride.pickupPoints[k].members).includes(userId)
+        Object.keys(ride.pickupPoints[k].members ?? {}).includes(userId)
       ) {
         set(
           ref(db, `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`),
@@ -421,10 +421,14 @@ export const setRideDriver = (
   if (state && driverId) {
     getRide(rideId)
       .then((ride) => {
-        const driverPointKey = Object.keys(ride.pickupPoints).find((k) => {
-          if (!ride.pickupPoints[k].members) return false;
-          return Object.keys(ride.pickupPoints[k].members).includes(driverId);
-        });
+        const driverPointKey = Object.keys(ride.pickupPoints ?? {}).find(
+          (k) => {
+            if (!ride.pickupPoints[k].members) return false;
+            return Object.keys(ride.pickupPoints[k].members ?? {}).includes(
+              driverId
+            );
+          }
+        );
         if (driverPointKey) setRideStart(rideId, driverPointKey);
       })
       .catch((err) => console.log(err));
@@ -437,7 +441,7 @@ export const setRideStart = (rideId: string, pickupId: string) => {
     .then((ride) => {
       // Fetch optimized route for new points
       const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
-      Object.keys(ride.pickupPoints).map((k) => {
+      Object.keys(ride.pickupPoints ?? {}).map((k) => {
         if (k === ride.start) return;
         routePoints.push(latLng(ride.pickupPoints[k].location));
       });
@@ -483,12 +487,12 @@ export const removeUserFromPickupPoints = async (
       await setRide({
         ...ride,
         pickupPoints: Object.fromEntries(
-          Object.keys(ride.pickupPoints).reduce((acc, pickupPointKey) => {
+          Object.keys(ride.pickupPoints ?? {}).reduce((acc, pickupPointKey) => {
             const pickupPointByKey = ride.pickupPoints[pickupPointKey];
             const newPickupPoint = {
               ...pickupPointByKey,
               members: Object.fromEntries(
-                Object.keys(pickupPointByKey.members)
+                Object.keys(pickupPointByKey.members ?? {})
                   .filter((k) => k !== userId)
                   .reduce((acc, memberKey) => {
                     acc.set(memberKey, true);
@@ -543,7 +547,7 @@ export const removeUserFromGroup = async (
   await setGroup({
     ...group,
     members: Object.fromEntries(
-      Object.keys(group.members)
+      Object.keys(group.members ?? {})
         .filter((mem) => mem !== userId)
         .reduce((acc, member) => {
           acc.set(member, true);
