@@ -1,16 +1,16 @@
 import {
+  endBefore,
   equalTo,
   get,
   orderByChild,
+  orderByKey,
   orderByValue,
   push,
   query,
   ref,
-  set,
   remove,
-  orderByKey,
+  set,
   startAt,
-  endBefore,
 } from "firebase/database";
 import { LatLng } from "leaflet";
 import { useListVals, useObjectVal } from "react-firebase-hooks/database";
@@ -33,15 +33,6 @@ const KEY_SLUG_OPTS = {
   strict: true,
   locale: "en",
   trim: true,
-};
-
-export const DBConstants = {
-  GROUPS,
-  USERS,
-  RIDES,
-  PASSENGERS,
-  ROUTES,
-  KEY_SLUG_OPTS,
 };
 
 export type Group = {
@@ -154,7 +145,7 @@ export const useGroups = () => {
 
 export const setGroup = async (group: Group) => {
   const { id, ...groupData } = group;
-  if (id) await set(ref(db, `${GROUPS}/${id}`), groupData);
+  await set(ref(db, `${GROUPS}/${id}`), groupData);
   return group;
 };
 
@@ -246,10 +237,10 @@ export const setUserInPickup = (
 export const clearUserFromPickups = async (rideId: string, userId: string) => {
   if (!rideId || !userId) return;
   return getRide(rideId).then((ride) => {
-    Object.keys(ride.pickupPoints).map((k) => {
+    Object.keys(ride.pickupPoints ?? {}).map((k) => {
       if (
         ride.pickupPoints[k].members &&
-        Object.keys(ride.pickupPoints[k].members).includes(userId)
+        Object.keys(ride.pickupPoints[k].members ?? {}).includes(userId)
       ) {
         set(
           ref(db, `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`),
@@ -304,8 +295,7 @@ export const getUser = async (userId: string) => {
             vehicles: user.vehicles,
           });
         } else {
-          console.log("failed to resolve user");
-          reject(undefined);
+          reject(`failed to resolve user "${userId}" in getUser`);
         }
       },
       (error) => {
@@ -356,12 +346,11 @@ export const setGroupMember = async (
   userId: string,
   isMember = true
 ) => {
-  set(
+  await set(
     ref(db, `${GROUPS}/${groupId}/members/${userId}`),
     isMember ? true : null
   );
 };
-
 export const setGroupRide = async (
   groupId: string,
   rideId: string,
@@ -373,12 +362,18 @@ export const setGroupRide = async (
   );
 };
 
-export const setRide = (ride: Ride) => {
+export const persistRide = async (ride: Ride): Promise<Ride> => {
   const { id, ...rideData } = ride;
-  if (id) console.log("Unexpected ID in Ride: " + id);
+  if (id) {
+    console.log("Unexpected ID in Ride: " + id);
+    throw new Error("Leave creating ID's to createRide");
+  }
   const rideRef = push(ref(db, RIDES));
-  if (!rideRef.key) throw new Error("Unable to get ride id.");
-  else set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
+  if (!rideRef.key) {
+    throw new Error("Unable to get ride id.");
+  } else {
+    await set(ref(db, `${RIDES}/${rideRef.key}`), rideData);
+  }
   return { id: rideRef.key, ...rideData } as Ride;
 };
 
@@ -441,10 +436,14 @@ export const setRideDriver = (
   if (state && driverId) {
     getRide(rideId)
       .then((ride) => {
-        const driverPointKey = Object.keys(ride.pickupPoints).find((k) => {
-          if (!ride.pickupPoints[k].members) return false;
-          return Object.keys(ride.pickupPoints[k].members).includes(driverId);
-        });
+        const driverPointKey = Object.keys(ride.pickupPoints ?? {}).find(
+          (k) => {
+            if (!ride.pickupPoints[k].members) return false;
+            return Object.keys(ride.pickupPoints[k].members ?? {}).includes(
+              driverId
+            );
+          }
+        );
         if (driverPointKey) setRideStart(rideId, driverPointKey);
       })
       .catch((err) => console.log(err));
@@ -456,12 +455,14 @@ export const setRideStart = (rideId: string, pickupId: string) => {
     .then(() => getRide(rideId))
     .then((ride) => {
       // Fetch optimized route for new points
-      const routePoints = [ride.pickupPoints[ride.start]];
-      Object.keys(ride.pickupPoints).map((k) => {
+      const routePoints = [
+        { location: ride.pickupPoints[ride.start].location },
+      ];
+      Object.keys(ride.pickupPoints ?? {}).map((k) => {
         if (k === ride.start) return;
-        routePoints.push(ride.pickupPoints[k]);
+        routePoints.push({ location: ride.pickupPoints[k].location });
       });
-      routePoints.push({ location: ride.end, members: {} });
+      routePoints.push({ location: ride.end });
       return getOptimizedRoute(routePoints);
     })
     .then((route) => {
@@ -485,10 +486,89 @@ export const useRidePassengers = (rideId: string) => {
   );
 };
 
-export const setRoute = (rideId: string, route: Route) => {
-  if (rideId) set(ref(db, `${ROUTES}/${rideId}`), route);
-};
+export const setRoute = (rideId: string, route: Route) =>
+  set(ref(db, `${ROUTES}/${rideId}`), route);
 
 export const useRoute = (rideId: string) => {
   return useObjectVal<Route>(ref(db, `${ROUTES}/${rideId}`));
+};
+
+export const removeUserFromPickupPoints = async (
+  userId: string,
+  rideId: string
+): Promise<void> => {
+  const ride = await getRide(rideId);
+  for (const pickupPoint of Object.values(ride.pickupPoints)) {
+    if (pickupPoint.members[userId]) {
+      await setRide({
+        ...ride,
+        pickupPoints: Object.fromEntries(
+          Object.keys(ride.pickupPoints ?? {}).reduce((acc, pickupPointKey) => {
+            const pickupPointByKey = ride.pickupPoints[pickupPointKey];
+            const newPickupPoint = {
+              ...pickupPointByKey,
+              members: Object.fromEntries(
+                Object.keys(pickupPointByKey.members ?? {})
+                  .filter((k) => k !== userId)
+                  .reduce((acc, memberKey) => {
+                    acc.set(memberKey, true);
+                    return acc;
+                  }, new Map<string, boolean>())
+              ),
+            };
+            acc.set(pickupPointKey, newPickupPoint);
+            return acc;
+          }, new Map<string, PickupPoint>())
+        ),
+      });
+    }
+  }
+};
+
+const setRide = (ride: Ride) => set(ref(db, `${RIDES}/${ride.id}`), ride);
+
+export const removeUserFromDriver = async (
+  userId: string,
+  rideId: string
+): Promise<void> => {
+  const currDriver = await get(ref(db, `${RIDES}/${rideId}/driver`));
+
+  if (currDriver.val() === userId) {
+    await set(ref(db, `${RIDES}/${rideId}/driver`), null);
+  }
+};
+
+const removeUserFromPassengers = async (userId: string, rideId: string) =>
+  remove(ref(db, `${PASSENGERS}/${rideId}/${userId}`));
+
+export const removeUserFromRide = async (
+  userId: string,
+  rideId: string
+): Promise<void> => {
+  await removeUserFromDriver(userId, rideId);
+  await removeUserFromPickupPoints(userId, rideId);
+  await removeUserFromPassengers(userId, rideId);
+};
+
+export const removeUserFromGroup = async (
+  userId: string,
+  groupId: string
+): Promise<void> => {
+  const group = await getGroup(groupId);
+  await Promise.all(
+    Object.keys(group.rides ?? {}).map((rideId) =>
+      removeUserFromRide(userId, rideId)
+    )
+  );
+  await setGroup({
+    ...group,
+    members: Object.fromEntries(
+      Object.keys(group.members ?? {})
+        .filter((mem) => mem !== userId)
+        .reduce((acc, member) => {
+          acc.set(member, true);
+          return acc;
+        }, new Map<string, boolean>())
+    ),
+  });
 };
