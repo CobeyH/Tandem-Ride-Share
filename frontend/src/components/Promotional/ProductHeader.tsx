@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import {
   Box,
   Stack,
@@ -48,29 +48,42 @@ const ProductHeader = ({
           display={{ base: isOpen ? "flex" : "none", md: "flex" }}
         >
           <Menu>
-            <MenuButton color="white">
-              Features and Benefits
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
-              <MenuItem onClick={scrollToProducts}>Small Organization</MenuItem>
-              <MenuItem onClick={scrollToProducts}>Large Organization</MenuItem>
-              <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
-            </MenuList>
+            {({ isOpen }) => (
+              <>
+                <MenuButton color="white">
+                  Features and Benefits
+                  {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
+                  <MenuItem onClick={scrollToProducts}>
+                    Small Organization
+                  </MenuItem>
+                  <MenuItem onClick={scrollToProducts}>
+                    Large Organization
+                  </MenuItem>
+                  <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
+                </MenuList>
+              </>
+            )}
           </Menu>
 
           <Menu>
-            <MenuButton color="white">
-              Company
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={scrollToTestimonials}>Testimonials</MenuItem>
-              <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
-              <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
-              <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
-            </MenuList>
+            {({ isOpen }) => (
+              <>
+                <MenuButton color="white">
+                  Company {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={scrollToTestimonials}>
+                    Testimonials
+                  </MenuItem>
+                  <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
+                  <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
+                  <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
+                </MenuList>
+              </>
+            )}
           </Menu>
         </HStack>
 
