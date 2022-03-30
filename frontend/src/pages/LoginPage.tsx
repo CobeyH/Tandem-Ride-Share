@@ -51,8 +51,9 @@ export default function Login({ state }: { state?: LocationGotoState }) {
       if (state?.goto) {
         link = state?.goto;
       } else {
-        link = "/";
+        link = "/welcome";
       }
+      console.log("Link: ", link);
       return navigate(link);
     }
   }, [user, loading]);

@@ -19,7 +19,17 @@ import { styleColors } from "../theme/colours";
 import { useRef } from "react";
 import { EmailIcon } from "@chakra-ui/icons";
 
-function Footer() {
+function ProductFooter({
+  scrollToProducts,
+  scrollToTestimonials,
+  scrollToAboutUs,
+  scrollToContactUs,
+}: {
+  scrollToProducts: () => void;
+  scrollToTestimonials: () => void;
+  scrollToAboutUs: () => void;
+  scrollToContactUs: () => void;
+}) {
   const fontColor = useColorModeValue(
     styleColors.deepBlue,
     styleColors.lightBlue
@@ -30,7 +40,11 @@ function Footer() {
       textAlign="center"
     >
       <HStack p={4}>
-        <Stack direction={{ base: "column", md: "row" }} align="center">
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          align="center"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
           <Image
             src={`/logo_${useColorModeValue("darkBlue", "white")}.svg`}
             alt="dark blue logo"
@@ -46,34 +60,27 @@ function Footer() {
           <Text fontWeight={"bold"} color={fontColor} fontSize="70%">
             Company
           </Text>
-          <Text color={fontColor} fontSize="65%">
-            About Us
-          </Text>
-          <Text color={fontColor} fontSize="65%">
-            Contact Us
-          </Text>
-          <Text color={fontColor} fontSize="65%">
+          <Text color={fontColor} fontSize="65%" onClick={scrollToProducts}>
             Pricing
           </Text>
-          <Text color={fontColor} fontSize="65%">
+          <Text color={fontColor} fontSize="65%" onClick={scrollToTestimonials}>
             Testimonials
           </Text>
         </VStack>
         <VStack>
-          <Text fontWeight={"bold"} color={fontColor} fontSize="70%">
+          <Text
+            fontWeight={"bold"}
+            color={fontColor}
+            fontSize="70%"
+            onClick={scrollToAboutUs}
+          >
             Support
           </Text>
-          <Text color={fontColor} fontSize="65%">
-            Help Center
+          <Text color={fontColor} fontSize="65%" onClick={scrollToAboutUs}>
+            About Us
           </Text>
-          <Text color={fontColor} fontSize="65%">
-            Privacy Policy
-          </Text>
-          <Text color={fontColor} fontSize="65%">
-            Legal
-          </Text>
-          <Text color={fontColor} fontSize="65%">
-            Terms of Service
+          <Text color={fontColor} fontSize="65%" onClick={scrollToContactUs}>
+            Contact Us
           </Text>
         </VStack>
         <Spacer />
@@ -152,6 +159,14 @@ const ProductPage = () => {
   const testimonialsRef = useRef<HTMLDivElement | null>(null);
   const aboutUsRef = useRef<HTMLDivElement | null>(null);
 
+  const scrollToProducts = () =>
+    productsRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToTestimonials = () =>
+    testimonialsRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToAboutUs = () =>
+    aboutUsRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToContactUs = () =>
+    aboutUsRef.current?.scrollIntoView({ behavior: "smooth" });
   return (
     <Box
       h="-webkit-fit-content"
@@ -161,18 +176,10 @@ const ProductPage = () => {
       )}
     >
       <ProductHeader
-        scrollToProducts={() =>
-          productsRef.current?.scrollIntoView({ behavior: "smooth" })
-        }
-        scrollToTestimonials={() =>
-          testimonialsRef.current?.scrollIntoView({ behavior: "smooth" })
-        }
-        scrollToAboutUs={() =>
-          aboutUsRef.current?.scrollIntoView({ behavior: "smooth" })
-        }
-        scrollToContactUs={() =>
-          aboutUsRef.current?.scrollIntoView({ behavior: "smooth" })
-        }
+        scrollToProducts={scrollToProducts}
+        scrollToTestimonials={scrollToTestimonials}
+        scrollToAboutUs={scrollToAboutUs}
+        scrollToContactUs={scrollToContactUs}
       />
       <Box h="-webkit-fit-content" ml={5} mr={5}>
         <Center>
@@ -271,7 +278,12 @@ const ProductPage = () => {
           <AboutUs />
         </Box>
       </Center>
-      <Footer />
+      <ProductFooter
+        scrollToProducts={scrollToProducts}
+        scrollToTestimonials={scrollToTestimonials}
+        scrollToAboutUs={scrollToAboutUs}
+        scrollToContactUs={scrollToContactUs}
+      />
     </Box>
   );
 };

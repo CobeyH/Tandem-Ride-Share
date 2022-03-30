@@ -160,19 +160,13 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   return (
     <Box flexGrow={1}>
       {bannerLoading || error ? (
-        <Box
-          bg={styleColors.mainBlue}
-          h="10%"
-          w="100%"
-          maxHeight="200px"
-          minHeight="100"
-        />
+        <Box h="10%" w="100%" maxHeight="150" minHeight="100" />
       ) : (
         <Image
           src={banner}
           h="10%"
           w="100%"
-          maxHeight="200px"
+          maxHeight="150"
           objectFit="cover"
         />
       )}
@@ -223,19 +217,17 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               <RideCard key={key} rideId={key} isActive={true} />
             ))
           ) : (
-            <>
-              <Text>There are no currently active rides...</Text>
-              <Button
-                fontWeight="normal"
-                id="new-ride"
-                onClick={() => {
-                  navigate(`/group/${group.id}/ride/new`);
-                }}
-              >
-                Create a new ride
-              </Button>
-            </>
+            <Text>There are no currently active rides...</Text>
           )}
+          <Button
+            fontWeight="normal"
+            id="new-ride"
+            onClick={() => {
+              navigate(`/group/${group.id}/ride/new`);
+            }}
+          >
+            Create a new ride
+          </Button>
           <Box
             textAlign="left"
             fontWeight="bold"

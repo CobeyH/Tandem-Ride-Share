@@ -1,15 +1,15 @@
 import React from "react";
 import {
   BrowserRouter as Router,
+  Navigate,
   Route,
   Routes,
-  useNavigate,
 } from "react-router-dom";
 import { Center, ChakraProvider, Container, Spinner } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import { NavConstants } from "./NavigationConstants";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import extendedTheme from "./theme/style";
 import Fonts from "./theme/components/font";
 
@@ -36,123 +36,94 @@ const LazyLoad = ({ children }: { children?: ReactNode | undefined }) => (
 const LazyLoginPage = React.lazy(() => import("./pages/LoginPage"));
 
 export const App = () => {
-  const [user] = useAuthState(auth);
-
   return (
-    <React.StrictMode>
-      <ChakraProvider theme={extendedTheme}>
-        <Fonts />
-        <Router>
-          {user ? (
-            <Routes>
-              <Route
-                path="/login"
-                element={
-                  <LazyLoad>
-                    <LazyLoginPage />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <LazyLoad>
-                    <LazyGroupsListPage />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/group/new"
-                element={
-                  <LazyLoad>
-                    <LazyCreateGroup />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/group/:groupId"
-                element={
-                  <LazyLoad>
-                    <LazyGroupPage />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/group/:groupId/join"
-                element={
-                  <LazyLoad>
-                    <LazyJoinGroup />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <LazyLoad>
-                    <LazyRegistration />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/group/:groupId/ride/new"
-                element={
-                  <LazyLoad>
-                    <LazyCreateRide />
-                  </LazyLoad>
-                }
-              />
-            </Routes>
-          ) : (
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <LazyLoad>
-                    <LazyProductPage />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/login"
-                element={
-                  <LazyLoad>
-                    <LazyLoginPage />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <LazyLoad>
-                    <LazyRegistration />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="/group/:groupId/join"
-                element={
-                  <LazyLoad>
-                    <LazyJoinGroup />
-                  </LazyLoad>
-                }
-              />
-              <Route
-                path="*"
-                element={<Redirect to={NavConstants.PRODUCT_PAGE} />}
-              />
-            </Routes>
-          )}
-        </Router>
-      </ChakraProvider>
-    </React.StrictMode>
+    <ChakraProvider theme={extendedTheme}>
+      <Fonts />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LazyLoad>
+                <LazyProductPage />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LazyLoad>
+                <LazyLoginPage />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <LazyLoad>
+                <LazyRegistration />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/group/:groupId/join"
+            element={
+              <LazyLoad>
+                <LazyJoinGroup />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/welcome"
+            element={
+              <RequireAuth>
+                <LazyLoad>
+                  <LazyGroupsListPage />
+                </LazyLoad>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/group/new"
+            element={
+              <RequireAuth>
+                <LazyLoad>
+                  <LazyCreateGroup />
+                </LazyLoad>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/group/:groupId"
+            element={
+              <RequireAuth>
+                <LazyLoad>
+                  <LazyGroupPage />
+                </LazyLoad>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/group/:groupId/ride/new"
+            element={
+              <RequireAuth>
+                <LazyLoad>
+                  <LazyCreateRide />
+                </LazyLoad>
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      </Router>
+    </ChakraProvider>
   );
 };
 
-const Redirect = ({ to }: { to: string }) => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate(to);
-  }, []);
-
-  return <></>;
-};
+function RequireAuth({ children }: { children: JSX.Element }) {
+  const [user, loading] = useAuthState(auth);
+  return user || loading ? (
+    children
+  ) : (
+    <Navigate to={NavConstants.PRODUCT_PAGE} replace />
+  );
+}

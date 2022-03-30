@@ -23,17 +23,11 @@ import GroupSearch from "./GroupSearch";
 import GroupAvatar from "./GroupAvatar";
 
 const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [groups] = useGroups();
   const [userGroups, setUserGroups] = useState<Group[]>();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/login");
-  }, [user, loading]);
 
   useEffect(
     () =>
@@ -150,6 +144,8 @@ const NewGroupButton = () => {
         onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
         isRound
+        size="md"
+        mx={5}
       />
     </Tooltip>
   );
