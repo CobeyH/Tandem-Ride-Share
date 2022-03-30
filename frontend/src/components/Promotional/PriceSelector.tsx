@@ -70,7 +70,10 @@ export function groupMaxSize(groupPlan: PlanTypes) {
   );
 }
 
-const PriceSelector = (props: {
+const PriceSelector = ({
+  showSelectors,
+  updateGroupPlan,
+}: {
   showSelectors: boolean;
   updateGroupPlan?: (newPlan: PlanTypes) => void;
 }) => {
@@ -94,14 +97,14 @@ const PriceSelector = (props: {
             icon={card.icon}
             highlight={card.data.name == selectedPlan}
             button={
-              !props.showSelectors || card.data.numericPrice > 0 ? (
+              !showSelectors || card.data.numericPrice > 0 ? (
                 <></>
               ) : (
                 <Button
                   onClick={() => {
                     setSelectedPlan(card.data.name);
-                    if (props.updateGroupPlan !== undefined) {
-                      props.updateGroupPlan(card.data.name);
+                    if (updateGroupPlan !== undefined) {
+                      updateGroupPlan(card.data.name);
                     }
                   }}
                   isDisabled={card.data.name == selectedPlan}
