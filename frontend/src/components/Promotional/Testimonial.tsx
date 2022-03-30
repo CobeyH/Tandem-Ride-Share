@@ -18,10 +18,9 @@ export const Testimonal = () => (
         px={{ base: "6", md: "8" }}
         pt="12"
         pb="16"
-        borderColor={styleColors.deepBlue}
         borderWidth={0}
         borderRadius={15}
-        bgColor="rgba(256,256,256,0.5)"
+        bgColor={useColorModeValue("rgba(256,256,256,0.5)", "rgba(0,0,0,0.5)")}
       >
         <Flex direction="column" align="center" textAlign="center">
           <ImQuotesLeft
@@ -46,7 +45,7 @@ export const Testimonal = () => (
         borderColor={styleColors.deepBlue}
         borderWidth={0}
         borderRadius={15}
-        bgColor="rgba(256,256,256,0.5)"
+        bgColor={useColorModeValue("rgba(256,256,256,0.5)", "rgba(0,0,0,0.5)")}
       >
         <Flex direction="column" align="center" textAlign="center">
           <ImQuotesLeft
@@ -71,7 +70,7 @@ export const Testimonal = () => (
         borderColor={styleColors.deepBlue}
         borderWidth={0}
         borderRadius={15}
-        bgColor="rgba(256,256,256,0.5)"
+        bgColor={useColorModeValue("rgba(256,256,256,0.5)", "rgba(0,0,0,0.5)")}
       >
         <Flex direction="column" align="center" textAlign="center">
           <ImQuotesLeft
@@ -80,10 +79,12 @@ export const Testimonal = () => (
               "${styleColors.deepBlue}"
             )}
           />
-          <Text fontSize={{ base: "l", md: "xl" }} fontWeight="medium" mt="6">
-            &ldquo;This app reminded me how much money everyone from high school
-            to now owes me. 10/10&rdquo;
-          </Text>
+          <Box mt={47}>
+            <Text fontSize={{ base: "l", md: "xl" }} fontWeight="medium" mt="6">
+              &ldquo;This app reminded me how much money everyone from high
+              school to now owes me. 10/10&rdquo;
+            </Text>
+          </Box>
           <Quotee name="Oscar" jobTitle="Tandem User" mt="8" />
         </Flex>
       </Box>
@@ -95,7 +96,7 @@ export const Testimonal = () => (
         borderColor={styleColors.deepBlue}
         borderWidth={0}
         borderRadius={15}
-        bgColor="rgba(256,256,256,0.5)"
+        bgColor={useColorModeValue("rgba(256,256,256,0.5)", "rgba(0,0,0,0.5)")}
       >
         <Flex direction="column" align="center" textAlign="center">
           <ImQuotesLeft
