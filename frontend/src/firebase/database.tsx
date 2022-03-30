@@ -455,12 +455,14 @@ export const setRideStart = (rideId: string, pickupId: string) => {
     .then(() => getRide(rideId))
     .then((ride) => {
       // Fetch optimized route for new points
-      const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+      const routePoints = [
+        { location: ride.pickupPoints[ride.start].location },
+      ];
       Object.keys(ride.pickupPoints ?? {}).map((k) => {
         if (k === ride.start) return;
-        routePoints.push(ride.pickupPoints[k]);
+        routePoints.push({ location: ride.pickupPoints[k].location });
       });
-      routePoints.push({ location: ride.end, members: {} });
+      routePoints.push({ location: ride.end });
       return getOptimizedRoute(routePoints);
     })
     .then((route) => {
