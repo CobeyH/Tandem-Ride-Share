@@ -35,7 +35,6 @@ import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
 import { FaWalking } from "react-icons/all";
-import { styleColors } from "../theme/colours";
 import GroupAvatar from "../components/Groups/GroupAvatar";
 
 const tutorialSteps = [
