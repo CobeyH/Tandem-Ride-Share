@@ -127,6 +127,7 @@ const ReportBug = () => {
           mr="2"
           variant="ghost"
           aria-label="report a bug"
+          color="white"
           icon={<FaBug />}
           onClick={onOpen}
         />

@@ -14,7 +14,7 @@ const Tutorial = (props: TutorialProps) => {
       {props.buttonText ? (
         <Button
           aria-label="Tutorial-Trigger"
-          id="tutorial"
+          id="tutorial-button"
           rightIcon={<FaQuestionCircle />}
           onClick={() => {
             setStarted(true);
@@ -29,6 +29,7 @@ const Tutorial = (props: TutorialProps) => {
           aria-label="Tutorial-Trigger"
           id="tutorial"
           icon={<FaQuestionCircle />}
+          color="white"
           onClick={(e) => {
             e.stopPropagation();
             setStarted(true);
