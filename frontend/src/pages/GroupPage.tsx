@@ -25,7 +25,6 @@ import GroupSettings from "../components/Groups/GroupSettings";
 import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
-import { styleColors } from "../theme/colours";
 import GroupAvatar from "../components/Groups/GroupAvatar";
 
 const tutorialSteps = [
@@ -95,19 +94,13 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   return (
     <Box flexGrow={1}>
       {bannerLoading || error ? (
-        <Box
-          bg={styleColors.mainBlue}
-          h="10%"
-          w="100%"
-          maxHeight="200px"
-          minHeight="100"
-        />
+        <Box h="10%" w="100%" maxHeight="150" minHeight="100" />
       ) : (
         <Image
           src={banner}
           h="10%"
           w="100%"
-          maxHeight="200px"
+          maxHeight="150"
           objectFit="cover"
         />
       )}
