@@ -85,7 +85,7 @@ export const planData: PlanInfo[] = [
 
 export function groupMaxSize(groupPlan: PlanTypes) {
   return (
-    planData.find((p: PlanInfo) => p.data.name === groupPlan)?.data.limit ||
+    planData.find((p: PlanInfo) => p.data.key === groupPlan)?.data.limit ||
     100000
   );
 }
@@ -112,10 +112,10 @@ const PriceSelector = ({
         {planData.map((card: PlanInfo) => (
           <PricingCard
             minHeight={550}
-            key={card.data.name}
+            key={card.data.key}
             data={card.data}
             icon={card.icon}
-            highlight={card.data.name == selectedPlan}
+            highlight={card.data.key == selectedPlan}
             button={
               !showSelectors || card.data.numericPrice > 0 ? (
                 <></>
@@ -127,7 +127,7 @@ const PriceSelector = ({
                       updateGroupPlan(card.data.key);
                     }
                   }}
-                  isDisabled={card.data.name == selectedPlan}
+                  isDisabled={card.data.key == selectedPlan}
                 >
                   Select
                 </Button>
