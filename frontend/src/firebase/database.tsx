@@ -469,9 +469,8 @@ export const useRidePassengers = (rideId: string) => {
   );
 };
 
-export const setRoute = (rideId: string, route: Route) => {
-  if (rideId) set(ref(db, `${ROUTES}/${rideId}`), route);
-};
+export const setRoute = (rideId: string, route: Route) =>
+  set(ref(db, `${ROUTES}/${rideId}`), route);
 
 export const useRoute = (rideId: string) => {
   return useObjectVal<Route>(ref(db, `${ROUTES}/${rideId}`));
