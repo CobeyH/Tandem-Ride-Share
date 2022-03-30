@@ -43,7 +43,12 @@ const Tutorial = (props: TutorialProps) => {
         showSkipButton
         run={started}
         showProgress
-        styles={{ options: { zIndex: theme.zIndices.modal + 1 } }}
+        styles={{
+          options: {
+            zIndex: theme.zIndices.modal + 1,
+            primaryColor: "#38A169",
+          },
+        }}
         floaterProps={{
           disableAnimation: true,
         }}
