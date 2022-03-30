@@ -536,7 +536,9 @@ export const removeUserFromGroup = async (
 ): Promise<void> => {
   const group = await getGroup(groupId);
   await Promise.all(
-    Object.keys(group.rides).map((rideId) => removeUserFromRide(userId, rideId))
+    Object.keys(group.rides ?? {}).map((rideId) =>
+      removeUserFromRide(userId, rideId)
+    )
   );
   await setGroup({
     ...group,
