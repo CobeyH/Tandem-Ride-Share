@@ -46,6 +46,40 @@ type ValidatableFiled<T> = {
   invalid: boolean;
 };
 
+const tutorialSteps = [
+  {
+    target: "#create-group",
+    content:
+      "Groups form the backbone of Tandem. You can invite your friends to a group to engage with your rides.",
+    disableBeacon: true,
+  },
+  {
+    target: "#group-name",
+    content:
+      "Your group name will be displayed to others when they search for your group.",
+  },
+  {
+    target: "#group-description",
+    content:
+      "Your group description will be displayed at the top of your group page. This will be publicly visible to everybody",
+  },
+  {
+    target: "#group-plan",
+    content:
+      "Your plan determines how many people can join your group. You can try out a group with up to 10 people for free! Upgrade anytime.",
+  },
+  {
+    target: "#group-plan",
+    content:
+      "You can also change your group visiblity. Public groups are visible to anybody using the group search feature. Private groups can only be joined with an invitation link.",
+  },
+  {
+    target: "#group-media",
+    content:
+      "You can add customization to your group by uploading a banner and cover picture for your group. These help identify your group and add some personal pizzazz.",
+  },
+];
+
 const CreateGroup = () => {
   // TODO: Fix type
   const [banner, setBanner] = useState<Blob | MediaSource>();
@@ -110,9 +144,11 @@ const CreateGroup = () => {
 
   return (
     <>
-      <Header pages={[{ label: "My Groups", url: "/" }]} />
+      <Header isNested tutorialSteps={tutorialSteps} />
       <Container maxWidth="90%">
-        <Heading textAlign={"center"}>Create Group</Heading>
+        <Heading textAlign={"center"} id="create-group">
+          Create Group
+        </Heading>
         <Steps activeStep={activeStep} orientation="vertical">
           <VerifiedStep
             label="Group Name"
@@ -125,6 +161,7 @@ const CreateGroup = () => {
             icon={FaClipboard}
           >
             <Input
+              id="group-name"
               value={name}
               placeholder={"name"}
               onInput={(e) =>
@@ -144,6 +181,7 @@ const CreateGroup = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Description"
+            id="group-description"
             currentInput={description}
             isVerified={() => true}
             prevStep={prevStep}
@@ -159,6 +197,7 @@ const CreateGroup = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Choose a Plan"
+            id="group-plan"
             currentInput={plan}
             isVerified={(plan) => plan !== undefined}
             prevStep={prevStep}
@@ -182,6 +221,7 @@ const CreateGroup = () => {
             </Stack>
           </VerifiedStep>
           <VerifiedStep
+            id="group-media"
             label="Upload Media"
             currentInput={banner}
             isVerified={() => true}

@@ -14,6 +14,7 @@ import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { FirebaseError, initializeApp } from "firebase/app";
 import { getUser, setUser } from "./database";
 import { createStandaloneToast, UseToastOptions } from "@chakra-ui/react";
+import extendedTheme from "../theme/style";
 
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -67,7 +68,11 @@ export const signInWithProvider = async (
       }
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof FirebaseError) {
+      handleAuthError(err);
+    } else {
+      console.log(err);
+    }
   }
 };
 
@@ -110,11 +115,12 @@ export const registerWithEmailAndPassword = async (
 };
 
 const handleAuthError = (error: FirebaseError) => {
-  const toast = createStandaloneToast();
+  const toast = createStandaloneToast({ theme: extendedTheme });
   const report: UseToastOptions = {
     title: "",
     status: "error",
     description: "",
+    isClosable: true,
   };
   switch (error.code) {
     case "auth/email-already-in-use":
@@ -135,6 +141,11 @@ const handleAuthError = (error: FirebaseError) => {
     case "auth/missing-email":
       report.title = "Missing Email";
       report.description = "Please provide a valid email address.";
+      break;
+    case "auth/account-exists-with-different-credential":
+      report.title = "Account Already Exists";
+      report.description =
+        "It's possible you already created an account with a different login service.";
       break;
     default:
       report.title = error.code;

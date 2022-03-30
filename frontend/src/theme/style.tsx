@@ -11,6 +11,10 @@ import { Input } from "./components/input";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 
 const styles = {
+  config: {
+    initialColorMode: "light",
+    useSystemColorMode: true,
+  },
   styles: {
     global: (props: Dict) => ({
       body: {

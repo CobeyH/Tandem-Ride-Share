@@ -5,8 +5,6 @@ import {
   HStack,
   IconButton,
   Input,
-  InputGroup,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,15 +17,15 @@ import {
   Text,
   Box,
   Center,
+  Tooltip,
 } from "@chakra-ui/react";
-import { GiMagnifyingGlass } from "react-icons/gi";
-import GroupJoinButton from "./GroupJoinButton";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import { useState } from "react";
 import { Group } from "../../firebase/database";
-import GroupCapacity from "./GroupCapacity";
+import { GroupCapacityBadge } from "./GroupCapacity";
 import { useNavigate } from "react-router-dom";
+import { ImSearch } from "react-icons/im";
 
 const GroupSearch = (props: { groups: Group[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,26 +46,24 @@ const GroupSearch = (props: { groups: Group[] }) => {
 
   return (
     <>
-      <InputGroup mt={4} size={"sm"}>
-        <Input
-          textAlign={"center"}
-          onInput={(e) => setSearch(e.currentTarget.value)}
-          value={search}
-          placeholder="Find Public Groups"
-          borderRadius={5}
+      <Tooltip
+        label="Find A Public Group"
+        aria-label="find public group"
+        hasArrow
+        placement="right"
+      >
+        <IconButton
+          id="search-group"
+          aria-label="public-group-search"
+          icon={<ImSearch />}
+          isRound
+          onClick={onOpen}
         />
-        <InputRightElement color={"black"}>
-          <IconButton
-            size="sm"
-            aria-label="Search Groups"
-            icon={<GiMagnifyingGlass />}
-            onClick={onOpen}
-          />
-        </InputRightElement>
-      </InputGroup>
+      </Tooltip>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW={{ base: "90%", md: "50%", lg: "30%" }}>
           <ModalHeader textAlign={"center"}>
             {publicGroups.length > 0
               ? "Found Public Groups"
@@ -75,10 +71,17 @@ const GroupSearch = (props: { groups: Group[] }) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack>
+            <Input
+              textAlign={"center"}
+              onInput={(e) => setSearch(e.currentTarget.value)}
+              value={search}
+              placeholder="Find Public Groups"
+              borderRadius={5}
+            />
+            <VStack my={5}>
               {publicGroups.length === 0 ? (
                 <Box>
-                  <Text>
+                  <Text mt={5}>
                     Please refine your search request or create your own group.
                   </Text>
                   <Center>
@@ -91,17 +94,19 @@ const GroupSearch = (props: { groups: Group[] }) => {
                 publicGroups.map((publicGroup: Group, i: number) => {
                   return (
                     <HStack key={i} w="full">
-                      <Heading size="sm">{publicGroup.name}</Heading>
+                      <Heading size="sm" maxW={"40%"}>
+                        {publicGroup.name}
+                      </Heading>
                       <Spacer />
-                      <GroupCapacity group={publicGroup} />
+                      <GroupCapacityBadge group={publicGroup} />
                       <Button
                         onClick={() =>
                           navigate(`/group/${publicGroup.id}/join`)
                         }
+                        size={"sm"}
                       >
                         Preview
                       </Button>
-                      <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );
                 })

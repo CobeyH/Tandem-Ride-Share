@@ -21,6 +21,7 @@ const FileDropzone = (props: {
       status: "success",
       description:
         "Your file has been selected and will be uploaded when you confirm group creation.",
+      isClosable: true,
     });
     props.parentCallback(file);
   }, []);

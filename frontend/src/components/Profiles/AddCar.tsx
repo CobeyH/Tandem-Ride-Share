@@ -28,6 +28,7 @@ import { useState } from "react";
 import { setUserVehicle, Vehicle } from "../../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
 import { FaCarSide, FaClipboard, FaWrench } from "react-icons/all";
+import Tutorial from "../Tutorial";
 
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
@@ -46,22 +47,61 @@ const trucks: Vehicle[] = [
   { type: "Extra Large", fuelUsage: 15, numSeats: 7 },
 ];
 
+const tutorialSteps = [
+  {
+    target: "#header",
+    content:
+      "You are about to add a car to your profile. When you create or join a ride you can select from the cars on your profile.",
+    disableBeacon: true,
+  },
+  {
+    target: "#name-car",
+    content: "The car name will be used to identify it from your list of cars",
+  },
+  {
+    target: "#car-type",
+    content:
+      "The type of car is used to estimate the number of seats and fuel usage of your car for you. You can fine tune it in the next step.",
+  },
+  {
+    target: "#configure",
+    content:
+      "In the final step you can change your number of seats and specify your fuel usage in L/100Km. This will be used when you join a ride to determine fuel cost and number of passengers.",
+  },
+];
+
+interface AddCarProps {
+  modalProps: { isOpen: boolean; onClose(): void };
+  user: User;
+}
+
+export const AddCarModal = (props: AddCarProps) => {
+  return (
+    <Modal
+      isOpen={props.modalProps.isOpen}
+      onClose={props.modalProps.onClose}
+      isCentered={true}
+    >
+      <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
+        <ModalCloseButton />
+        <ModalHeader id="header">
+          Add A Car
+          <Tutorial steps={tutorialSteps} />
+        </ModalHeader>
+        <CarSelector user={props.user} onDone={props.modalProps.onClose} />
+      </ModalContent>
+    </Modal>
+  );
+};
+
 const AddCar = (props: { user: User }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <MenuItem onClick={onOpen}>
-      Add A Car
-      {
-        <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
-          <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
-            <ModalCloseButton />
-            <ModalHeader>Add A Car</ModalHeader>
-            <CarSelector user={props.user} onDone={onClose} />
-          </ModalContent>
-        </Modal>
-      }
-    </MenuItem>
+    <>
+      <MenuItem onClick={onOpen}>Add A Car</MenuItem>
+      <AddCarModal user={props.user} modalProps={{ isOpen, onClose }} />
+    </>
   );
 };
 
@@ -109,7 +149,7 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
   return (
     <ModalBody>
       <Steps activeStep={activeStep} orientation="vertical">
-        <Step label="Name Your Car" icon={FaClipboard}>
+        <Step label="Name Your Car" icon={FaClipboard} id="name-car">
           <Input
             isRequired={true}
             value={displayName}
@@ -119,10 +159,10 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
             The name will be used to identify your car when you join a ride.
           </Text>
         </Step>
-        <Step label="Choose Car Type" icon={FaCarSide}>
+        <Step label="Choose Car Type" icon={FaCarSide} id="car-type">
           <CarAccordion carUpdate={setCar} />
         </Step>
-        <Step label="Configure" icon={FaWrench}>
+        <Step label="Configure" icon={FaWrench} id="configure">
           <CarStatsSlider car={car} updateCar={setCar} />
         </Step>
       </Steps>

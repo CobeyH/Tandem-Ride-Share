@@ -1,4 +1,4 @@
-import { IoMdSettings } from "react-icons/all";
+import { FaCog } from "react-icons/fa";
 import {
   useDisclosure,
   Modal,
@@ -27,7 +27,7 @@ const GroupSettings = ({ group }: { group: Group }) => {
     <>
       <Button
         size="sm"
-        rightIcon={<IoMdSettings />}
+        rightIcon={<FaCog />}
         onClick={() => {
           onOpen();
         }}
@@ -67,12 +67,14 @@ const GroupSettings = ({ group }: { group: Group }) => {
                         status: "info",
                         description:
                           "Only people who have been sent a link to your group can join it.",
+                        isClosable: true,
                       });
                     } else {
                       toast({
                         title: `${group.name} is now public`,
                         status: "warning",
                         description: `Anyone can join ${group.name} and it is publicly discoverable.`,
+                        isClosable: true,
                       });
                     }
                   }

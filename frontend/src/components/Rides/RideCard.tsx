@@ -13,6 +13,7 @@ import {
   Stack,
   Switch,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -69,20 +70,19 @@ export default function RideCard({
     endMarker = <Marker position={ride.end} icon={endIcon} />;
   }
 
+  const cardColour = useColorModeValue(
+    isActive ? "white" : "gray.100",
+    isActive ? "gray.700" : "gray.600"
+  );
   return !ride?.isComplete == isActive ? (
-    <Box
-      borderWidth="1px"
-      borderRadius="lg"
-      p="3"
-      bg={isActive ? "white" : "gray.100"}
-    >
+    <Box borderWidth="1px" w="100%" borderRadius="lg" p="3" bg={cardColour}>
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
         <>
           {/** Header and Collapse Button */}
           <Flex onClick={onToggle}>
-            <Heading size="sm" isTruncated>
+            <Heading id={`${rideId}-name`} size="sm" isTruncated>
               {ride.name}
             </Heading>
             <Spacer />
@@ -134,7 +134,10 @@ export default function RideCard({
             />
             <PassengerBar rideId={rideId} />
             {ride.startDate ? (
-              <RideTimesBar startTime={ride.startDate} />
+              <RideTimesBar
+                startTime={ride.startDate}
+                duration={route?.points?.end?.duration}
+              />
             ) : null}
             {
               /** Pickup Bar */
@@ -152,7 +155,7 @@ export default function RideCard({
             </AspectRatio>
             <GasCalculator
               fuelUsage={car?.fuelUsage}
-              distance={route?.distance}
+              distance={route?.points?.end?.distance}
               rideId={rideId}
             />
             {
@@ -183,7 +186,7 @@ function DriverIcon({
 }) {
   let color;
   if (!isActive) {
-    color = "gray";
+    color = useColorModeValue("gray", "gray.100");
   } else {
     if (isDriver) {
       color = "green.100";
@@ -256,7 +259,7 @@ function DriverBar({
         driverChecked
       );
     }
-  }, [driverChecked]);
+  }, [driverChecked, user?.vehicles]);
 
   useEffect(() => {
     setDriverChecked(authUser?.uid === driverId);
@@ -278,7 +281,7 @@ function DriverBar({
           />
         ) : null}
       </RideCardBar>
-      {authUser?.uid === driverId && isActive ? (
+      {driverChecked && isActive ? (
         <RideCardBar>
           <Text>Vehicle: </Text>
           <ChooseCar
@@ -378,12 +381,14 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
       .then(() => getRide(rideId))
       .then((ride) => {
         // Fetch optimized route for new points
-        const routePoints = [latLng(ride.pickupPoints[ride.start].location)];
+        const routePoints = [
+          { id: ride.start, location: ride.pickupPoints[ride.start].location },
+        ];
         Object.keys(ride.pickupPoints).map((k) => {
           if (k === ride.start) return;
-          routePoints.push(latLng(ride.pickupPoints[k].location));
+          routePoints.push({ id: k, location: ride.pickupPoints[k].location });
         });
-        routePoints.push(latLng(ride.end));
+        routePoints.push({ id: "end", location: ride.end });
         return getOptimizedRoute(routePoints);
       })
       .then((route) => {
@@ -443,15 +448,39 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
   );
 }
 
-function RideTimesBar({ startTime }: { startTime: string }) {
-  // make time strings pretty
-  const start_date = startTime?.split("T")[0];
-  let start_time = startTime?.split("T")[1];
-  const isPm_start = parseInt(start_time.split(":")[0]) >= 12;
+function RideTimesBar({
+  startTime,
+  duration,
+}: {
+  startTime: string;
+  duration?: number;
+}) {
+  // convert datetime string to Date object
+  const startDate = new Date(startTime);
 
-  start_time = isPm_start
-    ? `${parseInt(start_time.split(":")[0]) - 12}:${start_time.split(":")[1]}`
-    : `${parseInt(start_time.split(":")[0])}:${start_time.split(":")[1]}`;
+  // calculate arrival time
+  const arrivalDate = new Date(startTime);
+  if (duration) arrivalDate.setTime(arrivalDate.getTime() + duration * 1000);
+
+  // date formatting options
+  const dateOpts: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const timeOpts: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  const datesAreOnSameDay = (first: Date, second: Date) => {
+    return (
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate()
+    );
+  };
 
   return (
     <>
@@ -459,9 +488,23 @@ function RideTimesBar({ startTime }: { startTime: string }) {
         <Text>Start Date</Text>
         <Spacer />
         <Text>
-          {start_date} {start_time} {isPm_start ? "PM" : "AM"}
+          {startDate.toLocaleString("en-CA", { ...dateOpts, ...timeOpts })}
         </Text>
       </RideCardBar>
+      {duration ? (
+        <RideCardBar>
+          <Text>Estimated Arrival</Text>
+          <Spacer />
+          <Text>
+            {arrivalDate.toLocaleString(
+              "en-CA",
+              datesAreOnSameDay(startDate, arrivalDate)
+                ? { ...timeOpts }
+                : { ...timeOpts, ...dateOpts }
+            )}
+          </Text>
+        </RideCardBar>
+      ) : null}
     </>
   );
 }

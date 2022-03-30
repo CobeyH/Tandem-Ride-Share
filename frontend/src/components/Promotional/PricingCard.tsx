@@ -1,6 +1,7 @@
 import {
   BoxProps,
   Flex,
+  FlexProps,
   Heading,
   Icon,
   List,
@@ -27,6 +28,34 @@ interface PricingCardProps extends BoxProps {
   button: React.ReactElement;
   highlight: boolean;
 }
+
+const CardBadge = (props: FlexProps) => {
+  const { children, ...flexProps } = props;
+  return (
+    <Flex
+      bg={useColorModeValue("blue.500", "blue.200")}
+      position="absolute"
+      right={-20}
+      top={6}
+      width="240px"
+      transform="rotate(45deg)"
+      py={2}
+      justifyContent="center"
+      alignItems="center"
+      {...flexProps}
+    >
+      <Text
+        fontSize="xs"
+        textTransform="uppercase"
+        fontWeight="bold"
+        letterSpacing="wider"
+        color={useColorModeValue("white", "gray.800")}
+      >
+        {children}
+      </Text>
+    </Flex>
+  );
+};
 
 export const PricingCard = (props: PricingCardProps) => {
   const { data, icon, button, highlight, ...rest } = props;
@@ -85,6 +114,7 @@ export const PricingCard = (props: PricingCardProps) => {
           </ListItem>
         ))}
       </List>
+      {data.price !== "Free" ? <CardBadge> Coming Soon </CardBadge> : null}
       {button}
     </Card>
   );

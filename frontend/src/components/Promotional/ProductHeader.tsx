@@ -9,8 +9,6 @@ import {
   MenuList,
   MenuItem,
   Button,
-  Text,
-  Image,
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiMenu } from "react-icons/all";
@@ -18,8 +16,19 @@ import * as React from "react";
 import { NavConstants } from "../../NavigationConstants";
 import { styleColors } from "../../theme/colours";
 import { useNavigate } from "react-router-dom";
+import LogoName from "./LogoName";
 
-const ProductHeader = () => {
+const ProductHeader = ({
+  scrollToProducts,
+  scrollToTestimonials,
+  scrollToAboutUs,
+  scrollToContactUs,
+}: {
+  scrollToProducts: () => void;
+  scrollToTestimonials: () => void;
+  scrollToAboutUs: () => void;
+  scrollToContactUs: () => void;
+}) => {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
 
@@ -27,10 +36,7 @@ const ProductHeader = () => {
     <Box as="nav" bg={styleColors.mainBlue} p={4} textAlign="center">
       <Stack direction={{ base: "column", md: "row" }}>
         <HStack>
-          <Image src={"/logo_white.svg"} objectFit="cover" maxW="70px" />
-          <Text color="white" fontSize={30} p={1}>
-            Tandem
-          </Text>
+          <LogoName />
           <Spacer />
           <Box display={{ base: "block", md: "none" }} onClick={onToggle}>
             <HiMenu />
@@ -47,10 +53,10 @@ const ProductHeader = () => {
               <ChevronDownIcon />
             </MenuButton>
             <MenuList>
-              <MenuItem>Friend Group</MenuItem>
-              <MenuItem>Small Organization</MenuItem>
-              <MenuItem>Large Organization</MenuItem>
-              <MenuItem>Enterprise</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Small Organization</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Large Organization</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
             </MenuList>
           </Menu>
 
@@ -60,23 +66,10 @@ const ProductHeader = () => {
               <ChevronDownIcon />
             </MenuButton>
             <MenuList>
-              <MenuItem>Testimonials</MenuItem>
-              <MenuItem>Pricing</MenuItem>
-              <MenuItem>About Us</MenuItem>
-              <MenuItem>Contact Us</MenuItem>
-            </MenuList>
-          </Menu>
-
-          <Menu>
-            <MenuButton color="white">
-              Help
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>FAQ</MenuItem>
-              <MenuItem>Privacy Policy</MenuItem>
-              <MenuItem>Legal</MenuItem>
-              <MenuItem>Terms of Service</MenuItem>
+              <MenuItem onClick={scrollToTestimonials}>Testimonials</MenuItem>
+              <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
+              <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
+              <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
             </MenuList>
           </Menu>
         </HStack>
