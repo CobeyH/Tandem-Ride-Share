@@ -31,7 +31,7 @@ import MapView, {
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/Rides/ChooseCar";
 import CarStatsSlider from "../components/Profiles/CarStatsSlider";
-import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
+import { getRideRoute } from "../Directions";
 import LocationSearch from "../components/Rides/LocationSearch";
 import VerifiedStep from "../components/VerifiedStep";
 import {
