@@ -15,7 +15,7 @@ import { Steps, useSteps } from "chakra-ui-steps";
 import {
   Ride,
   setGroupRide,
-  setRide,
+  persistRide,
   setRidePassenger,
   setRoute,
   Vehicle,
@@ -44,12 +44,46 @@ import {
 } from "react-icons/all";
 import { styleColors } from "../theme/colours";
 
+const tutorialSteps = [
+  {
+    target: "#ride-create",
+    content:
+      "Rides are used to organize carpoolers. You can let others know when you plan to drive or ask others for a lift.",
+    disableBeacon: true,
+  },
+  {
+    target: "#ride-name",
+    content:
+      "The ride name should be a short description of what the ride is about. This allows others to quickly determine if they are interested in joining the ride.",
+  },
+  {
+    target: "#ride-driver",
+    content:
+      "You can create a ride as either a driver or passenger. If you choose to drive you must select a car from your profile.",
+  },
+  {
+    target: "#ride-time",
+    content:
+      "You must specify to time you plan the trip to start. This will be used to determine when the car will get to each pickup point.",
+  },
+  {
+    target: "#ride-route",
+    content:
+      "The route dictates where the trip will start and end. You can either enter text into the search boxes to drag the markers to fine-tune your start and destination points.",
+  },
+  {
+    target: "#ride-route",
+    content:
+      "If you create a ride as a passenger then the start point will be changed to the location that the driver is departing from when a driver joins.",
+  },
+];
+
 const createRide = async (
   ride: Ride,
   groupId: string,
   passList: string[] = []
 ) => {
-  const rideId = (await setRide(ride)).id;
+  const rideId = (await persistRide(ride)).id;
   if (rideId) {
     await setGroupRide(groupId, rideId);
     createRoute(rideId, ride);
@@ -147,9 +181,11 @@ const CreateRide = () => {
 
   return (
     <>
-      <Header isNested />
+      <Header isNested tutorialSteps={tutorialSteps} />
       <Container>
-        <Heading textAlign={"center"}>Create Ride</Heading>
+        <Heading id="ride-create" textAlign={"center"}>
+          Create Ride
+        </Heading>
         <Steps activeStep={activeStep} orientation="vertical">
           <VerifiedStep
             label="Name Ride"
@@ -161,6 +197,7 @@ const CreateRide = () => {
             icon={FaClipboard}
           >
             <Input
+              id="ride-name"
               mt={4}
               value={title}
               placeholder={"Ride Name"}
@@ -171,6 +208,7 @@ const CreateRide = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Are you the driver?"
+            id="ride-driver"
             currentInput={isDriver}
             isVerified={(driver) => driver !== undefined}
             prevStep={prevStep}
@@ -201,6 +239,7 @@ const CreateRide = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Select Car"
+            id="ride-car"
             currentInput={selectedCar}
             isVerified={(car) => {
               return car !== undefined;
@@ -224,6 +263,7 @@ const CreateRide = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Start Time"
+            id="ride-time"
             currentInput={[startDate, startTime]}
             prevStep={() => {
               if (isDriver) prevStep();
@@ -260,6 +300,7 @@ const CreateRide = () => {
           </VerifiedStep>
           <VerifiedStep
             label="Create Route"
+            id="ride-route"
             currentInput={{ start: startPosition, end: endPosition }}
             prevStep={prevStep}
             nextStep={submitRide}

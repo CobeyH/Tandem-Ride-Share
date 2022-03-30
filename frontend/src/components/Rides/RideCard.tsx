@@ -63,24 +63,19 @@ export default function RideCard({
   const [map, setMap] = useState<Map | undefined>(undefined);
   const [car] = useUserVehicle(ride?.driver, ride?.carId);
 
+  const cardColour = useColorModeValue(
+    isActive ? "white" : "gray.100",
+    isActive ? "gray.700" : "gray.600"
+  );
   return !ride?.isComplete == isActive ? (
-    <Box
-      borderWidth="1px"
-      borderRadius="lg"
-      p="3"
-      bg={
-        isActive
-          ? useColorModeValue("white", "gray.700")
-          : useColorModeValue("gray.100", "gray.600")
-      }
-    >
+    <Box borderWidth="1px" w="100%" borderRadius="lg" p="3" bg={cardColour}>
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
         <>
           {/** Header and Collapse Button */}
           <Flex onClick={onToggle}>
-            <Heading size="sm" isTruncated>
+            <Heading id={`${rideId}-name`} size="sm" isTruncated>
               {ride.name}
             </Heading>
             <Spacer />

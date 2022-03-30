@@ -94,7 +94,7 @@ const Chat = ({
               return component;
             })
           )}
-          <div ref={ref}></div>
+          <div ref={ref} />
         </Flex>
         <ChatTextBox
           addChat={(contents) => {
@@ -139,20 +139,25 @@ const MessageComponent = ({
 
   const amSender = sender_id === userId;
   return sender === "loading" ? null : (
-    <Box pt={1} alignSelf={amSender ? "flex-end" : "flex-start"}>
-      {sender_id !== prevSender ? (
-        <Text pt={3} textAlign={amSender ? "right" : "left"}>
-          {sender?.name ?? sender_id}
+    <>
+      <Box pt={1} alignSelf={amSender ? "flex-end" : "flex-start"}>
+        {sender_id !== prevSender ? (
+          <Text pt={3} textAlign={amSender ? "right" : "left"}>
+            {sender?.name ?? sender_id}
+          </Text>
+        ) : null}
+      </Box>
+      <Box pt={1} alignSelf={amSender ? "flex-end" : "flex-start"}>
+        <Text
+          p={2}
+          borderRadius={7}
+          align={amSender ? "right" : "left"}
+          color={"black"}
+          background={amSender ? lightTheme.lightButton : lightTheme.main}
+        >
+          {contents}
         </Text>
-      ) : null}
-      <Text
-        p={2}
-        borderRadius={7}
-        align={amSender ? "right" : "left"}
-        background={amSender ? lightTheme.lightButton : lightTheme.darkButton}
-      >
-        {contents}
-      </Text>
-    </Box>
+      </Box>
+    </>
   );
 };

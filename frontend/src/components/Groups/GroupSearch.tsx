@@ -19,12 +19,11 @@ import {
   Center,
   Tooltip,
 } from "@chakra-ui/react";
-import GroupJoinButton from "./GroupJoinButton";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import { useState } from "react";
 import { Group } from "../../firebase/database";
-import GroupCapacity from "./GroupCapacity";
+import { GroupCapacityBadge } from "./GroupCapacity";
 import { useNavigate } from "react-router-dom";
 import { ImSearch } from "react-icons/im";
 
@@ -54,16 +53,18 @@ const GroupSearch = (props: { groups: Group[] }) => {
         placement="right"
       >
         <IconButton
+          id="search-group"
           aria-label="public-group-search"
           icon={<ImSearch />}
           isRound
           onClick={onOpen}
+          size="md"
         />
       </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW={{ base: "90%", md: "50%", lg: "30%" }}>
           <ModalHeader textAlign={"center"}>
             {publicGroups.length > 0
               ? "Found Public Groups"
@@ -78,10 +79,10 @@ const GroupSearch = (props: { groups: Group[] }) => {
               placeholder="Find Public Groups"
               borderRadius={5}
             />
-            <VStack>
+            <VStack my={5}>
               {publicGroups.length === 0 ? (
                 <Box>
-                  <Text>
+                  <Text mt={5}>
                     Please refine your search request or create your own group.
                   </Text>
                   <Center>
@@ -94,17 +95,19 @@ const GroupSearch = (props: { groups: Group[] }) => {
                 publicGroups.map((publicGroup: Group, i: number) => {
                   return (
                     <HStack key={i} w="full">
-                      <Heading size="sm">{publicGroup.name}</Heading>
+                      <Heading size="sm" maxW={"40%"}>
+                        {publicGroup.name}
+                      </Heading>
                       <Spacer />
-                      <GroupCapacity group={publicGroup} />
+                      <GroupCapacityBadge group={publicGroup} />
                       <Button
                         onClick={() =>
                           navigate(`/group/${publicGroup.id}/join`)
                         }
+                        size={"sm"}
                       >
                         Preview
                       </Button>
-                      <GroupJoinButton group={publicGroup} userId={user?.uid} />
                     </HStack>
                   );
                 })
