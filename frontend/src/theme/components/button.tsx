@@ -1,5 +1,6 @@
 import { ComponentStyleConfig } from "@chakra-ui/theme";
 import { styleColors } from "../colours";
+import { mode } from "@chakra-ui/theme-tools";
 
 const Button: ComponentStyleConfig = {
   variants: {
@@ -18,7 +19,7 @@ const Button: ComponentStyleConfig = {
       bg: "red",
       textColor: "white",
     },
-    "tandem-registration": {
+    "tandem-registration": (props) => ({
       bg: styleColors.medBlue,
       textColor: "white",
       fontWeight: "semiBold",
@@ -26,9 +27,9 @@ const Button: ComponentStyleConfig = {
       p: 4,
       _hover: { bg: styleColors.paleBlue },
       _disabled: {
-        _hover: { textColor: styleColors.deepBlue },
+        _hover: { textColor: mode(styleColors.deepBlue, "white")(props) },
       },
-    },
+    }),
     "tandem-login": {
       bg: styleColors.darkBlue,
       textColor: "white",

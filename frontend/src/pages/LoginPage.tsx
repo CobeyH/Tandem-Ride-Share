@@ -177,8 +177,11 @@ const ResetPasswordModal = ({
             We will send a password reset to your email, give it a couple
             minutes to show up.
           </Text>
+        </ModalBody>
+        <ModalFooter>
           <Button
             p={4}
+            mb={2}
             onClick={() =>
               sendPasswordReset(email).then(() => {
                 toast({
@@ -193,14 +196,8 @@ const ResetPasswordModal = ({
           >
             Reset Password
           </Button>
-        </ModalBody>
+        </ModalFooter>
       </ModalContent>
-      <ModalFooter>
-        <Button colorScheme="blue" mr={3} onClick={onClose}>
-          Close
-        </Button>
-        <Button variant="ghost">Secondary Action</Button>
-      </ModalFooter>
     </Modal>
   );
 };
