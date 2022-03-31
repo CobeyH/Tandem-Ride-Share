@@ -54,15 +54,13 @@ const Header = ({
       padding={6}
       bg={styleColors.mainBlue}
     >
-      <LogoName />
-      {isNested ? (
-        <IconButton
-          onClick={() => navigate("/welcome")}
-          aria-label="home"
-          icon={<FaHome />}
-          mx={3}
-        />
-      ) : null}
+      <Button
+        onClick={() => navigate("/welcome")}
+        aria-label="home"
+        variant="ghost"
+      >
+        <LogoName />
+      </Button>
       <Spacer />
       {tutorialSteps ? <Tutorial steps={tutorialSteps} /> : null}
       {user ? (
