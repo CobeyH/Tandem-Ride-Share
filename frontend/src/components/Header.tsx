@@ -49,6 +49,7 @@ const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
       bg={styleColors.mainBlue}
     >
       <Button
+        id="home"
         onClick={() => navigate("/welcome")}
         aria-label="home"
         variant="ghost"
