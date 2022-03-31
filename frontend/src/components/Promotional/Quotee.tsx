@@ -1,4 +1,10 @@
-import { Box, BoxProps, Center, Text } from "@chakra-ui/react";
+import {
+  Box,
+  BoxProps,
+  Center,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import * as React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { styleColors } from "../../theme/colours";
@@ -18,13 +24,20 @@ export const Quotee = (props: Props) => {
       <Box mt="3">
         <Text
           as="cite"
-          color={styleColors.deepBlue}
+          color={useColorModeValue("${styleColors.deepBlue}", "white")}
           fontStyle="normal"
           fontWeight="bold"
         >
           {name}
         </Text>
-        <Text fontSize="sm" fontWeight="medium" color={styleColors.darkBlue}>
+        <Text
+          fontSize="sm"
+          fontWeight="medium"
+          color={useColorModeValue(
+            "${styleColors.darkBlue}",
+            "${styleColors.paleBlue}"
+          )}
+        >
           {jobTitle}
         </Text>
       </Box>

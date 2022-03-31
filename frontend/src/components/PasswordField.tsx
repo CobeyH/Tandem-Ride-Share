@@ -35,7 +35,7 @@ const PasswordField = (props: {
             onClick={() => setShowPassword(!showPassword)}
             icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
             aria-label="password-visability"
-            color={styleColors.darkBlue}
+            color={styleColors.deepBlue}
             variant="ghost"
           />
         </InputRightElement>

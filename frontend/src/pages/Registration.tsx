@@ -72,16 +72,18 @@ function Register() {
       <Container height="100vh">
         <VStack align="center" p={6} mb={30}>
           <Image
-            src={"/logo_mainBlue.svg"}
+            src={useColorModeValue("/logo_mainBlue.svg", "/logo_white.svg")}
             alt="main blue logo"
             objectFit="cover"
             maxW="100px"
           />
-          <Text color={styleColors.mainBlue}>TANDEM</Text>
+          <Text color={useColorModeValue(styleColors.mainBlue, "white")}>
+            TANDEM
+          </Text>
         </VStack>
         <VStack>
           <Box
-            color={styleColors.mainBlue}
+            color={useColorModeValue(styleColors.mainBlue, "white")}
             fontWeight="medium"
             fontSize="200%"
             mb={4}
@@ -110,18 +112,30 @@ function Register() {
             submitHandler={register}
           />
           <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
-            <Button onClick={register} disabled={!isFormValid} mt={5}>
+            <Button
+              onClick={register}
+              disabled={!isFormValid}
+              mt={5}
+              variant="tandem-registration"
+            >
               Create Account
             </Button>
           </Tooltip>
-          <Box pt={10} pb={2} color={styleColors.deepBlue}>
+          <Box
+            pt={10}
+            pb={2}
+            color={useColorModeValue(styleColors.deepBlue, "white")}
+          >
             Or create an account with
           </Box>
           <ProviderAuth buttonVar="signInWith" />
           <Box>
             Already have an account?{" "}
             <Link
-              style={{ color: styleColors.mainBlue, fontWeight: "bold" }}
+              style={{
+                color: useColorModeValue(styleColors.mainBlue, "white"),
+                fontWeight: "bold",
+              }}
               to={NavConstants.LOGIN}
               state={location.state}
             >
