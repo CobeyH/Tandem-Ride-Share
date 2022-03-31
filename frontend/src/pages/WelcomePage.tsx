@@ -1,12 +1,21 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import { Box, Center, Heading, HStack, VStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Heading,
+  HStack,
+  VStack,
+  Text,
+  Image,
+  useToast,
+} from "@chakra-ui/react";
 import Tutorial from "../components/Tutorial";
 import { FaQuestionCircle } from "react-icons/fa";
 
@@ -51,6 +60,8 @@ export default function WelcomePage() {
 
   const navigate = useNavigate();
 
+  const toast = useToast();
+
   useEffect(() => {
     if (loading) return;
     if (!user) return navigate("/login");
@@ -70,13 +81,13 @@ export default function WelcomePage() {
           <Center>
             <VStack spacing={"5%"}>
               <Heading
-                mt={{ base: "40%", md: "30%" }}
+                mt={"20%"}
                 id="get-started"
                 fontSize={{ base: "2xl", md: "4xl" }}
               >
                 Welcome to Tandem!
               </Heading>
-              <Box textAlign={"center"}>
+              <VStack spacing={1}>
                 <Text
                   fontSize={{ base: "xl", md: "2xl" }}
                   fontWeight={"medium"}
@@ -84,11 +95,43 @@ export default function WelcomePage() {
                 >
                   Excuse the occasional flat tire!
                 </Text>
-                <Text>
-                  Our app is still in beta. We are working to patch things up.
-                  Let us know how we can make your experience better.
+                <Image
+                  align="center"
+                  src={"/FlatTire.png"}
+                  alt="flat tire gif"
+                  objectFit="cover"
+                  maxW="300px"
+                />
+                <Text
+                  fontWeight={"medium"}
+                  textColor={"gray.500"}
+                  px="20%"
+                  textAlign={"center"}
+                >
+                  Our app is still in <b>beta</b>. We are working to patch
+                  things up.{" "}
+                  <Link
+                    onClick={() => {
+                      navigator.clipboard
+                        .writeText("CobeyHollier@gmail.com")
+                        .then(() => {
+                          toast({
+                            title: "Copied Email to Clipboard",
+                            status: "success",
+                            isClosable: true,
+                          });
+                        });
+                    }}
+                    color={"gray.500"}
+                    to={""}
+                  >
+                    <b>
+                      <u>Email us</u>
+                    </b>
+                  </Link>{" "}
+                  and let us know how we can make your experience better.
                 </Text>
-              </Box>
+              </VStack>
               <Tutorial steps={tutorialSteps} buttonText="Get Started" />
             </VStack>
           </Center>
