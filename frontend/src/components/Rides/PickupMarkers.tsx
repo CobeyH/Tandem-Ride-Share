@@ -28,10 +28,13 @@ const addSecToDate = (dateString: string, seconds: number) => {
 
 const validateRideRoute = (ride: Ride, route: Route) => {
   if (!ride.startDate) return false;
-  if (!ride.start || !Object.keys(ride.pickupPoints).includes(ride.start)) {
+  if (
+    !ride.start ||
+    !Object.keys(ride.pickupPoints ?? {}).includes(ride.start)
+  ) {
     return false;
   }
-  if (!Object.keys(route.points).includes("end")) return false;
+  if (!Object.keys(route.points ?? {}).includes("end")) return false;
   return true;
 };
 

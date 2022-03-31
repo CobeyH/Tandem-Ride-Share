@@ -111,7 +111,7 @@ export default function RideCard({
                     ]
                   : [
                       latLng(ride.end.lat, ride.end.lng),
-                      ...Object.values(ride.pickupPoints).map((p) => {
+                      ...Object.values(ride.pickupPoints ?? {}).map((p) => {
                         return latLng(p.location.lat, p.location.lng);
                       }),
                     ];
@@ -309,10 +309,9 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
 
   useEffect(() => {
     if (ride && route && user) {
-      const p = Object.keys(ride.pickupPoints).find((p) => {
+      const p = Object.keys(ride.pickupPoints ?? {}).find((p) => {
         const pickup = ride.pickupPoints[p];
-        if (!pickup.members) return false;
-        return Object.keys(pickup.members).includes(user.uid);
+        return Object.keys(pickup.members ?? {}).includes(user.uid);
       });
       if (p) setText(route.points[p]?.geocode ?? "");
     }
