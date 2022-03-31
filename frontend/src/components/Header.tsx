@@ -46,7 +46,7 @@ const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding={6}
+      padding={{ base: 3, md: 4, lg: 6, xl: 8 }}
       bg={styleColors.mainBlue}
     >
       <Button
@@ -54,6 +54,7 @@ const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
         onClick={() => navigate("/welcome")}
         aria-label="home"
         variant="ghost"
+        p={0}
       >
         <LogoName />
       </Button>
