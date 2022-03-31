@@ -488,7 +488,7 @@ export const removeUserFromPickupPoints = async (
 ): Promise<void> => {
   const ride = await getRide(rideId);
   for (const pickupPoint of Object.values(ride.pickupPoints)) {
-    if (pickupPoint.members[userId]) {
+    if ((pickupPoint?.members ?? {})[userId]) {
       await setRide({
         ...ride,
         pickupPoints: Object.fromEntries(
