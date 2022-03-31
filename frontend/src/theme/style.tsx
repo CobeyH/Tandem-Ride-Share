@@ -9,6 +9,7 @@ import Button from "./components/button";
 import Text from "./components/text";
 import { Input } from "./components/input";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
+import Menu from "./components/menu";
 
 const styles = {
   config: {
@@ -30,6 +31,7 @@ const styles = {
     Input,
     Text,
     Steps,
+    Menu,
   },
   fonts: {
     heading: "Montserrat",

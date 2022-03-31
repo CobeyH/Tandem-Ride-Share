@@ -10,6 +10,7 @@ import {
   MenuGroup,
   Button,
   VStack,
+  Heading,
 } from "@chakra-ui/react";
 import { HiMenu } from "react-icons/all";
 import * as React from "react";
@@ -44,22 +45,6 @@ const ProductHeader = ({
               <Box as={HiMenu} w={6} h={6} />
             </MenuButton>
             <MenuList>
-              <VStack alignItems="stretch" mx={2} pb={2}>
-                <Button
-                  variant="tandem-product"
-                  p={4}
-                  onClick={() => navigate(NavConstants.LOGIN)}
-                >
-                  Login
-                </Button>
-                <Button
-                  variant="tandem-product"
-                  p={4}
-                  onClick={() => navigate(NavConstants.REGISTER)}
-                >
-                  Register Now
-                </Button>
-              </VStack>
               <MenuGroup title="Features and Benefits">
                 <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
                 <MenuItem onClick={scrollToProducts}>
@@ -76,6 +61,22 @@ const ProductHeader = ({
                 <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
                 <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
               </MenuGroup>
+              <VStack alignItems="stretch" mx={2} pt={2}>
+                <Button
+                  variant="tandem-product"
+                  p={4}
+                  onClick={() => navigate(NavConstants.LOGIN)}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="tandem-product"
+                  p={4}
+                  onClick={() => navigate(NavConstants.REGISTER)}
+                >
+                  Register Now
+                </Button>
+              </VStack>
             </MenuList>
           </Menu>
         </Box>
