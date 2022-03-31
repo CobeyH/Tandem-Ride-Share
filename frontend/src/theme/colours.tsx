@@ -31,7 +31,7 @@ export const styleColors = {
 
 export const groupLogos = [
   "#E06C9F",
-  "#77A2CA",
+  "#3975AE",
   "#8CDD70",
   "#2A1E5C",
   "#BA1200",
