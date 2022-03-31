@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   useToast,
   Input,
   HStack,
