@@ -109,7 +109,7 @@ export default function WelcomePage() {
                   textAlign={"center"}
                 >
                   Our app is still in <b>beta</b>. We are working to patch
-                  things up.{" "}
+                  things up. Contact our{" "}
                   <Link
                     onClick={() => {
                       navigator.clipboard
@@ -126,7 +126,7 @@ export default function WelcomePage() {
                     to={""}
                   >
                     <b>
-                      <u>Email us</u>
+                      <u>support team</u>
                     </b>
                   </Link>{" "}
                   and let us know how we can make your experience better.
