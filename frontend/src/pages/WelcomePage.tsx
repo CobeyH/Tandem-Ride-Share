@@ -15,46 +15,13 @@ import {
   Text,
   Image,
   useToast,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import Tutorial from "../components/Tutorial";
 import { FaQuestionCircle } from "react-icons/fa";
 
-const tutorialSteps = [
-  {
-    target: "#get-started",
-    content:
-      "Welcome to Tandem! An app designed to foster community by bringing people together.",
-    disableBeacon: true,
-  },
-  {
-    target: "#tutorial",
-    content: (
-      <>
-        <Text mb={3}>
-          If you ever need help, click on the question mark icon.
-        </Text>
-        <Center>
-          <FaQuestionCircle />
-        </Center>
-      </>
-    ),
-  },
-  {
-    target: "#new-group",
-    content: "You can get started by creating a group of your own.",
-  },
-  {
-    target: "#search-group",
-    content: "Or you can search for an established group.",
-  },
-  {
-    target: "#home",
-    content:
-      "If you every get stuck, click the Tandem logo to return to your group pages.",
-  },
-];
-
 export default function WelcomePage() {
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [user, loading] = useAuthState(auth);
   const [groups, setGroups] = useState<Group[]>();
 
@@ -72,9 +39,52 @@ export default function WelcomePage() {
       navigate(`/group/${groups[0].id}`);
     }
   }, [groups]);
+
+  const tutorialSteps = [
+    {
+      target: "#get-started",
+      content:
+        "Welcome to Tandem! An app designed to foster community by bringing people together.",
+      disableBeacon: true,
+    },
+    {
+      target: "#tutorial",
+      content: (
+        <>
+          <Text mb={3}>
+            If you ever need help, click on the question mark icon.
+          </Text>
+          <Center>
+            <FaQuestionCircle />
+          </Center>
+        </>
+      ),
+    },
+  ];
+
+  const extraSteps = isMobile
+    ? [
+        {
+          target: "#selector-open",
+          content:
+            "You can click here to create a group or search for existing groups.",
+          spotlightClicks: true,
+        },
+      ]
+    : [
+        {
+          target: "#new-group",
+          content: "You can get started by creating a group of your own.",
+        },
+        {
+          target: "#search-group",
+          content: "Or you can search for an established group.",
+        },
+      ];
+
   return (
     <>
-      <Header tutorialSteps={tutorialSteps} />
+      <Header tutorialSteps={[...tutorialSteps, ...extraSteps]} />
       <HStack alignItems="flex-start">
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
@@ -132,7 +142,11 @@ export default function WelcomePage() {
                   and let us know how we can make your experience better.
                 </Text>
               </VStack>
-              <Tutorial steps={tutorialSteps} buttonText="Get Started" />
+              <Tutorial
+                steps={[...tutorialSteps, ...extraSteps]}
+                buttonText="Get Started"
+              />
+              abd2fba (CH: Fixing mobile welcome tutorial)
             </VStack>
           </Center>
         </Box>
