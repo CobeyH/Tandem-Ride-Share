@@ -18,6 +18,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import { divIcon, latLng, LatLng } from "leaflet";
 import { styleColors } from "../../theme/colours";
+import { getReverseGeocodeAsString } from "../../Directions";
 
 const timeFmt: Intl.DateTimeFormatOptions = { timeStyle: "short" };
 const addSecToDate = (dateString: string, seconds: number) => {
@@ -115,6 +116,8 @@ const RideMarker = ({
 }) => {
   const [members, setMembers] = useState<User[]>();
   const [user] = useAuthState(auth);
+  const [geocodeText, setGeocodeText] = useState<string>(geocode);
+  const isEnd = () => purpose !== MarkerPurpose.End;
 
   useEffect(() => {
     if (!memberIds) setMembers(undefined);
@@ -128,6 +131,10 @@ const RideMarker = ({
   const inPickup =
     user?.uid && memberIds ? memberIds.includes(user.uid) : false;
 
+  useEffect(() => {
+    if (!geocode) getReverseGeocodeAsString(location).then(setGeocodeText);
+  }, [geocode]);
+
   const icon = divIcon({
     className: "",
     iconSize: [48, 48],
@@ -140,25 +147,29 @@ const RideMarker = ({
   return (
     <Marker position={location} icon={icon}>
       <Popup offset={[9, -10]}>
-        <Heading size={"sm"}>
-          {geocode ? geocode : `${location.lat}, ${location.lng}`}
-        </Heading>
-        {members?.map((member: User, i: number) => (
-          <Heading size={"xs"} key={i} pt={2} pb={2}>
-            {member.name}
-          </Heading>
-        ))}
-        <Button
-          onClick={() => {
-            if (pickupId && user?.uid) {
-              clearUserFromPickups(rideId, user.uid);
-              setUserInPickup(rideId, pickupId, user.uid, !inPickup);
-              setRidePassenger(user.uid, rideId, !inPickup);
-            }
-          }}
-        >
-          {inPickup ? "Leave" : "Join"}
-        </Button>
+        <Heading size={"sm"}>{geocodeText}</Heading>
+        {isEnd() ? (
+          <>
+            {members?.map((member: User, i: number) => (
+              <Heading size={"xs"} key={i} pt={2} pb={2}>
+                {member.name}
+              </Heading>
+            ))}
+            <Button
+              onClick={() => {
+                if (pickupId && user?.uid) {
+                  clearUserFromPickups(rideId, user.uid);
+                  setUserInPickup(rideId, pickupId, user.uid, !inPickup);
+                  setRidePassenger(user.uid, rideId, !inPickup);
+                }
+              }}
+            >
+              {inPickup ? "Leave" : "Join"}
+            </Button>
+          </>
+        ) : (
+          <></>
+        )}
       </Popup>
     </Marker>
   );
