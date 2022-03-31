@@ -56,6 +56,32 @@ const Button: ComponentStyleConfig = {
       bgColor: styleColors.medGreen,
       _hover: { bg: styleColors.green },
     },
+    "tandem-group": {
+      bg: "transparent",
+      _hover: {
+        _before: {
+          content: `""`,
+          position: "absolute",
+          left: "2px",
+          width: "6px",
+          height: "100%",
+          borderRadius: "3px",
+          bg: styleColors.paleBlue,
+        },
+      },
+    },
+    "tandem-group-current": {
+      bg: "transparent",
+      _before: {
+        content: `""`,
+        position: "absolute",
+        left: "2px",
+        width: "6px",
+        height: "100%",
+        borderRadius: "3px",
+        bg: styleColors.darkBlue,
+      },
+    },
     signInWith: {
       bg: styleColors.paleBlue,
       textColor: "white",
