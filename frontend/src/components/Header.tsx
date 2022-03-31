@@ -124,7 +124,7 @@ const ReportBug = () => {
     <>
       <Tooltip hasArrow label="Report a Bug" bg="gray.300" color="black">
         <IconButton
-          mr="2"
+          mr="4"
           variant="ghost"
           aria-label="report a bug"
           color="white"

@@ -25,6 +25,7 @@ export const styleColors = {
   mint: "#B5F0D3",
   green: "#ADFC92",
   medGreen: "#8CDD70",
+  checkmarkGreen: "#38A169",
   charcoal: "#2D3748",
 };
 
