@@ -5,7 +5,6 @@ import {
   IconButton,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
   Spinner,
   Text,
