@@ -69,6 +69,18 @@ const Button: ComponentStyleConfig = {
           bg: styleColors.paleBlue,
         },
       },
+      _focus: {
+        boxShadow: "none",
+        _before: {
+          content: `""`,
+          position: "absolute",
+          left: "2px",
+          width: "6px",
+          height: "100%",
+          borderRadius: "3px",
+          bg: styleColors.paleBlue,
+        },
+      },
     },
     "tandem-group-current": {
       bg: "transparent",
@@ -80,6 +92,9 @@ const Button: ComponentStyleConfig = {
         height: "100%",
         borderRadius: "3px",
         bg: styleColors.darkBlue,
+      },
+      _focus: {
+        boxShadow: "none",
       },
     },
     signInWith: {
