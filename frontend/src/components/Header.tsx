@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { logout, auth } from "../firebase/firebase";
-import { FaHome, MdEmail, FaBug, FaBars } from "react-icons/all";
+import { MdEmail, FaBug, FaBars } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
 import { styleColors } from "../theme/colours";
