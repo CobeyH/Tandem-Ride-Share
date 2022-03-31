@@ -3,11 +3,8 @@ import {
   Heading,
   Input,
   Text,
-  Stack,
   HStack,
   Textarea,
-  Checkbox,
-  Tooltip,
   Container,
   TabList,
   TabPanel,
@@ -16,6 +13,7 @@ import {
   Tab,
   VStack,
   Box,
+  Button,
 } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
@@ -36,10 +34,12 @@ import VerifiedStep from "../components/VerifiedStep";
 import {
   FaClipboard,
   FaUserFriends,
+  FaUserSecret,
   ImQuill,
   IoMdPhotos,
 } from "react-icons/all";
 import IconBrowser from "../components/Groups/IconBrowser";
+import { styleColors } from "../theme/colours";
 
 type ValidatableFiled<T> = {
   field: T;
@@ -105,7 +105,7 @@ const CreateGroup = () => {
     invalid: false,
   });
   const [description, setDescription] = useState("");
-  const [isPrivate, setPrivate] = useState<boolean>(true);
+  const [isPrivate, setPrivate] = useState<boolean>(false);
   const [plan, setPlan] = useState<PlanTypes>("Friend Group");
   const MAX_GROUP_NAME_LENGTH = 25;
 
@@ -146,7 +146,7 @@ const CreateGroup = () => {
     <>
       <Header isNested tutorialSteps={tutorialSteps} />
       <Container maxWidth="90%">
-        <Heading textAlign={"center"} id="create-group">
+        <Heading textAlign={"center"} id="create-group" mt={5}>
           Create Group
         </Heading>
         <Steps activeStep={activeStep} orientation="vertical">
@@ -204,21 +204,39 @@ const CreateGroup = () => {
             nextStep={nextStep}
             icon={FaUserFriends}
           >
-            <Stack>
-              <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
-              <HStack>
-                <Tooltip
-                  label="Private groups are only joinable through an invite link from a group member"
-                  hasArrow
-                >
-                  <Text mb={"8px"}>Private Group:</Text>
-                </Tooltip>
-                <Checkbox
-                  isChecked={isPrivate}
-                  onChange={(e) => setPrivate(e.target.checked)}
-                />
-              </HStack>
-            </Stack>
+            <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
+          </VerifiedStep>
+          <VerifiedStep
+            label="Group Publicity"
+            id="group-publicity"
+            currentInput={isPrivate}
+            prevStep={prevStep}
+            nextStep={nextStep}
+            icon={FaUserSecret}
+          >
+            <Text variant="help-text" align="left" mb={3}>
+              {isPrivate
+                ? "Private groups can only be joined using an invite link from a group member."
+                : "Public groups can be joined by anybody using the group search."}
+            </Text>
+            <HStack>
+              <Button
+                bg={!isPrivate ? styleColors.green : "white"}
+                onClick={() => setPrivate(false)}
+                borderRadius={20}
+                borderWidth={2}
+              >
+                Public
+              </Button>
+              <Button
+                bg={isPrivate ? styleColors.green : "white"}
+                onClick={() => setPrivate(true)}
+                borderRadius={20}
+                borderWidth={2}
+              >
+                Private
+              </Button>
+            </HStack>
           </VerifiedStep>
           <VerifiedStep
             id="group-media"

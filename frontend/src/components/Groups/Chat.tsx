@@ -1,5 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Flex, Input, Spinner, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Spinner,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   getUser,
@@ -13,7 +24,8 @@ import {
   addChatToRideChat,
 } from "../../firebase/database";
 import { auth } from "../../firebase/firebase";
-import { lightTheme } from "../../theme/colours";
+import { lightTheme, styleColors } from "../../theme/colours";
+import { IoMdSend } from "react-icons/io";
 
 export const GroupChat = ({ groupId }: { groupId: string }) => (
   <Chat dbLocation={{ chatType: "group", id: groupId }} />
@@ -27,18 +39,39 @@ const ChatTextBox = ({
   addChat,
 }: {
   addChat: (message: string) => Promise<void>;
-}) => (
-  <Box w="95%">
-    <Input
-      onKeyDown={(e) => {
-        if (e.key == "Enter" && e.currentTarget.value !== "") {
-          addChat(e.currentTarget.value);
-          e.currentTarget.value = "";
-        }
-      }}
-    />
-  </Box>
-);
+}) => {
+  const [message, setMessage] = useState("");
+  return (
+    <Box w="95%">
+      <InputGroup>
+        <Input
+          onKeyDown={(e) => {
+            if (e.key == "Enter" && message !== "") {
+              addChat(message);
+              setMessage("");
+            }
+          }}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Send a message"
+          value={message}
+        />
+        <InputRightElement>
+          <IconButton
+            aria-label="send-message"
+            icon={<IoMdSend />}
+            variant="ghost"
+            onClick={() => {
+              addChat(message);
+              setMessage("");
+            }}
+            isDisabled={message.length <= 0}
+            color={useColorModeValue(styleColors.medBlue, styleColors.mainBlue)}
+          />
+        </InputRightElement>
+      </InputGroup>
+    </Box>
+  );
+};
 
 const Chat = ({
   dbLocation,
