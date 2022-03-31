@@ -1,8 +1,8 @@
 import { Button, IconButton, theme } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
-import Joyride, { Props } from "react-joyride";
 import { styleColors } from "../theme/colours";
+import Joyride, { CallBackProps, Props, STATUS } from "react-joyride";
 
 interface TutorialProps extends Props {
   buttonText?: string;
@@ -10,6 +10,14 @@ interface TutorialProps extends Props {
 
 const Tutorial = (props: TutorialProps) => {
   const [started, setStarted] = useState<boolean>(false);
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+
+    if (finishedStatuses.includes(status)) {
+      setStarted(false);
+    }
+  };
   return (
     <>
       {props.buttonText ? (
@@ -43,6 +51,7 @@ const Tutorial = (props: TutorialProps) => {
         continuous
         showSkipButton
         run={started}
+        callback={handleJoyrideCallback}
         showProgress
         styles={{
           options: {
