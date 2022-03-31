@@ -2,10 +2,12 @@ import * as React from "react";
 import {
   Box,
   Button,
+  Collapse,
   Container,
   Heading,
   HStack,
   Image,
+  Switch,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -25,6 +27,7 @@ import GroupDrawer from "../components/Groups/GroupDrawer";
 import GroupSelector from "../components/Groups/GroupSelector";
 import { LoadingPage } from "../App";
 import GroupAvatar from "../components/Groups/GroupAvatar";
+import { useState } from "react";
 
 const tutorialSteps = [
   {
@@ -89,6 +92,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
     : undefined;
   const [banner, bannerLoading, error] = useDownloadURL(bannerRef);
   const [user] = useAuthState(auth);
+  const [showPrev, setShowPrev] = useState(false);
 
   return (
     <Box flexGrow={1}>
@@ -124,17 +128,18 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               {group.description}
             </Box>
           ) : null}
-          <Box
-            textAlign="left"
-            fontWeight="bold"
-            fontSize="22"
-            w="100%"
-            px={5}
-            pt={5}
-            pb={2}
-            id="active-rides"
-          >
-            Active Rides
+          <Box w="100%" px={5} pt={5} id="active-rides">
+            <Text textAlign="left" fontWeight="bold" fontSize="22">
+              Active Rides
+            </Text>
+            <HStack justifyContent={"flex-start"} w="100%">
+              <Text fontSize={12}>Show Completed</Text>
+              <Switch
+                isChecked={showPrev}
+                onChange={(e) => setShowPrev(e.target.checked)}
+                size="sm"
+              />
+            </HStack>
           </Box>
           {group.rides ? (
             Object.keys(group.rides).map((key) => (
@@ -143,6 +148,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           ) : (
             <Text>There are no currently active rides...</Text>
           )}
+          {group.rides && showPrev
+            ? Object.keys(group.rides).map((key) => (
+                <RideCard key={key} rideId={key} isActive={false} />
+              ))
+            : null}
           <Button
             fontWeight="normal"
             id="new-ride"
@@ -152,23 +162,6 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           >
             Create a new ride
           </Button>
-          <Box
-            textAlign="left"
-            fontWeight="bold"
-            fontSize="22"
-            w="100%"
-            px={5}
-            pt={5}
-            pb={2}
-            id="prev-rides"
-          >
-            Previous Rides
-          </Box>
-          {group.rides
-            ? Object.keys(group.rides).map((key) => (
-                <RideCard key={key} rideId={key} isActive={false} />
-              ))
-            : null}
         </VStack>
       </Container>
     </Box>
