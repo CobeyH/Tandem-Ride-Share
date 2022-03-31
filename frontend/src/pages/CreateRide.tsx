@@ -118,7 +118,9 @@ const CreateRide = () => {
     undefined
   );
   const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
+
+  const currentTime = getCurrentTime();
+  const [startTime, setStartTime] = useState(currentTime);
   const { nextStep, prevStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -133,8 +135,6 @@ const CreateRide = () => {
       })
       .join(":");
   }
-
-  const currentTime = getCurrentTime();
 
   const navigate = useNavigate();
 
