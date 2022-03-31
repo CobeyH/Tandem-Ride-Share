@@ -60,6 +60,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
     <>
       {!isOpen ? (
         <IconButton
+          id="selector-open"
           position="fixed"
           aria-label="toggle-group-list"
           ml={-2}
