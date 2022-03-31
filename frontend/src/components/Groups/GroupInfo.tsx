@@ -143,7 +143,7 @@ const GroupInfo = ({ group, userId }: { group: Group; userId: string }) => {
                 setGroup({ ...group, plan });
               }}
             >
-              {group.plan === plan ? Close : Save}
+              {group.plan === plan ? "Close" : "Save"}
             </Button>
           </ModalFooter>
         </ModalContent>
