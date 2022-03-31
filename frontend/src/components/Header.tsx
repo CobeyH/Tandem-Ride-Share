@@ -58,7 +58,7 @@ const Header = ({
       <LogoName />
       {isNested ? (
         <IconButton
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/welcome")}
           aria-label="home"
           icon={<FaHome />}
           mx={3}
