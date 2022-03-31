@@ -111,7 +111,7 @@ const ManageCars = (props: { user: User }) => {
                   updateCar={setSelectedCar}
                   isDisabled={false}
                 />
-                <HStack spacing={2} mt={2}>
+                <HStack spacing={2} mt={3}>
                   <Spacer />
                   <Button
                     onClick={() => {
@@ -128,44 +128,39 @@ const ManageCars = (props: { user: User }) => {
               </>
             ) : null}
           </ModalBody>
-          <ModalFooter>
-            <Button variant="outline" onClick={() => setUserModalOpen(false)}>
-              Cancel
-            </Button>
-            <AlertDialog
-              isOpen={isOpen}
-              leastDestructiveRef={cancelRef}
-              onClose={onClose}
-              isCentered
-            >
-              <AlertDialogOverlay>
-                <AlertDialogContent>
-                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                    Delete car
-                  </AlertDialogHeader>
+          <AlertDialog
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+            isCentered
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                  Delete car
+                </AlertDialogHeader>
 
-                  <AlertDialogBody>Are you sure?</AlertDialogBody>
+                <AlertDialogBody>Are you sure?</AlertDialogBody>
 
-                  <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      variant={"tandem-warning"}
-                      onClick={() => {
-                        onClose();
-                        deleteCar(user, selectedCar);
-                        setUserModalOpen(false);
-                      }}
-                      ml={3}
-                    >
-                      Confirm
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialogOverlay>
-            </AlertDialog>
-          </ModalFooter>
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Button
+                    variant={"tandem-warning"}
+                    onClick={() => {
+                      onClose();
+                      deleteCar(user, selectedCar);
+                      setUserModalOpen(false);
+                    }}
+                    ml={3}
+                  >
+                    Confirm
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
         </ModalContent>
       </Modal>
     </MenuItem>

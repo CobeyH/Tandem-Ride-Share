@@ -52,8 +52,8 @@ const Button: ComponentStyleConfig = {
     "tandem-submit": {
       textColor: "white",
       fontWeight: "Bold",
-      bgColor: styleColors.medGreen,
-      _hover: { bg: styleColors.green },
+      bgColor: styleColors.checkmarkGreen,
+      _hover: { bg: styleColors.medGreen },
     },
     signInWith: {
       bg: styleColors.paleBlue,

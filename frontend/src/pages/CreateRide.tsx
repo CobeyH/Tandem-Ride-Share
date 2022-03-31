@@ -210,7 +210,7 @@ const CreateRide = () => {
             />
           </VerifiedStep>
           <VerifiedStep
-            label="Are you the driver?"
+            label="Select Role"
             id="ride-driver"
             currentInput={isDriver}
             isVerified={(driver) => driver !== undefined}
@@ -223,7 +223,7 @@ const CreateRide = () => {
           >
             <HStack>
               <Button
-                bg={!isDriver ? styleColors.green : "white"}
+                bg={!isDriver ? styleColors.medGreen : "white"}
                 onClick={() => setIsDriver(false)}
                 borderRadius={20}
                 borderWidth={2}
@@ -231,7 +231,7 @@ const CreateRide = () => {
                 Passenger
               </Button>
               <Button
-                bg={isDriver ? styleColors.green : "white"}
+                bg={isDriver ? styleColors.medGreen : "white"}
                 onClick={() => setIsDriver(true)}
                 borderRadius={20}
                 borderWidth={2}
@@ -265,7 +265,7 @@ const CreateRide = () => {
             ) : null}
           </VerifiedStep>
           <VerifiedStep
-            label="Start Time"
+            label="Set Start Time"
             id="ride-time"
             currentInput={[startDate, startTime]}
             prevStep={() => {

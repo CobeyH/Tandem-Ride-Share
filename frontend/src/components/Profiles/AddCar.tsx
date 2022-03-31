@@ -5,10 +5,9 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { Flex, Heading, Spacer, Stack } from "@chakra-ui/layout";
-import { Step, Steps, useSteps } from "chakra-ui-steps";
+import { Heading, Spacer, Stack } from "@chakra-ui/layout";
+import { Steps, useSteps } from "chakra-ui-steps";
 import {
-  Button,
   Input,
   MenuItem,
   Modal,
@@ -29,7 +28,7 @@ import { setUserVehicle, Vehicle } from "../../firebase/database";
 import CarStatsSlider from "./CarStatsSlider";
 import { FaCarSide, FaClipboard, FaWrench } from "react-icons/all";
 import Tutorial from "../Tutorial";
-
+import VerifiedStep from "../VerifiedStep";
 const cars: Vehicle[] = [
   { type: "Two-seater", fuelUsage: 10, numSeats: 2 },
   { type: "Subcompact", fuelUsage: 8, numSeats: 5 },
@@ -149,7 +148,16 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
   return (
     <ModalBody>
       <Steps activeStep={activeStep} orientation="vertical">
-        <Step label="Name Your Car" icon={FaClipboard} id="name-car">
+        <VerifiedStep
+          isFirstStep={true}
+          nextStep={nextStep}
+          prevStep={prevStep}
+          isVerified={(displayName) => displayName.length !== 0}
+          currentInput={displayName}
+          label="Name Your Car"
+          icon={FaClipboard}
+          id="name-car"
+        >
           <Input
             isRequired={true}
             value={displayName}
@@ -158,43 +166,29 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
           <Text textAlign={"left"} variant="help-text">
             The name will be used to identify your car when you join a ride.
           </Text>
-        </Step>
-        <Step label="Choose Car Type" icon={FaCarSide} id="car-type">
+        </VerifiedStep>
+        <VerifiedStep
+          label="Choose Car Type"
+          icon={FaCarSide}
+          id="car-type"
+          nextStep={nextStep}
+          prevStep={prevStep}
+          currentInput={car}
+        >
           <CarAccordion carUpdate={setCar} />
-        </Step>
-        <Step label="Configure" icon={FaWrench} id="configure">
+        </VerifiedStep>
+        <VerifiedStep
+          label="Configure"
+          icon={FaWrench}
+          id="configure"
+          currentInput={car}
+          prevStep={prevStep}
+          nextStep={submitCar}
+          isLastStep={true}
+        >
           <CarStatsSlider car={car} updateCar={setCar} />
-        </Step>
+        </VerifiedStep>
       </Steps>
-      {activeStep === 3 ? (
-        <Flex p={4}>
-          <Button mx="auto" size="sm" onClick={reset}>
-            Reset
-          </Button>
-          <Button mx="auto" size="sm" onClick={submitCar}>
-            Submit
-          </Button>
-        </Flex>
-      ) : (
-        <Flex width="100%" justify="flex-end">
-          <Button
-            isDisabled={activeStep === 0}
-            mr={4}
-            onClick={prevStep}
-            size="sm"
-            variant="ghost"
-          >
-            Prev
-          </Button>
-          <Button
-            size="sm"
-            onClick={nextStep}
-            isDisabled={activeStep === 0 && !displayName}
-          >
-            {activeStep === 2 ? "Finish" : "Next"}
-          </Button>
-        </Flex>
-      )}
       <Spacer pt={5} />
     </ModalBody>
   );
