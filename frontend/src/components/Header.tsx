@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { logout, auth } from "../firebase/firebase";
-import { FaHome, MdEmail, FaBug } from "react-icons/all";
+import { MdEmail, FaBug } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
 import { styleColors } from "../theme/colours";
@@ -35,13 +35,7 @@ import { Step } from "react-joyride";
 import Tutorial from "./Tutorial";
 import LogoName from "./Promotional/LogoName";
 
-const Header = ({
-  isNested,
-  tutorialSteps,
-}: {
-  isNested?: boolean;
-  tutorialSteps?: Array<Step>;
-}) => {
+const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 

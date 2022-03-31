@@ -181,7 +181,7 @@ const CreateRide = () => {
 
   return (
     <>
-      <Header isNested tutorialSteps={tutorialSteps} />
+      <Header tutorialSteps={tutorialSteps} />
       <Container>
         <Heading id="ride-create" textAlign={"center"}>
           Create Ride

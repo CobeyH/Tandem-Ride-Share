@@ -144,7 +144,7 @@ const CreateGroup = () => {
 
   return (
     <>
-      <Header isNested tutorialSteps={tutorialSteps} />
+      <Header tutorialSteps={tutorialSteps} />
       <Container maxWidth="90%">
         <Heading textAlign={"center"} id="create-group" mt={5}>
           Create Group
