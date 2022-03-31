@@ -88,13 +88,13 @@ export type Route = {
 export type RoutePoint = {
   distance: number; // kilometres
   duration: number; // seconds
+  geocode: string;
 };
 
 export type PickupPoint = {
   id?: string;
   location: { lat: number; lng: number };
   members: { [key: string]: boolean };
-  geocode?: string;
 };
 
 export type Message = {
@@ -453,18 +453,7 @@ export const setRideDriver = (
 export const setRideStart = (rideId: string, pickupId: string) => {
   set(ref(db, `${RIDES}/${rideId}/start`), pickupId)
     .then(() => getRide(rideId))
-    .then((ride) => {
-      // Fetch optimized route for new points
-      const routePoints = [
-        { location: ride.pickupPoints[ride.start].location },
-      ];
-      Object.keys(ride.pickupPoints ?? {}).map((k) => {
-        if (k === ride.start) return;
-        routePoints.push({ location: ride.pickupPoints[k].location });
-      });
-      routePoints.push({ location: ride.end });
-      return getOptimizedRoute(routePoints);
-    })
+    .then(getOptimizedRoute)
     .then((route) => {
       setRoute(rideId, route);
     });
@@ -499,7 +488,7 @@ export const removeUserFromPickupPoints = async (
 ): Promise<void> => {
   const ride = await getRide(rideId);
   for (const pickupPoint of Object.values(ride.pickupPoints)) {
-    if (pickupPoint.members[userId]) {
+    if ((pickupPoint?.members ?? {})[userId]) {
       await setRide({
         ...ride,
         pickupPoints: Object.fromEntries(

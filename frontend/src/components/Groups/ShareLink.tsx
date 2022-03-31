@@ -17,11 +17,15 @@ import { useState } from "react";
 import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 import { User } from "firebase/auth";
 import { FaShareSquare } from "react-icons/fa";
+import { useUser } from "../../firebase/database";
 
 const ShareLink = (props: { user: User | null | undefined }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = useState("");
-  const context = `${props.user?.displayName} invited you to join their Tandem group! Follow the link to join the group: \n`;
+  const [userData] = useUser(props.user?.uid);
+  const context = `${
+    userData?.name ?? "A friend has"
+  } invited you to join their Tandem group! Follow the link to join the group: \n`;
   const { hasCopied, onCopy } = useClipboard(context + value);
   const url = window.location.href;
   return (

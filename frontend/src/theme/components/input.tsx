@@ -14,11 +14,14 @@ export const Input: ComponentStyleConfig = {
     }),
     "tandem-registration": (props) => ({
       field: {
-        bg: mode(lightTheme.form, darkTheme.form)(props),
+        bg: mode(lightTheme.form, "white")(props),
         color: styleColors.darkBlue,
         fontWeight: "medium",
         p: 6,
-        _placeholder: { color: styleColors.darkBlue, fontWeight: "medium" },
+        _placeholder: {
+          color: styleColors.darkBlue,
+          fontWeight: "medium",
+        },
       },
     }),
     "tandem-login": {

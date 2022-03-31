@@ -13,7 +13,7 @@ const LogoName = () => {
       <Text color="white" fontSize={{ base: 20, md: 30 }} p={1}>
         Tandem
       </Text>
-      <Badge bg={styleColors.medBlue} borderRadius={4}>
+      <Badge bg={styleColors.medBlue} textColor="white" borderRadius={4}>
         Beta
       </Badge>
     </>

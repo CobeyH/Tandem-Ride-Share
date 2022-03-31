@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { logout, auth } from "../firebase/firebase";
-import { FaHome, MdEmail, FaBug } from "react-icons/all";
+import { MdEmail, FaBug, FaBars } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
 import { styleColors } from "../theme/colours";
@@ -34,14 +34,9 @@ import { useNavigate } from "react-router-dom";
 import { Step } from "react-joyride";
 import Tutorial from "./Tutorial";
 import LogoName from "./Promotional/LogoName";
+import { useUser } from "../firebase/database";
 
-const Header = ({
-  isNested,
-  tutorialSteps,
-}: {
-  isNested?: boolean;
-  tutorialSteps?: Array<Step>;
-}) => {
+const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
@@ -51,26 +46,34 @@ const Header = ({
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding={6}
+      padding={{ base: 3, md: 4, lg: 6, xl: 8 }}
       bg={styleColors.mainBlue}
     >
-      <LogoName />
-      {isNested ? (
-        <IconButton
-          onClick={() => navigate("/")}
-          aria-label="home"
-          icon={<FaHome />}
-          mx={3}
-        />
-      ) : null}
+      <Button
+        id="home"
+        onClick={() => navigate("/welcome")}
+        aria-label="home"
+        variant="ghost"
+        p={0}
+      >
+        <LogoName />
+      </Button>
       <Spacer />
       {tutorialSteps ? <Tutorial steps={tutorialSteps} /> : null}
       {user ? (
         <Menu>
           <ReportBug />
-          <MenuButton as={Button} fontSize={{ base: 14, md: 16 }}>
-            Profile
-          </MenuButton>
+          <MenuButton
+            as={IconButton}
+            fontSize={{ base: 14, md: 16 }}
+            aria-label={"menu"}
+            icon={<FaBars />}
+            varient="ghost"
+            bg="transparent"
+            _hover={{ bg: "whiteAlpha.200" }}
+            color="white"
+            ml="2"
+          />
           <MenuList zIndex={3}>
             <Settings user={user} />
             <AddCar user={user} />
@@ -89,6 +92,7 @@ const Header = ({
 const Settings = (props: { user: User }) => {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const user = props.user;
+  const [userData] = useUser(user.uid);
   return (
     <MenuItem onClick={() => setUserModalOpen(true)}>
       Settings
@@ -100,7 +104,7 @@ const Settings = (props: { user: User }) => {
         <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
           <ModalCloseButton />
           <ModalHeader>
-            {user?.displayName}
+            {userData?.name}
             <ColorModeSwitcher float={"right"} />
           </ModalHeader>
           <ModalBody>
@@ -124,7 +128,7 @@ const ReportBug = () => {
     <>
       <Tooltip hasArrow label="Report a Bug" bg="gray.300" color="black">
         <IconButton
-          mr="2"
+          mr="4"
           variant="ghost"
           aria-label="report a bug"
           color="white"

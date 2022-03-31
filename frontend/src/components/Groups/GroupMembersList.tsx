@@ -1,4 +1,4 @@
-import { Heading, Badge, HStack, Text } from "@chakra-ui/react";
+import { Badge, HStack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { getUser, User } from "../../firebase/database";
 
@@ -24,17 +24,21 @@ const GroupMembersList = (props: {
 
   return (
     <>
-      {groupMembers?.map((user: User, i) => (
-        <HStack key={i}>
-          <Heading size="md">{user?.name}</Heading>
-          {user?.uid === props.ownerId ? (
+      {groupMembers
+        ?.filter((user) => user.uid === props.ownerId)
+        .map((user: User, i) => (
+          <HStack key={i}>
+            <Text>{user?.name}</Text>
             <Badge colorScheme={"blue"}>Owner</Badge>
-          ) : null}
-        </HStack>
-      ))}
-      <Text pl={5} align="right">
-        {Object.keys(props.members).length} / {props.maxSize}
-      </Text>
+          </HStack>
+        ))}
+      {groupMembers
+        ?.filter((user) => user.uid !== props.ownerId)
+        .map((user: User, i) => (
+          <HStack key={i}>
+            <Text>{user?.name}</Text>
+          </HStack>
+        ))}
     </>
   );
 };

@@ -51,7 +51,7 @@ const FoundGroup = (props: GroupUserProps) => {
 
   return (
     <>
-      <Header isNested />
+      <Header />
       <Box>
         <Center>
           <VStack>

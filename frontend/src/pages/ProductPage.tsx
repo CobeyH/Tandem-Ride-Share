@@ -114,7 +114,10 @@ function AboutUs() {
             The Project is all open source - you can check it out{" "}
             <Link
               href={"https://github.com/CobeyH/SENG-480A"}
-              color={"blue.300"}
+              color={useColorModeValue(
+                styleColors.medBlue,
+                styleColors.mainBlue
+              )}
             >
               here
             </Link>
@@ -123,11 +126,14 @@ function AboutUs() {
             You can reach out using the{" "}
             <Link
               href={"https://github.com/CobeyH/SENG-480A"}
-              color={"blue.300"}
+              color={useColorModeValue(
+                styleColors.medBlue,
+                styleColors.mainBlue
+              )}
             >
               github
             </Link>{" "}
-            or by sending an email to{" "}
+            or by sending an email to our{" "}
             <Link
               onClick={() => {
                 navigator.clipboard
@@ -140,11 +146,12 @@ function AboutUs() {
                     });
                   });
               }}
+              color={useColorModeValue(
+                styleColors.medBlue,
+                styleColors.mainBlue
+              )}
             >
-              our support team
-            </Link>{" "}
-            <Link href={"mailto:CobeyHollier@gmail.com"}>
-              <EmailIcon />
+              support team <EmailIcon />
             </Link>
             .
           </Text>
@@ -236,7 +243,10 @@ const ProductPage = () => {
         <Center>
           <Box w="90vw" pt={10} pb={100} ref={testimonialsRef}>
             <Text
-              bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
+              bgGradient={useColorModeValue(
+                `linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`,
+                `linear(to-r, ${styleColors.mainBlue}, ${styleColors.medBlue})`
+              )}
               bgClip="text"
               fontWeight="extrabold"
               fontSize={50}
@@ -250,7 +260,10 @@ const ProductPage = () => {
         </Center>
         <VStack pb={25}>
           <Text
-            bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
+            bgGradient={useColorModeValue(
+              `linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`,
+              `linear(to-r, ${styleColors.deepBlue}, ${styleColors.deepBlue})`
+            )}
             bgClip="text"
             fontWeight="extrabold"
             fontSize={50}
@@ -267,7 +280,10 @@ const ProductPage = () => {
       <Center>
         <Box w="90vw" pt={10} pb={100} ref={aboutUsRef}>
           <Text
-            bgGradient={`linear(to-r, ${styleColors.medBlue}, ${styleColors.mainBlue})`}
+            bgGradient={useColorModeValue(
+              `linear(to-r, ${styleColors.mainBlue}, ${styleColors.medBlue})`,
+              `linear(to-r, ${styleColors.deepBlue}, ${styleColors.medBlue})`
+            )}
             bgClip="text"
             fontWeight="extrabold"
             fontSize={50}
