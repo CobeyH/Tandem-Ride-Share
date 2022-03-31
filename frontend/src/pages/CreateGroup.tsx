@@ -261,7 +261,7 @@ const CreateGroup = () => {
                   <TabPanels>
                     <TabPanel>
                       <FileDropzone parentCallback={handleProfilePicSubmit} />
-                      <Box py={149} />
+                      <Box py={50} />
                     </TabPanel>
                     <TabPanel>
                       <IconBrowser

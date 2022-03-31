@@ -5,14 +5,15 @@ import {
   InputGroup,
   InputLeftElement,
   SimpleGrid,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
 import { IconType } from "react-icons";
 import * as icons from "react-icons/gi";
-import { GrNext, GrPrevious } from "react-icons/gr";
 import { ImSearch } from "react-icons/im";
 import { styleColors } from "../../theme/colours";
+import { FaCaretRight, FaCaretLeft } from "react-icons/fa";
 
 const IconBrowser = (props: {
   icon: string;
@@ -49,18 +50,16 @@ const IconBrowser = (props: {
       <HStack alignItems="center" pt={2} pb={2}>
         <IconButton
           variant="tandem-nextPrev"
-          icon={<GrPrevious />}
+          icon={<FaCaretLeft />}
           isRound
-          color={styleColors.deepBlue}
           isDisabled={startIndx < numPerPage}
           onClick={() => setStartIndx(startIndx - numPerPage)}
           aria-label={"next page"}
         />
         <IconButton
           variant="tandem-nextPrev"
-          icon={<GrNext />}
+          icon={<FaCaretRight />}
           isRound
-          color={styleColors.deepBlue}
           isDisabled={startIndx + numPerPage + 1 > filteredIcons.length}
           onClick={() => setStartIndx(startIndx + numPerPage)}
           aria-label={"prev page"}
@@ -75,8 +74,15 @@ const IconBrowser = (props: {
           <IconButton
             key={key}
             aria-label={key}
+            variant="tandem-icons"
             boxSize={{ base: "30px", sm: "40px", md: "50px", lg: "60px" }}
             bg={key == props.icon ? styleColors.mint : styleColors.lightBlue}
+            border={key == props.icon ? "4px" : "0px"}
+            borderColor={
+              key == props.icon
+                ? useColorModeValue(styleColors.mainBlue, styleColors.medBlue)
+                : "transparent"
+            }
             as={(icons as { [k: string]: IconType })[key]}
             isRound
             p={1}
