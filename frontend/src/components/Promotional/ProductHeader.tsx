@@ -10,7 +10,6 @@ import {
   MenuGroup,
   Button,
   VStack,
-  Heading,
 } from "@chakra-ui/react";
 import { HiMenu } from "react-icons/all";
 import * as React from "react";
