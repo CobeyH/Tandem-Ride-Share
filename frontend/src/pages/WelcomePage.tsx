@@ -1,12 +1,21 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
-import { Box, Center, Heading, HStack, VStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Heading,
+  HStack,
+  VStack,
+  Text,
+  Image,
+  useToast,
+} from "@chakra-ui/react";
 import Tutorial from "../components/Tutorial";
 import { FaQuestionCircle } from "react-icons/fa";
 
@@ -38,6 +47,11 @@ const tutorialSteps = [
     target: "#search-group",
     content: "Or you can search for an established group.",
   },
+  {
+    target: "#home",
+    content:
+      "If you every get stuck, click the Tandem logo to return to your group pages.",
+  },
 ];
 
 export default function WelcomePage() {
@@ -45,6 +59,8 @@ export default function WelcomePage() {
   const [groups, setGroups] = useState<Group[]>();
 
   const navigate = useNavigate();
+
+  const toast = useToast();
 
   useEffect(() => {
     if (loading) return;
@@ -63,14 +79,59 @@ export default function WelcomePage() {
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
           <Center>
-            <VStack spacing="5%">
+            <VStack spacing={"5%"}>
               <Heading
-                mt={"50%"}
+                mt={"20%"}
                 id="get-started"
                 fontSize={{ base: "2xl", md: "4xl" }}
               >
                 Welcome to Tandem!
               </Heading>
+              <VStack spacing={1}>
+                <Text
+                  fontSize={{ base: "xl", md: "2xl" }}
+                  fontWeight={"medium"}
+                  textColor={"gray.500"}
+                >
+                  Excuse the occasional flat tire!
+                </Text>
+                <Image
+                  align="center"
+                  src={"/FlatTire.png"}
+                  alt="flat tire gif"
+                  objectFit="cover"
+                  maxW="300px"
+                />
+                <Text
+                  fontWeight={"medium"}
+                  textColor={"gray.500"}
+                  px="20%"
+                  textAlign={"center"}
+                >
+                  Our app is still in <b>beta</b>. We are working to patch
+                  things up. Contact our{" "}
+                  <Link
+                    onClick={() => {
+                      navigator.clipboard
+                        .writeText("CobeyHollier@gmail.com")
+                        .then(() => {
+                          toast({
+                            title: "Copied Email to Clipboard",
+                            status: "success",
+                            isClosable: true,
+                          });
+                        });
+                    }}
+                    color={"gray.500"}
+                    to={""}
+                  >
+                    <b>
+                      <u>support team</u>
+                    </b>
+                  </Link>{" "}
+                  and let us know how we can make your experience better.
+                </Text>
+              </VStack>
               <Tutorial steps={tutorialSteps} buttonText="Get Started" />
             </VStack>
           </Center>

@@ -31,7 +31,7 @@ import MapView, {
 import { LatLng, latLngBounds } from "leaflet";
 import ChooseCar from "../components/Rides/ChooseCar";
 import CarStatsSlider from "../components/Profiles/CarStatsSlider";
-import { getReverseGeocodeAsString, getRideRoute } from "../Directions";
+import { getRideRoute } from "../Directions";
 import LocationSearch from "../components/Rides/LocationSearch";
 import VerifiedStep from "../components/VerifiedStep";
 import {
@@ -118,7 +118,9 @@ const CreateRide = () => {
     undefined
   );
   const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
+
+  const currentTime = getCurrentTime();
+  const [startTime, setStartTime] = useState(currentTime);
   const { nextStep, prevStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -133,8 +135,6 @@ const CreateRide = () => {
       })
       .join(":");
   }
-
-  const currentTime = getCurrentTime();
 
   const navigate = useNavigate();
 
@@ -166,7 +166,6 @@ const CreateRide = () => {
           start: {
             location: startPosition,
             members: { [userId]: true },
-            geocode: "",
           },
         },
         ...(isDriver && { driver: user.uid }),
@@ -174,9 +173,7 @@ const CreateRide = () => {
           carId: selectedCar?.carId,
         }),
       };
-      getReverseGeocodeAsString(startPosition)
-        .then((geo) => (ride.pickupPoints.start.geocode = geo))
-        .then(() => createRide(ride, groupId, [userId]))
+      createRide(ride, groupId, [userId])
         .then(() => navigate(`/group/${groupId}`))
         .catch((err) => console.error(err));
     }
@@ -184,7 +181,7 @@ const CreateRide = () => {
 
   return (
     <>
-      <Header isNested tutorialSteps={tutorialSteps} />
+      <Header tutorialSteps={tutorialSteps} />
       <Container>
         <Heading id="ride-create" textAlign={"center"}>
           Create Ride
@@ -210,7 +207,7 @@ const CreateRide = () => {
             />
           </VerifiedStep>
           <VerifiedStep
-            label="Are you the driver?"
+            label="Select Role"
             id="ride-driver"
             currentInput={isDriver}
             isVerified={(driver) => driver !== undefined}
@@ -223,7 +220,7 @@ const CreateRide = () => {
           >
             <HStack>
               <Button
-                bg={!isDriver ? styleColors.green : "white"}
+                bg={!isDriver ? styleColors.medGreen : "white"}
                 onClick={() => setIsDriver(false)}
                 borderRadius={20}
                 borderWidth={2}
@@ -231,7 +228,7 @@ const CreateRide = () => {
                 Passenger
               </Button>
               <Button
-                bg={isDriver ? styleColors.green : "white"}
+                bg={isDriver ? styleColors.medGreen : "white"}
                 onClick={() => setIsDriver(true)}
                 borderRadius={20}
                 borderWidth={2}
@@ -265,7 +262,7 @@ const CreateRide = () => {
             ) : null}
           </VerifiedStep>
           <VerifiedStep
-            label="Start Time"
+            label="Set Start Time"
             id="ride-time"
             currentInput={[startDate, startTime]}
             prevStep={() => {

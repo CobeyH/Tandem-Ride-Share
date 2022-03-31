@@ -68,7 +68,7 @@ export default function Login({ state }: { state?: LocationGotoState }) {
 
   return (
     <Box bg={useColorModeValue(styleColors.mainBlue, styleColors.deepBlue)}>
-      <Container height="100vh">
+      <Container minH="100vh" pb={20}>
         <VStack align="center" p={6} mb={30}>
           <Image
             src={"/logo_white.svg"}

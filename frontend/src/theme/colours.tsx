@@ -25,13 +25,17 @@ export const styleColors = {
   mint: "#B5F0D3",
   green: "#ADFC92",
   medGreen: "#8CDD70",
+  checkmarkGreen: "#38A169",
   charcoal: "#2D3748",
 };
 
 export const groupLogos = [
-  "#3975AE",
-  "#EC9A29",
-  "#72E1D1",
-  "#D7263D",
-  "#B07C9E",
+  "#E06C9F",
+  "#77A2CA",
+  "#8CDD70",
+  "#2A1E5C",
+  "#BA1200",
+  "#F18F01",
+  "#FF6B6B",
+  "#1A535C",
 ];

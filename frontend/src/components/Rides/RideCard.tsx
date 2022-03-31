@@ -19,8 +19,8 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { BsFillPersonFill, BsGeoAlt } from "react-icons/bs";
 import { AiFillCar } from "react-icons/ai";
-import MapView, { endIcon, findMidpoint } from "./MapView";
-import { Marker, Polyline } from "react-leaflet";
+import MapView from "./MapView";
+import { Polyline } from "react-leaflet";
 import { latLng, LatLng, latLngBounds, LeafletMouseEvent, Map } from "leaflet";
 import { auth } from "../../firebase/firebase";
 import {
@@ -42,8 +42,8 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import ChooseCar from "./ChooseCar";
 import GasCalculator from "./GasCalculator";
-import PickupMarkers from "./PickupMarkers";
-import { getOptimizedRoute, getReverseGeocodeAsString } from "../../Directions";
+import RideMarkers from "./PickupMarkers";
+import { getOptimizedRoute } from "../../Directions";
 import LocationSearch from "./LocationSearch";
 import CompleteRideButton from "./CompleteRideButton";
 
@@ -62,13 +62,6 @@ export default function RideCard({
   const { isOpen, onToggle } = useDisclosure();
   const [map, setMap] = useState<Map | undefined>(undefined);
   const [car] = useUserVehicle(ride?.driver, ride?.carId);
-
-  let center, endMarker, startLocation: LatLng;
-  if (ride !== undefined) {
-    startLocation = ride.pickupPoints[ride.start].location as LatLng;
-    center = findMidpoint(startLocation, ride.end as LatLng);
-    endMarker = <Marker position={ride.end} icon={endIcon} />;
-  }
 
   const cardColour = useColorModeValue(
     isActive ? "white" : "gray.100",
@@ -118,7 +111,7 @@ export default function RideCard({
                     ]
                   : [
                       latLng(ride.end.lat, ride.end.lng),
-                      ...Object.values(ride.pickupPoints).map((p) => {
+                      ...Object.values(ride.pickupPoints ?? {}).map((p) => {
                         return latLng(p.location.lat, p.location.lng);
                       }),
                     ];
@@ -147,9 +140,8 @@ export default function RideCard({
             }
             {/** Map */}
             <AspectRatio ratio={16 / 10} mt="2">
-              <MapView center={center} zoom={undefined} setMap={setMap}>
-                {endMarker}
-                <PickupMarkers pickups={ride?.pickupPoints} rideId={rideId} />
+              <MapView setMap={setMap}>
+                <RideMarkers rideId={rideId} />
                 {route && <Polyline positions={route.shape} />}
               </MapView>
             </AspectRatio>
@@ -241,7 +233,7 @@ function DriverBar({
   const [user] = useUser(authUser?.uid);
   const [ride] = useRide(rideId);
   const [driverChecked, setDriverChecked] = useState<boolean | undefined>(
-    authUser?.uid === driverId
+    undefined
   );
   const [driverUser, driverLoading, driverError] = useUser(driverId);
   const driver = driverLoading
@@ -252,12 +244,15 @@ function DriverBar({
 
   useEffect(() => {
     if (driverChecked !== undefined && user?.vehicles) {
-      setRideDriver(
-        user.uid,
-        rideId,
-        Object.keys(user.vehicles).pop(),
-        driverChecked
-      );
+      const amDriver = authUser?.uid === driverId;
+      if ((driverChecked && !amDriver) || (!driverChecked && amDriver)) {
+        setRideDriver(
+          user.uid,
+          rideId,
+          Object.keys(user.vehicles).pop(),
+          driverChecked
+        );
+      }
     }
   }, [driverChecked, user?.vehicles]);
 
@@ -307,19 +302,22 @@ function PassengerBar({ rideId }: { rideId: string }) {
 function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
   const [user] = useAuthState(auth);
   const [ride, rideLoading, rideError] = useRide(rideId);
+  const [route] = useRoute(rideId);
   const [text, setText] = useState<string | undefined>(undefined);
   const ref = useRef<HTMLDivElement>(null);
   const [addingPickup, setAddingPickup] = useState(false);
 
   useEffect(() => {
-    if (ride && user) {
-      const p = Object.values(ride.pickupPoints).find((p) => {
-        if (!p.members) return false;
-        return Object.keys(p.members).includes(user.uid);
+    if (ride && route && user) {
+      const p = Object.keys(ride.pickupPoints ?? {}).find((p) => {
+        const pickup = ride.pickupPoints[p];
+        return Object.keys(pickup.members ?? {}).includes(user.uid);
       });
-      setText(p?.geocode);
+      if (p && Object.keys(route.points ?? {}).includes(p)) {
+        setText(route.points[p].geocode ?? "");
+      }
     }
-  }, [user, ride]);
+  }, [user, ride, route]);
 
   useEffect(() => {
     if (!addingPickup) return;
@@ -364,11 +362,6 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
       },
     };
     newPoint.members[userId] = true;
-    await getReverseGeocodeAsString(latLng(position.lat, position.lng)).then(
-      (geocode) => {
-        newPoint.geocode = geocode;
-      }
-    );
     addPickupToRide(rideId, newPoint)
       .then((ref) => {
         if (ref.key) {
@@ -379,18 +372,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         }
       })
       .then(() => getRide(rideId))
-      .then((ride) => {
-        // Fetch optimized route for new points
-        const routePoints = [
-          { id: ride.start, location: ride.pickupPoints[ride.start].location },
-        ];
-        Object.keys(ride.pickupPoints).map((k) => {
-          if (k === ride.start) return;
-          routePoints.push({ id: k, location: ride.pickupPoints[k].location });
-        });
-        routePoints.push({ id: "end", location: ride.end });
-        return getOptimizedRoute(routePoints);
-      })
+      .then(getOptimizedRoute)
       .then((route) => {
         setRoute(rideId, route);
       })

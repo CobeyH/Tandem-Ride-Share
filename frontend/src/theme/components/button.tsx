@@ -8,6 +8,11 @@ const Button: ComponentStyleConfig = {
       bg: styleColors.paleBlue,
       textColor: styleColors.deepBlue,
     },
+    "tandem-icons": {
+      bg: styleColors.paleBlue,
+      textColor: styleColors.deepBlue,
+      _hover: { bg: styleColors.mint },
+    },
     "tandem-product": {
       bg: "",
       textColor: "white",
@@ -43,18 +48,56 @@ const Button: ComponentStyleConfig = {
       fontWeight: "semiBold",
       _hover: { bg: styleColors.lightBlue },
     }),
-    "tandem-nextPrev": {
-      variant: "ghost",
-      textColor: styleColors.darkBlue,
-      fontWeight: "semiBold",
-      _hover: { bg: styleColors.lightMint },
-      _isDisabled: { textColor: styleColors.deepBlue },
-    },
+    "tandem-nextPrev": (props) => ({
+      textColor: mode(styleColors.deepBlue, "white")(props),
+      _hover: { bg: mode(styleColors.mint, styleColors.medBlue)(props) },
+    }),
     "tandem-submit": {
       textColor: "white",
       fontWeight: "Bold",
-      bgColor: styleColors.medGreen,
-      _hover: { bg: styleColors.green },
+      bgColor: styleColors.checkmarkGreen,
+      _hover: { bg: styleColors.medGreen },
+    },
+    "tandem-group": {
+      bg: "transparent",
+      _hover: {
+        _before: {
+          content: `""`,
+          position: "absolute",
+          left: "2px",
+          width: "6px",
+          height: "100%",
+          borderRadius: "3px",
+          bg: styleColors.paleBlue,
+        },
+      },
+      _focus: {
+        boxShadow: "none",
+        _before: {
+          content: `""`,
+          position: "absolute",
+          left: "2px",
+          width: "6px",
+          height: "100%",
+          borderRadius: "3px",
+          bg: styleColors.paleBlue,
+        },
+      },
+    },
+    "tandem-group-current": {
+      bg: "transparent",
+      _before: {
+        content: `""`,
+        position: "absolute",
+        left: "2px",
+        width: "6px",
+        height: "100%",
+        borderRadius: "3px",
+        bg: styleColors.darkBlue,
+      },
+      _focus: {
+        boxShadow: "none",
+      },
     },
     signInWith: {
       bg: styleColors.paleBlue,

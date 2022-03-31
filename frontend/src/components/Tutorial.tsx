@@ -2,6 +2,7 @@ import { Button, IconButton, theme } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import Joyride, { Props } from "react-joyride";
+import { styleColors } from "../theme/colours";
 
 interface TutorialProps extends Props {
   buttonText?: string;
@@ -46,7 +47,7 @@ const Tutorial = (props: TutorialProps) => {
         styles={{
           options: {
             zIndex: theme.zIndices.modal + 1,
-            primaryColor: "#38A169",
+            primaryColor: styleColors.checkmarkGreen,
           },
         }}
         floaterProps={{
