@@ -37,12 +37,12 @@ const Button: ComponentStyleConfig = {
       color: "white",
       _hover: { bg: styleColors.lightBlue },
     },
-    "tandem-loginProv": {
-      bg: "white",
+    "tandem-loginProv": (props) => ({
+      bg: mode("white", styleColors.paleBlue)(props),
       textColor: styleColors.darkBlue,
       fontWeight: "semiBold",
       _hover: { bg: styleColors.lightBlue },
-    },
+    }),
     "tandem-nextPrev": {
       variant: "ghost",
       textColor: styleColors.darkBlue,
