@@ -38,6 +38,11 @@ const tutorialSteps = [
     target: "#search-group",
     content: "Or you can search for an established group.",
   },
+  {
+    target: "#home",
+    content:
+      "If you every get stuck, click the Tandem logo to return to your group pages.",
+  },
 ];
 
 export default function WelcomePage() {
