@@ -36,6 +36,7 @@ import VerifiedStep from "../components/VerifiedStep";
 import {
   FaClipboard,
   FaUserFriends,
+  FaUserSecret,
   ImQuill,
   IoMdPhotos,
 } from "react-icons/all";
@@ -146,7 +147,7 @@ const CreateGroup = () => {
     <>
       <Header isNested tutorialSteps={tutorialSteps} />
       <Container maxWidth="90%">
-        <Heading textAlign={"center"} id="create-group">
+        <Heading textAlign={"center"} id="create-group" mt={5}>
           Create Group
         </Heading>
         <Steps activeStep={activeStep} orientation="vertical">
@@ -213,12 +214,21 @@ const CreateGroup = () => {
                 >
                   <Text mb={"8px"}>Private Group:</Text>
                 </Tooltip>
-                <Checkbox
-                  isChecked={isPrivate}
-                  onChange={(e) => setPrivate(e.target.checked)}
-                />
               </HStack>
             </Stack>
+          </VerifiedStep>
+          <VerifiedStep
+            label="Group Publicity"
+            id="group-publicity"
+            currentInput={isPrivate}
+            prevStep={prevStep}
+            nextStep={nextStep}
+            icon={FaUserSecret}
+          >
+            <Checkbox
+              isChecked={isPrivate}
+              onChange={(e) => setPrivate(e.target.checked)}
+            />
           </VerifiedStep>
           <VerifiedStep
             id="group-media"
