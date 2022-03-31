@@ -313,7 +313,9 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         const pickup = ride.pickupPoints[p];
         return Object.keys(pickup.members ?? {}).includes(user.uid);
       });
-      if (p) setText(route.points[p]?.geocode ?? "");
+      if (p && Object.keys(route.points ?? {}).includes(p)) {
+        setText(route.points[p].geocode ?? "");
+      }
     }
   }, [user, ride, route]);
 
