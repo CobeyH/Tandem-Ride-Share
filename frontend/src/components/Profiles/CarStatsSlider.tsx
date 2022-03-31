@@ -77,7 +77,6 @@ const CarStatsSlider = (props: {
             props.updateCar({ ...props.car, fuelUsage: value })
           }
           value={props.car.fuelUsage}
-          min={5}
           max={20}
           isDisabled={props.isDisabled}
         >
