@@ -57,6 +57,7 @@ const GroupSearch = ({
           leftIcon={<ImSearch />}
           onClick={onOpen}
           w="80%"
+          borderRadius={100}
           alignSelf={"center"}
         >
           Search Groups
@@ -74,7 +75,7 @@ const GroupSearch = ({
             icon={<ImSearch />}
             isRound
             onClick={onOpen}
-            size="md"
+            size="lg"
           />
         </Tooltip>
       )}
