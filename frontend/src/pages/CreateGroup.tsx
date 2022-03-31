@@ -163,7 +163,7 @@ const CreateGroup = () => {
             <Input
               id="group-name"
               value={name}
-              placeholder={"name"}
+              placeholder={"Group Name"}
               onInput={(e) =>
                 setName({
                   field: e.currentTarget.value,

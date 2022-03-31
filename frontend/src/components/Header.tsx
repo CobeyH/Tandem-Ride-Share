@@ -34,6 +34,7 @@ import { useNavigate } from "react-router-dom";
 import { Step } from "react-joyride";
 import Tutorial from "./Tutorial";
 import LogoName from "./Promotional/LogoName";
+import { useUser } from "../firebase/database";
 
 const Header = ({
   isNested,
@@ -89,6 +90,7 @@ const Header = ({
 const Settings = (props: { user: User }) => {
   const [userModalOpen, setUserModalOpen] = useState(false);
   const user = props.user;
+  const [userData] = useUser(user.uid);
   return (
     <MenuItem onClick={() => setUserModalOpen(true)}>
       Settings
@@ -100,7 +102,7 @@ const Settings = (props: { user: User }) => {
         <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
           <ModalCloseButton />
           <ModalHeader>
-            {user?.displayName}
+            {userData?.name}
             <ColorModeSwitcher float={"right"} />
           </ModalHeader>
           <ModalBody>
