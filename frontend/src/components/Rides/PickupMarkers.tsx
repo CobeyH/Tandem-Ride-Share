@@ -27,7 +27,6 @@ const addSecToDate = (dateString: string, seconds: number) => {
 };
 
 const validateRideRoute = (ride: Ride, route: Route) => {
-  if (!ride.startDate) return false;
   if (
     !ride.start ||
     !Object.keys(ride.pickupPoints ?? {}).includes(ride.start)
@@ -56,10 +55,14 @@ const RideMarkers = ({ rideId }: { rideId: string }) => {
         return (
           <RideMarker
             key={key}
-            label={addSecToDate(
-              ride.startDate,
-              isStart ? 0 : route.points[key]?.duration ?? 0
-            ).toLocaleTimeString("en", timeFmt)}
+            label={
+              ride.startDate
+                ? addSecToDate(
+                    ride.startDate,
+                    isStart ? 0 : route.points[key]?.duration ?? 0
+                  ).toLocaleTimeString("en", timeFmt)
+                : ""
+            }
             purpose={isStart ? MarkerPurpose.Start : MarkerPurpose.Pickup}
             geocode={
               Object.keys(route.points).includes(key)
@@ -74,10 +77,14 @@ const RideMarkers = ({ rideId }: { rideId: string }) => {
         );
       })}
       <RideMarker
-        label={addSecToDate(
-          ride.startDate,
-          route.points["end"].duration
-        ).toLocaleTimeString("en", timeFmt)}
+        label={
+          ride.startDate
+            ? addSecToDate(
+                ride.startDate,
+                route.points["end"].duration
+              ).toLocaleTimeString("en", timeFmt)
+            : ""
+        }
         purpose={MarkerPurpose.End}
         geocode={route.points["end"].geocode}
         location={latLng(ride.end)}
@@ -239,20 +246,24 @@ const SVGMarkerIcon = ({
       cx={32}
       cy={20}
       r={19}
-      fill="white"
-      stroke="black"
-      strokeWidth={2}
-    />
-    <rect
-      x={1}
-      y={29}
-      width={62}
-      height={18}
-      rx={3}
       fill={styleColors.paleBlue}
       stroke="black"
       strokeWidth={2}
     />
+    {label.length > 0 ? (
+      <rect
+        x={1}
+        y={29}
+        width={62}
+        height={18}
+        rx={3}
+        fill={styleColors.paleBlue}
+        stroke="black"
+        strokeWidth={2}
+      />
+    ) : (
+      <></>
+    )}
     <circle cx={32} cy={20} r={18} fill={styleColors.paleBlue} />
     {
       /*
