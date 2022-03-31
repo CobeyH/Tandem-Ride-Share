@@ -27,12 +27,18 @@ import { GroupCapacityBadge } from "./GroupCapacity";
 import { useNavigate } from "react-router-dom";
 import { ImSearch } from "react-icons/im";
 
-const GroupSearch = (props: { groups: Group[] }) => {
+const GroupSearch = ({
+  groups,
+  fullSizeButtons,
+}: {
+  groups: Group[];
+  fullSizeButtons: boolean;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
-  const publicGroups: Group[] = props.groups.filter((group: Group) => {
+  const publicGroups: Group[] = groups.filter((group: Group) => {
     // Groups should only be listed if they are public
     // and the user isn't already in that group
     // and the group name contains the search request
@@ -46,21 +52,32 @@ const GroupSearch = (props: { groups: Group[] }) => {
 
   return (
     <>
-      <Tooltip
-        label="Find A Public Group"
-        aria-label="find public group"
-        hasArrow
-        placement="right"
-      >
-        <IconButton
-          id="search-group"
-          aria-label="public-group-search"
-          icon={<ImSearch />}
-          isRound
+      {fullSizeButtons ? (
+        <Button
+          leftIcon={<ImSearch />}
           onClick={onOpen}
-          size="md"
-        />
-      </Tooltip>
+          w="80%"
+          alignSelf={"center"}
+        >
+          Search Groups
+        </Button>
+      ) : (
+        <Tooltip
+          label="Find A Public Group"
+          aria-label="find public group"
+          hasArrow
+          placement="right"
+        >
+          <IconButton
+            id="search-group"
+            aria-label="public-group-search"
+            icon={<ImSearch />}
+            isRound
+            onClick={onOpen}
+            size="md"
+          />
+        </Tooltip>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

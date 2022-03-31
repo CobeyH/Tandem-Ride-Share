@@ -80,6 +80,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
           <ListContents
             userGroups={userGroups ?? []}
             isMobile={isMobile}
+            fullSizeButtons={isOpen}
             groups={groups ?? []}
           />
           <Spacer />
@@ -98,6 +99,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
       <ListContents
         userGroups={userGroups ?? []}
         isMobile={isMobile}
+        fullSizeButtons={isOpen}
         groups={groups ?? []}
       />
     </Box>
@@ -108,13 +110,15 @@ const ListContents = ({
   userGroups,
   isMobile,
   groups,
+  fullSizeButtons,
 }: {
   userGroups: Group[];
   groups: Group[];
   isMobile: boolean | undefined;
+  fullSizeButtons: boolean;
 }) => {
   return (
-    <VStack mt={5} mx={2} spacing={3}>
+    <VStack mt={5} mx={4} spacing={2} alignItems={"stretch"}>
       {userGroups?.map((group, i) => (
         <GroupListElement
           key={group.id}
@@ -123,15 +127,26 @@ const ListContents = ({
           isMobile={isMobile}
         />
       ))}
-      <NewGroupButton />
-      <GroupSearch groups={groups} />
+      <Spacer my={3} />
+      <NewGroupButton fullSizeButtons={fullSizeButtons} />
+      <GroupSearch groups={groups} fullSizeButtons={fullSizeButtons} />
     </VStack>
   );
 };
 
-const NewGroupButton = () => {
+const NewGroupButton = ({ fullSizeButtons }: { fullSizeButtons: boolean }) => {
+  console.log({ fullSizeButtons });
   const navigate = useNavigate();
-  return (
+  return fullSizeButtons ? (
+    <Button
+      leftIcon={<FaPlus />}
+      onClick={() => navigate("/group/new")}
+      w="80%"
+      alignSelf={"center"}
+    >
+      New Group
+    </Button>
+  ) : (
     <Tooltip
       label="Create a New Group"
       aria-label="create a new group"
@@ -160,7 +175,9 @@ const GroupListElement = (props: {
   return props.isMobile ? (
     <>
       <Button
+        py={6}
         onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
+        justifyContent={"flex-start"}
       >
         <GroupAvatar group={props.group} index={props.index} size="xs" />
         <Text ml={3}>{props.group.name}</Text>
