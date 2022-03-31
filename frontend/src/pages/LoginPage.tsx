@@ -68,7 +68,7 @@ export default function Login({ state }: { state?: LocationGotoState }) {
 
   return (
     <Box bg={useColorModeValue(styleColors.mainBlue, styleColors.deepBlue)}>
-      <Container height="100vh">
+      <Container minH="100vh">
         <VStack align="center" p={6} mb={30}>
           <Image
             src={"/logo_white.svg"}
@@ -126,7 +126,7 @@ export default function Login({ state }: { state?: LocationGotoState }) {
             Or sign in with
           </Box>
           <ProviderAuth buttonVar="tandem-loginProv" />
-          <Text textAlign="center" color="white">
+          <Text textAlign="center" color="white" mb={20}>
             New to Tandem?{" "}
             <Link
               style={{ color: "white", fontWeight: "bold" }}

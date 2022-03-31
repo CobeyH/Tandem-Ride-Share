@@ -69,7 +69,7 @@ function Register() {
   }, [user, loading]);
   return (
     <Box bg={useColorModeValue("white", styleColors.deepBlue)}>
-      <Container height="100vh">
+      <Container minH="100vh">
         <VStack align="center" p={6} mb={30}>
           <Image
             src={useColorModeValue("/logo_mainBlue.svg", "/logo_white.svg")}
