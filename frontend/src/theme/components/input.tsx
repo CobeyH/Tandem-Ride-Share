@@ -15,11 +15,11 @@ export const Input: ComponentStyleConfig = {
     "tandem-registration": (props) => ({
       field: {
         bg: mode(lightTheme.form, "white")(props),
-        color: mode(styleColors.darkBlue, "black")(props),
+        color: styleColors.darkBlue,
         fontWeight: "medium",
         p: 6,
         _placeholder: {
-          color: mode(styleColors.darkBlue, "black")(props),
+          color: styleColors.darkBlue,
           fontWeight: "medium",
         },
       },
