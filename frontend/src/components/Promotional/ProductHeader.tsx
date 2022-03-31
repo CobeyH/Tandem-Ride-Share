@@ -1,15 +1,15 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Stack,
   HStack,
   Spacer,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
+  MenuGroup,
   Button,
-  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { HiMenu } from "react-icons/all";
 import * as React from "react";
@@ -29,85 +29,120 @@ const ProductHeader = ({
   scrollToAboutUs: () => void;
   scrollToContactUs: () => void;
 }) => {
-  const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
 
   return (
     <Box as="nav" bg={styleColors.mainBlue} p={4} textAlign="center">
-      <Stack direction={{ base: "column", md: "row" }}>
-        <HStack>
-          <LogoName />
-          <Spacer />
-          <Box display={{ base: "block", md: "none" }} onClick={onToggle}>
-            <HiMenu />
+      <HStack>
+        <LogoName />
+        <Spacer />
+        {/* base: Hamburger Icon */}
+        <Box>
+          {/* see: https://github.com/chakra-ui/chakra-ui/issues/3173 */}
+          <Menu>
+            <MenuButton display={{ base: "block", md: "none" }}>
+              <Box as={HiMenu} w={6} h={6} />
+            </MenuButton>
+            <MenuList>
+              <VStack alignItems="stretch" mx={2} pb={2}>
+                <Button
+                  variant="tandem-product"
+                  p={4}
+                  onClick={() => navigate(NavConstants.LOGIN)}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="tandem-product"
+                  p={4}
+                  onClick={() => navigate(NavConstants.REGISTER)}
+                >
+                  Register Now
+                </Button>
+              </VStack>
+              <MenuGroup title="Features and Benefits">
+                <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
+                <MenuItem onClick={scrollToProducts}>
+                  Small Organization
+                </MenuItem>
+                <MenuItem onClick={scrollToProducts}>
+                  Large Organization
+                </MenuItem>
+                <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
+              </MenuGroup>
+              <MenuGroup title="Company">
+                <MenuItem onClick={scrollToTestimonials}>Testimonials</MenuItem>
+                <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
+                <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
+                <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
+              </MenuGroup>
+            </MenuList>
+          </Menu>
+        </Box>
+        {/* md: Navbar */}
+        <HStack spacing={4} display={{ base: "none", md: "flex" }}>
+          <Box>
+            {/* see: https://github.com/chakra-ui/chakra-ui/issues/3173 */}
+            <Menu>
+              {({ isOpen }) => (
+                <>
+                  <MenuButton color="white">
+                    Features and Benefits
+                    {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
+                    <MenuItem onClick={scrollToProducts}>
+                      Small Organization
+                    </MenuItem>
+                    <MenuItem onClick={scrollToProducts}>
+                      Large Organization
+                    </MenuItem>
+                    <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
+                  </MenuList>
+                </>
+              )}
+            </Menu>
+          </Box>
+          <Box>
+            <Menu>
+              {({ isOpen }) => (
+                <>
+                  <MenuButton color="white">
+                    Company {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem onClick={scrollToTestimonials}>
+                      Testimonials
+                    </MenuItem>
+                    <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
+                    <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
+                    <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
+                  </MenuList>
+                </>
+              )}
+            </Menu>
+          </Box>
+          <Box>
+            <Button
+              variant="tandem-product"
+              p={4}
+              onClick={() => navigate(NavConstants.REGISTER)}
+            >
+              Register Now
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              variant="tandem-product"
+              p={4}
+              onClick={() => navigate(NavConstants.LOGIN)}
+            >
+              Login
+            </Button>
           </Box>
         </HStack>
-        <Spacer />
-        <HStack
-          spacing={4}
-          display={{ base: isOpen ? "flex" : "none", md: "flex" }}
-        >
-          <Menu>
-            {({ isOpen }) => (
-              <>
-                <MenuButton color="white">
-                  Features and Benefits
-                  {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
-                  <MenuItem onClick={scrollToProducts}>
-                    Small Organization
-                  </MenuItem>
-                  <MenuItem onClick={scrollToProducts}>
-                    Large Organization
-                  </MenuItem>
-                  <MenuItem onClick={scrollToProducts}>Enterprise</MenuItem>
-                </MenuList>
-              </>
-            )}
-          </Menu>
-
-          <Menu>
-            {({ isOpen }) => (
-              <>
-                <MenuButton color="white">
-                  Company {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={scrollToTestimonials}>
-                    Testimonials
-                  </MenuItem>
-                  <MenuItem onClick={scrollToProducts}>Pricing</MenuItem>
-                  <MenuItem onClick={scrollToAboutUs}>About Us</MenuItem>
-                  <MenuItem onClick={scrollToContactUs}>Contact Us</MenuItem>
-                </MenuList>
-              </>
-            )}
-          </Menu>
-        </HStack>
-
-        <HStack
-          spacing={4}
-          pl={4}
-          display={{ base: isOpen ? "block" : "none", md: "flex" }}
-        >
-          <Button
-            variant="tandem-product"
-            p={4}
-            onClick={() => navigate(NavConstants.REGISTER)}
-          >
-            Register Now
-          </Button>
-          <Button
-            variant="tandem-product"
-            p={4}
-            onClick={() => navigate(NavConstants.LOGIN)}
-          >
-            Login
-          </Button>
-        </HStack>
-      </Stack>
+      </HStack>
     </Box>
   );
 };
