@@ -63,14 +63,27 @@ export default function WelcomePage() {
         <GroupList updateGroups={setGroups} />
         <Box flexGrow={1}>
           <Center>
-            <VStack spacing="5%">
+            <VStack spacing={"5%"}>
               <Heading
-                mt={"50%"}
+                mt={{ base: "40%", md: "30%" }}
                 id="get-started"
                 fontSize={{ base: "2xl", md: "4xl" }}
               >
                 Welcome to Tandem!
               </Heading>
+              <Box textAlign={"center"}>
+                <Text
+                  fontSize={{ base: "xl", md: "2xl" }}
+                  fontWeight={"medium"}
+                  textColor={"gray.500"}
+                >
+                  Excuse the occasional flat tire!
+                </Text>
+                <Text>
+                  Our app is still in beta. We are working to patch things up.
+                  Let us know how we can make your experience better.
+                </Text>
+              </Box>
               <Tutorial steps={tutorialSteps} buttonText="Get Started" />
             </VStack>
           </Center>

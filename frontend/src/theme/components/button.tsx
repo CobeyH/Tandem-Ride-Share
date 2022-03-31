@@ -8,6 +8,11 @@ const Button: ComponentStyleConfig = {
       bg: styleColors.paleBlue,
       textColor: styleColors.deepBlue,
     },
+    "tandem-icons": {
+      bg: styleColors.paleBlue,
+      textColor: styleColors.deepBlue,
+      _hover: { bg: styleColors.mint },
+    },
     "tandem-product": {
       bg: "",
       textColor: "white",
@@ -43,13 +48,10 @@ const Button: ComponentStyleConfig = {
       fontWeight: "semiBold",
       _hover: { bg: styleColors.lightBlue },
     }),
-    "tandem-nextPrev": {
-      variant: "ghost",
-      textColor: styleColors.darkBlue,
-      fontWeight: "semiBold",
-      _hover: { bg: styleColors.lightMint },
-      _isDisabled: { textColor: styleColors.deepBlue },
-    },
+    "tandem-nextPrev": (props) => ({
+      textColor: mode(styleColors.deepBlue, "white")(props),
+      _hover: { bg: mode(styleColors.mint, styleColors.medBlue)(props) },
+    }),
     "tandem-submit": {
       textColor: "white",
       fontWeight: "Bold",
