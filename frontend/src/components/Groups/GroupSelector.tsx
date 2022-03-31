@@ -10,6 +10,7 @@ import {
   DrawerContent,
   useDisclosure,
   Spacer,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -64,6 +65,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
           ml={-2}
           mt={"50vh"}
           icon={<FaChevronRight />}
+          bg={useColorModeValue("rgba(0,0,0, 0.1)", "rgba(255,255,255, 0.1)")}
           onClick={() => (isOpen ? onClose() : onOpen())}
           variant="ghost"
         />
