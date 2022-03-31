@@ -1,4 +1,4 @@
-import { FaCog, FaInfo } from "react-icons/fa";
+import { FaInfo } from "react-icons/fa";
 import {
   useDisclosure,
   Modal,
@@ -90,13 +90,13 @@ const GroupInfo = ({ group, userId }: { group: Group; userId: string }) => {
     <>
       <Button
         size="sm"
-        rightIcon={isOwner ? <FaCog /> : <FaInfo />}
+        rightIcon={<FaInfo />}
         onClick={() => {
           onOpen();
         }}
         aria-label="Share group"
       >
-        {isOwner ? "Settings" : "Info"}
+        Info
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -143,7 +143,7 @@ const GroupInfo = ({ group, userId }: { group: Group; userId: string }) => {
                 setGroup({ ...group, plan });
               }}
             >
-              Exit
+              {group.plan === plan ? Close : Save}
             </Button>
           </ModalFooter>
         </ModalContent>
