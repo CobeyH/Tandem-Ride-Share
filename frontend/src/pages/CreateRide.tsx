@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Container,
   Heading,
   HStack,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -25,10 +26,11 @@ import { Marker } from "react-leaflet";
 import Header from "../components/Header";
 import MapView, {
   DEFAULT_CENTER,
+  DEFAULT_ZOOM,
   endIcon,
   startIcon,
 } from "../components/Rides/MapView";
-import { LatLng, latLngBounds } from "leaflet";
+import { LatLng, latLngBounds, LeafletMouseEvent } from "leaflet";
 import ChooseCar from "../components/Rides/ChooseCar";
 import CarStatsSlider from "../components/Profiles/CarStatsSlider";
 import { getRideRoute } from "../Directions";
@@ -110,8 +112,8 @@ const CreateRide = () => {
   const [user] = useAuthState(auth);
   const [title, setTitle] = useState<string>("");
 
-  const [startPosition, setStartPosition] = useState<LatLng>(DEFAULT_CENTER);
-  const [endPosition, setEndPosition] = useState<LatLng>(DEFAULT_CENTER);
+  const [startPosition, setStartPosition] = useState<LatLng>();
+  const [endPosition, setEndPosition] = useState<LatLng>();
   const [map, setMap] = useState<L.Map | undefined>(undefined);
   const [isDriver, setIsDriver] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<Vehicle | undefined>(
@@ -124,6 +126,8 @@ const CreateRide = () => {
   const { nextStep, prevStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
+  const [pickingMapStartLocation, setPickingMapStartLocation] = useState(false);
+  const [pickingMapEndLocation, setPickingMapEndLocation] = useState(false);
 
   function getCurrentTime() {
     const date = new Date();
@@ -147,19 +151,26 @@ const CreateRide = () => {
   useEffect(() => {
     if (map) {
       map.invalidateSize();
-      map.fitBounds(latLngBounds([endPosition, startPosition]).pad(0.1));
+      if (startPosition && endPosition) {
+        map.fitBounds(latLngBounds([endPosition, startPosition]).pad(0.1));
+      } else if (startPosition) {
+        map.panTo(startPosition);
+      } else if (endPosition) {
+        map.panTo(endPosition);
+      } else {
+        map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+      }
     }
   }, [map, startPosition, endPosition]);
 
   const submitRide = () => {
-    if (groupId && user) {
+    if (groupId && user && startPosition && endPosition) {
       const userId = user.uid;
-      const ride = {
+      const ride: Ride = {
         id: "",
         name: title,
         start: "start",
         end: endPosition,
-        maxPassengers: selectedCar?.numSeats || 4,
         startDate: `${startDate}T${startTime}`,
         isComplete: false,
         pickupPoints: {
@@ -178,6 +189,39 @@ const CreateRide = () => {
         .catch((err) => console.error(err));
     }
   };
+
+  useEffect(() => {
+    if (!map || !(pickingMapStartLocation || pickingMapEndLocation)) return;
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event: MouseEvent) {
+      if (!map || !map.getContainer()) return;
+      if (event.target instanceof Element) {
+        if (!map.getContainer().contains(event.target)) {
+          setPickingMapStartLocation(false);
+          setPickingMapEndLocation(false);
+        }
+      }
+    }
+    function handleMapClick(event: LeafletMouseEvent) {
+      if (pickingMapStartLocation) {
+        setStartPosition(event.latlng);
+        setPickingMapStartLocation(false);
+      } else if (pickingMapEndLocation) {
+        setEndPosition(event.latlng);
+        setPickingMapEndLocation(false);
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    map.on("click", handleMapClick);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+      map.off("click", handleMapClick);
+    };
+  }, [pickingMapStartLocation, pickingMapEndLocation, map]);
 
   return (
     <>
@@ -310,25 +354,57 @@ const CreateRide = () => {
             }}
             icon={FaMapMarkedAlt}
           >
-            <Text>Start Location</Text>
-            <LocationSearch setLatLng={setStartPosition} />
-            <Text>End Location</Text>
-            <LocationSearch setLatLng={setEndPosition} />
+            <Text variant="help-text" textAlign="left" pb={2}>
+              Search for locations by address, or click the button to choose on
+              the map.
+            </Text>
+            <Heading variant="sub-heading">Start Location</Heading>
+            <HStack align="flex-start">
+              <LocationSearch setLatLng={setStartPosition} />
+              <IconButton
+                icon={<FaMapMarkedAlt />}
+                aria-label="Choose start location on map"
+                variant={pickingMapStartLocation ? "solid" : "outline"}
+                onClick={() => {
+                  setPickingMapStartLocation(!pickingMapStartLocation);
+                }}
+              />
+            </HStack>
+            <Heading variant="sub-heading">End Location</Heading>
+            <HStack align="flex-start">
+              <LocationSearch setLatLng={setEndPosition} />
+              <IconButton
+                icon={<FaMapMarkedAlt />}
+                aria-label="Choose end location on map"
+                variant={pickingMapEndLocation ? "solid" : "outline"}
+                onClick={() => {
+                  setPickingMapEndLocation(!pickingMapEndLocation);
+                }}
+              />
+            </HStack>
             <MapView style={{ height: "50vh" }} setMap={setMap}>
-              <DraggableMarker
-                position={startPosition}
-                onDragEnd={(p: LatLng) => {
-                  setEndPosition(p);
-                }}
-                icon={startIcon}
-              />
-              <DraggableMarker
-                position={endPosition}
-                onDragEnd={(p: LatLng) => {
-                  setStartPosition(p);
-                }}
-                icon={endIcon}
-              />
+              {startPosition ? (
+                <Marker position={startPosition} icon={startIcon} />
+              ) : null}
+              {endPosition ? (
+                <Marker position={endPosition} icon={endIcon} />
+              ) : null}
+              {/*
+                <DraggableMarker
+                  position={startPosition}
+                  onDragEnd={(p: LatLng) => {
+                    setEndPosition(p);
+                  }}
+                  icon={startIcon}
+                />
+                <DraggableMarker
+                  position={endPosition}
+                  onDragEnd={(p: LatLng) => {
+                    setStartPosition(p);
+                  }}
+                  icon={endIcon}
+                />
+               */}
             </MapView>
           </VerifiedStep>
         </Steps>
@@ -339,34 +415,3 @@ const CreateRide = () => {
 };
 
 export default CreateRide;
-
-interface MarkerProperties {
-  onDragEnd: (position: L.LatLng) => void;
-  icon: L.Icon;
-  position: L.LatLng;
-}
-
-const DraggableMarker = (props: MarkerProperties) => {
-  const markerRef = useRef<L.Marker>(null);
-  const eventHandlers = useMemo(
-    () => ({
-      dragend() {
-        const marker = markerRef.current;
-        if (marker != null) {
-          props.onDragEnd(marker.getLatLng());
-        }
-      },
-    }),
-    []
-  );
-
-  return (
-    <Marker
-      draggable={true}
-      eventHandlers={eventHandlers}
-      position={props.position}
-      ref={markerRef}
-      icon={props.icon}
-    />
-  );
-};
