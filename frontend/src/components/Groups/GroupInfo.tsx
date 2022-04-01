@@ -101,7 +101,7 @@ const GroupInfo = ({ group, userId }: { group: Group; userId: string }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent maxW={{ base: "90%", md: "70%", lg: "40%" }} p={15}>
+        <ModalContent maxW={{ base: "90%", md: "70%", lg: "60%" }} p={15}>
           <ModalHeader>{isOwner ? "Group Settings" : "Group Info"}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
