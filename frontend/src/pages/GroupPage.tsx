@@ -37,8 +37,7 @@ const tutorialSteps = [
   },
   {
     target: "#chat",
-    content:
-      "You can chat with other group members or see who is in your group.",
+    content: "You can chat with other group members to discuss your rides.",
   },
   {
     target: "#active-rides",
@@ -47,7 +46,7 @@ const tutorialSteps = [
   {
     target: "#prev-rides",
     content:
-      "The previous rides section is an archive of the rides that have already occured.",
+      "The previous rides toggle shows an archive of the rides that have already occured.",
   },
   {
     target: "#new-ride",
@@ -127,13 +126,19 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
               {group.description}
             </Box>
           ) : null}
-          <Box w="100%" pt={5} id="active-rides">
-            <Text textAlign="left" fontWeight="bold" fontSize="22">
+          <Box w="100%" pt={5}>
+            <Text
+              id="active-rides"
+              textAlign="left"
+              fontWeight="bold"
+              fontSize="22"
+            >
               Active Rides
             </Text>
             <HStack justifyContent={"flex-start"} w="100%">
               <Text fontSize={12}>Show Completed</Text>
               <Switch
+                id="prev-rides"
                 isChecked={showPrev}
                 onChange={(e) => setShowPrev(e.target.checked)}
                 size="sm"

@@ -61,7 +61,7 @@ const tutorialSteps = [
   {
     target: "#group-description",
     content:
-      "Your group description will be displayed at the top of your group page. This will be publicly visible to everybody",
+      "Your group description will be displayed at the top of your group page. This will be publicly visible to everybody.",
   },
   {
     target: "#group-plan",
@@ -69,7 +69,7 @@ const tutorialSteps = [
       "Your plan determines how many people can join your group. You can try out a group with up to 10 people for free! Upgrade anytime.",
   },
   {
-    target: "#group-plan",
+    target: "#group-publicity",
     content:
       "You can also change your group visiblity. Public groups are visible to anybody using the group search feature. Private groups can only be joined with an invitation link.",
   },

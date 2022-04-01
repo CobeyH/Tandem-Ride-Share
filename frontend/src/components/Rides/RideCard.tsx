@@ -396,25 +396,17 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         ) : (
           <>
             {user ? (
-              <Stack
-                direction={{ base: "column", md: "row" }}
-                flexGrow={1}
-                w="95%"
-                alignItems={{ base: "stretch", md: "baseline" }}
-              >
-                <HStack
-                  flexGrow={1}
-                  minH={"3.5rem"}
-                  alignItems={"stretch"}
-                  alignContent={"center"}
-                >
-                  <Icon as={BsGeoAlt} w={6} h={6} mt={4} />
+              <Stack direction="column" flexGrow={1}>
+                <HStack flexGrow={1} minH={"3.5rem"} alignItems={"center"}>
+                  <Icon as={BsGeoAlt} w={6} h={6} />
                   {addingPickup ? (
-                    <LocationSearch
-                      setLatLng={(latLng) =>
-                        newPickupPoint(user?.uid, rideId, latLng)
-                      }
-                    />
+                    <Box flexGrow={1}>
+                      <LocationSearch
+                        setLatLng={(latLng) =>
+                          newPickupPoint(user?.uid, rideId, latLng)
+                        }
+                      />
+                    </Box>
                   ) : (
                     <>
                       <Text isTruncated alignContent={"end"} pt={4} pr={2}>
@@ -423,11 +415,17 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                       <Spacer />
                     </>
                   )}
+                  <Button
+                    display={{ base: "none", md: "block" }}
+                    onClick={() => {
+                      setAddingPickup(!addingPickup);
+                    }}
+                  >
+                    {addingPickup ? "Cancel" : "Add New Pickup"}
+                  </Button>
                 </HStack>
                 <Button
-                  mb={4}
-                  ml={2}
-                  alignSelf={"center"}
+                  display={{ base: "block", md: "none" }}
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}

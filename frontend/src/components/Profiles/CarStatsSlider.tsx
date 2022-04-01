@@ -23,7 +23,7 @@ const CarStatsSlider = (props: {
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
   return (
     <>
-      <Heading as="h2" size="l" mt={2} textAlign="left">
+      <Heading variant="sub-heading" mt={2} textAlign="left">
         Number of Seats
       </Heading>
       <Text textAlign="left" variant="help-text">
@@ -65,9 +65,7 @@ const CarStatsSlider = (props: {
           bg={lightTheme.darkButton}
           placement="right"
         >
-          <Heading as="h2" size="l">
-            Fuel Usage
-          </Heading>
+          <Heading variant="sub-heading">Fuel Usage</Heading>
         </Tooltip>
         <BsQuestionCircleFill />
       </HStack>

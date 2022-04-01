@@ -8,7 +8,6 @@ import {
 import { LatLng } from "leaflet";
 import * as React from "react";
 import { Location } from "../../firebase/database";
-import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { DEFAULT_CENTER } from "./MapView";
 
@@ -88,46 +87,44 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
   };
 
   return (
-    <Box pb={4} pt={4} flexGrow={1}>
-      <AsyncSelect<LocationSuggestion, false, GroupBase<LocationSuggestion>>
-        isClearable
-        isSearchable
-        inputValue={input}
-        onInputChange={(newInput, { action }) => {
-          if (action === "set-value" || action === "input-change") {
-            setInput(newInput);
-          }
-          return newInput;
-        }}
-        cacheOptions={true}
-        name={"Location"}
-        defaultOptions={true}
-        placeholder={"The address"}
-        onChange={(newValue) => {
-          if (newValue !== null) {
-            const [lng, lat] = newValue.place.geometry.coordinates;
-            const latLng = new LatLng(lat, lng);
-            props.setLatLng(latLng);
-          } else {
-            props.setLatLng(DEFAULT_CENTER);
-          }
-        }}
-        loadOptions={(inputValue, callback) => {
-          getLocations(inputValue).then((locs) => {
-            const suggestions = locs.map((loc) => ({
-              ...loc,
-              label: loc.displayString,
-              value: loc.name,
-            }));
-            callback(suggestions);
-          });
-        }}
-        components={customComponents}
-        chakraStyles={{
-          menu: (provided) => ({ ...provided, zIndex: 10000 }), // leaflet sets their Z-index to something dumb
-        }}
-      />
-    </Box>
+    <AsyncSelect<LocationSuggestion, false, GroupBase<LocationSuggestion>>
+      isClearable
+      isSearchable
+      inputValue={input}
+      onInputChange={(newInput, { action }) => {
+        if (action === "set-value" || action === "input-change") {
+          setInput(newInput);
+        }
+        return newInput;
+      }}
+      cacheOptions={true}
+      name={"Location"}
+      defaultOptions={true}
+      placeholder={"The address"}
+      onChange={(newValue) => {
+        if (newValue !== null) {
+          const [lng, lat] = newValue.place.geometry.coordinates;
+          const latLng = new LatLng(lat, lng);
+          props.setLatLng(latLng);
+        } else {
+          props.setLatLng(DEFAULT_CENTER);
+        }
+      }}
+      loadOptions={(inputValue, callback) => {
+        getLocations(inputValue).then((locs) => {
+          const suggestions = locs.map((loc) => ({
+            ...loc,
+            label: loc.displayString,
+            value: loc.name,
+          }));
+          callback(suggestions);
+        });
+      }}
+      components={customComponents}
+      chakraStyles={{
+        menu: (provided) => ({ ...provided, zIndex: 10000 }), // leaflet sets their Z-index to something dumb
+      }}
+    />
   );
 };
 
