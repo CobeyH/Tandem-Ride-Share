@@ -1,5 +1,6 @@
 import {
   Button,
+  Text,
   AlertDialog,
   AlertDialogOverlay,
   AlertDialogContent,
@@ -19,7 +20,7 @@ const CompleteRideButton = ({ rideId }: { rideId: string }) => {
   return (
     <>
       <Button width="full" onClick={onOpen}>
-        Ride Completed
+        <Text isTruncated>Ride Completed</Text>
       </Button>
       <AlertDialog
         isOpen={isOpen}

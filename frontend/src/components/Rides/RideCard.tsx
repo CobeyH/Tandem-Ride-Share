@@ -427,7 +427,6 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                 <Button
                   mb={4}
                   ml={2}
-                  w={"35%"}
                   alignSelf={"center"}
                   onClick={() => {
                     setAddingPickup(!addingPickup);
@@ -533,7 +532,9 @@ function StatusButtonBar({
           setRidePassenger(userId, rideId, !amPassenger);
         }}
       >
-        {amPassenger ? "Leave this Ride" : "Join this Ride"}
+        <Text isTruncated>
+          {amPassenger ? "Leave this Ride" : "Join this Ride"}
+        </Text>
       </Button>
       {amDriver ? <CompleteRideButton rideId={rideId} /> : null}
     </RideCardBar>
