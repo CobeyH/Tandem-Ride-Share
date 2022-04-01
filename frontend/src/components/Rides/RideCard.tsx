@@ -397,7 +397,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           <>
             {user ? (
               <Stack direction="column" flexGrow={1}>
-                <HStack flexGrow={1} minH={"3.5rem"} alignItems={"center"}>
+                <HStack minH={"3.5rem"} alignItems={"center"}>
                   <Icon as={BsGeoAlt} w={6} h={6} />
                   {addingPickup ? (
                     <Box flexGrow={1}>
@@ -409,9 +409,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                     </Box>
                   ) : (
                     <>
-                      <Text isTruncated alignContent={"end"} pt={4} pr={2}>
-                        {text}
-                      </Text>
+                      <Text isTruncated>{text}</Text>
                       <Spacer />
                     </>
                   )}
@@ -426,6 +424,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                 </HStack>
                 <Button
                   display={{ base: "block", md: "none" }}
+                  alignSelf="center"
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}
