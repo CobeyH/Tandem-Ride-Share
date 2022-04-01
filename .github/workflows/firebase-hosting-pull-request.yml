@@ -20,5 +20,6 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARPOOLING_6112A }}'
           projectId: carpooling-6112a
+          expires: 5d
         env:
           API_KEY: '${{ secrets.REACT_APP_MQ_KEY }}'
