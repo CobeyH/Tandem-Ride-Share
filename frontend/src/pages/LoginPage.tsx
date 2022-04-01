@@ -53,7 +53,6 @@ export default function Login({ state }: { state?: LocationGotoState }) {
       } else {
         link = "/welcome";
       }
-      console.log("Link: ", link);
       return navigate(link);
     }
   }, [user, loading]);

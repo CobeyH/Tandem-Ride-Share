@@ -32,6 +32,7 @@ import PriceSelector, {
 import { useNavigate } from "react-router-dom";
 import { FaWalking } from "react-icons/all";
 import GroupMembersList from "./GroupMembersList";
+import { NavConstants } from "../../NavigationConstants";
 
 function Publicity({ group }: { group: Group }) {
   const toast = useToast();
@@ -198,7 +199,7 @@ function LeaveGroupButton({
                 bg={"red.300"}
                 onClick={() => {
                   removeUserFromGroup(userId, groupId).then(() =>
-                    navigate("/")
+                    navigate(NavConstants.WELCOME)
                   );
                   onClose();
                 }}
