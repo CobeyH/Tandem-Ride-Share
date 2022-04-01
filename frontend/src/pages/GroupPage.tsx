@@ -123,11 +123,11 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
             }
           </HStack>
           {group.description && group.description.length > 0 ? (
-            <Box px={5} py={5} textAlign="left" w="100%">
+            <Box py={5} textAlign="left" w="100%">
               {group.description}
             </Box>
           ) : null}
-          <Box w="100%" px={5} pt={5} id="active-rides">
+          <Box w="100%" pt={5} id="active-rides">
             <Text textAlign="left" fontWeight="bold" fontSize="22">
               Active Rides
             </Text>
