@@ -107,7 +107,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
         />
       )}
 
-      <Container>
+      <Container mb={4}>
         <VStack spacing="24px" justifyContent={"center"}>
           <GroupAvatar group={group} index={0} mt={10} size="xl" />
           <Heading textAlign={"center"} mt={5}>
