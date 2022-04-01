@@ -152,7 +152,6 @@ export const getOptimizedRoute = async (ride: Ride) => {
             points: routePoints,
           };
           if (!route.shape) {
-            console.log(res.info);
             reject(res.info);
           } else {
             resolve(route);

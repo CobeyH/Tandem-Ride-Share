@@ -147,7 +147,6 @@ const ListContents = ({
 };
 
 const NewGroupButton = ({ fullSizeButtons }: { fullSizeButtons: boolean }) => {
-  console.log({ fullSizeButtons });
   const navigate = useNavigate();
   return fullSizeButtons ? (
     <Button
