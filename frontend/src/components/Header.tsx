@@ -169,8 +169,8 @@ const ReportBug = () => {
             </Text>
             <br />
             <Text>
-              Please provide as much context as possible. For example, the page
-              you were in, the function you were using, etc
+              Please provide as much context as possible. For example, you can
+              provide a screenshot of the page you were on.
             </Text>
           </ModalBody>
           <ModalFooter>

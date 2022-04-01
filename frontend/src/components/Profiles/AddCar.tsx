@@ -121,7 +121,7 @@ const getCarFromList = (radioIndex: string): Vehicle => {
 
 const CarSelector = (props: { user: User; onDone?: () => void }) => {
   const [displayName, setDisplayName] = useState("");
-  const [car, setCar] = useState<Vehicle>(cars[0]);
+  const [car, setCar] = useState<Vehicle>(cars[2]);
   const toast = useToast();
   const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
