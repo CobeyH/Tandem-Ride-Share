@@ -88,7 +88,7 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
   };
 
   return (
-    <Box pb={4} flexGrow={1}>
+    <Box pb={4} pt={4} flexGrow={1}>
       <AsyncSelect<LocationSuggestion, false, GroupBase<LocationSuggestion>>
         isClearable
         isSearchable

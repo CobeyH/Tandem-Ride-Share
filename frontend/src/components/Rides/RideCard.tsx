@@ -212,7 +212,14 @@ function PassengerCounter({ rideId }: { rideId: string }) {
 
 function RideCardBar({ children }: { children?: ReactNode }) {
   return (
-    <Flex flexDirection="row" m={2} gap={2} minH="2.5rem" align="center">
+    <Flex
+      flexDirection="row"
+      w="95%"
+      m={2}
+      gap={2}
+      minH="2.5rem"
+      align="center"
+    >
       {children}
     </Flex>
   );
@@ -392,6 +399,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
               <Stack
                 direction={{ base: "column", md: "row" }}
                 flexGrow={1}
+                w="95%"
                 alignItems={{ base: "stretch", md: "baseline" }}
               >
                 <HStack
@@ -400,7 +408,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                   alignItems={"stretch"}
                   alignContent={"center"}
                 >
-                  <Icon as={BsGeoAlt} w={6} h={6} />
+                  <Icon as={BsGeoAlt} w={6} h={6} mt={4} />
                   {addingPickup ? (
                     <LocationSearch
                       setLatLng={(latLng) =>
@@ -409,12 +417,18 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                     />
                   ) : (
                     <>
-                      <Text isTruncated>{text}</Text>
+                      <Text isTruncated alignContent={"end"} pt={4} pr={2}>
+                        {text}
+                      </Text>
                       <Spacer />
                     </>
                   )}
                 </HStack>
                 <Button
+                  mb={4}
+                  ml={2}
+                  w={"35%"}
+                  alignSelf={"center"}
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}
