@@ -10,6 +10,7 @@ import {
   MenuGroup,
   Button,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { HiMenu } from "react-icons/all";
 import * as React from "react";
@@ -41,7 +42,7 @@ const ProductHeader = ({
           {/* see: https://github.com/chakra-ui/chakra-ui/issues/3173 */}
           <Menu>
             <MenuButton display={{ base: "block", md: "none" }}>
-              <Box as={HiMenu} w={6} h={6} />
+              <Box as={HiMenu} color={"white"} w={6} h={6} />
             </MenuButton>
             <MenuList>
               <MenuGroup title="Features and Benefits">
@@ -63,6 +64,8 @@ const ProductHeader = ({
               <VStack alignItems="stretch" mx={2} pt={2}>
                 <Button
                   variant="tandem-product"
+                  borderColor={useColorModeValue(styleColors.deepBlue, "white")}
+                  color={useColorModeValue(styleColors.deepBlue, "white")}
                   p={4}
                   onClick={() => navigate(NavConstants.LOGIN)}
                 >
@@ -70,6 +73,8 @@ const ProductHeader = ({
                 </Button>
                 <Button
                   variant="tandem-product"
+                  borderColor={useColorModeValue(styleColors.deepBlue, "white")}
+                  color={useColorModeValue(styleColors.deepBlue, "white")}
                   p={4}
                   onClick={() => navigate(NavConstants.REGISTER)}
                 >

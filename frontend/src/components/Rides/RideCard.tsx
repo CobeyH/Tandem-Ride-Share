@@ -212,7 +212,14 @@ function PassengerCounter({ rideId }: { rideId: string }) {
 
 function RideCardBar({ children }: { children?: ReactNode }) {
   return (
-    <Flex flexDirection="row" m={2} gap={2} minH="2.5rem" align="center">
+    <Flex
+      flexDirection="row"
+      w="95%"
+      m={2}
+      gap={2}
+      minH="2.5rem"
+      align="center"
+    >
       {children}
     </Flex>
   );
@@ -390,7 +397,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
           <>
             {user ? (
               <Stack direction="column" flexGrow={1}>
-                <HStack flexGrow={1} minH={"3.5rem"} alignItems={"center"}>
+                <HStack minH={"3.5rem"} alignItems={"center"}>
                   <Icon as={BsGeoAlt} w={6} h={6} />
                   {addingPickup ? (
                     <Box flexGrow={1}>
@@ -417,6 +424,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                 </HStack>
                 <Button
                   display={{ base: "block", md: "none" }}
+                  alignSelf="center"
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}
@@ -521,7 +529,9 @@ function StatusButtonBar({
           setRidePassenger(userId, rideId, !amPassenger);
         }}
       >
-        {amPassenger ? "Leave this Ride" : "Join this Ride"}
+        <Text isTruncated>
+          {amPassenger ? "Leave this Ride" : "Join this Ride"}
+        </Text>
       </Button>
       {amDriver ? <CompleteRideButton rideId={rideId} /> : null}
     </RideCardBar>

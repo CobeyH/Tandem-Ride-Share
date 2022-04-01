@@ -93,7 +93,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
   const [showPrev, setShowPrev] = useState(false);
 
   return (
-    <Box flexGrow={1}>
+    <Box flexGrow={1} w="100%">
       {bannerLoading || error ? (
         <Box h="10%" w="100%" maxHeight="150" minHeight="100" />
       ) : (
@@ -106,7 +106,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
         />
       )}
 
-      <Container>
+      <Container mb={4}>
         <VStack spacing="24px" justifyContent={"center"}>
           <GroupAvatar group={group} index={0} mt={10} size="xl" />
           <Heading textAlign={"center"} mt={5}>
