@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Box,
   Button,
   Container,
   Heading,
@@ -358,8 +359,10 @@ const CreateRide = () => {
               the map.
             </Text>
             <Heading variant="sub-heading">Start Location</Heading>
-            <HStack align="flex-start">
-              <LocationSearch setLatLng={setStartPosition} />
+            <HStack mt={1} mb={3}>
+              <Box flexGrow={1}>
+                <LocationSearch setLatLng={setStartPosition} />
+              </Box>
               <IconButton
                 icon={<FaMapMarkedAlt />}
                 aria-label="Choose start location on map"
@@ -370,8 +373,10 @@ const CreateRide = () => {
               />
             </HStack>
             <Heading variant="sub-heading">End Location</Heading>
-            <HStack align="flex-start">
-              <LocationSearch setLatLng={setEndPosition} />
+            <HStack mt={1} mb={3}>
+              <Box flexGrow={1}>
+                <LocationSearch setLatLng={setEndPosition} />
+              </Box>
               <IconButton
                 icon={<FaMapMarkedAlt />}
                 aria-label="Choose end location on map"

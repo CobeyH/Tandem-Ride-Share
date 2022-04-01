@@ -389,32 +389,34 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
         ) : (
           <>
             {user ? (
-              <Stack
-                direction={{ base: "column", md: "row" }}
-                flexGrow={1}
-                alignItems={{ base: "stretch", md: "baseline" }}
-              >
-                <HStack
-                  flexGrow={1}
-                  minH={"3.5rem"}
-                  alignItems={"stretch"}
-                  alignContent={"center"}
-                >
+              <Stack direction="column" flexGrow={1}>
+                <HStack flexGrow={1} minH={"3.5rem"} alignItems={"center"}>
                   <Icon as={BsGeoAlt} w={6} h={6} />
                   {addingPickup ? (
-                    <LocationSearch
-                      setLatLng={(latLng) =>
-                        newPickupPoint(user?.uid, rideId, latLng)
-                      }
-                    />
+                    <Box flexGrow={1}>
+                      <LocationSearch
+                        setLatLng={(latLng) =>
+                          newPickupPoint(user?.uid, rideId, latLng)
+                        }
+                      />
+                    </Box>
                   ) : (
                     <>
                       <Text isTruncated>{text}</Text>
                       <Spacer />
                     </>
                   )}
+                  <Button
+                    display={{ base: "none", md: "block" }}
+                    onClick={() => {
+                      setAddingPickup(!addingPickup);
+                    }}
+                  >
+                    {addingPickup ? "Cancel" : "Add New Pickup"}
+                  </Button>
                 </HStack>
                 <Button
+                  display={{ base: "block", md: "none" }}
                   onClick={() => {
                     setAddingPickup(!addingPickup);
                   }}
