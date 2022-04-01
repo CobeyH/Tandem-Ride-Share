@@ -183,7 +183,7 @@ const CreateRide = () => {
     <>
       <Header tutorialSteps={tutorialSteps} />
       <Container>
-        <Heading id="ride-create" textAlign={"center"}>
+        <Heading id="ride-create" textAlign={"center"} mt={5}>
           Create Ride
         </Heading>
         <Steps activeStep={activeStep} orientation="vertical">
