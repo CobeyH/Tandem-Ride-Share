@@ -4,6 +4,7 @@ import { Tag, Text } from "@chakra-ui/react";
 import { groupMaxSize } from "../Promotional/PriceSelector";
 import { styleColors } from "../../theme/colours";
 
+// This renders a circle with a color depending on how full the group is.
 const GroupCapacity = (props: { group: Group }) => {
   return (
     <Text>
