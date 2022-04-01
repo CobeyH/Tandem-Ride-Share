@@ -9,7 +9,9 @@ export const Input: ComponentStyleConfig = {
       field: {
         bg: mode(lightTheme.form, darkTheme.form)(props),
         color: mode("black", "white")(props),
-        _placeholder: { color: mode("black", "white")(props) },
+        _placeholder: {
+          color: mode("rgba(8, 41, 70, 0.7)", "whiteAlpha.700")(props),
+        },
       },
     }),
     "tandem-registration": (props) => ({
