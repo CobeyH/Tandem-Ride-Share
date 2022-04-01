@@ -1,0 +1,47 @@
+{
+  "rules": {
+    // USERS
+    "users": {
+      "$id": {
+        ".read": "auth !== null",
+        ".write": "auth.uid === $id",
+      }
+    },
+    // GROUPS
+    "groups": {
+      ".read": "auth !== null",
+      "$id": {
+        ".read": true,
+        ".write": "data.child('members').hasChild(auth.uid) || newData.child('members').hasChild(auth.uid)",
+        "members": {
+          ".write": "auth !== null && newData.hasChild(auth.uid)"
+        },
+      },
+    },
+    "rides": {
+      "$id": {
+     		".read": "auth !== null",
+      	".write": "auth !== null",
+      }
+    },
+    "routes": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+    },
+    "passengers": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+        "$id": {
+          ".indexOn": ".value"
+        }
+    },
+    "chats": {
+      "groups": {
+        "$id" : {
+          ".read": "root.child('groups').child($id).child('members').hasChild(auth.uid)",
+          ".write": "root.child('groups').child($id).child('members').hasChild(auth.uid)",
+        },
+      },
+    },
+  },
+}

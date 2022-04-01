@@ -112,7 +112,7 @@ const Chat = ({
           overflowY="scroll"
         >
           {chat.length === 0 ? (
-            <Text>Nothing seems to be here, Say something!</Text>
+            <Text>Nothing seems to be here, say something!</Text>
           ) : (
             chat.map((m, i) => {
               const component = (

@@ -65,7 +65,7 @@ export default function RideCard({
 
   const cardColour = useColorModeValue(
     isActive ? "white" : "gray.100",
-    isActive ? "gray.700" : "gray.600"
+    isActive ? "blackAlpha.200" : "whiteAlpha.200"
   );
   return !ride?.isComplete == isActive ? (
     <Box borderWidth="1px" w="100%" borderRadius="lg" p="3" bg={cardColour}>

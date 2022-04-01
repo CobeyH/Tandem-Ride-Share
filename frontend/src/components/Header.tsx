@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { logout, auth } from "../firebase/firebase";
-import { MdEmail, FaBug } from "react-icons/all";
+import { MdEmail, FaBug, FaBars } from "react-icons/all";
 import { User } from "firebase/auth";
 import AddCar from "./Profiles/AddCar";
 import { styleColors } from "../theme/colours";
@@ -63,9 +63,17 @@ const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
       {user ? (
         <Menu>
           <ReportBug />
-          <MenuButton as={Button} fontSize={{ base: 14, md: 16 }}>
-            Profile
-          </MenuButton>
+          <MenuButton
+            as={IconButton}
+            fontSize={{ base: 14, md: 16 }}
+            aria-label={"menu"}
+            icon={<FaBars />}
+            varient="ghost"
+            bg="transparent"
+            _hover={{ bg: "whiteAlpha.200" }}
+            color="white"
+            ml="2"
+          />
           <MenuList zIndex={3}>
             <Settings user={user} />
             <AddCar user={user} />
@@ -161,8 +169,8 @@ const ReportBug = () => {
             </Text>
             <br />
             <Text>
-              Please provide as much context as possible. For example, the page
-              you were in, the function you were using, etc
+              Please provide as much context as possible. For example, you can
+              provide a screenshot of the page you were on.
             </Text>
           </ModalBody>
           <ModalFooter>

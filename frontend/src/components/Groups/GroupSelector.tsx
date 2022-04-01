@@ -60,6 +60,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
     <>
       {!isOpen ? (
         <IconButton
+          id="selector-open"
           position="fixed"
           aria-label="toggle-group-list"
           ml={-2}
@@ -83,6 +84,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
           <ListContents
             userGroups={userGroups ?? []}
             isMobile={isMobile}
+            fullSizeButtons={isOpen}
             groups={groups ?? []}
           />
           <Spacer />
@@ -90,6 +92,8 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
             <IconButton
               aria-label="toggle-group-list"
               icon={<FaChevronLeft />}
+              borderRadius={0}
+              bgGradient={"linear(to-r, styleColors.mainBlue, white)"}
               onClick={() => (isOpen ? onClose() : onOpen())}
             />
           ) : null}
@@ -101,6 +105,7 @@ const GroupList = (props: { updateGroups?: (groups: Group[]) => void }) => {
       <ListContents
         userGroups={userGroups ?? []}
         isMobile={isMobile}
+        fullSizeButtons={false}
         groups={groups ?? []}
       />
     </Box>
@@ -111,13 +116,21 @@ const ListContents = ({
   userGroups,
   isMobile,
   groups,
+  fullSizeButtons,
 }: {
   userGroups: Group[];
   groups: Group[];
   isMobile: boolean | undefined;
+  fullSizeButtons: boolean;
 }) => {
   return (
-    <VStack mt={5} mx={2} spacing={3}>
+    <VStack
+      mt={5}
+      mx={4}
+      h={isMobile ? "90%" : ""}
+      spacing={2}
+      alignItems={isMobile ? "stretch" : "center"}
+    >
       {userGroups?.map((group, i) => (
         <GroupListElement
           key={group.id}
@@ -126,15 +139,27 @@ const ListContents = ({
           isMobile={isMobile}
         />
       ))}
-      <NewGroupButton />
-      <GroupSearch groups={groups} />
+      {userGroups.length > 0 ? <Spacer /> : null}
+      <NewGroupButton fullSizeButtons={fullSizeButtons} />
+      <GroupSearch groups={groups} fullSizeButtons={fullSizeButtons} />
     </VStack>
   );
 };
 
-const NewGroupButton = () => {
+const NewGroupButton = ({ fullSizeButtons }: { fullSizeButtons: boolean }) => {
+  console.log({ fullSizeButtons });
   const navigate = useNavigate();
-  return (
+  return fullSizeButtons ? (
+    <Button
+      leftIcon={<FaPlus />}
+      onClick={() => navigate("/group/new")}
+      w="80%"
+      borderRadius={100}
+      alignSelf={"center"}
+    >
+      New Group
+    </Button>
+  ) : (
     <Tooltip
       label="Create a New Group"
       aria-label="create a new group"
@@ -147,8 +172,7 @@ const NewGroupButton = () => {
         onClick={() => navigate("/group/new")}
         icon={<FaPlus />}
         isRound
-        size="md"
-        mx={5}
+        size="lg"
       />
     </Tooltip>
   );
@@ -167,7 +191,9 @@ const GroupListElement = (props: {
   return props.isMobile ? (
     <>
       <Button
+        py={6}
         onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
+        justifyContent={"flex-start"}
       >
         <GroupAvatar group={props.group} index={props.index} size="xs" />
         <Text ml={3}>{props.group.name}</Text>
@@ -183,6 +209,7 @@ const GroupListElement = (props: {
       <Button
         mt={4}
         onClick={() => navigate(NavConstants.groupWithId(props.group.id))}
+        borderRadius={100}
         variant={isCurrentGroup() ? "tandem-group-current" : "tandem-group"}
       >
         <GroupAvatar group={props.group} index={props.index} />
