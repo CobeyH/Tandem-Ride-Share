@@ -27,6 +27,8 @@ export const styleColors = {
   medGreen: "#8CDD70",
   checkmarkGreen: "#38A169",
   charcoal: "#2D3748",
+  mainBlueAlpha300: "rgba(119,162,202,0.16)",
+  paleBlueAlpha700: "rgb(192,218,240, 0.64)",
 };
 
 export const groupLogos = [
