@@ -21,6 +21,8 @@ Check out our live application page at: <a href="https://ride-tandem.ca">ride-ta
 <img src="https://user-images.githubusercontent.com/74685702/162544210-51bd424b-2a56-43a8-82cc-acf4e0fbf9c4.png" width="200">
 </p>
 
+<h4 align="center">Watch the demonstation video <a href="https://youtu.be/tKx8-qhpNMk">here</a></h4>
+
 
 # Members
 
