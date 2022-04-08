@@ -18,6 +18,8 @@ Checkout [who built this](https://github.com/CobeyH/SENG-480A/wiki/Team-Contribu
 
 [Milestone 2](https://docs.google.com/presentation/d/1xmXsBqUpmiAcZRO8HfMe55J8MQXNO3-oCCqqMlNhIt8/edit?usp=sharing)
 
+[Milestone 3](https://1drv.ms/p/s!AsJ3sdz3anzTgkPNj37TMvn3wBi_?e=6fMSeM)
+
 # Contributing
 
 Try to make an issue before trying to fix it, you may find someone is already on it!
