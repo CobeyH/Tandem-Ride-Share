@@ -92,6 +92,7 @@ function Register() {
           </Box>
           <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
             <Input
+              name="full name input"
               type="fullName"
               placeholder="Full Name"
               onChange={(event) => setName(event.currentTarget.value)}
@@ -100,6 +101,7 @@ function Register() {
           </FormControl>
           <FormControl mt={10} pb={5} width={"85%"} maxW={"85%"} isRequired>
             <Input
+              name="email input"
               type="email"
               placeholder="Email Address"
               onChange={(event) => setEmail(event.currentTarget.value)}
@@ -113,6 +115,7 @@ function Register() {
           />
           <Tooltip hasArrow label={tooltipContents} shouldWrapChildren>
             <Button
+              name="create account button"
               onClick={register}
               disabled={!isFormValid}
               mt={5}

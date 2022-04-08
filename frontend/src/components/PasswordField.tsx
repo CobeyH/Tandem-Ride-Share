@@ -1,13 +1,13 @@
 import {
   FormControl,
-  InputGroup,
-  Input,
-  InputRightElement,
   IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { useState } from "react";
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { styleColors } from "../theme/colours";
 
 const PasswordField = (props: {
@@ -20,6 +20,7 @@ const PasswordField = (props: {
     <FormControl mt={10} width={"85%"} maxW={"85%"}>
       <InputGroup>
         <Input
+          name="password input"
           type={showPassword ? "text" : "password"}
           placeholder="Password"
           onChange={(event) => props.setPassword(event.currentTarget.value)}
