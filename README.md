@@ -1,8 +1,26 @@
-# Tandem
-![smol](https://user-images.githubusercontent.com/51931484/157334498-2952ad7f-9b7a-4fe8-b9ae-97932ff16fa9.png)
 
+<p align="center">
+<img src="https://user-images.githubusercontent.com/74685702/162538917-e1aa138c-6e03-4f93-92ed-8335828d2a52.svg" width="200" height="200"/>
+</p>
 
-Tandem is a application built to make carpooling delightful - [check out our product and application page](https://carpooling-6112a.web.app/).
+<h1 fontSize="50" align="center"> Tandem. </h1>
+
+<h3 align="center">
+Carpooling made easy.
+</h3>
+
+<h3 align="center">
+Carpooling made social.
+</h3>
+
+<h4 align="center">
+Check out our live application page at: <a href="https://ride-tandem.ca">ride-tandem.ca</a>
+</h4>
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/74685702/162544210-51bd424b-2a56-43a8-82cc-acf4e0fbf9c4.png" width="200">
+</p>
+
 
 # Members
 
