@@ -46,7 +46,7 @@ Try to make an issue before trying to fix it, you may find someone is already on
 
 Barring that, make a pull request with your changes - we prefer, although do not enforce, a linear git history.
 
-Someone *should* come along and review your code, if it looks good your changes should be live as soon as they are merged!
+Someone *should* come along and review your code, if it looks good, your changes should be live as soon as they are merged!
 
 ## Dependancies
 
