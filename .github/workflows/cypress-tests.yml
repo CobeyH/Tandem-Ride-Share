@@ -18,3 +18,4 @@ jobs:
         with:
           start: npm run emulators & npm start
           working-directory: frontend
+          wait-on: 'http://localhost:3000'
