@@ -5,9 +5,9 @@
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 
-describe("Login ", () => {
+describe("Login", () => {
   it.only("is accessable via url", () => {
     cy.visit("http://localhost:3000/login");
-    cy.contains("Sign In");
+    cy.contains("Sign in");
   });
 });
