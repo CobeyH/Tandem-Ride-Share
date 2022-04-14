@@ -16,6 +16,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: npm run emulators & npm start
+          start: npm run emulators, npm start
           working-directory: frontend
           wait-on: 'http://localhost:3000'
