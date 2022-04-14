@@ -17,4 +17,4 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: npm run emulators & npm start
-          project: frontent
+          project: ./frontend
