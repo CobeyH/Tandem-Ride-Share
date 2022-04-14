@@ -39,7 +39,8 @@
     "emulators": "firebase emulators:start --import=./emulator-data --export-on-exit",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "prepare": "cd .. && husky install frontend/.husky",
+    "cypress": "node_modules/cypress/bin/cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
