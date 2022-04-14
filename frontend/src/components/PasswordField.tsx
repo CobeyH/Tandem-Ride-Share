@@ -20,7 +20,7 @@ const PasswordField = (props: {
     <FormControl mt={10} width={"85%"} maxW={"85%"}>
       <InputGroup>
         <Input
-          name="password input"
+          data-cy="password"
           type={showPassword ? "text" : "password"}
           placeholder="Password"
           onChange={(event) => props.setPassword(event.currentTarget.value)}
