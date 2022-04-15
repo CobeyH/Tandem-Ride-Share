@@ -23,6 +23,7 @@
 # Firebase emulators
 *.log
 /frontend/emulator-data
+/frontend/serviceAccount.json
 
 # Secrets
 frontend/.env
