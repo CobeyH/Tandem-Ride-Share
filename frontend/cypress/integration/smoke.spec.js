@@ -7,7 +7,7 @@
 
 describe("Smoke tests", () => {
   it("Open the app", () => {
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
     cy.contains("Tandem");
   });
 });
