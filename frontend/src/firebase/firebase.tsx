@@ -22,7 +22,7 @@ import extendedTheme from "../theme/style";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyBrUBFWOzhP3XPuzi0ZYrNdNLcUWkLngTQ",
   authDomain: "carpooling-6112a.firebaseapp.com",
   databaseURL: "https://carpooling-6112a-default-rtdb.firebaseio.com/",
