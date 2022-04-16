@@ -8,8 +8,8 @@ import {firebaseConfig} from "../../src/firebase/firebase"
 const shouldUseEmulator = window.location.hostname === "localhost";
 // Emulate RTDB
 if (shouldUseEmulator) {
-  fbConfig.databaseURL = `http://localhost:9000?ns=${fbConfig.projectId}`;
-  console.debug(`Using RTDB emulator: ${fbConfig.databaseURL}`);
+  firebaseConfig.databaseURL = `http://localhost:9000?ns=${firebaseConfig.projectId}`;
+  console.debug(`Using RTDB emulator: ${firebaseConfig.databaseURL}`);
 }
 
 // Initialize Firebase instance
