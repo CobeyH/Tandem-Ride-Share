@@ -93,6 +93,7 @@ export default function Login({ state }: { state?: LocationGotoState }) {
               placeholder="Email"
               onChange={(event) => setEmail(event.currentTarget.value)}
               variant="tandem-login"
+              data-cy="email"
             />
           </FormControl>
           <PasswordField

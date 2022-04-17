@@ -24,6 +24,7 @@ export default function SignInRegister({
                 }
           }
           variant="tandem-login"
+          data-cy="auth-submit"
         >
           Sign in
         </Button>
