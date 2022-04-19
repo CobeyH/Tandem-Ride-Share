@@ -12,8 +12,10 @@ describe("Tutorials complete from start to finish", () => {
     cy.visit("/welcome");
     cy.get("[data-cy=main-menu]").click();
     cy.get("[data-cy=add-car]").click();
-    cy.get("[data-cy=tutorial-icon]");
-    // TODO: Figure out how to select one of the many tutorial buttons.
+    cy.get("[data-cy=add-car-header]").within(() => {
+      cy.get("[data-cy=tutorial-icon]").click();
+    });
+    // TODO: Iterate through steps.
   });
   it("Create group tutorial", () => {
     cy.visit("/group/new");
