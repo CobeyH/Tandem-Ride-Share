@@ -83,7 +83,7 @@ export const AddCarModal = (props: AddCarProps) => {
     >
       <ModalContent h={"container.sm"} padding={"4"} w={"95%"}>
         <ModalCloseButton />
-        <ModalHeader id="header">
+        <ModalHeader id="header" data-cy="add-car-header">
           Add A Car
           <Tutorial steps={tutorialSteps} />
         </ModalHeader>
