@@ -64,6 +64,7 @@ const Header = ({ tutorialSteps }: { tutorialSteps?: Array<Step> }) => {
         <Menu>
           <ReportBug />
           <MenuButton
+            data-cy="main-menu"
             as={IconButton}
             fontSize={{ base: 14, md: 16 }}
             aria-label={"menu"}

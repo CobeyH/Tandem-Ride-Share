@@ -29,6 +29,7 @@ const Tutorial = (props: TutorialProps) => {
             setStarted(true);
           }}
           mr={3}
+          data-cy="tutorial-button"
         >
           {props.buttonText}
         </Button>
@@ -44,6 +45,7 @@ const Tutorial = (props: TutorialProps) => {
             setStarted(true);
           }}
           mr={3}
+          data-cy="tutorial-icon"
         />
       )}
       <Joyride
