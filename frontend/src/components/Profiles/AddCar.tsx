@@ -98,7 +98,9 @@ const AddCar = (props: { user: User }) => {
 
   return (
     <>
-      <MenuItem onClick={onOpen}>Add A Car</MenuItem>
+      <MenuItem data-cy="add-car" onClick={onOpen}>
+        Add A Car
+      </MenuItem>
       <AddCarModal user={props.user} modalProps={{ isOpen, onClose }} />
     </>
   );
@@ -162,6 +164,7 @@ const CarSelector = (props: { user: User; onDone?: () => void }) => {
             isRequired={true}
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
+            data-cy="car-name"
           />
           <Text textAlign={"left"} variant="help-text">
             The name will be used to identify your car when you join a ride.

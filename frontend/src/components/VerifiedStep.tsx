@@ -53,6 +53,7 @@ const VerifiedStep = <T,>({
           isDisabled={!verified}
           mb={4}
           variant="tandem-submit"
+          data-cy="next-step"
         >
           {isLastStep ? "Submit" : "Next"}
         </Button>
