@@ -1,5 +1,3 @@
-// If a tutorial element that a tutorial references is removed then the tutorial will skip a step.
-
 function completeTutorial(length) {
   for (let i = 0; i < length; i++) {
     cy.get(".react-joyride__tooltip").within(() => {
@@ -9,6 +7,8 @@ function completeTutorial(length) {
   cy.contains("Last").click();
 }
 
+// If an element referenced by a tutorial is removed, then the tutorial will skip a step.
+// We should ensure that tutorials always have the correct number of steps.
 describe("Tutorials complete from start to finish", () => {
   it("Get started tutorial", () => {
     cy.visit("/welcome");
