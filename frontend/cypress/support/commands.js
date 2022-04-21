@@ -2,25 +2,20 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/database";
 import { attachCustomCommands } from "cypress-firebase";
-import {firebaseConfig} from "../../src/firebase/firebase"
+import { firebaseConfig } from "../../src/firebase/firebase";
 
-
-const shouldUseEmulator = window.location.hostname === "localhost";
-// Emulate RTDB
-if (shouldUseEmulator) {
-  firebaseConfig.databaseURL = `http://localhost:9000?ns=${firebaseConfig.projectId}`;
-  console.debug(`Using RTDB emulator: ${firebaseConfig.databaseURL}`);
+// Emulate RTDB if Env variable is passed
+const rtdbEmulatorHost = Cypress.env("FIREBASE_DATABASE_EMULATOR_HOST");
+if (rtdbEmulatorHost) {
+  firebaseConfig.databaseURL = `http://${rtdbEmulatorHost}?ns=${firebaseConfig.projectId}`;
 }
 
-// Initialize Firebase instance
 firebase.initializeApp(firebaseConfig);
 
-// Emulate Auth
-if (shouldUseEmulator) {
-  firebase.auth().useEmulator(`http://localhost:9099/`);
-  console.debug(`Using Auth emulator: http://localhost:9099/`);
+const authEmulatorHost = Cypress.env("FIREBASE_AUTH_EMULATOR_HOST");
+if (authEmulatorHost) {
+  firebase.auth().useEmulator(`http://${authEmulatorHost}/`);
+  console.debug(`Using Auth emulator: http://${authEmulatorHost}/`);
 }
 
-
 attachCustomCommands({ Cypress, cy, firebase });
-
