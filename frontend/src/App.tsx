@@ -38,87 +38,85 @@ const LazyLoginPage = React.lazy(() => import("./pages/LoginPage"));
 
 export const App = () => {
   return (
-    <AuthProvider>
-      <ChakraProvider theme={extendedTheme}>
-        <Fonts />
-        <Router>
-          <Routes>
-            <Route
-              path="/"
-              element={
+    <ChakraProvider theme={extendedTheme}>
+      <Fonts />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LazyLoad>
+                <LazyProductPage />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LazyLoad>
+                <LazyLoginPage />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <LazyLoad>
+                <LazyRegistration />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/group/:groupId/join"
+            element={
+              <LazyLoad>
+                <LazyJoinGroup />
+              </LazyLoad>
+            }
+          />
+          <Route
+            path="/welcome"
+            element={
+              <RequireAuth>
                 <LazyLoad>
-                  <LazyProductPage />
+                  <LazyGroupsListPage />
                 </LazyLoad>
-              }
-            />
-            <Route
-              path="/login"
-              element={
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/group/new"
+            element={
+              <RequireAuth>
                 <LazyLoad>
-                  <LazyLoginPage />
+                  <LazyCreateGroup />
                 </LazyLoad>
-              }
-            />
-            <Route
-              path="/register"
-              element={
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/group/:groupId"
+            element={
+              <RequireAuth>
                 <LazyLoad>
-                  <LazyRegistration />
+                  <LazyGroupPage />
                 </LazyLoad>
-              }
-            />
-            <Route
-              path="/group/:groupId/join"
-              element={
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/group/:groupId/ride/new"
+            element={
+              <RequireAuth>
                 <LazyLoad>
-                  <LazyJoinGroup />
+                  <LazyCreateRide />
                 </LazyLoad>
-              }
-            />
-            <Route
-              path="/welcome"
-              element={
-                <RequireAuth>
-                  <LazyLoad>
-                    <LazyGroupsListPage />
-                  </LazyLoad>
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/group/new"
-              element={
-                <RequireAuth>
-                  <LazyLoad>
-                    <LazyCreateGroup />
-                  </LazyLoad>
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/group/:groupId"
-              element={
-                <RequireAuth>
-                  <LazyLoad>
-                    <LazyGroupPage />
-                  </LazyLoad>
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/group/:groupId/ride/new"
-              element={
-                <RequireAuth>
-                  <LazyLoad>
-                    <LazyCreateRide />
-                  </LazyLoad>
-                </RequireAuth>
-              }
-            />
-          </Routes>
-        </Router>
-      </ChakraProvider>
-    </AuthProvider>
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      </Router>
+    </ChakraProvider>
   );
 };
 

@@ -1,8 +1,8 @@
-before(() => {
-  cy.visit("/welcome");
-});
-
 describe("Add car modal", () => {
+  before(() => {
+    cy.visit("/welcome");
+    cy.login("7RcUrOgmqRJWvF8WkcR9Mb67B8va");
+  });
   it("is accessible from menu", () => {
     cy.get("[data-cy=main-menu]").click();
     cy.get("[data-cy=add-car]").click();
