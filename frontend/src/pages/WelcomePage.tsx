@@ -1,8 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
 import Header from "../components/Header";
 import GroupList from "../components/Groups/GroupSelector";
 import { Group } from "../firebase/database";
@@ -22,17 +20,11 @@ import { FaQuestionCircle } from "react-icons/fa";
 
 export default function WelcomePage() {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const [user, loading] = useAuthState(auth);
   const [groups, setGroups] = useState<Group[]>();
 
   const navigate = useNavigate();
 
   const toast = useToast();
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/login");
-  }, [user, loading]);
 
   useEffect(() => {
     if (groups && groups.length > 0) {
