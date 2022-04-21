@@ -40,7 +40,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "cd .. && husky install frontend/.husky",
-    "cypress": "node_modules/cypress/bin/cypress open"
+    "cypress": "node_modules/cypress/bin/cypress open",
+    "test:emulate": "cross-env FIREBASE_AUTH_EMULATOR_HOST=\"localhost:$(cat firebase.json | jq .emulators.auth.port)\" FIREBASE_DATABASE_EMULATOR_HOST=\"localhost:$(cat firebase.json | jq .emulators.database.port)\" npm run cypress"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -66,6 +67,8 @@
     "@types/leaflet": "^1.7.9",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
+    "cross-env": "^7.0.3",
+    "cypress": "^9.5.3",
     "cypress-firebase": "^2.2.1",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.3.0",
@@ -75,7 +78,6 @@
     "firebase-tools": "^10.2.2",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.3",
-    "prettier": "^2.5.1",
-    "cypress": "^9.5.3"
+    "prettier": "^2.5.1"
   }
 }
