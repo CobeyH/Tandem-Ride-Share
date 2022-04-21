@@ -12,6 +12,7 @@ import { NavConstants } from "./NavigationConstants";
 import { ReactNode } from "react";
 import extendedTheme from "./theme/style";
 import Fonts from "./theme/components/font";
+import { AuthProvider } from "./firebase/AuthContent";
 
 const LazyGroupsListPage = React.lazy(() => import("./pages/WelcomePage"));
 const LazyCreateGroup = React.lazy(() => import("./pages/CreateGroup"));
@@ -37,85 +38,87 @@ const LazyLoginPage = React.lazy(() => import("./pages/LoginPage"));
 
 export const App = () => {
   return (
-    <ChakraProvider theme={extendedTheme}>
-      <Fonts />
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <LazyLoad>
-                <LazyProductPage />
-              </LazyLoad>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <LazyLoad>
-                <LazyLoginPage />
-              </LazyLoad>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <LazyLoad>
-                <LazyRegistration />
-              </LazyLoad>
-            }
-          />
-          <Route
-            path="/group/:groupId/join"
-            element={
-              <LazyLoad>
-                <LazyJoinGroup />
-              </LazyLoad>
-            }
-          />
-          <Route
-            path="/welcome"
-            element={
-              <RequireAuth>
+    <AuthProvider>
+      <ChakraProvider theme={extendedTheme}>
+        <Fonts />
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={
                 <LazyLoad>
-                  <LazyGroupsListPage />
+                  <LazyProductPage />
                 </LazyLoad>
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/group/new"
-            element={
-              <RequireAuth>
+              }
+            />
+            <Route
+              path="/login"
+              element={
                 <LazyLoad>
-                  <LazyCreateGroup />
+                  <LazyLoginPage />
                 </LazyLoad>
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/group/:groupId"
-            element={
-              <RequireAuth>
+              }
+            />
+            <Route
+              path="/register"
+              element={
                 <LazyLoad>
-                  <LazyGroupPage />
+                  <LazyRegistration />
                 </LazyLoad>
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/group/:groupId/ride/new"
-            element={
-              <RequireAuth>
+              }
+            />
+            <Route
+              path="/group/:groupId/join"
+              element={
                 <LazyLoad>
-                  <LazyCreateRide />
+                  <LazyJoinGroup />
                 </LazyLoad>
-              </RequireAuth>
-            }
-          />
-        </Routes>
-      </Router>
-    </ChakraProvider>
+              }
+            />
+            <Route
+              path="/welcome"
+              element={
+                <RequireAuth>
+                  <LazyLoad>
+                    <LazyGroupsListPage />
+                  </LazyLoad>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/group/new"
+              element={
+                <RequireAuth>
+                  <LazyLoad>
+                    <LazyCreateGroup />
+                  </LazyLoad>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/group/:groupId"
+              element={
+                <RequireAuth>
+                  <LazyLoad>
+                    <LazyGroupPage />
+                  </LazyLoad>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/group/:groupId/ride/new"
+              element={
+                <RequireAuth>
+                  <LazyLoad>
+                    <LazyCreateRide />
+                  </LazyLoad>
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </Router>
+      </ChakraProvider>
+    </AuthProvider>
   );
 };
 
