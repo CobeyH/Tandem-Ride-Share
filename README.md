@@ -83,6 +83,16 @@ This application uses Firebase services that need to be emulated locally. Run `n
 
 To start developing run `npm start`. This should open your default browser to the application. Change a file and save it and the application should reload.
 
+
+## Setting Up Testing
+This project is tested using Cypress. The tests can be run locally by linking to the Firebase emulators. 
+
+To begin, create a new service account in the firebase console. Add the path to your serviceAccount.json file into your `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+
+You will also need the UID of a testing user to authenticate your tests. Create a `cypress.env.json` file and add the UID of your user to the `TEST_UID` json key.
+
+Finally, run `npm run test:emulate` to run the tests using the emulators.
+
 # License
 
 We're GPL-3.0 licensed, if you don't like the license in [its full glory](https://github.com/CobeyH/SENG-480A/blob/main/LICENSE), [this](https://choosealicense.com/licenses/gpl-3.0/) is a nice synopsis.
