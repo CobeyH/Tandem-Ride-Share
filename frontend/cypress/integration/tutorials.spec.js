@@ -9,7 +9,7 @@ function completeTutorial(length) {
 
 beforeEach(() => {
   cy.logout();
-  cy.login("7RcUrOgmqRJWvF8WkcR9Mb67B8va");
+  cy.login();
 });
 
 // If an element referenced by a tutorial is removed, then the tutorial will skip a step.
