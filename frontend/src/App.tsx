@@ -12,7 +12,6 @@ import { NavConstants } from "./NavigationConstants";
 import { ReactNode } from "react";
 import extendedTheme from "./theme/style";
 import Fonts from "./theme/components/font";
-import { AuthProvider } from "./firebase/AuthContent";
 
 const LazyGroupsListPage = React.lazy(() => import("./pages/WelcomePage"));
 const LazyCreateGroup = React.lazy(() => import("./pages/CreateGroup"));

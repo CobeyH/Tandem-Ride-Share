@@ -3,6 +3,7 @@ describe("Login Specs", () => {
     cy.logout();
     cy.visit("/login");
   });
+
   describe("User can login with UI", () => {
     it("is accessible via url", () => {
       cy.contains("Sign in");
@@ -17,8 +18,7 @@ describe("Login Specs", () => {
 
   describe("Login without UI", () => {
     beforeEach(() => {
-      //TODO: This is hard coded. Needs to be changed
-      cy.login("7RcUrOgmqRJWvF8WkcR9Mb67B8va");
+      cy.login();
     });
 
     it("Visit a page that requires authentication", () => {
