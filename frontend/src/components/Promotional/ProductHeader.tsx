@@ -133,6 +133,7 @@ const ProductHeader = ({
               variant="tandem-product"
               p={4}
               onClick={() => navigate(NavConstants.REGISTER)}
+              data-cy="register-button"
             >
               Register Now
             </Button>
