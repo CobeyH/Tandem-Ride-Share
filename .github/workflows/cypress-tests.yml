@@ -16,7 +16,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         env:
-          TEST_UID: ${{ secrets.TEST_UID }}
+          CYPRESS_TEST_UID: ${{ secrets.TEST_UID }}
         with:
           start: npm run emulators, npm start
           working-directory: frontend
