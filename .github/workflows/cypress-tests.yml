@@ -10,7 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        - name: Cache firebase emulators
+          uses: actions/cache@v2
+          with:
+            path: ~/.cache/firebase/emulators
+            key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('~/.cache/firebase/emulators/**') }}
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
