@@ -36,6 +36,7 @@ describe("Tutorials complete from start to finish", () => {
   });
   it("Group page tutorial", () => {
     // TODO: Create a mock group
+    // We will need to figure out how to add mock data to the database and clear it after the tests.
   });
   it("Create ride tutorial", () => {
     // TODO: Create a mock group
