@@ -17,6 +17,7 @@ jobs:
         uses: cypress-io/github-action@v2
         env:
           CYPRESS_TEST_UID: ${{ secrets.TEST_UID }}
+          CYPRESS_SERVICE_ACCOUNT: ${{ secrets.SERVICEACCOUNT }}
         with:
           start: npm run emulators, npm start
           working-directory: frontend
