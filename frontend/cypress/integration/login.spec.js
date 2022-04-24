@@ -9,7 +9,7 @@ describe("Login Specs", () => {
       cy.contains("Sign in");
     });
     it("existing user can log in", () => {
-      cy.get("[data-cy=email]").type("example@example.com");
+      cy.get("[data-cy=email]").type("cypress@example.com");
       cy.get("[data-cy=password]").type("password");
       cy.get("[data-cy=auth-submit]").click();
       cy.url().should("include", "/welcome");
