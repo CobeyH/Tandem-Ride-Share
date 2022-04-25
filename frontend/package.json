@@ -37,6 +37,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "emulators": "firebase emulators:start --import=./emulator-data --export-on-exit",
+    "emulators:CI": "firebase emulators:start --import=./cypress-emulator-data",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "cd .. && husky install frontend/.husky",

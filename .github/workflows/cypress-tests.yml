@@ -29,7 +29,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         with:
-          start: npm run emulators, npm start
+          start: npm run emulators:CI, npm start
           record: true
           working-directory: frontend
           wait-on: "http://localhost:3000"
