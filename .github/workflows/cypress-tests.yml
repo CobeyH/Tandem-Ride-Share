@@ -23,7 +23,13 @@ jobs:
         env:
           CYPRESS_TEST_UID: ${{ secrets.TEST_UID }}
           SERVICE_ACCOUNT: ${{ secrets.SERVICEACCOUNT }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         with:
           start: npm run emulators, npm start
+          record: true
           working-directory: frontend
           wait-on: "http://localhost:3000"
