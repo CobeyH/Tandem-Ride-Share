@@ -95,7 +95,7 @@ const Settings = (props: { user: User }) => {
   const user = props.user;
   const [userData] = useUser(user.uid);
   return (
-    <MenuItem onClick={() => setUserModalOpen(true)}>
+    <MenuItem data-cy="settings" onClick={() => setUserModalOpen(true)}>
       Settings
       <Modal
         isOpen={userModalOpen}
