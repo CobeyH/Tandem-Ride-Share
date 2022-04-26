@@ -1,10 +1,12 @@
 describe("Login Specs", () => {
   beforeEach(() => {
     cy.logout();
-    cy.visit("/login");
   });
 
   describe("User can login with UI", () => {
+    beforeEach(() => {
+      cy.visit("/login");
+    });
     it("is accessible via url", () => {
       cy.contains("Sign in");
     });
