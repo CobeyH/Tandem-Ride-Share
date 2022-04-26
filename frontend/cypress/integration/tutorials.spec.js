@@ -7,11 +7,6 @@ function completeTutorial(length) {
   cy.contains("Last").click();
 }
 
-beforeEach(() => {
-  cy.logout();
-  cy.login();
-});
-
 // If an element referenced by a tutorial is removed, then the tutorial will skip a step.
 // We should ensure that tutorials always have the correct number of steps.
 describe("Tutorials complete from start to finish", () => {
