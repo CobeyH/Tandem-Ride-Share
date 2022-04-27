@@ -41,10 +41,13 @@ const ProductHeader = ({
         <Box>
           {/* see: https://github.com/chakra-ui/chakra-ui/issues/3173 */}
           <Menu>
-            <MenuButton display={{ base: "block", md: "none" }}>
+            <MenuButton
+              data-cy="mobile-menu-button"
+              display={{ base: "block", md: "none" }}
+            >
               <Box as={HiMenu} color={"white"} w={6} h={6} />
             </MenuButton>
-            <MenuList>
+            <MenuList data-cy="mobile-menu-list">
               <MenuGroup title="Features and Benefits">
                 <MenuItem onClick={scrollToProducts}>Friend Group</MenuItem>
                 <MenuItem onClick={scrollToProducts}>
