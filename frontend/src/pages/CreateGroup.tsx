@@ -262,7 +262,7 @@ const CreateGroup = () => {
                 <Tabs isFitted>
                   <TabList>
                     <Tab>Upload a profile picture</Tab>
-                    <Tab>Choose an Icon</Tab>
+                    <Tab data-cy="icon-browser">Choose an Icon</Tab>
                   </TabList>
                   <TabPanels>
                     <TabPanel>

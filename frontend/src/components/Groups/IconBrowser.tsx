@@ -41,6 +41,7 @@ const IconBrowser = (props: {
             setSearchInput(e.currentTarget.value);
             setStartIndx(0);
           }}
+          data-cy="icon-search-filter"
         />
         <InputLeftElement>
           <ImSearch color={styleColors.deepBlue} />
@@ -89,6 +90,7 @@ const IconBrowser = (props: {
             onClick={() => {
               props.updateIcon(key);
             }}
+            data-cy="icon-option"
           />
         ))}
       </SimpleGrid>
