@@ -22,7 +22,8 @@ describe("Tutorials complete from start to finish", () => {
   it("Add car tutorial", () => {
     cy.visit("/welcome");
     cy.get("[data-cy=main-menu]").click();
-    cy.get("[data-cy=add-car]").click();
+    // Must force the click because the menu animation makes it click the wrong place
+    cy.get("[data-cy=add-car]").click({ force: true });
     cy.get("[data-cy=add-car-header]").within(() => {
       cy.get("[data-cy=tutorial-icon]").click();
     });
