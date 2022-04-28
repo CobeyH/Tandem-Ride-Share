@@ -24,6 +24,7 @@
 *.log
 /frontend/emulator-data
 /frontend/serviceAccount.json
+/frontend/cypress/screenshots
 
 # Secrets
 frontend/.env
