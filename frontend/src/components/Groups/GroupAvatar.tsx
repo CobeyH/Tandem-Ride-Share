@@ -23,22 +23,28 @@ const GroupAvatar = (props: Props) => {
   const [profilePic, profilePicLoading] = useDownloadURL(profileRef);
 
   return profilePicLoading ? null : profilePic ? (
+    // For groups that have a profile picture
     <Avatar
       bg={groupLogos[index % groupLogos.length]}
       src={profilePic}
       {...avatarProps}
+      data-cy="group-photo"
     />
   ) : photoName ? (
+    // For groups with a group icon but not profile picture
     <Avatar
       bg={groupLogos[index % groupLogos.length]}
       as={(icons as { [k: string]: IconType })[photoName]}
       {...avatarProps}
+      data-cy="group-icon"
     />
   ) : (
+    // Use group initals if there isn't a group photo or group icon
     <Avatar
       bg={groupLogos[index % groupLogos.length]}
       name={photoName ? undefined : group.name}
       {...avatarProps}
+      data-cy="group-initials"
     />
   );
 };

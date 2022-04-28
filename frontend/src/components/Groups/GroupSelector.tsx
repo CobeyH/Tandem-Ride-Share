@@ -155,6 +155,7 @@ const NewGroupButton = ({ fullSizeButtons }: { fullSizeButtons: boolean }) => {
       w="80%"
       borderRadius={100}
       alignSelf={"center"}
+      data-cy="new-group"
     >
       New Group
     </Button>
@@ -172,6 +173,7 @@ const NewGroupButton = ({ fullSizeButtons }: { fullSizeButtons: boolean }) => {
         icon={<FaPlus />}
         isRound
         size="lg"
+        data-cy="new-group"
       />
     </Tooltip>
   );

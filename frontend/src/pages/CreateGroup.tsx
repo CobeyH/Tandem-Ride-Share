@@ -172,6 +172,7 @@ const CreateGroup = () => {
               }
               isInvalid={invalidName}
               maxLength={MAX_GROUP_NAME_LENGTH}
+              data-cy="group-name"
             />
             <Text
               color="grey.200"
@@ -193,6 +194,7 @@ const CreateGroup = () => {
               placeholder={"Description"}
               onInput={(e) => setDescription(e.currentTarget.value)}
               isInvalid={invalidName}
+              data-cy="group-description"
             />
           </VerifiedStep>
           <VerifiedStep
@@ -203,6 +205,7 @@ const CreateGroup = () => {
             prevStep={prevStep}
             nextStep={nextStep}
             icon={FaUserFriends}
+            data-cy="group-plan"
           >
             <PriceSelector showSelectors={true} updateGroupPlan={setPlan} />
           </VerifiedStep>
@@ -213,6 +216,7 @@ const CreateGroup = () => {
             prevStep={prevStep}
             nextStep={nextStep}
             icon={FaUserSecret}
+            data-cy="group-publicity"
           >
             <Text variant="help-text" align="left" mb={3}>
               {isPrivate
@@ -225,6 +229,7 @@ const CreateGroup = () => {
                 onClick={() => setPrivate(false)}
                 borderRadius={20}
                 borderWidth={2}
+                data-cy="public-group"
               >
                 Public
               </Button>
@@ -233,6 +238,7 @@ const CreateGroup = () => {
                 onClick={() => setPrivate(true)}
                 borderRadius={20}
                 borderWidth={2}
+                data-cy="private-group"
               >
                 Private
               </Button>

@@ -22,6 +22,7 @@ const FileDropzone = (props: {
       description:
         "Your file has been selected and will be uploaded when you confirm group creation.",
       isClosable: true,
+      position: "top-right",
     });
     props.parentCallback(file);
   }, []);
@@ -44,6 +45,7 @@ const FileDropzone = (props: {
       borderWidth={2}
       borderRadius={5}
       {...getRootProps()}
+      data-cy="file-dropzone"
     >
       <input {...getInputProps()} />
       {fileAccepted ? (
