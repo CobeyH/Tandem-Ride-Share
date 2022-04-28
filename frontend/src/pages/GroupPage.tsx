@@ -103,13 +103,14 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
           w="100%"
           maxHeight="150"
           objectFit="cover"
+          data-cy="group-banner"
         />
       )}
 
       <Container mb={4}>
         <VStack spacing="24px" justifyContent={"center"}>
           <GroupAvatar group={group} index={0} mt={10} size="xl" />
-          <Heading textAlign={"center"} mt={5}>
+          <Heading textAlign={"center"} mt={5} data-cy="group-name">
             {group.name}
           </Heading>
           <HStack mt={5} align="center" spacing={5}>
