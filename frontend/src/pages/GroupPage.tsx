@@ -143,6 +143,7 @@ const SingleGroup = ({ group }: { group: Val<Group> }) => {
                 isChecked={showPrev}
                 onChange={(e) => setShowPrev(e.target.checked)}
                 size="sm"
+                data-cy="show-complete-rides"
               />
             </HStack>
           </Box>

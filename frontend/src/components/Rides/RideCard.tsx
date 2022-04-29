@@ -68,13 +68,20 @@ export default function RideCard({
     isActive ? "blackAlpha.200" : "whiteAlpha.200"
   );
   return !ride?.isComplete == isActive ? (
-    <Box borderWidth="1px" w="100%" borderRadius="lg" p="3" bg={cardColour}>
+    <Box
+      borderWidth="1px"
+      w="100%"
+      borderRadius="lg"
+      p="3"
+      bg={cardColour}
+      data-cy="ride-card"
+    >
       {rideLoading && "Loading..."}
       {rideError && `Error: ${rideError.message}`}
       {ride && (
         <>
           {/** Header and Collapse Button */}
-          <Flex onClick={onToggle}>
+          <Flex onClick={onToggle} data-cy="ride-header">
             <Heading id={`${rideId}-name`} size="sm" isTruncated>
               {ride.name}
             </Heading>
@@ -198,7 +205,7 @@ function PassengerCounter({ rideId }: { rideId: string }) {
     <>
       <Icon as={BsFillPersonFill} w={6} h={6} />
       {rideLoading || rideError !== undefined ? null : (
-        <Text isTruncated>
+        <Text isTruncated data-cy="passenger-count">
           {`${passLoading ? "?" : passError ? "0" : passVals?.length} / ${
             car ? car.numSeats : 4
           }`}
@@ -271,7 +278,9 @@ function DriverBar({
     <>
       <RideCardBar>
         <DriverIcon isDriver={driverId !== undefined} isActive={isActive} />
-        <Text>{`${driverId ? driver : "Driver Needed"}`}</Text>
+        <Text data-cy="driver-name">{`${
+          driverId ? driver : "Driver Needed"
+        }`}</Text>
         <Spacer />
         {amPassenger &&
         (driverUser?.uid === user?.uid || !driverUser) &&
@@ -280,6 +289,7 @@ function DriverBar({
             id="am-driver"
             isChecked={driverChecked}
             onChange={() => setDriverChecked(!driverChecked)}
+            data-cy="become-driver-button"
           />
         ) : null}
       </RideCardBar>
@@ -528,6 +538,7 @@ function StatusButtonBar({
           if (ride) setUserInPickup(rideId, ride?.start, userId);
           setRidePassenger(userId, rideId, !amPassenger);
         }}
+        data-cy="ride-participation-button"
       >
         <Text isTruncated>
           {amPassenger ? "Leave this Ride" : "Join this Ride"}
