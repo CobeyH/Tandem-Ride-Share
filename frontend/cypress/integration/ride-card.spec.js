@@ -5,12 +5,14 @@ describe("Ride Card Tests", () => {
       cy.login("Tu1cVTl9nB1MKbdERZEFFy8gOCzN");
       cy.visit("/welcome");
     });
+
     it("Ride cards can be expanded and collapsed", () => {
       cy.get("[data-cy=ride-header]").click();
       cy.get(".leaflet-container").should("be.visible");
       cy.get("[data-cy=ride-header]").click();
       cy.get(".leaflet-container").should("not.be.visible");
     });
+
     it("Previous rides can be toggled on and off", () => {
       cy.get("[data-cy=ride-card]").should("have.length", 1);
       cy.get("[data-cy=show-complete-rides]").click();
@@ -24,6 +26,16 @@ describe("Ride Card Tests", () => {
       cy.login("jFijsAabXUc0p6iv7yM4F49y62Fk");
       cy.visit("/welcome");
     });
+
+    it("Adding a pickup point", () => {
+      cy.get("[data-cy=ride-header]").click();
+      cy.get("[data-cy=ride-participation-button]").click();
+      cy.get("[data-cy=add-pickup-button]").click();
+      // Type address into pickup point search bar.
+      // Reset by leaving the ride at the end
+      cy.get("[data-cy=ride-participation-button]").click();
+    });
+
     it("Join and leave ride as passenger", () => {
       cy.get("[data-cy=ride-header]").click();
       // Before joining there should be one person in the ride
@@ -41,6 +53,7 @@ describe("Ride Card Tests", () => {
         .find("[data-cy=passenger-count]")
         .contains("1");
     });
+
     it("Join and leave ride as driver", () => {
       cy.get("[data-cy=ride-header]").click();
       // Before joining there should be one person in the ride
