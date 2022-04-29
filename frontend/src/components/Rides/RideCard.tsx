@@ -428,6 +428,7 @@ function PickupBar({ rideId, map }: { rideId: string; map: Map }) {
                     onClick={() => {
                       setAddingPickup(!addingPickup);
                     }}
+                    data-cy="add-pickup-button"
                   >
                     {addingPickup ? "Cancel" : "Add New Pickup"}
                   </Button>
