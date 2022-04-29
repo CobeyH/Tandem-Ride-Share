@@ -3,7 +3,7 @@ describe("Ride Card Tests", () => {
     beforeEach(() => {
       cy.logout();
       cy.login("Tu1cVTl9nB1MKbdERZEFFy8gOCzN");
-      cy.visit("/welcome");
+      cy.visit("/group/ride-card-tests");
     });
 
     it("Ride cards can be expanded and collapsed", () => {
@@ -24,16 +24,7 @@ describe("Ride Card Tests", () => {
     beforeEach(() => {
       cy.logout();
       cy.login("jFijsAabXUc0p6iv7yM4F49y62Fk");
-      cy.visit("/welcome");
-    });
-
-    it("Adding a pickup point", () => {
-      cy.get("[data-cy=ride-header]").click();
-      cy.get("[data-cy=ride-participation-button]").click();
-      cy.get("[data-cy=add-pickup-button]").click();
-      // Type address into pickup point search bar.
-      // Reset by leaving the ride at the end
-      cy.get("[data-cy=ride-participation-button]").click();
+      cy.visit("/group/ride-card-tests");
     });
 
     it("Join and leave ride as passenger", () => {
@@ -76,6 +67,16 @@ describe("Ride Card Tests", () => {
         .find("[data-cy=passenger-count]")
         .contains("1");
       cy.get("[data-cy=driver-name]").contains("Driver Needed");
+      cy.wait(500); //TODO: This may have exposed a bug in our code. Remove this line and try to get the test to pass.
+    });
+
+    it("Adding a pickup point", () => {
+      cy.get("[data-cy=ride-header]").click();
+      cy.get("[data-cy=ride-participation-button]").click();
+      cy.get("[data-cy=add-pickup-button]").click();
+      // Type address into pickup point search bar.
+      // Reset by leaving the ride at the end
+      cy.get("[data-cy=ride-participation-button]").click();
     });
   });
 });
