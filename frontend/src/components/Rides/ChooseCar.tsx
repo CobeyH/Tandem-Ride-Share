@@ -37,6 +37,7 @@ const ChooseCar = (props: {
         }
         props.carUpdate(cars.find((v: Vehicle) => v.carId === e.target.value));
       }}
+      data-cy="choose-car"
     >
       {cars?.map((v: Vehicle) => (
         <option key={v.carId} value={v.carId}>
