@@ -34,7 +34,7 @@ export default function MapView(
     >
       <TileLayer
         url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
         id="mapbox/streets-v11"
         accessToken={MAPBOX_ACCESS_TOKEN}
       />

@@ -3,6 +3,7 @@ import {
   chakraComponents,
   DropdownIndicatorProps,
   GroupBase,
+  InputProps,
   MenuProps,
 } from "chakra-react-select";
 import { LatLng } from "leaflet";
@@ -65,6 +66,20 @@ const LocationSearch = (props: { setLatLng: (pos: LatLng) => void }) => {
           <chakraComponents.Menu {...props}>{children}</chakraComponents.Menu>
         );
       }
+    },
+    Input: ({
+      children,
+      ...props
+    }: InputProps<
+      LocationSuggestion,
+      false,
+      GroupBase<LocationSuggestion>
+    >) => {
+      return (
+        <chakraComponents.Input {...{ "data-cy": "pickup-input", ...props }}>
+          {children}
+        </chakraComponents.Input>
+      );
     },
     DropdownIndicator: ({
       children,
