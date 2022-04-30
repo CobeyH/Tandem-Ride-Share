@@ -526,7 +526,7 @@ function StatusButtonBar({
 
   useEffect(() => {
     if (ride) setAmDriver(ride.driver === userId);
-  }, [ride]);
+  }, [ride, userId]);
 
   return (
     <RideCardBar>

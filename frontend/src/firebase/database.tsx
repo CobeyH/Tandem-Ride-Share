@@ -115,22 +115,14 @@ export type Location = {
 };
 
 export const getGroup = async (groupId: string) => {
-  return new Promise<Group>((resolve, reject) => {
-    get(ref(db, `${GROUPS}/${groupId}`)).then(
-      (result) => {
-        if (result.exists()) {
-          const group = result.val();
-          group.id = groupId;
-          resolve(group);
-        } else {
-          reject(undefined);
-        }
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
+  const result = await get(ref(db, `${GROUPS}/${groupId}`));
+  if (result.exists()) {
+    const group = result.val();
+    group.id = groupId;
+    return group;
+  } else {
+    throw new Error("Result does not exist for groupId: " + groupId);
+  }
 };
 
 export const useGroup = (groupId: string) => {
@@ -213,7 +205,7 @@ export const addPickupToRide = (rideId: string, pickup: PickupPoint) => {
   return push(ref(db, `${RIDES}/${rideId}/pickupPoints`), pickup);
 };
 
-export const setUserInPickup = (
+export const setUserInPickup = async (
   rideId: string,
   pickupId: string,
   userId: string,
@@ -225,30 +217,31 @@ export const setUserInPickup = (
       ref(db, `${RIDES}/${rideId}/pickupPoints/${pickupId}/members/${userId}`),
       isPassenger ? true : null
     );
-    if (isPassenger)
-      getRide(rideId).then((ride) => {
-        if (ride.driver === userId) {
-          setRideStart(rideId, pickupId);
-        }
-      });
+    if (isPassenger) {
+      const ride = await getRide(rideId);
+      if (ride.driver === userId) {
+        setRideStart(rideId, pickupId);
+      }
+    }
   }
 };
 
 export const clearUserFromPickups = async (rideId: string, userId: string) => {
   if (!rideId || !userId) return;
-  return getRide(rideId).then((ride) => {
-    Object.keys(ride.pickupPoints ?? {}).map((k) => {
+  const ride = await getRide(rideId);
+  await Promise.all(
+    Object.keys(ride.pickupPoints ?? {}).map(async (k) => {
       if (
         ride.pickupPoints[k].members &&
         Object.keys(ride.pickupPoints[k].members ?? {}).includes(userId)
       ) {
-        set(
+        await set(
           ref(db, `${RIDES}/${rideId}/pickupPoints/${k}/members/${userId}`),
           null
         );
       }
-    });
-  });
+    })
+  );
 };
 
 export const usePickupPoint = (rideId: string, pickupId: string) => {
@@ -282,27 +275,19 @@ export const setGroupProfilePic = async (
 };
 
 export const getUser = async (userId: string) => {
-  return new Promise<User>((resolve, reject) => {
-    get(ref(db, `${USERS}/${userId}`)).then(
-      (result) => {
-        if (result.exists()) {
-          const user = result.val();
-          resolve({
-            uid: userId,
-            name: user.name,
-            authProvider: user.authProvider,
-            email: user.email,
-            vehicles: user.vehicles,
-          });
-        } else {
-          reject(`failed to resolve user "${userId}" in getUser`);
-        }
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
+  const result = await get(ref(db, `${USERS}/${userId}`));
+  if (result.exists()) {
+    const user = result.val();
+    return {
+      uid: userId,
+      name: user.name,
+      authProvider: user.authProvider,
+      email: user.email,
+      vehicles: user.vehicles,
+    };
+  } else {
+    throw new Error("User does not exist with Id " + userId);
+  }
 };
 
 export const setUser = async (user: User) => {
@@ -378,47 +363,40 @@ export const persistRide = async (ride: Ride): Promise<Ride> => {
 };
 
 export const getRide = async (rideId: string) => {
-  return new Promise<Ride>((resolve, reject) => {
-    get(ref(db, `${RIDES}/${rideId}`)).then(
-      (result) => {
-        if (result.exists()) {
-          const ride: Ride = result.val();
-          ride.id = rideId;
-          resolve(ride);
-        } else {
-          reject(undefined);
-        }
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
+  const result = await get(ref(db, `${RIDES}/${rideId}`));
+  if (result.exists()) {
+    const ride: Ride = result.val();
+    ride.id = rideId;
+    return ride;
+  } else {
+    throw new Error("Ride does not exist with id " + rideId);
+  }
 };
 
 export const useRide = (rideId: string) => {
   return useObjectVal<Ride>(ref(db, `${RIDES}/${rideId}`));
 };
 
-export const setRidePassenger = (
+export const setRidePassenger = async (
   passId: string,
   rideId: string,
   isPassenger = true
 ) => {
-  if (rideId && passId)
+  if (rideId && passId) {
     set(
       ref(db, `${PASSENGERS}/${rideId}/${passId}`),
       isPassenger ? true : null
     );
-  if (!isPassenger)
-    getRide(rideId).then((ride) => {
-      if (ride.driver === passId) {
-        setRideDriver(passId, rideId, undefined, false);
-      }
-    });
+  }
+  if (!isPassenger) {
+    const ride = await getRide(rideId);
+    if (ride.driver === passId) {
+      setRideDriver(passId, rideId, undefined, false);
+    }
+  }
 };
 
-export const setRideDriver = (
+export const setRideDriver = async (
   driverId?: string,
   rideId?: string,
   carId?: string,
@@ -434,29 +412,20 @@ export const setRideDriver = (
     state ? (carId ? carId : null) : null
   );
   if (state && driverId) {
-    getRide(rideId)
-      .then((ride) => {
-        const driverPointKey = Object.keys(ride.pickupPoints ?? {}).find(
-          (k) => {
-            if (!ride.pickupPoints[k].members) return false;
-            return Object.keys(ride.pickupPoints[k].members ?? {}).includes(
-              driverId
-            );
-          }
-        );
-        if (driverPointKey) setRideStart(rideId, driverPointKey);
-      })
-      .catch((err) => console.log(err));
+    const ride = await getRide(rideId);
+    const driverPointKey = Object.keys(ride.pickupPoints ?? {}).find((k) => {
+      if (!ride.pickupPoints[k].members) return false;
+      return Object.keys(ride.pickupPoints[k].members ?? {}).includes(driverId);
+    });
+    if (driverPointKey) setRideStart(rideId, driverPointKey);
   }
 };
 
-export const setRideStart = (rideId: string, pickupId: string) => {
-  set(ref(db, `${RIDES}/${rideId}/start`), pickupId)
-    .then(() => getRide(rideId))
-    .then(getOptimizedRoute)
-    .then((route) => {
-      setRoute(rideId, route);
-    });
+export const setRideStart = async (rideId: string, pickupId: string) => {
+  await set(ref(db, `${RIDES}/${rideId}/start`), pickupId);
+  const ride = await getRide(rideId);
+  const route = await getOptimizedRoute(ride);
+  await setRoute(rideId, route);
 };
 
 export const completeRide = (rideId: string) => {
