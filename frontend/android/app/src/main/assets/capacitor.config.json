@@ -1,0 +1,6 @@
+{
+	"appId": "com.tandem.app",
+	"appName": "Tandem",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}

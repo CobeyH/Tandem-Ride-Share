@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^3.5.1",
+    "@capacitor/cli": "^3.5.1",
+    "@capacitor/core": "^3.5.1",
+    "@capacitor/ios": "^3.5.1",
     "@chakra-ui/icons": "^1.1.5",
     "@chakra-ui/react": "^1.8.3",
     "@emotion/react": "^11.7.1",

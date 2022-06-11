@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tandem</string>
+    <string name="title_activity_main">Tandem</string>
+    <string name="package_name">com.tandem.app</string>
+    <string name="custom_url_scheme">com.tandem.app</string>
+</resources>
